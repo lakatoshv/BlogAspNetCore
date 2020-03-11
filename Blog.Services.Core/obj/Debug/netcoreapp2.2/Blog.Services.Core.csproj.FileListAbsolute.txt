@@ -1,0 +1,17 @@
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\bin\Debug\netcoreapp2.2\Blog.Services.Core.deps.json
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\bin\Debug\netcoreapp2.2\Blog.Services.Core.dll
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\obj\Debug\netcoreapp2.2\Blog.Services.Core.AssemblyInfoInputs.cache
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\obj\Debug\netcoreapp2.2\Blog.Services.Core.AssemblyInfo.cs
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\bin\Debug\netcoreapp2.2\Blog.Services.Core.runtimeconfig.json
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\bin\Debug\netcoreapp2.2\Blog.Services.Core.runtimeconfig.dev.json
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\obj\Debug\netcoreapp2.2\Blog.Services.Core.csprojAssemblyReference.cache
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\bin\Debug\netcoreapp2.2\Blog.Services.Core.pdb
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\bin\Debug\netcoreapp2.2\Blog.Core.dll
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\bin\Debug\netcoreapp2.2\Blog.Data.Core.dll
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\bin\Debug\netcoreapp2.2\Blog.Data.Models.dll
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\bin\Debug\netcoreapp2.2\Blog.Core.pdb
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\bin\Debug\netcoreapp2.2\Blog.Data.Models.pdb
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\bin\Debug\netcoreapp2.2\Blog.Data.Core.pdb
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\obj\Debug\netcoreapp2.2\Blog.Services.Core.csproj.CopyComplete
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\obj\Debug\netcoreapp2.2\Blog.Services.Core.dll
+D:\Projects\AspNet\BlogAspNetCore\Blog.Services.Core\obj\Debug\netcoreapp2.2\Blog.Services.Core.pdb
