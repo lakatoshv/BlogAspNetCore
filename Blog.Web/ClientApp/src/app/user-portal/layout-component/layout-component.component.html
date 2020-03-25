@@ -1,0 +1,132 @@
+<header class="masthead" style="background-image: url('assets/img/home-bg-v2.jpg')">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="site-heading">
+                    <h1>AngularBlog</h1>
+                    <hr class="hr">
+                    <span class="subheading">Цікавий блог про цікаве</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+        <img src="assets/blog.ico" width="50px" height="50px">
+        <a class="navbar-brand" routerLink="/blog/">AngularBlog</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" (click)="toggleNavbar()">
+        Menu
+        <i class="fa fa-bars"></i>
+    </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive" [ngClass]="{ 'show': navbarOpen }">
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item" *ngIf="loggedIn"><a routerLink="/blog/my-posts" class="nav-link"> Мої пости</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/blog/about">Про нас</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/blog/contacts">Контакти</a>
+                </li>
+                <li class="nav-item" *ngIf="!loggedIn"><a routerLink="/blog/authorization" class="nav-link"><i class="fa fa-sign-in"></i> Ввійти</a></li>
+                <li class="nav-item" *ngIf="!loggedIn"><a routerLink="/blog/registration" class="nav-link"><i class="fa fa-user"></i> Зареєструватись</a></li>
+                <li class="nav-item dropdow" *ngIf="loggedIn">
+                    <a routerLink="/blog/my-profile" class="nav-link">
+                      user.Email
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="loggedIn"><a routerLink="/blog/logout" class="nav-link"><i class="fa fa-sign-in"></i> Вийти</a></li>
+                <!--
+            <li class="nav-item dropdow">
+              <a routerLink="/blog#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" v-pre>
+                {{ Auth::user()->name }} <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a routerLink="/blog{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                  <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    {{ csrf_field() }}
+                  </form>
+                </li>
+              </ul>
+            </li>
+             <li class="nav-item">
+                <a routerLink="/blog{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Вийти</a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                  {{ csrf_field() }}
+                </form>
+                </li>
+          @endguest
+              -->
+            </ul>
+        </div>
+    </div>
+</nav>
+<router-outlet></router-outlet>
+<hr>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 col-md-12 mx-auto">
+                <ul class="socialIcons">
+                    <li class="facebook">
+                        <a routerLink="/blog#">
+                            <i class="fa fa-fw fa-facebook"></i>Facebook
+                        </a>
+                    </li>
+                    <li class="twitter">
+                        <a routerLink="/blog#">
+                            <i class="fa fa-fw fa-twitter"></i>Twitter
+                        </a>
+                    </li>
+                    <li class="instagram">
+                        <a routerLink="/blog#">
+                            <i class="fa fa-fw fa-instagram"></i>Instagram
+                        </a>
+                    </li>
+                    <li class="pinterest">
+                        <a routerLink="/blog#">
+                            <i class="fa fa-fw fa-pinterest-p"></i>Pinterest
+                        </a>
+                    </li>
+                    <li class="vk">
+                        <a routerLink="/blog#">
+                            <i class="fa fa-fw fa-vk"></i>VKontakte
+                        </a>
+                    </li>
+                    <li class="tumblr">
+                        <a routerLink="/blog#">
+                            <i class="fa fa-fw fa-tumblr"></i>Tumblr
+                        </a>
+                    </li>
+                    <li class="linkedin">
+                        <a routerLink="/blog#">
+                            <i class="fa fa-fw fa-linkedin"></i>Linkedid
+                        </a>
+                    </li>
+                    <li class="google-plus">
+                        <a routerLink="/blog#">
+                            <i class="fa fa-fw fa-google-plus"></i>Google+
+                        </a>
+                    </li>
+                    <li class="yahoo">
+                        <a routerLink="/blog#">
+                            <i class="fa fa-fw fa-yahoo"></i>Yahoo
+                        </a>
+                    </li>
+                    <li class="skype">
+                        <a routerLink="/blog#">
+                            <i class="fa fa-fw fa-skype"></i>Skype
+                        </a>
+                    </li>
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Your Website 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
