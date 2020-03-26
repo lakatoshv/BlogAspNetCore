@@ -1,11 +1,22 @@
-﻿namespace Blog.Data
+﻿// <copyright file="EntityIndexesConfiguration.cs" company="Blog">
+// Copyright (c) Blog. All rights reserved.
+// </copyright>
+
+namespace Blog.Data
 {
     using System.Linq;
     using Blog.Data.Core.Models.Interfaces;
     using Microsoft.EntityFrameworkCore;
 
+    /// <summary>
+    /// Entity indexes configuration.
+    /// </summary>
     internal static class EntityIndexesConfiguration
     {
+        /// <summary>
+        /// Configure.
+        /// </summary>
+        /// <param name="modelBuilder">modelBuilder.</param>
         public static void Configure(ModelBuilder modelBuilder)
         {
             // IDeletableEntity.IsDeleted index

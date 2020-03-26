@@ -1,4 +1,8 @@
-﻿namespace Blog.Data.Repositories
+﻿// <copyright file="EfRepository.cs" company="Blog">
+// Copyright (c) Blog. All rights reserved.
+// </copyright>
+
+namespace Blog.Data.Repositories
 {
     /*
     using System;
