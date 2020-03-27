@@ -14945,11 +14945,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\AspNet\\BlogAspNetCore\\Blog.Services\\Blog.Services.csproj",
+      "projectUniqueName": "D:\\Projects\\AspNet\\BlogAspNetCore\\BlogAspNetCore\\Blog.Services\\Blog.Services.csproj",
       "projectName": "Blog.Services",
-      "projectPath": "D:\\Projects\\AspNet\\BlogAspNetCore\\Blog.Services\\Blog.Services.csproj",
+      "projectPath": "D:\\Projects\\AspNet\\BlogAspNetCore\\BlogAspNetCore\\Blog.Services\\Blog.Services.csproj",
       "packagesPath": "C:\\Users\\Vital\\.nuget\\packages\\",
-      "outputPath": "D:\\Projects\\AspNet\\BlogAspNetCore\\Blog.Services\\obj\\",
+      "outputPath": "D:\\Projects\\AspNet\\BlogAspNetCore\\BlogAspNetCore\\Blog.Services\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\",
@@ -14970,14 +14970,14 @@
       "frameworks": {
         "netcoreapp2.2": {
           "projectReferences": {
-            "D:\\Projects\\AspNet\\BlogAspNetCore\\Blog.Data.Models\\Blog.Data.Models.csproj": {
-              "projectPath": "D:\\Projects\\AspNet\\BlogAspNetCore\\Blog.Data.Models\\Blog.Data.Models.csproj"
+            "D:\\Projects\\AspNet\\BlogAspNetCore\\BlogAspNetCore\\Blog.Data.Models\\Blog.Data.Models.csproj": {
+              "projectPath": "D:\\Projects\\AspNet\\BlogAspNetCore\\BlogAspNetCore\\Blog.Data.Models\\Blog.Data.Models.csproj"
             },
-            "D:\\Projects\\AspNet\\BlogAspNetCore\\Blog.Data\\Blog.Data.csproj": {
-              "projectPath": "D:\\Projects\\AspNet\\BlogAspNetCore\\Blog.Data\\Blog.Data.csproj"
+            "D:\\Projects\\AspNet\\BlogAspNetCore\\BlogAspNetCore\\Blog.Data\\Blog.Data.csproj": {
+              "projectPath": "D:\\Projects\\AspNet\\BlogAspNetCore\\BlogAspNetCore\\Blog.Data\\Blog.Data.csproj"
             },
-            "D:\\Projects\\AspNet\\BlogAspNetCore\\Blog.Services.Core\\Blog.Services.Core.csproj": {
-              "projectPath": "D:\\Projects\\AspNet\\BlogAspNetCore\\Blog.Services.Core\\Blog.Services.Core.csproj"
+            "D:\\Projects\\AspNet\\BlogAspNetCore\\BlogAspNetCore\\Blog.Services.Core\\Blog.Services.Core.csproj": {
+              "projectPath": "D:\\Projects\\AspNet\\BlogAspNetCore\\BlogAspNetCore\\Blog.Services.Core\\Blog.Services.Core.csproj"
             }
           }
         }
@@ -15030,7 +15030,7 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.200\\RuntimeIdentifierGraph.json"
       }
     }
   }

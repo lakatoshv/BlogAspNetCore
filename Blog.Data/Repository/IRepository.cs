@@ -26,7 +26,7 @@ namespace Blog.Data.Repository
         IQueryable<T> Table { get; }
 
         /// <summary>
-        /// Gets tableNoTracking.
+        /// Gets no tracked table.
         /// </summary>
         IQueryable<T> TableNoTracking { get; }
 
@@ -37,21 +37,21 @@ namespace Blog.Data.Repository
         IQueryable<T> GetAll();
 
         /// <summary>
-        /// Get all items.
+        /// Get all items by expressiom.
         /// </summary>
         /// <param name="expression">expression.</param>
         /// <returns>IQueryable.</returns>
         IQueryable<T> GetAll(Expression<Func<T, bool>> expression);
 
         /// <summary>
-        /// Get by id.
+        /// Get item by id.
         /// </summary>
         /// <param name="id">id.</param>
         /// <returns>Type.</returns>
         T GetById(object id);
 
         /// <summary>
-        /// Get by id async.
+        /// Async get item by id async.
         /// </summary>
         /// <param name="id">id.</param>
         /// <returns>Task.</returns>
