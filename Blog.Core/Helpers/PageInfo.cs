@@ -1,14 +1,37 @@
-﻿namespace Blog.Core.Helpers
+﻿// <copyright file="PageInfo.cs" company="Blog">
+// Copyright (c) Blog. All rights reserved.
+// </copyright>
+
+namespace Blog.Core.Helpers
 {
     using System;
+
+    /// <summary>
+    /// Page Info.
+    /// </summary>
     public class PageInfo
     {
-        public int PageNumber { get; set; } // номер текущей страницы
-        public int PageSize { get; set; } // кол-во объектов на странице
-        public int TotalItems { get; set; } // всего объектов
-        public int TotalPages  // всего страниц
+        /// <summary>
+        /// Gets or sets current page number.
+        /// </summary>
+        public int PageNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets page size.
+        /// </summary>
+        public int PageSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets total items count.
+        /// </summary>
+        public int TotalItems { get; set; }
+
+        /// <summary>
+        /// Gets total pages count.
+        /// </summary>
+        public int TotalPages
         {
-            get { return (int)Math.Ceiling((decimal)TotalItems / PageSize); }
+            get { return (int)Math.Ceiling((decimal)this.TotalItems / this.PageSize); }
         }
     }
 }

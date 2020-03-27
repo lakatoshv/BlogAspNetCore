@@ -1,4 +1,8 @@
-﻿namespace Blog.Data
+﻿// <copyright file="ApplicationDbContextSeeder.cs" company="Blog">
+// Copyright (c) BLog. All rights reserved.
+// </copyright>
+
+namespace Blog.Data
 {
     using System;
     using System.Linq;
@@ -7,8 +11,16 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.DependencyInjection;
 
+    /// <summary>
+    /// Application database context seeder.
+    /// </summary>
     public static class ApplicationDbContextSeeder
     {
+        /// <summary>
+        /// Seed data.
+        /// </summary>
+        /// <param name="dbContext">dbContext.</param>
+        /// <param name="serviceProvider">serviceProvider.</param>
         public static void Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
             if (dbContext == null)
@@ -25,6 +37,11 @@
             Seed(dbContext, roleManager);
         }
 
+        /// <summary>
+        /// Seed data.
+        /// </summary>
+        /// <param name="dbContext">dbContext.</param>
+        /// <param name="roleManager">roleManager.</param>
         public static void Seed(ApplicationDbContext dbContext, RoleManager<ApplicationRole> roleManager)
         {
             if (dbContext == null)
@@ -40,11 +57,20 @@
             SeedRoles(roleManager);
         }
 
+        /// <summary>
+        /// Seed roles.
+        /// </summary>
+        /// <param name="roleManager">roleManager.</param>
         private static void SeedRoles(RoleManager<ApplicationRole> roleManager)
         {
             SeedRole(GlobalConstants.AdministratorRoleName, roleManager);
         }
 
+        /// <summary>
+        /// Seed role.
+        /// </summary>
+        /// <param name="roleName">roleName.</param>
+        /// <param name="roleManager">roleManager.</param>
         private static void SeedRole(string roleName, RoleManager<ApplicationRole> roleManager)
         {
             var role = roleManager.FindByNameAsync(roleName).GetAwaiter().GetResult();

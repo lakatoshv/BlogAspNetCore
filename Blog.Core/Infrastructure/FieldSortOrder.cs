@@ -1,31 +1,56 @@
-﻿namespace Blog.Core.Infrastructure
+﻿// <copyright file="FieldSortOrder.cs" company="Blog">
+// Copyright (c) Blog. All rights reserved.
+// </copyright>
+
+namespace Blog.Core.Infrastructure
 {
-    using Blog.Core.Enums;
-    using Blog.Core.Infrastructure.Pagination.Interfaces;
     using System;
     using System.Linq;
-    public class FieldSortOrder<T> : ISortCriteria<T> where T : class
-    {
-        public String Name { get; set; }
+    using Blog.Core.Enums;
+    using Blog.Core.Infrastructure.Pagination.Interfaces;
 
+    /// <summary>
+    /// Field sort order.
+    /// </summary>
+    /// <typeparam name="T">Type.</typeparam>
+    public class FieldSortOrder<T> : ISortCriteria<T>
+        where T : class
+    {
+        /// <summary>
+        /// Gets or sets name.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets direction.
+        /// </summary>
         public OrderType Direction { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FieldSortOrder{T}"/> class.
+        /// </summary>
         public FieldSortOrder()
         {
-            Direction = OrderType.Ascending;
+            this.Direction = OrderType.Ascending;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FieldSortOrder{T}"/> class.
+        /// </summary>
+        /// <param name="name">name.</param>
+        /// <param name="direction">direction.</param>
         public FieldSortOrder(string name, OrderType direction)
         {
-            Name = name;
-            Direction = direction;
+            this.Name = name;
+            this.Direction = direction;
         }
 
-        public IOrderedQueryable<T> ApplyOrdering(IQueryable<T> qry, Boolean useThenBy)
+        /// <inheritdoc/>
+        public IOrderedQueryable<T> ApplyOrdering(IQueryable<T> qry, bool useThenBy)
         {
             IOrderedQueryable<T> result;
-            var descending = Direction == OrderType.Descending;
-            result = !useThenBy ? qry.OrderBy(Name, descending) : qry.ThenBy(Name, descending);
+            var descending = this.Direction == OrderType.Descending;
+            result = !useThenBy ? qry.OrderBy(this.Name, descending) : qry.ThenBy(this.Name, descending);
             return result;
         }
     }

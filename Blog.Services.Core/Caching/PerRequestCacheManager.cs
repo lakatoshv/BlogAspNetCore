@@ -1,89 +1,109 @@
-﻿namespace Blog.Services.Core.Caching
+﻿// <copyright file="PerRequestCacheManager.cs" company="Blog">
+// Copyright (c) Blog. All rights reserved.
+// </copyright>
+
+namespace Blog.Services.Core.Caching
 {
     using System.Collections.Generic;
     using System.Linq;
     using Blog.Services.Core.Caching.Interfaces;
     using Microsoft.AspNetCore.Http;
 
+    /// <summary>
+    /// Per request cache manager.
+    /// </summary>
     public class PerRequestCacheManager : ICacheManager
     {
-        #region Fields
+        /// <summary>
+        /// Http context accessor.
+        /// </summary>
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        #endregion
-
-        #region Ctor
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PerRequestCacheManager"/> class.
+        /// </summary>
+        /// <param name="httpContextAccessor">httpContextAccessor.</param>
         public PerRequestCacheManager(IHttpContextAccessor httpContextAccessor)
         {
-            _httpContextAccessor = httpContextAccessor;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
-        #endregion
-
-        #region Utilities
-        protected virtual IDictionary<object, object> GetItems()
-        {
-            return _httpContextAccessor.HttpContext?.Items;
-        }
-
-        #endregion
-
-        #region Methods
+        /// <inheritdoc/>
         public virtual T Get<T>(string key)
         {
-            var items = GetItems();
+            var items = this.GetItems();
             if (items == null)
+            {
                 return default(T);
+            }
 
             return (T)items[key];
         }
 
+        /// <inheritdoc/>
         public virtual void Set(string key, object data, int cacheTime)
         {
-            var items = GetItems();
+            var items = this.GetItems();
             if (items == null)
+            {
                 return;
+            }
 
             if (data != null)
+            {
                 items[key] = data;
+            }
         }
 
+        /// <inheritdoc/>
         public virtual bool IsSet(string key)
         {
-            var items = GetItems();
+            var items = this.GetItems();
 
             return items?[key] != null;
         }
 
+        /// <inheritdoc/>
         public virtual void Remove(string key)
         {
-            var items = GetItems();
+            var items = this.GetItems();
 
             items?.Remove(key);
         }
 
+        /// <inheritdoc/>
         public virtual void RemoveByPattern(string pattern)
         {
-            var items = GetItems();
+            var items = this.GetItems();
             if (items == null)
+            {
                 return;
+            }
 
             this.RemoveByPattern(pattern, items.Keys.Select(p => p.ToString()));
         }
 
+        /// <inheritdoc/>
         public virtual void Clear()
         {
-            var items = GetItems();
+            var items = this.GetItems();
 
             items?.Clear();
         }
 
+        /// <inheritdoc/>
         public virtual void Dispose()
         {
-            //nothing special
+            // nothing special
         }
 
-        #endregion
+        /// <summary>
+        /// Get Items.
+        /// </summary>
+        /// <returns>IDictionary.</returns>
+        protected virtual IDictionary<object, object> GetItems()
+        {
+            return this.httpContextAccessor.HttpContext?.Items;
+        }
     }
 }

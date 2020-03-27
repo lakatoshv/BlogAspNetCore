@@ -1,4 +1,8 @@
-﻿namespace Blog.Data
+﻿// <copyright file="ApplicationDbContext.cs" company="Blog">
+// Copyright (c) Blog. All rights reserved.
+// </copyright>
+
+namespace Blog.Data
 {
     using System;
     using System.Linq;
@@ -10,32 +14,69 @@
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
+    /// <summary>
+    /// Application database context.
+    /// </summary>
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
+        /// <summary>
+        /// Set is deleted query filter method.
+        /// </summary>
         private static readonly MethodInfo SetIsDeletedQueryFilterMethod =
             typeof(ApplicationDbContext).GetMethod(
                 nameof(SetIsDeletedQueryFilter),
                 BindingFlags.NonPublic | BindingFlags.Static);
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class.
+        /// </summary>
+        /// <param name="options">options.</param>
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
 
+        /// <summary>
+        /// Gets or sets settings.
+        /// </summary>
         public DbSet<Setting> Settings { get; set; }
+
+        /// <summary>
+        /// Gets or sets refreshTokens.
+        /// </summary>
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
+        /// <summary>
+        /// Save changes.
+        /// </summary>
+        /// <returns>int.</returns>
         public override int SaveChanges() => this.SaveChanges(true);
 
+        /// <summary>
+        /// Save changes.
+        /// </summary>
+        /// <param name="acceptAllChangesOnSuccess">acceptAllChangesOnSuccess.</param>
+        /// <returns>int.</returns>
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             this.ApplyAuditInfoRules();
             return base.SaveChanges(acceptAllChangesOnSuccess);
         }
 
+        /// <summary>
+        /// Async save changes.
+        /// </summary>
+        /// <param name="cancellationToken">cancellationToken.</param>
+        /// <returns>Task.</returns>
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) =>
             this.SaveChangesAsync(true, cancellationToken);
 
+        /// <summary>
+        /// Async save changes.
+        /// </summary>
+        /// <param name="acceptAllChangesOnSuccess">acceptAllChangesOnSuccess.</param>
+        /// <param name="cancellationToken">cancellationToken.</param>
+        /// <returns>Task.</returns>
         public override Task<int> SaveChangesAsync(
             bool acceptAllChangesOnSuccess,
             CancellationToken cancellationToken = default)
@@ -44,6 +85,10 @@
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
+        /// <summary>
+        /// On model creating.
+        /// </summary>
+        /// <param name="builder">builder.</param>
         protected override void OnModelCreating(ModelBuilder builder)
         {
             // Needed for Identity models configuration
@@ -73,6 +118,10 @@
             }
         }
 
+        /// <summary>
+        /// Configure user identity relations.
+        /// </summary>
+        /// <param name="builder">builder.</param>
         private static void ConfigureUserIdentityRelations(ModelBuilder builder)
         {
             builder.Entity<ApplicationUser>()
@@ -97,12 +146,20 @@
                 .OnDelete(DeleteBehavior.Restrict);
         }
 
+        /// <summary>
+        /// Set is deleted query filter.
+        /// </summary>
+        /// <typeparam name="T">Type.</typeparam>
+        /// <param name="builder">builder.</param>
         private static void SetIsDeletedQueryFilter<T>(ModelBuilder builder)
             where T : class, IDeletableEntity
         {
             builder.Entity<T>().HasQueryFilter(e => !e.IsDeleted);
         }
 
+        /// <summary>
+        /// Apply audit info rules.
+        /// </summary>
         private void ApplyAuditInfoRules()
         {
             var changedEntries = this.ChangeTracker

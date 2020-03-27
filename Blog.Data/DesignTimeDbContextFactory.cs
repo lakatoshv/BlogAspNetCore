@@ -1,4 +1,8 @@
-﻿namespace Blog.Data
+﻿// <copyright file="DesignTimeDbContextFactory.cs" company="Blog">
+// Copyright (c) Blog. All rights reserved.
+// </copyright>
+
+namespace Blog.Data
 {
     using System.IO;
     using Microsoft.EntityFrameworkCore;
@@ -6,8 +10,12 @@
     using Microsoft.EntityFrameworkCore.Diagnostics;
     using Microsoft.Extensions.Configuration;
 
+    /// <summary>
+    /// Design time database context factory.
+    /// </summary>
     public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {
+        /// <inheritdoc/>
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             var configuration = new ConfigurationBuilder()

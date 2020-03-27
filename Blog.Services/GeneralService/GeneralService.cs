@@ -1,4 +1,8 @@
-﻿namespace Blog.Services.GeneralService
+﻿// <copyright file="GeneralService.cs" company="Blog">
+// Copyright (c) Blog. All rights reserved.
+// </copyright>
+
+namespace Blog.Services.GeneralService
 {
     using System;
     using System.Collections.Generic;
@@ -11,104 +15,150 @@
     using Blog.Data.Repository;
     using Microsoft.EntityFrameworkCore;
 
-    public class GeneralService<T> : IGeneralService<T> where T : Entity
+    /// <summary>
+    /// General service.
+    /// </summary>
+    /// <typeparam name="T">Type.</typeparam>
+    public class GeneralService<T> : IGeneralService<T>
+        where T : Entity
     {
+        /// <summary>
+        /// Repository.
+        /// </summary>
         protected IRepository<T> Repository;
 
-        protected IQueryable<T> Table => Repository.Table;
-        protected IQueryable<T> TableNoTracking => Repository.TableNoTracking;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GeneralService{T}"/> class.
+        /// </summary>
+        /// <param name="repository">repository.</param>
+        public GeneralService(IRepository<T> repository)
+        {
+            this.Repository = repository;
+        }
+
+        /// <summary>
+        /// Gets table.
+        /// </summary>
+        protected IQueryable<T> Table => this.Repository.Table;
+
+        /// <summary>
+        /// Gets tableNoTracking.
+        /// </summary>
+        protected IQueryable<T> TableNoTracking => this.Repository.TableNoTracking;
+
+        /// <inheritdoc/>
+        public T Find(object id)
+        {
+            return this.Repository.GetById(id);
+        }
+        /// <inheritdoc/>
+        public async Task<T> FindAsync(object id)
+        {
+            return await this.Repository.GetByIdAsync(id);
+        }
+
+        /// <inheritdoc/>
+        public void Insert(T entity)
+        {
+            this.Repository.Insert(entity);
+        }
+
+        /// <inheritdoc/>
+        public void Insert(IEnumerable<T> entities)
+        {
+            this.Repository.Insert(entities);
+        }
+
+        /// <inheritdoc/>
+        public void Update(T entity)
+        {
+            this.Repository.Update(entity);
+        }
+
+        /// <inheritdoc/>
+        public void Update(IEnumerable<T> entities)
+        {
+            this.Repository.Update(entities);
+        }
+
+        /// <inheritdoc/>
+        public void Delete(T entity)
+        {
+            this.Repository.Delete(entity);
+        }
+
+        /// <inheritdoc/>
+        public void Delete(IEnumerable<T> entities)
+        {
+            this.Repository.Delete(entities);
+        }
+
+        /// <inheritdoc/>
+        public async Task<PagedListResult<T>> SearchAsync(SearchQuery<T> searchQuery)
+        {
+            return await this.Repository.SearchAsync(searchQuery);
+        }
+
+        /// <inheritdoc/>
+        public async Task<PagedListResult<T>> SearchBySquenceAsync(
+            SearchQuery<T> searchQuery,
+            IQueryable<T> sequence)
+        {
+            return await this.Repository.SearchBySquenceAsync(searchQuery, sequence);
+        }
+
+        /// <inheritdoc/>
+        public ICollection<T> GetAll()
+        {
+            return this.Repository.GetAll().ToList();
+        }
+
+        /// <inheritdoc/>
+        public async Task<ICollection<T>> GetAllAsync(Expression<Func<T, bool>> expression)
+        {
+            return await this.Repository.GetAll(expression).ToListAsync();
+        }
+
+        /// <inheritdoc/>
+        public ICollection<T> GetAll(Expression<Func<T, bool>> expression)
+        {
+            return this.Repository.GetAll(expression).ToList();
+        }
+
+        /// <inheritdoc/>
+        public bool Any(Expression<Func<T, bool>> expression)
+        {
+            return this.Repository.Any(expression);
+        }
+
+        /// <inheritdoc/>
+        public T FirstOrDefault(Expression<Func<T, bool>> expression)
+        {
+            return this.Repository.FirstOrDefault(expression);
+        }
+
+        /// <inheritdoc/>
+        public T LastOrDefault(Expression<Func<T, bool>> expression)
+        {
+            return this.Repository.LastOrDefault(expression);
+        }
+
+        /// <inheritdoc/>
+        public SearchQuery<T> GenerateQuery(TableFilter tableFilter, string includeProperties = null)
+        {
+            return this.Repository.GenerateQuery(tableFilter, includeProperties);
+        }
+
+        /// <summary>
+        /// Get member name.
+        /// </summary>
+        /// <typeparam name="T">Type.</typeparam>
+        /// <typeparam name="TValue">TValue.</typeparam>
+        /// <param name="memberAccess">memberAccess.</param>
+        /// <returns>string.</returns>
         protected static string GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         {
             return ((MemberExpression)memberAccess.Body).Member.Name;
-        }
-        public GeneralService(IRepository<T> repository)
-        {
-            Repository = repository;
-        }
-
-        public T Find(object id)
-        {
-            return Repository.GetById(id);
-        }
-        public async Task<T> FindAsync(object id)
-        {
-            return await Repository.GetByIdAsync(id);
-        }
-
-        public void Insert(T entity)
-        {
-            Repository.Insert(entity);
-        }
-
-        public void Insert(IEnumerable<T> entities)
-        {
-            Repository.Insert(entities);
-        }
-
-        public void Update(T entity)
-        {
-            Repository.Update(entity);
-        }
-
-        public void Update(IEnumerable<T> entities)
-        {
-            Repository.Update(entities);
-        }
-
-        public void Delete(T entity)
-        {
-            Repository.Delete(entity);
-        }
-
-        public void Delete(IEnumerable<T> entities)
-        {
-            Repository.Delete(entities);
-        }
-
-        public async Task<PagedListResult<T>> SearchAsync(SearchQuery<T> searchQuery)
-        {
-            return await Repository.SearchAsync(searchQuery);
-        }
-
-        public async Task<PagedListResult<T>> SearchBySquenceAsync(SearchQuery<T> searchQuery,
-            IQueryable<T> sequence)
-        {
-            return await Repository.SearchBySquenceAsync(searchQuery, sequence);
-        }
-
-        public ICollection<T> GetAll()
-        {
-            return Repository.GetAll().ToList();
-        }
-
-        public async Task<ICollection<T>> GetAllAsync(Expression<Func<T, bool>> expression)
-        {
-            return await Repository.GetAll(expression).ToListAsync();
-        }
-
-        public ICollection<T> GetAll(Expression<Func<T, bool>> expression)
-        {
-            return Repository.GetAll(expression).ToList();
-        }
-
-        public bool Any(Expression<Func<T, bool>> expression)
-        {
-            return Repository.Any(expression);
-        }
-
-        public T FirstOrDefault(Expression<Func<T, bool>> expression)
-        {
-            return Repository.FirstOrDefault(expression);
-        }
-
-        public T LastOrDefault(Expression<Func<T, bool>> expression)
-        {
-            return Repository.LastOrDefault(expression);
-        }
-
-        public SearchQuery<T> GenerateQuery(TableFilter tableFilter, string includeProperties = null)
-        {
-            return Repository.GenerateQuery(tableFilter, includeProperties);
         }
     }
 }

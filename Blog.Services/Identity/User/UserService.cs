@@ -1,4 +1,8 @@
-﻿namespace Blog.Services.Identity.User
+﻿// <copyright file="UserService.cs" company="Blog">
+// Copyright (c) Blog. All rights reserved.
+// </copyright>
+
+namespace Blog.Services.Identity.User
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -11,177 +15,229 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
+    /// <summary>
+    /// User service.
+    /// </summary>
     public class UserService : IUserService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IRepository<ApplicationUser> _applicationUserRepository;
-        private readonly IMapper _mapper;
+        /// <summary>
+        /// User manager.
+        /// </summary>
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public UserService(UserManager<ApplicationUser> userManager,
+        /// <summary>
+        /// Repository for ApplicationUser.
+        /// </summary>
+        private readonly IRepository<ApplicationUser> applicationUserRepository;
+
+        /// <summary>
+        /// Mapper.
+        /// </summary>
+        private readonly IMapper mapper;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserService"/> class.
+        /// </summary>
+        /// <param name="userManager">userManager.</param>
+        /// <param name="applicationUserRepository">applicationUserRepository.</param>
+        /// <param name="mapper">mapper.</param>
+        public UserService(
+            UserManager<ApplicationUser> userManager,
             IRepository<ApplicationUser> applicationUserRepository,
             IMapper mapper)
         {
-            _userManager = userManager;
-            _applicationUserRepository = applicationUserRepository;
-            _mapper = mapper;
+            this.userManager = userManager;
+            this.applicationUserRepository = applicationUserRepository;
+            this.mapper = mapper;
         }
+
+        /// <inheritdoc/>
         public async Task<IdentityResult> CreateAsync(ApplicationUser user, string password)
         {
-            var result = await _userManager.CreateAsync(user, password);
+            var result = await this.userManager.CreateAsync(user, password);
             return result;
         }
 
+        /// <inheritdoc/>
         public async Task<ApplicationUser> GetByIdAsync(string id)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var user = await this.userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
             return user;
         }
 
+        /// <inheritdoc/>
         public async Task<IList<ApplicationUser>> GetUsersAsync(IEnumerable<string> userIds)
         {
-            return await _userManager.Users
+            return await this.userManager.Users
                 .Where(x => userIds.Contains(x.Id))
                 .ToListAsync();
         }
 
+        /// <inheritdoc/>
         public async Task<ApplicationUser> GetByEmailAsync(string email)
         {
-            return await _userManager.Users
+            return await this.userManager.Users
                 .FirstOrDefaultAsync(m => m.Email == email);
         }
 
+        /// <inheritdoc/>
         public async Task<IdentityResult> ChangePasswordAsync(string userName, string oldPassword, string newPassword)
         {
-            var user = await GetByUserNameAsync(userName);
-            var changePasswordResult = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+            var user = await this.GetByUserNameAsync(userName);
+            var changePasswordResult = await this.userManager.ChangePasswordAsync(user, oldPassword, newPassword);
             return changePasswordResult;
         }
 
+        /// <inheritdoc/>
         public async Task<List<ApplicationUser>> GetAllAsync()
         {
-            var userList = await _userManager.Users.ToListAsync();
+            var userList = await this.userManager.Users.ToListAsync();
             return userList;
         }
 
+        /// <inheritdoc/>
         public async Task<string> GetAuthenticatorKeyAsync(string userName)
         {
-            var user = await GetByUserNameAsync(userName);
-            var token = await _userManager.GetAuthenticatorKeyAsync(user);
+            var user = await this.GetByUserNameAsync(userName);
+            var token = await this.userManager.GetAuthenticatorKeyAsync(user);
 
             return token;
         }
+
+        /// <inheritdoc/>
         public Task<string> GetAuthenticatorKeyAsync(ApplicationUser user)
         {
-            return _userManager.GetAuthenticatorKeyAsync(user);
-        }
-        public async Task<IdentityResult> ResetAuthenticatorKeyAsync(ApplicationUser user)
-        {
-            return await _userManager.ResetAuthenticatorKeyAsync(user);
+            return this.userManager.GetAuthenticatorKeyAsync(user);
         }
 
+        /// <inheritdoc/>
+        public async Task<IdentityResult> ResetAuthenticatorKeyAsync(ApplicationUser user)
+        {
+            return await this.userManager.ResetAuthenticatorKeyAsync(user);
+        }
+
+        /// <inheritdoc/>
         public async Task<ApplicationUser> GetByUserNameAsync(string userName)
         {
-            return await _userManager.Users
+            return await this.userManager.Users
                 .Include(u => u.RefreshTokens)
                 .FirstOrDefaultAsync(u => u.UserName == userName);
         }
 
+        /// <inheritdoc/>
         public async Task<ApplicationUser> GetByProfileIdAsync(int profileId)
         {
             return
-                await _userManager.Users
+                await this.userManager.Users
                     .FirstOrDefaultAsync();
         }
 
+        /// <inheritdoc/>
         public async Task DelByIdAsync(string id)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+            var user = await this.userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
             if (user != null)
             {
                 user.Email = user.Id;
                 user.UserName = user.Id;
 
-                await _userManager.UpdateAsync(user);
+                await this.userManager.UpdateAsync(user);
             }
         }
 
+        /// <inheritdoc/>
         public async Task<string> GetEmailVerificationTokenAsync(string userName)
         {
-            var user = await _userManager.FindByNameAsync(userName);
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var user = await this.userManager.FindByNameAsync(userName);
+            var token = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(token);
             return System.Convert.ToBase64String(plainTextBytes);
         }
 
+        /// <inheritdoc/>
         public async Task<string> GetPasswordResetTokenAsync(string userName)
         {
-            var user = await _userManager.FindByNameAsync(userName);
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var user = await this.userManager.FindByNameAsync(userName);
+            var token = await this.userManager.GeneratePasswordResetTokenAsync(user);
             return token;
         }
 
+        /// <inheritdoc/>
         public async Task<IdentityResult> UpdateAsync(string userName, ApplicationUser applicationUser)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == userName);
-            _mapper.Map(applicationUser, user);
+            var user = await this.userManager.Users.FirstOrDefaultAsync(u => u.UserName == userName);
+            this.mapper.Map(applicationUser, user);
 
-            var result = await _userManager.UpdateAsync(user);
+            var result = await this.userManager.UpdateAsync(user);
             return result;
         }
 
+        /// <inheritdoc/>
         public async Task<IdentityResult> VerifyEmailAsync(string userName, string token)
         {
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == userName);
+            var user = await this.userManager.Users.FirstOrDefaultAsync(u => u.UserName == userName);
 
             var base64EncodedBytes = System.Convert.FromBase64String(token);
             token = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
 
-            var result = await _userManager.ConfirmEmailAsync(user, token);
+            var result = await this.userManager.ConfirmEmailAsync(user, token);
             return result;
         }
 
+        /// <inheritdoc/>
         public Task<int> CountRecoveryCodesAsync(ApplicationUser user)
         {
-            return _userManager.CountRecoveryCodesAsync(user);
+            return this.userManager.CountRecoveryCodesAsync(user);
         }
 
+        /// <inheritdoc/>
         public Task<bool> VerifyTwoFactorTokenAsync(ApplicationUser user, string tokenProvider, string token)
         {
-            return _userManager.VerifyTwoFactorTokenAsync(user, tokenProvider, token);
+            return this.userManager.VerifyTwoFactorTokenAsync(user, tokenProvider, token);
         }
 
+        /// <inheritdoc/>
         public string GetAuthenticationProvider()
         {
-            return _userManager.Options.Tokens.AuthenticatorTokenProvider;
+            return this.userManager.Options.Tokens.AuthenticatorTokenProvider;
         }
 
+        /// <inheritdoc/>
         public Task<IdentityResult> SetTwoFactorEnabledAsync(ApplicationUser user, bool enabled)
         {
-            return _userManager.SetTwoFactorEnabledAsync(user, enabled);
+            return this.userManager.SetTwoFactorEnabledAsync(user, enabled);
         }
 
+        /// <inheritdoc/>
         public Task<IEnumerable<string>> GenerateNewTwoFactorRecoveryCodesAsync(ApplicationUser user, int number)
         {
-            return _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, number);
+            return this.userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, number);
         }
 
+        /// <inheritdoc/>
         public async Task<IdentityResult> ResetPasswordAsync(string userName, string token, string newPassword)
         {
-            var user = await GetByUserNameAsync(userName);
-            var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+            var user = await this.GetByUserNameAsync(userName);
+            var result = await this.userManager.ResetPasswordAsync(user, token, newPassword);
             return result;
         }
 
+        /// <inheritdoc/>
         public async Task<PagedListResult<ApplicationUser>> GetAllFilteredUsersAsync(TableFilter tableFilter)
         {
-            var sequence = _applicationUserRepository.Table;
+            var sequence = this.applicationUserRepository.Table;
 
-            return await _applicationUserRepository.SearchBySquenceAsync(AddFilter(tableFilter), sequence);
+            return await this.applicationUserRepository.SearchBySquenceAsync(this.AddFilter(tableFilter), sequence);
         }
 
+        /// <summary>
+        /// Add filter.
+        /// </summary>
+        /// <param name="tableFilter">tableFilter.</param>
+        /// <returns>SearchQuery.</returns>
         private SearchQuery<ApplicationUser> AddFilter(TableFilter tableFilter)
         {
-            var query = _applicationUserRepository.GenerateQuery(tableFilter);
+            var query = this.applicationUserRepository.GenerateQuery(tableFilter);
             var searchWord = tableFilter.Search.Value.ToUpper();
 
             query.AddFilter(x =>
