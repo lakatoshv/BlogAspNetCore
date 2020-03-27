@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Projects\\AspNet\\BlogAspNetCore\\UnitTests\\UnitTests.csproj": {}
+    "D:\\Projects\\AspNet\\BlogAspNetCore\\BlogAspNetCore\\UnitTests\\UnitTests.csproj": {}
   },
   "projects": {
-    "D:\\Projects\\AspNet\\BlogAspNetCore\\UnitTests\\UnitTests.csproj": {
+    "D:\\Projects\\AspNet\\BlogAspNetCore\\BlogAspNetCore\\UnitTests\\UnitTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Projects\\AspNet\\BlogAspNetCore\\UnitTests\\UnitTests.csproj",
+        "projectUniqueName": "D:\\Projects\\AspNet\\BlogAspNetCore\\BlogAspNetCore\\UnitTests\\UnitTests.csproj",
         "projectName": "UnitTests",
-        "projectPath": "D:\\Projects\\AspNet\\BlogAspNetCore\\UnitTests\\UnitTests.csproj",
+        "projectPath": "D:\\Projects\\AspNet\\BlogAspNetCore\\BlogAspNetCore\\UnitTests\\UnitTests.csproj",
         "packagesPath": "C:\\Users\\Vital\\.nuget\\packages\\",
-        "outputPath": "D:\\Projects\\AspNet\\BlogAspNetCore\\UnitTests\\obj\\",
+        "outputPath": "D:\\Projects\\AspNet\\BlogAspNetCore\\BlogAspNetCore\\UnitTests\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",
@@ -75,7 +75,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.200\\RuntimeIdentifierGraph.json"
         }
       }
     }

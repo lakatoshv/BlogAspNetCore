@@ -3,3 +3,6 @@
 ################################################################################
 
 /.vs/Blog/v16
+/ApiTest/bin/Debug/netcoreapp3.1/Properties
+/ApiTest/bin/Debug/netcoreapp3.1
+/ApiTest/obj
