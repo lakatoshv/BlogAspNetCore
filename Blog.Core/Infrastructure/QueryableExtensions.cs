@@ -1,11 +1,28 @@
-﻿namespace Blog.Core.Infrastructure
+﻿// <copyright file="QueryableExtensions.cs" company="Blog">
+// Copyright (c) Blog. All rights reserved.
+// </copyright>
+
+namespace Blog.Core.Infrastructure
 {
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+
+    /// <summary>
+    /// Queryable extensions.
+    /// </summary>
     public static class QueryableExtensions
     {
-        public static IOrderedQueryable<TEntity> OrderBy<TEntity>(this IQueryable<TEntity> source, string orderByProperty, bool desc) where TEntity : class
+        /// <summary>
+        /// Order By.
+        /// </summary>
+        /// <typeparam name="TEntity">TEntity.</typeparam>
+        /// <param name="source">source.</param>
+        /// <param name="orderByProperty">orderByProperty.</param>
+        /// <param name="desc">desc.</param>
+        /// <returns>IOrderedQueryable.</returns>
+        public static IOrderedQueryable<TEntity> OrderBy<TEntity>(this IQueryable<TEntity> source, string orderByProperty, bool desc)
+            where TEntity : class
         {
             string command = desc ? "OrderByDescending" : "OrderBy";
             var type = typeof(TEntity);
@@ -17,7 +34,16 @@
             return (IOrderedQueryable<TEntity>)source.Provider.CreateQuery<TEntity>(resultExpression);
         }
 
-        public static IOrderedQueryable<TEntity> ThenBy<TEntity>(this IQueryable<TEntity> source, string orderByProperty, bool desc) where TEntity : class
+        /// <summary>
+        /// Then By.
+        /// </summary>
+        /// <typeparam name="TEntity">TEntity.</typeparam>
+        /// <param name="source">source.</param>
+        /// <param name="orderByProperty">orderByProperty.</param>
+        /// <param name="desc">desc.</param>
+        /// <returns>IOrderedQueryable.</returns>
+        public static IOrderedQueryable<TEntity> ThenBy<TEntity>(this IQueryable<TEntity> source, string orderByProperty, bool desc)
+            where TEntity : class
         {
             string command = desc ? "ThenByDescending" : "ThenBy";
             var type = typeof(TEntity);

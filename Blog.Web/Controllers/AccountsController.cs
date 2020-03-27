@@ -17,9 +17,12 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using BLog.ViewModels.AspNetUser;
-    using BLog.Web.ViewModels.AspNetUser;
     using Blog.Web.ViewModels.AspNetUser;
 
+    /// <summary>
+    /// Accounts controller.
+    /// Registration and login user.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -63,6 +66,11 @@
             return new string[] { "value1", "value2" };
         }
 
+        /// <summary>
+        /// Get user data by user id.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>user json.</returns>
         [HttpGet("initialize/{userId}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -91,6 +99,10 @@
             return "value";
         }
 
+        /// <summary>
+        /// Get all users list.
+        /// </summary>
+        /// <returns>users.</returns>
         [HttpGet("get-all-users")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllUsers()
@@ -99,6 +111,11 @@
             return Ok(users);
         }
 
+        /// <summary>
+        /// User login.
+        /// </summary>
+        /// <param name="credentials">credentials.</param>
+        /// <returns>jwt token.</returns>
         [HttpPost("login")]
         [AllowAnonymous]
         [ProducesResponseType(200)]
@@ -118,6 +135,11 @@
             return Ok(jwt);
         }
 
+        /// <summary>
+        /// Register user.
+        /// </summary>
+        /// <param name="model">model.</param>
+        /// <returns>status.</returns>
         [HttpPost("register")]
         [AllowAnonymous]
         [ProducesResponseType(204)]
