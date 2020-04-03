@@ -16,7 +16,7 @@ export class AuthorizationComponent implements OnInit {
   /**
    * @param authorizationForm FormGroup
    */
-  private _authorizationForm: FormGroup = new AuthorizationForm().authorizationForm;
+  authorizationForm: FormGroup = new AuthorizationForm().authorizationForm;
 
   /**
    * @param _globalService GlobalService
@@ -46,7 +46,7 @@ export class AuthorizationComponent implements OnInit {
    * @returns void
    */
   authorization(dataForAuthorize: any): void {
-    if (this._authorizationForm.valid) {
+    if (this.authorizationForm.valid) {
       this._usersService.login(dataForAuthorize)
         .subscribe(
           (jwt: JwtToken) => {
