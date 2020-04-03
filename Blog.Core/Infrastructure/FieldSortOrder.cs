@@ -4,9 +4,8 @@
 
 namespace Blog.Core.Infrastructure
 {
-    using System;
     using System.Linq;
-    using Blog.Core.Enums;
+    using Enums;
     using Blog.Core.Infrastructure.Pagination.Interfaces;
 
     /// <summary>

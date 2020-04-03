@@ -4,7 +4,7 @@
 
 namespace Blog.Services.Core.Caching
 {
-    using Blog.Services.Core.Caching.Interfaces;
+    using Interfaces;
 
     /// <summary>
     /// Null cache.

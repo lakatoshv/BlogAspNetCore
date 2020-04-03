@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BLog.ViewModels.AspNetUser
+namespace Blog.Web.VIewModels.AspNetUser
 {
     /// <summary>
     /// Login view model.

@@ -13,7 +13,7 @@ namespace Blog.Data.Models
     /// <summary>
     /// Application user entity.
     /// </summary>
-    public class ApplicationUser : IdentityUser, IAuditInfo, IEntity<string>
+    public sealed class ApplicationUser : IdentityUser, IAuditInfo, IEntity<string>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationUser"/> class.
@@ -59,22 +59,22 @@ namespace Blog.Data.Models
         /// <summary>
         /// Gets or sets roles.
         /// </summary>
-        public virtual ICollection<IdentityUserRole<string>> Roles { get; set; }
+        public ICollection<IdentityUserRole<string>> Roles { get; set; }
 
         /// <summary>
         /// Gets or sets claims.
         /// </summary>
-        public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
+        public ICollection<IdentityUserClaim<string>> Claims { get; set; }
 
         /// <summary>
         /// Gets or sets logins.
         /// </summary>
-        public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
+        public ICollection<IdentityUserLogin<string>> Logins { get; set; }
 
         /// <summary>
         /// Gets or sets refresh tokens.
         /// </summary>
-        private ICollection<RefreshToken> refreshTokens;
+        private ICollection<RefreshToken> _refreshTokens;
 
         // public ICollection<Post> Posts { get; set; }
         // public ICollection<Comment> Comments { get; set; }
@@ -82,10 +82,10 @@ namespace Blog.Data.Models
         /// <summary>
         /// Gets or sets refresh tokens.
         /// </summary>
-        public virtual ICollection<RefreshToken> RefreshTokens
+        public ICollection<RefreshToken> RefreshTokens
         {
-            get => this.refreshTokens ?? (this.refreshTokens = new List<RefreshToken>());
-            set => this.refreshTokens = value;
+            get => this._refreshTokens ?? (this._refreshTokens = new List<RefreshToken>());
+            set => this._refreshTokens = value;
         }
     }
 }

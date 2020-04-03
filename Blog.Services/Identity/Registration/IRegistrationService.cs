@@ -5,7 +5,7 @@
 namespace Blog.Services.Identity.Registration
 {
     using System.Threading.Tasks;
-    using Blog.Data.Models;
+    using Data.Models;
     using Microsoft.AspNetCore.Identity;
 
     /// <summary>

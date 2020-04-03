@@ -1,7 +1,7 @@
 ﻿namespace Blog.Web.Core.ControllerContext
 {
-    using Blog.Data.Models;
-    using Blog.Services.Identity.User;
+    using Data.Models;
+    using Services.Identity.User;
     using Microsoft.AspNetCore.Http;
     using System.Security.Claims;
 

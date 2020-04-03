@@ -1,6 +1,6 @@
 ﻿namespace Blog.Web.Mappers.AspNetUser
 {
-    using Blog.Data.Models;
+    using Data.Models;
     using Blog.Services.Core.Dtos.User;
     using Blog.Web.ViewModels.AspNetUser;
 

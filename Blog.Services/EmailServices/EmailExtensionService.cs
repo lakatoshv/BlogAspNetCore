@@ -6,8 +6,8 @@ namespace Blog.Services.EmailServices
 {
     using System.Threading.Tasks;
     using Blog.Core.Emails;
-    using Blog.Services.Core.Email.Templates;
-    using Blog.Services.EmailServices.Interfaces;
+    using Core.Email.Templates;
+    using Interfaces;
     using Microsoft.Extensions.Options;
 
     /// <summary>
@@ -18,17 +18,17 @@ namespace Blog.Services.EmailServices
         /// <summary>
         /// Email service.
         /// </summary>
-        private readonly IEmailService emailService;
+        private readonly IEmailService _emailService;
 
         /// <summary>
         /// Options.
         /// </summary>
-        private readonly EmailExtensionOptions options;
+        private readonly EmailExtensionOptions _options;
 
         /// <summary>
         /// Email template provider.
         /// </summary>
-        private readonly IEmailTemplateProvider emailTemplateProvider;
+        private readonly IEmailTemplateProvider _emailTemplateProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmailExtensionService"/> class.
@@ -38,23 +38,23 @@ namespace Blog.Services.EmailServices
         /// <param name="emailTemplateProvider">emailTemplateProvider.</param>
         public EmailExtensionService(IEmailService emailService, IOptions<EmailExtensionOptions> options, IEmailTemplateProvider emailTemplateProvider)
         {
-            this.emailService = emailService;
-            this.options = options.Value;
-            this.emailTemplateProvider = emailTemplateProvider;
+            this._emailService = emailService;
+            this._options = options.Value;
+            this._emailTemplateProvider = emailTemplateProvider;
         }
 
         /// <inheritdoc/>
         public async Task SendPasswordResetEmailAsync(string email, string token)
         {
-            var body = this.emailTemplateProvider.ResolveBody(TemplateTypes.PasswordRestore, new { token, this.options.BaseUrl, email });
-            await this.emailService.SendAsync(body, "Reset Password", this.options.From, email);
+            var body = this._emailTemplateProvider.ResolveBody(TemplateTypes.PasswordRestore, new { token, this._options.BaseUrl, email });
+            await this._emailService.SendAsync(body, "Reset Password", this._options.From, email);
         }
 
         /// <inheritdoc/>
         public async Task SendVerificationEmailAsync(string email, string token)
         {
-            var body = this.emailTemplateProvider.ResolveBody(TemplateTypes.EmailVerification, new { token, this.options.BaseUrl, email });
-            await this.emailService.SendAsync(body, "Verify Email", this.options.From, email);
+            var body = this._emailTemplateProvider.ResolveBody(TemplateTypes.EmailVerification, new { token, this._options.BaseUrl, email });
+            await this._emailService.SendAsync(body, "Verify Email", this._options.From, email);
         }
     }
 }

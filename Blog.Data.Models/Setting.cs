@@ -4,7 +4,7 @@
 
 namespace Blog.Data.Models
 {
-    using Blog.Data.Core;
+    using Core;
 
     /// <summary>
     /// Setting.

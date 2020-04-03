@@ -1,6 +1,6 @@
 ﻿namespace Blog.Web.Core.ControllerContext
 {
-    using Blog.Data.Models;
+    using Data.Models;
 
     /// <summary>
     /// Controller context interface.

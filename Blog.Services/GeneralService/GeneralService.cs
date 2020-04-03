@@ -12,7 +12,7 @@ namespace Blog.Services.GeneralService
     using Blog.Core.Infrastructure.Pagination;
     using Blog.Core.TableFilters;
     using Blog.Data.Core;
-    using Blog.Data.Repository;
+    using Data.Repository;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>

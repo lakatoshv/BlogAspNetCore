@@ -28,7 +28,7 @@ namespace Blog.Core.Infrastructure
         /// </summary>
         /// <param name="hostingEnvironment">hostingEnvironment.</param>
         public FileProvider(IHostingEnvironment hostingEnvironment)
-            : base(File.Exists(hostingEnvironment.WebRootPath) ? Path.GetDirectoryName(hostingEnvironment.WebRootPath) : hostingEnvironment?.WebRootPath)
+            : base(File.Exists(hostingEnvironment.WebRootPath) ? Path.GetDirectoryName(hostingEnvironment.WebRootPath) : hostingEnvironment.WebRootPath)
         {
             var path = hostingEnvironment.ContentRootPath ?? string.Empty;
             if (File.Exists(path))

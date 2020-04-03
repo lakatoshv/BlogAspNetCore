@@ -32,3 +32,4 @@ D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Data\obj\Debug\netcoreapp2
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Data\obj\Debug\netcoreapp2.2\Blog.Data.csproj.CopyComplete
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Data\obj\Debug\netcoreapp2.2\Blog.Data.dll
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Data\obj\Debug\netcoreapp2.2\Blog.Data.pdb
+D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Data\obj\Debug\netcoreapp2.2\Blog.Data.genruntimeconfig.cache

@@ -9,7 +9,7 @@ namespace Blog.Services.Core.Caching
     using System.Linq;
     using System.Text.RegularExpressions;
     using Blog.Core.Consts;
-    using Blog.Services.Core.Caching.Interfaces;
+    using Interfaces;
 
     /// <summary>
     /// Cache extensions.

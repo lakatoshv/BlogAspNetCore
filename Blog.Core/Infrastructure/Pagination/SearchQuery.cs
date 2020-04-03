@@ -7,7 +7,7 @@ namespace Blog.Core.Infrastructure.Pagination
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
-    using Blog.Core.Infrastructure.Pagination.Interfaces;
+    using Interfaces;
 
     /// <summary>
     /// Search query.

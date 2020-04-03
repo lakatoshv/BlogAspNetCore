@@ -6,7 +6,7 @@ namespace Blog.Core.TableFilters
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Blog.Core.Enums;
+    using Enums;
 
     /// <summary>
     /// Table filter.

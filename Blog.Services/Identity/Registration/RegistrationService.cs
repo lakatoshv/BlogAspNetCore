@@ -7,9 +7,8 @@ namespace Blog.Services.Identity.Registration
     using System;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
-    using Blog.Data.Models;
-    using Blog.Services.EmailServices.Interfaces;
-    using Blog.Services.Identity.User;
+    using Data.Models;
+    using User;
     using Microsoft.AspNetCore.Identity;
 
     /// <summary>
@@ -20,24 +19,19 @@ namespace Blog.Services.Identity.Registration
         /// <summary>
         /// User service.
         /// </summary>
-        private readonly IUserService userService;
+        private readonly IUserService _userService;
 
-        /// <summary>
-        /// Email extension service.
-        /// </summary>
-        private readonly IEmailExtensionService emailExtensionService;
+        // private readonly IEmailExtensionService _emailExtensionService;
 
-        // TODO: Investigate if it is possible to abstracted out userrManager and Application context should to interfaces
+        // TODO: Investigate if it is possible to abstracted out userManager and Application context should to interfaces
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RegistrationService"/> class.
         /// </summary>
         /// <param name="userService">userService.</param>
-        /// <param name="emailExtensionService">emailExtensionService.</param>
-        public RegistrationService(IUserService userService, IEmailExtensionService emailExtensionService)
+        public RegistrationService(IUserService userService)
         {
-            this.userService = userService;
-            this.emailExtensionService = emailExtensionService;
+            this._userService = userService;
         }
 
         /// <inheritdoc/>
@@ -54,11 +48,12 @@ namespace Blog.Services.Identity.Registration
         {
             user.UserName = Regex.Replace(user.UserName, @"\s+", " ").Trim();
 
-            var result = await this.userService.CreateAsync(user, password);
+            var result = await this._userService.CreateAsync(user, password);
 
             if (result.Succeeded)
             {
-                var token = await this.userService.GetEmailVerificationTokenAsync(user.UserName);
+                // var token =
+                await this._userService.GetEmailVerificationTokenAsync(user.UserName);
 
                 // await _emailExtensionService.SendVerificationEmailAsync(user.UserName, token);
             }

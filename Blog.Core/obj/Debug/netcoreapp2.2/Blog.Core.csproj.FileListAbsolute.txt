@@ -18,3 +18,4 @@ D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\obj\Debug\netcoreapp2
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\obj\Debug\netcoreapp2.2\Blog.Core.dll
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\obj\Debug\netcoreapp2.2\Blog.Core.pdb
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\obj\Debug\netcoreapp2.2\Blog.Core.csprojAssemblyReference.cache
+D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\obj\Debug\netcoreapp2.2\Blog.Core.genruntimeconfig.cache

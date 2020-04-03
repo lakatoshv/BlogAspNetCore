@@ -13,7 +13,7 @@ namespace Blog.Core.Helpers
     using System.Reflection;
     using System.Security.Cryptography;
     using System.Text.RegularExpressions;
-    using Blog.Core.Infrastructure;
+    using Infrastructure;
 
     /// <summary>
     /// Common Helper.

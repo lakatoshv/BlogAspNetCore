@@ -9,7 +9,7 @@ namespace Blog.Services.Identity.Auth
     using System.Security.Claims;
     using System.Threading.Tasks;
     using Blog.Core;
-    using Blog.Data.Models;
+    using Data.Models;
     using Blog.Services.Core.Identity.Auth;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
@@ -26,17 +26,17 @@ namespace Blog.Services.Identity.Auth
         /// <summary>
         /// User manager.
         /// </summary>
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         /// <summary>
         /// Jwt factory.
         /// </summary>
-        private readonly IJwtFactory jwtFactory;
+        private readonly IJwtFactory _jwtFactory;
 
         /// <summary>
         /// Jwt issuer options.
         /// </summary>
-        private readonly JwtIssuerOptions jwtOptions;
+        private readonly JwtIssuerOptions _jwtOptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthService"/> class.
@@ -49,9 +49,9 @@ namespace Blog.Services.Identity.Auth
             IJwtFactory jwtFactory,
             IOptions<JwtIssuerOptions> jwtOptions)
         {
-            this.userManager = userManager;
-            this.jwtFactory = jwtFactory;
-            this.jwtOptions = jwtOptions.Value;
+            this._userManager = userManager;
+            this._jwtFactory = jwtFactory;
+            this._jwtOptions = jwtOptions.Value;
         }
 
         /// <inheritdoc/>
@@ -64,7 +64,7 @@ namespace Blog.Services.Identity.Auth
         /// <inheritdoc/>
         public async Task<ApplicationUser> GetByUserNameAsync(string username)
         {
-            return await this.userManager.Users
+            return await this._userManager.Users
                 .Where(x => x.Email.Equals(username))
                 .FirstOrDefaultAsync();
         }
@@ -73,15 +73,15 @@ namespace Blog.Services.Identity.Auth
         public async Task<bool> VerifyTwoFactorTokenAsync(string username, string authenticatorCode)
         {
             var user = await this.GetByUserNameAsync(username);
-            return await this.userManager.VerifyTwoFactorTokenAsync(
-               user, this.userManager.Options.Tokens.AuthenticatorTokenProvider, authenticatorCode);
+            return await this._userManager.VerifyTwoFactorTokenAsync(
+               user, this._userManager.Options.Tokens.AuthenticatorTokenProvider, authenticatorCode);
         }
 
         /// <inheritdoc/>
         public async Task<IdentityResult> RedeemTwoFactorRecoveryCodeAsync(string username, string code)
         {
             var user = await this.GetByUserNameAsync(username);
-            return await this.userManager.RedeemTwoFactorRecoveryCodeAsync(user, code);
+            return await this._userManager.RedeemTwoFactorRecoveryCodeAsync(user, code);
         }
 
         /// <inheritdoc/>
@@ -93,7 +93,7 @@ namespace Blog.Services.Identity.Auth
                 return null;
             }
 
-            var jwt = await Tokens.GenerateJwt(identity, this.jwtFactory, username, this.jwtOptions);
+            var jwt = await Tokens.GenerateJwt(identity, this._jwtFactory, username, this._jwtOptions);
             return jwt;
         }
 
@@ -106,7 +106,7 @@ namespace Blog.Services.Identity.Auth
                 return null;
             }
 
-            return await Tokens.GenerateJwt(identity, this.jwtFactory, username, this.jwtOptions);
+            return await Tokens.GenerateJwt(identity, this._jwtFactory, username, this._jwtOptions);
         }
 
         /// <inheritdoc/>
@@ -118,7 +118,7 @@ namespace Blog.Services.Identity.Auth
             }
 
             // get the user to verifty
-            var userToVerify = await this.userManager.FindByNameAsync(userName);
+            var userToVerify = await this._userManager.FindByNameAsync(userName);
 
             if (userToVerify == null)
             {
@@ -127,7 +127,7 @@ namespace Blog.Services.Identity.Auth
 
             var claimsIdentityUserModel = this.GetIdentityClaims(userToVerify, userName);
 
-            return await Task.FromResult(this.jwtFactory.GenerateClaimsIdentity(claimsIdentityUserModel));
+            return await Task.FromResult(this._jwtFactory.GenerateClaimsIdentity(claimsIdentityUserModel));
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Blog.Services.Identity.Auth
             }
 
             // get the user to verifty
-            var userToVerify = await this.userManager.FindByNameAsync(userName);
+            var userToVerify = await this._userManager.FindByNameAsync(userName);
 
             if (userToVerify == null)
             {
@@ -154,9 +154,9 @@ namespace Blog.Services.Identity.Auth
             var claimsIdentityUserModel = this.GetIdentityClaims(userToVerify, userName);
 
             // check the credentials
-            if (await this.userManager.CheckPasswordAsync(userToVerify, password))
+            if (await this._userManager.CheckPasswordAsync(userToVerify, password))
             {
-                return await Task.FromResult(this.jwtFactory.GenerateClaimsIdentity(claimsIdentityUserModel));
+                return await Task.FromResult(this._jwtFactory.GenerateClaimsIdentity(claimsIdentityUserModel));
             }
 
             // Credentials are invalid, or account doesn't exist
