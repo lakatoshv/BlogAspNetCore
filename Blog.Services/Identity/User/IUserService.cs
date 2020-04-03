@@ -8,7 +8,7 @@ namespace Blog.Services.Identity.User
     using System.Threading.Tasks;
     using Blog.Core.Infrastructure.Pagination;
     using Blog.Core.TableFilters;
-    using Blog.Data.Models;
+    using Data.Models;
     using Microsoft.AspNetCore.Identity;
 
     /// <summary>

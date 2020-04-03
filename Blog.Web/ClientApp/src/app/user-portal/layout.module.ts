@@ -1,3 +1,4 @@
+import { UserModule } from './user/user.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {LayoutRoutingModule } from './layout-routing.module';
@@ -16,6 +17,7 @@ import { ContactsComponent } from './default-pages/contacts/contacts.component';
     AngularFontAwesomeModule,
     ReactiveFormsModule,
     EditorModule,
+    UserModule
   ],
   declarations: [
     LayoutComponentComponent,

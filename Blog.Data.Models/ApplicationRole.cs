@@ -11,7 +11,7 @@ namespace Blog.Data.Models
     /// <summary>
     /// ApplicationRole.
     /// </summary>
-    public class ApplicationRole : IdentityRole, IAuditInfo, IDeletableEntity
+    public sealed class ApplicationRole : IdentityRole, IAuditInfo, IDeletableEntity
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationRole"/> class.

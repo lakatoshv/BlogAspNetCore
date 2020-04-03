@@ -13,7 +13,7 @@ namespace Blog.Data
     using Blog.Core.Infrastructure;
     using Blog.Core.Infrastructure.Pagination;
     using Blog.Core.TableFilters;
-    using Blog.Data.Repository;
+    using Repository;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
@@ -26,12 +26,12 @@ namespace Blog.Data
         /// <summary>
         /// Database context.
         /// </summary>
-        private readonly ApplicationDbContext context;
+        private readonly ApplicationDbContext _context;
 
         /// <summary>
         /// Entity.
         /// </summary>
-        private DbSet<TEntity> entities;
+        private DbSet<TEntity> _entities;
 
         /// <inheritdoc/>
         public virtual IQueryable<TEntity> Table => this.Entities;
@@ -50,12 +50,12 @@ namespace Blog.Data
         {
             get
             {
-                if (this.entities == null)
+                if (this._entities == null)
                 {
-                    this.entities = this.context.Set<TEntity>();
+                    this._entities = this._context.Set<TEntity>();
                 }
 
-                return this.entities;
+                return this._entities;
             }
         }
 
@@ -65,7 +65,7 @@ namespace Blog.Data
         /// <param name="context">context.</param>
         public TableMethods(ApplicationDbContext context)
         {
-            this.context = context;
+            this._context = context;
         }
 
         /// <inheritdoc/>
@@ -156,7 +156,7 @@ namespace Blog.Data
             try
             {
                 this.Entities.Add(entity);
-                this.context.SaveChanges();
+                this._context.SaveChanges();
             }
             catch (DbUpdateException exception)
             {
@@ -176,7 +176,7 @@ namespace Blog.Data
             try
             {
                 this.Entities.AddRange(entities);
-                this.context.SaveChanges();
+                this._context.SaveChanges();
             }
             catch (DbUpdateException exception)
             {
@@ -196,7 +196,7 @@ namespace Blog.Data
             try
             {
                 this.Entities.Update(entity);
-                this.context.SaveChanges();
+                this._context.SaveChanges();
             }
             catch (DbUpdateException exception)
             {
@@ -216,7 +216,7 @@ namespace Blog.Data
             try
             {
                 this.Entities.UpdateRange(entities);
-                this.context.SaveChanges();
+                this._context.SaveChanges();
             }
             catch (DbUpdateException exception)
             {
@@ -236,7 +236,7 @@ namespace Blog.Data
             try
             {
                 this.Entities.Remove(entity);
-                this.context.SaveChanges();
+                this._context.SaveChanges();
             }
             catch (DbUpdateException exception)
             {
@@ -256,7 +256,7 @@ namespace Blog.Data
             try
             {
                 this.Entities.RemoveRange(entities);
-                this.context.SaveChanges();
+                this._context.SaveChanges();
             }
             catch (DbUpdateException exception)
             {
@@ -306,7 +306,7 @@ namespace Blog.Data
         protected string GetFullErrorTextAndRollbackEntityChanges(DbUpdateException exception)
         {
             // rollback entity changes
-            if (this.context is DbContext dbContext)
+            if (this._context is DbContext dbContext)
             {
                 var entries = dbContext.ChangeTracker.Entries()
                     .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified).ToList();
@@ -314,7 +314,7 @@ namespace Blog.Data
                 entries.ForEach(entry => entry.State = EntityState.Unchanged);
             }
 
-            this.context.SaveChanges();
+            this._context.SaveChanges();
             return exception.ToString();
         }
 

@@ -1,13 +1,11 @@
-﻿namespace Blog.Web.Controllers
+﻿using Blog.Web.VIewModels.AspNetUser;
+
+namespace Blog.Web.Controllers
 {
-    using Blog.Core.Infrastructure.PageFilter;
-    using Blog.Data.Models;
-    using Blog.Services.EmailServices.Interfaces;
-    using Blog.Services.Identity.Auth;
-    using Blog.Services.Identity.RefreshToken;
-    using Blog.Services.Identity.Registration;
-    using Blog.Services.Identity.User;
-    using Blog.Web.Core.ControllerContext;
+    using Data.Models;
+    using Services.Identity.Auth;
+    using Services.Identity.Registration;
+    using Core.ControllerContext;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -15,9 +13,7 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using AutoMapper;
-    using BLog.ViewModels.AspNetUser;
-    using Blog.Web.ViewModels.AspNetUser;
+    using ViewModels.AspNetUser;
 
     /// <summary>
     /// Accounts controller.
@@ -28,34 +24,31 @@
     [Authorize]
     public class AccountsController : BaseController
     {
-        private readonly IUserService _userService;
-        private readonly IEmailExtensionService _emailExtensionService;
-        private readonly IMapper _mapper;
+        // private readonly IUserService _userService;
+        // private readonly IEmailExtensionService _emailExtensionService;
+        // private readonly IMapper _mapper;
         private readonly IRegistrationService _registrationService;
         private readonly IAuthService _authService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
-        private readonly IRefreshTokenService _refreshTokenService;
+        // private readonly IRefreshTokenService _refreshTokenService;
 
-        public AccountsController(IControllerContext controllerContext,
-            IUserService userService,
-            IEmailExtensionService emailService,
-            IMapper mapper,
+        public AccountsController(
+            IControllerContext controllerContext,
             IRegistrationService registrationService,
             IAuthService authService,
             UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager,
-            IRefreshTokenService refreshTokenService)
+            RoleManager<ApplicationRole> roleManager)
             : base(controllerContext)
         {
             _userManager = userManager;
             _roleManager = roleManager;
-            _userService = userService;
-            _emailExtensionService = emailService;
-            _mapper = mapper;
+            // _userService = userService;
+            // _emailExtensionService = emailService;
+            // _mapper = mapper;
             _registrationService = registrationService;
             _authService = authService;
-            _refreshTokenService = refreshTokenService;
+            // _refreshTokenService = refreshTokenService;
         }
 
         // GET: api/Users
@@ -63,7 +56,7 @@
         [AllowAnonymous]
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new[] { "value1", "value2" };
         }
 
         /// <summary>
@@ -77,13 +70,15 @@
         public async Task<IActionResult> InitializeAsync(string userId)
         {
             if (string.IsNullOrEmpty(userId))
+            {
                 return Bad("Something Went Wrong");
+            }
 
-            var notificationFilter = new StreamPageFilter
+            /*var notificationFilter = new StreamPageFilter
             {
                 Length = 5,
                 PageCount = 1
-            };
+            };*/
 
             var jsonResult = new
             {
@@ -180,7 +175,7 @@
             await _roleManager.CreateAsync(role3);
             */
 
-            if (model.Roles == null) model.Roles = new string[] { "User" };
+            if (model.Roles == null) model.Roles = new[] { "User" };
             
             foreach(var role in model.Roles)
             {

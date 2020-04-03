@@ -32,7 +32,7 @@ namespace Blog.Data.Repository
         /// Get by id with deleted async.
         /// </summary>
         /// <param name="id">id.</param>
-        /// <returns>Task.<TEntity>.</returns>
+        /// <returns>Task.</returns>
         Task<TEntity> GetByIdWithDeletedAsync(params object[] id);
 
         /// <summary>

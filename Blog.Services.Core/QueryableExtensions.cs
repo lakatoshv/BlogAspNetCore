@@ -7,7 +7,7 @@ namespace Blog.Services.Core
     using System;
     using System.Linq;
     using System.Linq.Expressions;
-    using Blog.Services.Core.Dtos;
+    using Dtos;
 
     /// <summary>
     /// Queriable extensions.
@@ -33,7 +33,7 @@ namespace Blog.Services.Core
             expression = Expression.Call(
                 typeof(Queryable),
                 method,
-                new Type[] { source.ElementType, selector.Type },
+                new[] { source.ElementType, selector.Type },
                 expression,
                 Expression.Quote(Expression.Lambda(selector, parameter)));
             return source.Provider.CreateQuery<T>(expression);

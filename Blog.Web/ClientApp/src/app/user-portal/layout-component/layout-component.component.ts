@@ -1,4 +1,7 @@
+import { UsersService } from 'src/app/core/services/users-services/users.service';
 import { Component, OnInit } from '@angular/core';
+import { User } from 'src/app/core/models/User';
+import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
 
 @Component({
   selector: 'app-layout-component',
@@ -7,16 +10,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LayoutComponentComponent implements OnInit {
   /**
-   * @param navbarOpen boolean
+   * @param user User
    */
-  navbarOpen = false;
+  user: User;
 
   /**
    * @param loggedIn boolean
    */
   loggedIn = false;
 
+  /**
+   * @param _navbarOpen boolean
+   */
+  private _navbarOpen = false;
+
+  /**
+   * @param _usersService UsersService
+   * @param _globalService GlobalService
+   */
   constructor(
+    private _usersService: UsersService,
+    private _globalService: GlobalService
   ) {
   }
 
@@ -24,12 +38,17 @@ export class LayoutComponentComponent implements OnInit {
    * @inheritdoc
    */
   ngOnInit() {
+    this.loggedIn = this._usersService.isLoggedIn();
+    if (this.loggedIn) {
+      this._globalService.resetUserData();
+      this.user = this._globalService._currentUser;
+    }
   }
 
   /**
    * Toggle navbar menu
    */
   toggleNavbar() {
-    this.navbarOpen = !this.navbarOpen;
+    this._navbarOpen = !this._navbarOpen;
   }
 }

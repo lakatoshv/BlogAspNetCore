@@ -6,7 +6,7 @@ namespace Blog.Services.Identity.Auth
 {
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using Blog.Data.Models;
+    using Data.Models;
     using Microsoft.AspNetCore.Identity;
 
     /// <summary>

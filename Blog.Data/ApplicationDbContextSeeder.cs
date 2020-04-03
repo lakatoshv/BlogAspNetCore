@@ -7,7 +7,7 @@ namespace Blog.Data
     using System;
     using System.Linq;
     using Blog.Core;
-    using Blog.Data.Models;
+    using Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.DependencyInjection;
 

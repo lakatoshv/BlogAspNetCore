@@ -8,7 +8,7 @@ namespace Blog.Services.Core.Caching
     using System.Linq;
     using System.Threading.Tasks;
     using Blog.Core.Configuration;
-    using Blog.Services.Core.Caching.Interfaces;
+    using Interfaces;
     using Newtonsoft.Json;
     using StackExchange.Redis;
 
@@ -20,17 +20,17 @@ namespace Blog.Services.Core.Caching
         /// <summary>
         /// Cache manager.
         /// </summary>
-        private readonly ICacheManager perRequestCacheManager;
+        private readonly ICacheManager _perRequestCacheManager;
 
         /// <summary>
         /// Redis connection wrapper.
         /// </summary>
-        private readonly IRedisConnectionWrapper connectionWrapper;
+        private readonly IRedisConnectionWrapper _connectionWrapper;
 
         /// <summary>
         /// Database.
         /// </summary>
-        private readonly IDatabase db;
+        private readonly IDatabase _db;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisCacheManager"/> class.
@@ -48,12 +48,12 @@ namespace Blog.Services.Core.Caching
                 throw new Exception("Redis connection string is empty");
             }
 
-            this.perRequestCacheManager = perRequestCacheManager;
+            this._perRequestCacheManager = perRequestCacheManager;
 
             // ConnectionMultiplexer.Connect should only be called once and shared between callers
-            this.connectionWrapper = connectionWrapper;
+            this._connectionWrapper = connectionWrapper;
 
-            this.db = this.connectionWrapper.GetDatabase();
+            this._db = this._connectionWrapper.GetDatabase();
         }
 
         /// <summary>
@@ -134,13 +134,13 @@ namespace Blog.Services.Core.Caching
             // little performance workaround here:
             // we use "PerRequestCacheManager" to cache a loaded object in memory for the current HTTP request.
             // this way we won't connect to Redis server many times per HTTP request (e.g. each time to load a locale or setting)
-            if (this.perRequestCacheManager.IsSet(key))
+            if (this._perRequestCacheManager.IsSet(key))
             {
-                return this.perRequestCacheManager.Get<T>(key);
+                return this._perRequestCacheManager.Get<T>(key);
             }
 
             // get serialized item from cache
-            var serializedItem = await this.db.StringGetAsync(key);
+            var serializedItem = await this._db.StringGetAsync(key);
             if (!serializedItem.HasValue)
             {
                 return default(T);
@@ -154,7 +154,7 @@ namespace Blog.Services.Core.Caching
             }
 
             // set item in the per-request cache
-            this.perRequestCacheManager.Set(key, item, 0);
+            this._perRequestCacheManager.Set(key, item, 0);
 
             return item;
         }
@@ -180,7 +180,7 @@ namespace Blog.Services.Core.Caching
             var serializedItem = JsonConvert.SerializeObject(data);
 
             // and set it to cache
-            await this.db.StringSetAsync(key, serializedItem, expiresIn);
+            await this._db.StringSetAsync(key, serializedItem, expiresIn);
         }
 
         /// <summary>
@@ -193,12 +193,12 @@ namespace Blog.Services.Core.Caching
             // little performance workaround here:
             // we use "PerRequestCacheManager" to cache a loaded object in memory for the current HTTP request.
             // this way we won't connect to Redis server many times per HTTP request (e.g. each time to load a locale or setting)
-            if (this.perRequestCacheManager.IsSet(key))
+            if (this._perRequestCacheManager.IsSet(key))
             {
                 return true;
             }
 
-            return await this.db.KeyExistsAsync(key);
+            return await this._db.KeyExistsAsync(key);
         }
 
         /// <summary>
@@ -215,8 +215,8 @@ namespace Blog.Services.Core.Caching
             }
 
             // remove item from caches
-            await this.db.KeyDeleteAsync(key);
-            this.perRequestCacheManager.Remove(key);
+            await this._db.KeyDeleteAsync(key);
+            this._perRequestCacheManager.Remove(key);
         }
 
         /// <summary>
@@ -226,17 +226,17 @@ namespace Blog.Services.Core.Caching
         /// <returns>Task.</returns>
         protected virtual async Task RemoveByPatternAsync(string pattern)
         {
-            this.perRequestCacheManager.RemoveByPattern(pattern);
+            this._perRequestCacheManager.RemoveByPattern(pattern);
 
-            foreach (var endPoint in this.connectionWrapper.GetEndPoints())
+            foreach (var endPoint in this._connectionWrapper.GetEndPoints())
             {
-                var server = this.connectionWrapper.GetServer(endPoint);
-                var keys = server.Keys(database: this.db.Database, pattern: $"*{pattern}*");
+                var server = this._connectionWrapper.GetServer(endPoint);
+                var keys = server.Keys(database: this._db.Database, pattern: $"*{pattern}*");
 
                 // we should always persist the data protection key list
                 keys = keys.Where(key => !key.ToString().Equals(CachingDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase));
 
-                await this.db.KeyDeleteAsync(keys.ToArray());
+                await this._db.KeyDeleteAsync(keys.ToArray());
             }
         }
 
@@ -246,22 +246,22 @@ namespace Blog.Services.Core.Caching
         /// <returns>Task.</returns>
         protected virtual async Task ClearAsync()
         {
-            this.perRequestCacheManager.Clear();
+            this._perRequestCacheManager.Clear();
 
-            foreach (var endPoint in this.connectionWrapper.GetEndPoints())
+            foreach (var endPoint in this._connectionWrapper.GetEndPoints())
             {
-                var server = this.connectionWrapper.GetServer(endPoint);
+                var server = this._connectionWrapper.GetServer(endPoint);
 
                 // we can use the code below (commented), but it requires administration permission - ",allowAdmin=true"
                 // server.FlushDatabase();
 
                 // that's why we manually delete all elements
-                var keys = server.Keys(database: this.db.Database);
+                var keys = server.Keys(database: this._db.Database);
 
                 // we should always persist the data protection key list
                 keys = keys.Where(key => !key.ToString().Equals(CachingDefaults.RedisDataProtectionKey, StringComparison.OrdinalIgnoreCase));
 
-                await this.db.KeyDeleteAsync(keys.ToArray());
+                await this._db.KeyDeleteAsync(keys.ToArray());
             }
         }
     }

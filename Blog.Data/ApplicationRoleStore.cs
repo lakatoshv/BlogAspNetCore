@@ -5,7 +5,7 @@
 namespace Blog.Data
 {
     using System.Security.Claims;
-    using Blog.Data.Models;
+    using Models;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 

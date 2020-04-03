@@ -10,7 +10,7 @@ namespace Blog.Core.Mapping
     using System.Reflection;
 
     using AutoMapper;
-    using Blog.Core.Mapping.Interfaces;
+    using Interfaces;
 
     /// <summary>
     /// AutoMapper Configuration.

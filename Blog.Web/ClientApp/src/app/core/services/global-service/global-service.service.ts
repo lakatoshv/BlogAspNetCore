@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { User } from '../../models/User';
-import { Users } from '../../data/UsersList';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GlobalService {
-
   /**
    * @param _isLoadedData boolean
    */
@@ -29,6 +28,11 @@ export class GlobalService {
   public _roles: string[];
 
   /**
+   * @param _jwt JwtHelperService
+   */
+  private _jwt = new JwtHelperService();
+
+  /**
    * @inheritdoc
    */
   constructor() { }
@@ -48,32 +52,11 @@ export class GlobalService {
   }
 
   /**
-   * Return property value by URL
-   * @param idName string
-   * @param routeObject ActivatedRouteSnapshot
-   * @returns string|null
-   */
-  private _getId(
-    idName: string,
-    routeObject: ActivatedRouteSnapshot
-  ): string|null {
-    if (!routeObject) {
-        return null;
-    }
-
-    if (routeObject.paramMap.get(idName) !== null) {
-        return routeObject.paramMap.get(idName);
-    } else {
-        return this._getId(idName, routeObject.parent);
-    }
-  }
-
-  /**
    * Initialize current user data from response.
    * @param response any
    * @returns void
    */
-  public initializeData(response): void {
+  public initializeData(response: any): void {
     if (response.currentUser) {
         this._currentUser = response.currentUser;
     }
@@ -84,25 +67,55 @@ export class GlobalService {
    * @returns void
    */
   public resetUserData(): void {
-    const user = localStorage.getItem('user');
-    if (user) {
-      this._currentUser = this.decode(user);
+    const token = localStorage.getItem('token');
+    if (token) {
+      this._currentUser = this.decode(token);
       // this._avatarUrl = this._currentUser.AvatarUrl;
       this._roles = this._currentUser.Roles;
-
       // this.onAvatarChanged.next(this._currentUser.AvatarUrl);
+
     } else {
       this._isLoadedData = true;
     }
   }
 
   /**
-   * @param userString string
+   * @param token string
    * @returns User
    */
-  public decode(userString: string): User {
-    const user = JSON.parse(userString);
-    user.Roles = Users[user.Id];
+  public decode(token: string): User {
+    const decoded = this._jwt.decodeToken(token);
+
+    const id = decoded['id'];
+    const username = decoded['sub'];
+    let user = new User(id, username);
+
+    user.Email = decoded['email'];
+    user.FirstName = decoded['firstName'];
+    user.LastName = decoded['lastName'];
+    user.PhoneNumber = decoded['phoneNumber'];
+    // user.IsEmailVerified = decoded['isEmailVerified'] == 'True';
+    // user. = decoded['avatarUrl'];
+    user.Roles = decoded['roles'];
+
     return user;
+  }
+
+  /**
+   * Return property value by URL
+   * @param idName string
+   * @param routeObject ActivatedRouteSnapshot
+   * @returns string|null
+   */
+  private _getId(idName: string, routeObject: ActivatedRouteSnapshot): string|null {
+    if (!routeObject) {
+      return null;
+    }
+
+    if (routeObject.paramMap.get(idName) !== null) {
+      return routeObject.paramMap.get(idName);
+    } else {
+      return this._getId(idName, routeObject.parent);
+    }
   }
 }

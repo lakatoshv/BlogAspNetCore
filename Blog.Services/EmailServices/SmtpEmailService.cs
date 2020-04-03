@@ -8,8 +8,8 @@ namespace Blog.Services.EmailServices
     using System.Net.Mail;
     using System.Text;
     using System.Threading.Tasks;
-    using Blog.Services.Core.Email.Smtp;
-    using Blog.Services.EmailServices.Interfaces;
+    using Core.Email.Smtp;
+    using Interfaces;
     using Microsoft.Extensions.Options;
 
     /// <summary>
@@ -17,7 +17,7 @@ namespace Blog.Services.EmailServices
     /// </summary>
     public class SmtpEmailService : IEmailService
     {
-        private readonly SmtpClient client;
+        private readonly SmtpClient _client;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SmtpEmailService"/> class.
@@ -26,7 +26,7 @@ namespace Blog.Services.EmailServices
         public SmtpEmailService(IOptions<SmtpOptions> smtpOptions)
         {
             var options = smtpOptions.Value;
-            this.client = new SmtpClient(options.Host, options.Port)
+            this._client = new SmtpClient(options.Host, options.Port)
             {
                 Credentials = new NetworkCredential(options.UserName, options.Password),
                 EnableSsl = options.EnableSsl,
@@ -37,7 +37,7 @@ namespace Blog.Services.EmailServices
         public void Send(Blog.Core.Emails.Email email)
         {
             var message = this.GetMailMessage(email.Body, email.Subject, email.From, email.To);
-            this.client.Send(message);
+            this._client.Send(message);
         }
 
         /// <inheritdoc/>
@@ -45,7 +45,7 @@ namespace Blog.Services.EmailServices
         {
             // TODO: Investigate how smtp client from argument works
             var message = this.GetMailMessage(body, subject, from, to);
-            this.client.Send(message);
+            this._client.Send(message);
         }
 
         // TODO: Think of something to get rid of this warning: This async methods lacks await operators ...
@@ -55,14 +55,14 @@ namespace Blog.Services.EmailServices
         public async Task SendAsync(Blog.Core.Emails.Email email)
         {
             var message = this.GetMailMessage(email.Body, email.Subject, email.From, email.To);
-            await this.client.SendMailAsync(message);
+            await this._client.SendMailAsync(message);
         }
 
         /// <inheritdoc/>
         public async Task SendAsync(string body, string subject, string from, string to)
         {
             var message = this.GetMailMessage(body, subject, from, to);
-            await this.client.SendMailAsync(message);
+            await this._client.SendMailAsync(message);
         }
 
         /// <summary>

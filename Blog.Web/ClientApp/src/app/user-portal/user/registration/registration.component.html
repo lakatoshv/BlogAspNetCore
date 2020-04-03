@@ -1,0 +1,55 @@
+<div class="container">
+    <div class="card card-container">
+        <img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
+        <p id="profile-name" class="profile-name-card"></p>
+        <b class="text-center">Реєстрація</b><br>
+        <p id="profile-name" class="profile-name-card"></p>
+        <form #registration="ngForm" [formGroup]="registrationForm" (ngSubmit)="register()" class="form-signin">
+            <div class="form-group">
+                <input id="first-name" type="text" class="form-control" placeholder="Ім'я" formControlName="firstName" required autofocus>
+
+                <!--
+              <span class="help-block">
+                <strong>Errors</strong>
+              </span>
+              -->
+            </div>
+            <div class="form-group">
+                <input id="last-name" type="text" class="form-control" placeholder="Фамілія" formControlName="lastName" required autofocus>
+
+                <!--
+            <span class="help-block">
+              <strong>Errors</strong>
+            </span>
+            -->
+            </div>
+            <span id="reauth-email" class="reauth-email"></span>
+            <div class="form-group">
+                <input type="email" id="email" class="form-control" placeholder="Електронна пошта" formControlName="email" required autofocus>
+            </div>
+            <div class="form-group">
+                <input type="tel" id="phone" class="form-control" placeholder="Номер телефону" formControlName="phoneNumber" required autofocus>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" class="form-control" placeholder="Пароль" formControlName="password" required>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password-confirm" class="form-control" placeholder="Підтвердження паролю" formControlName="confirmPassword" required autofocus>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">
+              Зареєструватись
+          </button>
+        </form>
+
+        <p id="profile-name" class="profile-name-card"></p>
+        <div class="login-or">
+            <hr class="hr-or">
+            <span class="span-or">Або</span>
+        </div>
+        <p id="profile-name" class="profile-name-card"></p>
+        <b class="text-center">Ввійдіть за допомогою соціальних мереж</b><br>
+        <p id="profile-name" class="profile-name-card"></p>
+        <a href="#" class="btn btn-lg btn-block" id="facebook">Facebook</a>
+        <a href="#" class="btn btn-lg btn-block" id="google-plus">Google</a>
+    </div>
+</div>

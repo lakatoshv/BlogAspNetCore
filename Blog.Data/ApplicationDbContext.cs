@@ -10,7 +10,7 @@ namespace Blog.Data
     using System.Threading;
     using System.Threading.Tasks;
     using Blog.Data.Core.Models.Interfaces;
-    using Blog.Data.Models;
+    using Models;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 

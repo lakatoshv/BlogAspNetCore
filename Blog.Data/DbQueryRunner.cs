@@ -5,7 +5,7 @@
 namespace Blog.Data
 {
     using System;
-    using Blog.Data.Core;
+    using Core;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>

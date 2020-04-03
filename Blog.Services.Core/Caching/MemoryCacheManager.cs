@@ -8,7 +8,7 @@ namespace Blog.Services.Core.Caching
     using System.Collections.Concurrent;
     using System.Linq;
     using System.Threading;
-    using Blog.Services.Core.Caching.Interfaces;
+    using Interfaces;
     using Microsoft.Extensions.Caching.Memory;
     using Microsoft.Extensions.Primitives;
 
@@ -25,12 +25,12 @@ namespace Blog.Services.Core.Caching
         /// <summary>
         /// Memory cache.
         /// </summary>
-        private readonly IMemoryCache cache;
+        private readonly IMemoryCache _cache;
 
         /// <summary>
         /// Cancellation token source.
         /// </summary>
-        protected CancellationTokenSource cancellationTokenSource;
+        protected CancellationTokenSource CancellationTokenSource;
 
         /// <summary>
         /// Initializes static members of the <see cref="MemoryCacheManager"/> class.
@@ -46,14 +46,14 @@ namespace Blog.Services.Core.Caching
         /// <param name="cache">cache.</param>
         public MemoryCacheManager(IMemoryCache cache)
         {
-            this.cache = cache;
-            this.cancellationTokenSource = new CancellationTokenSource();
+            this._cache = cache;
+            this.CancellationTokenSource = new CancellationTokenSource();
         }
 
         /// <inheritdoc/>
         public virtual T Get<T>(string key)
         {
-            return this.cache.Get<T>(key);
+            return this._cache.Get<T>(key);
         }
 
         /// <inheritdoc/>
@@ -61,14 +61,14 @@ namespace Blog.Services.Core.Caching
         {
             if (data != null)
             {
-                this.cache.Set(this.AddKey(key), data, this.GetMemoryCacheEntryOptions(TimeSpan.FromMinutes(cacheTime)));
+                this._cache.Set(this.AddKey(key), data, this.GetMemoryCacheEntryOptions(TimeSpan.FromMinutes(cacheTime)));
             }
         }
 
         /// <inheritdoc/>
         public virtual bool IsSet(string key)
         {
-            return this.cache.TryGetValue(key, out object _);
+            return this._cache.TryGetValue(key, out object _);
         }
 
         /// <inheritdoc/>
@@ -82,7 +82,7 @@ namespace Blog.Services.Core.Caching
 
             try
             {
-                this.cache.Set(key, key, this.GetMemoryCacheEntryOptions(expirationTime));
+                this._cache.Set(key, key, this.GetMemoryCacheEntryOptions(expirationTime));
 
                 // perform action
                 action();
@@ -99,7 +99,7 @@ namespace Blog.Services.Core.Caching
         /// <inheritdoc/>
         public virtual void Remove(string key)
         {
-            this.cache.Remove(this.RemoveKey(key));
+            this._cache.Remove(this.RemoveKey(key));
         }
 
         /// <inheritdoc/>
@@ -112,13 +112,13 @@ namespace Blog.Services.Core.Caching
         public virtual void Clear()
         {
             // send cancellation request
-            this.cancellationTokenSource.Cancel();
+            this.CancellationTokenSource.Cancel();
 
             // releases all resources used by this cancellation token
-            this.cancellationTokenSource.Dispose();
+            this.CancellationTokenSource.Dispose();
 
             // recreate cancellation token
-            this.cancellationTokenSource = new CancellationTokenSource();
+            this.CancellationTokenSource = new CancellationTokenSource();
         }
 
         /// <inheritdoc/>
@@ -137,7 +137,7 @@ namespace Blog.Services.Core.Caching
             var options = new MemoryCacheEntryOptions()
 
                 // add cancellation token for clear cache
-                .AddExpirationToken(new CancellationChangeToken(this.cancellationTokenSource.Token))
+                .AddExpirationToken(new CancellationChangeToken(this.CancellationTokenSource.Token))
 
                 // add post eviction callback
                 .RegisterPostEvictionCallback(this.PostEviction);

@@ -6,10 +6,10 @@ namespace Blog.Services.Identity.RefreshToken
 {
     using System.Linq;
     using System.Threading.Tasks;
-    using Blog.Data.Models;
-    using Blog.Data.Repository;
+    using Auth;
     using Blog.Services.Core.Identity.Auth;
-    using Blog.Services.Identity.Auth;
+    using Data.Models;
+    using Data.Repository;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
@@ -22,27 +22,27 @@ namespace Blog.Services.Identity.RefreshToken
         /// <summary>
         /// User manager.
         /// </summary>
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         /// <summary>
         /// Jwt factory.
         /// </summary>
-        private readonly IJwtFactory jwtFactory;
+        private readonly IJwtFactory _jwtFactory;
 
         /// <summary>
         /// Jwt issuer options.
         /// </summary>
-        private readonly JwtIssuerOptions jwtOptions;
+        private readonly JwtIssuerOptions _jwtOptions;
 
         /// <summary>
         /// Repository for RefreshToken.
         /// </summary>
-        private readonly IRepository<RefreshToken> refreshTokenRepository;
+        private readonly IRepository<RefreshToken> _refreshTokenRepository;
 
         /// <summary>
         /// Auth service.
         /// </summary>
-        private readonly IAuthService authService;
+        private readonly IAuthService _authService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RefreshTokenService"/> class.
@@ -55,39 +55,40 @@ namespace Blog.Services.Identity.RefreshToken
         public RefreshTokenService(
             IJwtFactory jwtFactory,
             IOptions<JwtIssuerOptions> jwtOptions,
-            IRepository<Data.Models.RefreshToken> refreshTokenRepository,
+            IRepository<RefreshToken> refreshTokenRepository,
             IAuthService authService,
             UserManager<ApplicationUser> userManager)
         {
-            this.jwtOptions = jwtOptions.Value;
-            this.jwtFactory = jwtFactory;
-            this.refreshTokenRepository = refreshTokenRepository;
-            this.authService = authService;
-            this.userManager = userManager;
+            this._jwtOptions = jwtOptions.Value;
+            this._jwtFactory = jwtFactory;
+            this._refreshTokenRepository = refreshTokenRepository;
+            this._authService = authService;
+            this._userManager = userManager;
         }
 
         /// <inheritdoc/>
         public async Task<string> RefreshTokensAsync(string userName, string refreshToken)
         {
-            var user = await this.userManager.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(u => u.UserName == userName);
-            var identity = await this.authService.GetClaimsIdentityWithoutPassword(userName);
-            var token = this.refreshTokenRepository.Table.Include(u => u.User).FirstOrDefault(t => t.Token.Equals(refreshToken));
+            // var user =
+            await this._userManager.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(u => u.UserName == userName);
+            var identity = await this._authService.GetClaimsIdentityWithoutPassword(userName);
+            var token = this._refreshTokenRepository.Table.Include(u => u.User).FirstOrDefault(t => t.Token.Equals(refreshToken));
             if (token == null)
             {
                 return null;
             }
 
-            this.refreshTokenRepository.Delete(token);
+            this._refreshTokenRepository.Delete(token);
 
-            return await Tokens.GenerateJwt(identity, this.jwtFactory, userName, this.jwtOptions);
+            return await Tokens.GenerateJwt(identity, this._jwtFactory, userName, this._jwtOptions);
         }
 
         /// <inheritdoc/>
         public async Task RemoveRefreshTokensAsync(string userName)
         {
-            this.refreshTokenRepository.Table.Include(r => r.User);
-            var tokensToDelete = await this.refreshTokenRepository.Table.Where(u => u.User.UserName == userName).ToListAsync();
-            this.refreshTokenRepository.Delete(tokensToDelete);
+            this._refreshTokenRepository.Table.Include(r => r.User);
+            var tokensToDelete = await this._refreshTokenRepository.Table.Where(u => u.User.UserName == userName).ToListAsync();
+            this._refreshTokenRepository.Delete(tokensToDelete);
         }
     }
 }

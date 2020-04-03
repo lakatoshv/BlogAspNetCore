@@ -12,8 +12,8 @@ namespace Blog.Services.Core.Identity.Auth
     using System.Security.Principal;
     using System.Threading.Tasks;
     using Blog.Core;
-    using Blog.Data.Models;
-    using Blog.Services.Core.Utilities;
+    using Data.Models;
+    using Utilities;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Options;
 
@@ -25,17 +25,17 @@ namespace Blog.Services.Core.Identity.Auth
         /// <summary>
         /// Jwt issuer options.
         /// </summary>
-        private readonly JwtIssuerOptions jwtOptions;
+        private readonly JwtIssuerOptions _jwtOptions;
 
         /// <summary>
         /// User manager.
         /// </summary>
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         /// <summary>
         /// Role manager.
         /// </summary>
-        private readonly RoleManager<ApplicationRole> roleManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JwtFactory"/> class.
@@ -48,10 +48,10 @@ namespace Blog.Services.Core.Identity.Auth
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager)
         {
-            this.jwtOptions = jwtOptions.Value;
-            this.userManager = userManager;
-            this.roleManager = roleManager;
-            ThrowIfInvalidOptions(this.jwtOptions);
+            this._jwtOptions = jwtOptions.Value;
+            this._userManager = userManager;
+            this._roleManager = roleManager;
+            ThrowIfInvalidOptions(this._jwtOptions);
         }
 
         /// <inheritdoc/>
@@ -60,10 +60,10 @@ namespace Blog.Services.Core.Identity.Auth
             var claims = new List<Claim>(new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userName),
-                new Claim(JwtRegisteredClaimNames.Jti, await this.jwtOptions.JtiGenerator()),
+                new Claim(JwtRegisteredClaimNames.Jti, await this._jwtOptions.JtiGenerator()),
                 new Claim(
                     JwtRegisteredClaimNames.Iat,
-                    this.jwtOptions.IssuedAt.ToUnixTimeStamp().ToString(),
+                    this._jwtOptions.IssuedAt.ToUnixTimeStamp().ToString(),
                     ClaimValueTypes.Integer64),
 
                 identity.FindFirst(JwtClaimTypes.Rol),
@@ -74,35 +74,35 @@ namespace Blog.Services.Core.Identity.Auth
                 identity.FindFirst(JwtClaimTypes.IsEmailVerified),
             });
 
-            var user = await this.userManager.FindByNameAsync(userName);
+            var user = await this._userManager.FindByNameAsync(userName);
 
-            claims.AddRange(await this.userManager.GetClaimsAsync(user));
+            claims.AddRange(await this._userManager.GetClaimsAsync(user));
 
-            var roleNames = await this.userManager.GetRolesAsync(user);
+            var roleNames = await this._userManager.GetRolesAsync(user);
             foreach (var roleName in roleNames)
             {
                 // Find IdentityRole by name
-                var role = await this.roleManager.FindByNameAsync(roleName);
+                var role = await this._roleManager.FindByNameAsync(roleName);
                 if (role != null)
                 {
                     // Convert Identity to claim and add
-                    var roleClaim = new Claim("roles", role.Name, ClaimValueTypes.String, this.jwtOptions.Issuer);
+                    var roleClaim = new Claim("roles", role.Name, ClaimValueTypes.String, this._jwtOptions.Issuer);
                     claims.Add(roleClaim);
 
                     // Add claims belonging to the role
-                    var roleClaims = await this.roleManager.GetClaimsAsync(role);
+                    var roleClaims = await this._roleManager.GetClaimsAsync(role);
                     claims.AddRange(roleClaims);
                 }
             }
 
             // Create the JWT security token and encode it.
             var jwt = new JwtSecurityToken(
-                issuer: this.jwtOptions.Issuer,
-                audience: this.jwtOptions.Audience,
+                issuer: this._jwtOptions.Issuer,
+                audience: this._jwtOptions.Audience,
                 claims: claims,
-                notBefore: this.jwtOptions.NotBefore,
-                expires: this.jwtOptions.Expiration,
-                signingCredentials: this.jwtOptions.SigningCredentials);
+                notBefore: this._jwtOptions.NotBefore,
+                expires: this._jwtOptions.Expiration,
+                signingCredentials: this._jwtOptions.SigningCredentials);
 
             var jwtHandler = new JwtSecurityTokenHandler();
             var encodedJwt = jwtHandler.WriteToken(jwt);
@@ -131,7 +131,7 @@ namespace Blog.Services.Core.Identity.Auth
         public async Task<string> GenerateRefreshToken(string userName)
         {
             // change
-            var user = await this.userManager.FindByNameAsync(userName);
+            var user = await this._userManager.FindByNameAsync(userName);
             string refreshToken;
             var randomNumber = new byte[32];
             using (var rng = RandomNumberGenerator.Create())
@@ -142,7 +142,7 @@ namespace Blog.Services.Core.Identity.Auth
 
             user.RefreshTokens.Add(new RefreshToken { Token = refreshToken, User = user });
 
-            await this.userManager.UpdateAsync(user);
+            await this._userManager.UpdateAsync(user);
             return refreshToken;
         }
 

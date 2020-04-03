@@ -4,7 +4,6 @@
 
 namespace Blog.Services.Core.Security
 {
-    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Authorization;

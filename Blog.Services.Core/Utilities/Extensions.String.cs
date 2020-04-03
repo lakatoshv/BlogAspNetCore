@@ -12,8 +12,8 @@
         /// <returns>int.</returns>
         public static int ToInt(this string input)
         {
-            int result = 0;
-            int.TryParse(input, out result);
+            // int result = 0;
+            int.TryParse(input, out var result);
             return result;
         }
 
@@ -24,8 +24,8 @@
         /// <returns>bool.</returns>
         public static bool ToBool(this string input)
         {
-            bool result = false;
-            bool.TryParse(input, out result);
+            // int result = 0;
+            bool.TryParse(input, out var result);
             return result;
         }
     }

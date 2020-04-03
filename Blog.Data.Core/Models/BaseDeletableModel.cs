@@ -6,7 +6,7 @@ namespace Blog.Data.Core.Models
 {
     using System;
     using Blog.Core;
-    using Blog.Data.Core.Models.Interfaces;
+    using Interfaces;
 
     /// <summary>
     /// Base deletable model.
@@ -44,6 +44,10 @@ namespace Blog.Data.Core.Models
         public static bool operator !=(BaseDeletableModel<TKey> x, BaseDeletableModel<TKey> y)
         {
             return !(x == y);
+        }
+
+        protected BaseDeletableModel(TKey id) : base(id)
+        {
         }
 
         /// <summary>

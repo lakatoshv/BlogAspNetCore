@@ -4,7 +4,7 @@
 
 namespace Blog.Services.Core.Identity.User
 {
-    using Blog.Data.Models;
+    using Data.Models;
 
     /// <summary>
     /// View model to entity mapping user.
