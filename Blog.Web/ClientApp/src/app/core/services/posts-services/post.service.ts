@@ -55,6 +55,15 @@ export class PostService {
   }
 
   /**
+   * Get post by id.
+   * @param id number
+   * @returns Observable<any>
+   */
+  public showPost(id: number): Observable<any> {
+    return this._httpClient.get(HttpClientService.SHOW_POST.concat('/', id.toString()));
+  }
+
+  /**
    * Edit post by id.
    * @param id number
    * @param model any

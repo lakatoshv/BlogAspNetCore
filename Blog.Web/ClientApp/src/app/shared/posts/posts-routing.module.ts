@@ -13,6 +13,22 @@ const routes: Routes = [
     path: '',
     component: PostsListComponent
   },
+  {
+    path: 'post/:post-id',
+    component: ShowComponent
+  },
+  {
+    path: 'posts/add',
+    component: AddPostComponent
+  },
+  {
+    path: 'post/edit/:post-id',
+    component: EditPostComponent
+  },
+  {
+    path: 'my-posts',
+    component: MyPostsComponent
+  },
 ];
 
 @NgModule({

@@ -145,6 +145,33 @@
             return Ok(post);
         }
 
+        // GET: Posts/Show/5
+        /// <summary>
+        /// Async get post by id.
+        /// </summary>
+        /// <param name="id">id.</param>
+        /// <returns>Task</returns>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [HttpGet("show/{id}")]
+        public async Task<ActionResult> Show(int id)
+        {
+            var sortParameters = new SortParametersDto
+            {
+                CurrentPage = 1,
+                PageSize = 10
+            };
+
+            var post = await _postsService.GetPostWithComments(id, sortParameters);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(post);
+        }
+
         // POST: Posts
         /// <summary>
         /// Async create new post.
