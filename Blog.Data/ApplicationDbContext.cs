@@ -47,6 +47,11 @@ namespace Blog.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         /// <summary>
+        /// Gets or sets posts.
+        /// </summary>
+        public DbSet<Post> Posts { get; set; }
+
+        /// <summary>
         /// Save changes.
         /// </summary>
         /// <returns>int.</returns>

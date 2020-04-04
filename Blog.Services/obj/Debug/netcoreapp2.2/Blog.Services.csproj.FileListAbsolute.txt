@@ -41,3 +41,4 @@ D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\obj\Debug\netcore
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\obj\Debug\netcoreapp2.2\Blog.Services.dll
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\obj\Debug\netcoreapp2.2\Blog.Services.pdb
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\obj\Debug\netcoreapp2.2\Blog.Services.genruntimeconfig.cache
+D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\obj\Debug\netcoreapp2.2\Blog.Services.csproj.CoreCompileInputs.cache

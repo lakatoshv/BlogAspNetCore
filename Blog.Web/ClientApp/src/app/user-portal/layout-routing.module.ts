@@ -13,8 +13,8 @@ const routes: Routes = [
     component: LayoutComponentComponent,
     children: [
       {
-        path: '', redirectTo: 'about', pathMatch: 'full'
-        // loadChildren: '../shared/posts/posts.module#PostsModule'
+        path: '',
+        loadChildren: '../shared/posts/posts.module#PostsModule'
       },
       {
         path: 'about',

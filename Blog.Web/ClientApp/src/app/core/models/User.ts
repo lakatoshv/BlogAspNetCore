@@ -4,35 +4,35 @@
 export class User {
   /**
    * User Id
-   * @param Id string
-   * User User Name
-   * @param UserName string
-   * User Email
-   * @param Email string
-   * User First Name
-   * @param FirstName string
-   * User Last Name
-   * @param LastName string
-   * User Phone Number
-   * @param PhoneNumber string
-   * User Roles
-   * @param Roles Array<string>
-   * User Password
-   * @param Password string
-   * User About
-   * @param About string
+   * @param id string
+   * User user Name
+   * @param userName string
+   * User email
+   * @param mail string
+   * User first Name
+   * @param firstName string
+   * User last Name
+   * @param lastName string
+   * User phone Number
+   * @param phoneNumber string
+   * User roles
+   * @param roles Array<string>
+   * User password
+   * @param password string
+   * User about
+   * @param about string
    */
   constructor(
-      public Id: string,
-      public UserName: string,
+      public id: string,
+      public userName: string,
 
-      public Email?: string,
-      public FirstName?: string,
-      public LastName?: string,
-      public PhoneNumber?: string,
+      public email?: string,
+      public firstName?: string,
+      public lastName?: string,
+      public phoneNumber?: string,
       // public ProfileImg?: string,
-      public Roles: Array<string> = [],
-      public Password?: string,
-      public About?: string
+      public roles: Array<string> = [],
+      public password?: string,
+      public about?: string
   ) { }
 }

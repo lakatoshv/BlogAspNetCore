@@ -116,6 +116,39 @@ namespace Blog.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Blog.Data.Models.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AuthorId");
+
+                    b.Property<string>("Content");
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<string>("Description");
+
+                    b.Property<int>("Dislikes");
+
+                    b.Property<string>("ImageUrl");
+
+                    b.Property<int>("Likes");
+
+                    b.Property<int>("Seen");
+
+                    b.Property<string>("Tags");
+
+                    b.Property<string>("Title");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("Posts");
+                });
+
             modelBuilder.Entity("Blog.Data.Models.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
@@ -232,6 +265,13 @@ namespace Blog.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("Blog.Data.Models.Post", b =>
+                {
+                    b.HasOne("Blog.Data.Models.ApplicationUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
                 });
 
             modelBuilder.Entity("Blog.Data.Models.RefreshToken", b =>

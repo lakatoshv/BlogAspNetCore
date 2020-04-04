@@ -19,6 +19,12 @@ export class HttpClientService {
    */
   public static readonly ACCOUNTS_CONTROLLER = HttpClientService.API + '/accounts';
 
+  /**
+   * Posts controller url.
+   * @param POSTS_CONTROLLER string
+   */
+  public static readonly POSTS_CONTROLLER = HttpClientService.API + '/posts';
+
   // Methods
 
   // Accounts controller methods
@@ -45,6 +51,43 @@ export class HttpClientService {
    * @param GET_ALL_USERS string
    */
   public static readonly GET_ALL_USERS = HttpClientService.ACCOUNTS_CONTROLLER + '/get-all-users';
+
+  // Posts controller methods
+  /**
+   * Create post method.
+   * @param CREATE_POST string
+   */
+  public static readonly CREATE_POST = HttpClientService.POSTS_CONTROLLER + '/create';
+
+  /**
+   * Get post method.
+   * @param GET_POSTS string
+   */
+  public static readonly GET_POSTS = HttpClientService.POSTS_CONTROLLER + '/get-posts';
+
+  /**
+   * Show post method.
+   * @param SHOW_POST string
+   */
+  public static readonly SHOW_POST = HttpClientService.POSTS_CONTROLLER + '/show';
+
+  /**
+   * Like post method.
+   * @param LIKE_POST string
+   */
+  public static readonly LIKE_POST = HttpClientService.POSTS_CONTROLLER + '/like';
+
+  /**
+   * Dislike post method.
+   * @param DISLIKE_POST string
+   */
+  public static readonly DISLIKE_POST = HttpClientService.POSTS_CONTROLLER + '/dislike';
+
+  /**
+   * Users posts method.
+   * @param USER_POSTS string
+   */
+  public static readonly USER_POSTS = HttpClientService.POSTS_CONTROLLER + '/user_posts';
 
   /**
    * @param _httpClient HttpClient
