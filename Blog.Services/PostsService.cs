@@ -166,7 +166,7 @@ namespace Blog.Services
 
             if (!string.IsNullOrEmpty(searchParameters.Search))
             {
-                postsList = postsList.Where(post => post.Title.Equals(searchParameters.Search)).ToList();
+                postsList = postsList.Where(post => post.Title.ToLower().Contains(searchParameters.Search.ToLower())).ToList();
             }
 
             postsList = postsList.AsQueryable().OrderBy(searchParameters.SortParameters).ToList();

@@ -1,0 +1,85 @@
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10 col-md-10 mx-auto">
+            <a routerLink="/blog/posts/add" class="btn btn-light">Написати пост</a>
+            <div class="text-center" *ngIf="!posts">
+                <b>Дана категорія ще не створена або не має записів</b>
+            </div>
+            <div *ngIf="posts">
+                <form #f="ngForm" [formGroup]="searchForm" (ngSubmit)="search(f.value.search)">
+                    <div class="input-group md-form form-sm form-2 pl-0 col-5">
+                        <input class="form-control search" type="text" placeholder="Search" aria-label="Search" formControlName="search" id="search">
+
+                        <button class="input-group-append" type="submit" id="search-btn">
+                    <span class="input-group-text"><i class="fa fa-search text-grey" aria-hidden="true"></i></span>
+                </button>
+                    </div>
+                </form>
+                <ul class="list-inline left">
+                    <li>Сортувати</li>
+                    <li>за:</li>
+                    <li>
+                        <select id="sort-by" [(ngModel)]="sortBy">
+                        <option value="createdAt">Датою</option>
+                        <option value="title">Назвою</option>
+                        <option value="author">Автором</option>
+                        <option value="likes">Лайками</option>
+                        <option value="dislikes">Дизлайками</option>
+                      </select>
+                    </li>
+                    <li>тип сортування:</li>
+                    <li>
+                        <select id="order-by" [(ngModel)]="orderBy">
+                        <option value="asc">За зростанням</option>
+                        <option value="desc">За спаданням</option>
+                      </select>
+                    </li>
+                    <li>
+                        <a id="sorting" class="btn btn-default button-background" (click)="sort()">Сортувати</a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+                <div class="post-preview" *ngFor="let post of posts | paginate: { itemsPerPage: pageInfo.pageSize, currentPage: pageInfo.pageNumber, totalItems: pageInfo.totalItems }">
+                    <a routerLink="/blog/post/{{post.id}}">
+                        <h2 class="post-title" [innerHTML]="post.title"></h2>
+                    </a>
+                    <div class="pull-right" *ngIf="isLoggedIn && post.author.id === user.id">
+                        <a class="btn btn-sm text-white btn-primary" routerLink="/blog/post/{{post.id}}/edit">
+                            <i class="fa fa-edit"></i> Редагувати
+                        </a>
+                        <button type="button" class="btn btn-sm text-white btn-danger" (click)="deleteAction(post.id)">
+                  <i class="fa fa-trash"></i>
+                  Видалити
+              </button>
+                    </div>
+                    <a routerLink="/blogpost/{{post.id}}">
+                        <img style="width: 100%; height: 300px;" src="{{post.imageUrl}}" />
+                        <h3 class="post-subtitle" [innerHTML]="post.Description"></h3>
+                    </a>
+                    <p class="post-meta">
+                        <span><i class="fa fa-fw fa-eye"></i>  {{post.seen}}</span>
+                        <span><i class="fa fa-fw fa-thumbs-up"></i> {{post.likes}}</span>
+                        <span><i class="fa fa-fw fa-thumbs-down"></i> {{post.dislikes}}</span>
+                        <span><i class="fa fa-fw fa-comment"></i>{{post.commentsCount}}</span>
+                    </p>
+                    <p class="post-meta">Теги: {{post.tags}}
+                    </p>
+                    <p class="post-meta">
+                        Написав: <b><a routerLink="/blog/profile/{{post.authorId}}">{{post.author.firstName + " " + post.author.lastName}}</a><i>
+              10.11.2018</i></b>
+                    </p>
+                    <button class="btn btn-xs btn-info" (click)="like(post.Id)"><span class="fa fa-thumbs-up"></span> Подобається</button>
+                    <button class="btn btn-sm btn-danger" (click)="dislike(post.Id)"><span class="fa fa-thumbs-down"></span> Неподобається</button>
+                </div>
+                <hr>
+
+                <!-- Pager -->
+                <div class="clearfix">
+                    <pagination-controls (pageChange)="paginate($event)"></pagination-controls>
+                    <a class="btn btn-primary float-right" routerLink="/blog#">Older Posts &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
