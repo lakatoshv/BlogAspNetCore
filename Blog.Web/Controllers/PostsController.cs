@@ -82,7 +82,6 @@
             return Ok(posts);
         }
 
-
         // POST: Posts/get-posts
         /// <summary>
         /// Async get filtered and sorted posts.
@@ -117,7 +116,6 @@
 
             return Ok(posts);
         }
-
 
         // GET: Posts/user_posts/5
         /// <summary>
@@ -166,6 +164,39 @@
                 return Ok();
             }
             return NotFound();
+        }
+
+        // PUT: Posts/5
+        /// <summary>
+        /// Async edit post by id.
+        /// </summary>
+        /// <param name="id">id.</param>
+        /// <param name="model">model.</param>
+        /// <returns>Task.</returns>
+        [HttpPut("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> EditAsync(int id, [FromBody] PostViewModel model)
+        {
+            /*
+            var originPost = await _postService.GetPostWithoutCommentsAsync(id);
+            if (!model.ApplicationUserId.Equals(originPost.ApplicationUserId))
+            {
+                return NotFound();
+            }
+
+            model.Comments = originPost.Comments;
+            */
+
+            var post = await _postsService.GetPostAsync(id);
+            var updatedModel = _mapper.Map(model, post);
+            _postsService.Update(updatedModel);
+
+            var postModel = await _postsService.GetPostAsync(id);
+            var mappedPost = _mapper.Map<PostViewModel>(postModel);
+
+            return Ok(mappedPost);
         }
     }
 }

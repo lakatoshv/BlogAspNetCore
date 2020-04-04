@@ -55,6 +55,16 @@ export class PostService {
   }
 
   /**
+   * Edit post by id.
+   * @param id number
+   * @param model any
+   * @returns Observable<any>
+   */
+  public edit(id: number, model: any): Observable<any> {
+    return this._httpClient.put(HttpClientService.POSTS_CONTROLLER.concat('/', id.toString()), model);
+  }
+
+  /**
    * Add new post.
    * @param model any
    * @returns Observable<any>
