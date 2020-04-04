@@ -225,5 +225,35 @@
 
             return Ok(mappedPost);
         }
+
+        // DELETE: Posts/5
+        /// <summary>
+        /// Async delete post by id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="authorId"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> DeleteAsync(int id, string authorId)
+        {
+            var post = await _postsService.GetPostAsync(id);
+            // var comments = await _commentsService.GetCommentsForPostAsync(id);
+            // comments.ForEach(comment => _commentsService.Delete(comment));
+            await _postsService.GetPostAsync(id);
+
+            if (!post.AuthorId.Equals(authorId))
+            {
+                return NotFound();
+            }
+
+            _postsService.Delete(post);
+
+            return Ok(new
+            {
+                Id = id
+            });
+        }
     }
 }
