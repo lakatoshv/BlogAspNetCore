@@ -85,4 +85,17 @@ export class PostService {
           catchError((e: Response) => throwError(e))
         );
   }
+
+  /**
+   * Delete post by id and author id.
+   * @param id number
+   * @param authorId string
+   * @returns Observable<any>
+   */
+  public delete(id: number, authorId: string): Observable<any> {
+    const params = {
+      authorId: authorId
+    };
+    return this._httpClient.delete(HttpClientService.POSTS_CONTROLLER.concat('/', id.toString()), params);
+  }
 }

@@ -116,6 +116,24 @@ export class MyPostsComponent implements OnInit {
   }
 
   /**
+   * Delete post event.
+   * @param postId number
+   * @returns void
+   */
+  public deleteAction(postId: number): void {
+    const post = this.posts.find(p =>  p.id === postId);
+    if (this.isLoggedIn && this.posts[postId].author.id === this.user.id) {
+      this._postService.delete(postId, this._globalService._currentUser.id).subscribe(
+        (response: any) => {
+          this._onDeleteCommentAction(response.id);
+        },
+        (errorMessage) => {
+        }
+      );
+    }
+  }
+
+  /**
    * Like post event.
    * @param id number
    * @returns void
@@ -217,5 +235,19 @@ export class MyPostsComponent implements OnInit {
     );
 
     this.pageInfo.totalItems = this.posts.length;
+  }
+
+  /**
+   * Delete post event.
+   * @param postId number
+   * @returns void
+   */
+  private _onDeleteCommentAction(postId: number): void {
+    const index = this.posts.findIndex(x => x.id === postId);
+    if (index > -1) {
+      this.posts.splice(index, 1);
+      this.pageInfo.totalItems -= 1;
+    }
+    this.posts = this.posts;
   }
 }

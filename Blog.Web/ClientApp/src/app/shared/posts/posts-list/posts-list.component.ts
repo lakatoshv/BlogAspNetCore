@@ -100,6 +100,24 @@ export class PostsListComponent implements OnInit {
     }
   }
 
+  /**
+   * Delete event
+   * @param postId number
+   * @returns void
+   */
+  deleteAction(postId: number): void {
+    const postItem = this.posts.find(post =>  post.id === postId);
+    if (this.loggedIn && postItem.authorId === this._globalService._currentUser.id) {
+      this._postService.delete(postId, this._globalService._currentUser.id).subscribe(
+        (response: any) => {
+          this._onDeleteCommentAction(response.id);
+        },
+        (errorMessage) => {
+        }
+      );
+    }
+  }
+
    /**
    * Like post event.
    * @param id number
@@ -204,5 +222,19 @@ export class PostsListComponent implements OnInit {
         (error: any) => {
           this.isLoaded = true;
         });
+  }
+
+  /**
+   * Delete post event.
+   * @param postId number
+   * @returns void
+   */
+  private _onDeleteCommentAction(postId: number): void {
+    const index = this.posts.findIndex(x => x.id === postId);
+    if (index > -1) {
+      this.posts.splice(index, 1);
+    }
+    this.posts = this.posts;
+    this.pageInfo.totalItems -= 1;
   }
 }

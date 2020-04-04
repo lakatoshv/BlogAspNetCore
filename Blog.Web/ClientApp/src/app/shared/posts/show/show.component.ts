@@ -75,6 +75,21 @@ export class ShowComponent implements OnInit {
   }
 
   /**
+   * Delete post.
+   */
+  public deleteAction() {
+    if (this.loggedIn && this.post.authorId === this.user.id) {
+      this._postService.delete(this.post.id, this.user.id).subscribe(
+        () => {
+          this._router.navigateByUrl('/blog');
+        },
+        (error) => {
+        }
+      );
+    }
+  }
+
+  /**
    * Back button.
    */
   backButton(): void {
