@@ -179,6 +179,7 @@
         /// <param name="model">model.</param>
         /// <returns>IActionResult.</returns>
         [HttpPost]
+        // [Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -193,6 +194,48 @@
             return NotFound();
         }
 
+        [HttpPut("like/{id}")]
+        // [Authorize]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> LikePostAsync(int id)
+        {
+            var model = await _postsService.GetPostAsync(id);
+            if (model == null)
+                return NotFound();
+            model.Likes++;
+
+            _postsService.Update(model);
+
+            var post = await _postsService.GetPostAsync(id);
+
+            var mappedPost = _mapper.Map<PostViewModel>(post);
+            mappedPost.Author = post.Author;
+            return Ok(mappedPost);
+        }
+
+        [HttpPut("dislike/{id}")]
+        // [Authorize]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> DislikeCommentAsync(int id)
+        {
+            var model = await _postsService.GetPostAsync(id);
+            if (model == null)
+                return NotFound();
+            model.Dislikes++;
+
+            _postsService.Update(model);
+
+            var post = await _postsService.GetPostAsync(id);
+
+            var mappedPost = _mapper.Map(post, new PostViewModel());
+            mappedPost.Author = post.Author;
+            return Ok(mappedPost);
+        }
+
         // PUT: Posts/5
         /// <summary>
         /// Async edit post by id.
@@ -201,6 +244,7 @@
         /// <param name="model">model.</param>
         /// <returns>Task.</returns>
         [HttpPut("{id}")]
+        // [Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -234,6 +278,7 @@
         /// <param name="authorId"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
+        // [Authorize]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteAsync(int id, string authorId)

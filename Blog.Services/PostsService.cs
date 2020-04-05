@@ -44,6 +44,7 @@ namespace Blog.Services
 
                 // .Include(c => c.Comments)
                 .Where(x => x.Id.Equals(id))
+                .Include(x => x.Author)
 
                 // .OrderByDescending(d => d.) comments order by date descending
                 .FirstOrDefaultAsync();

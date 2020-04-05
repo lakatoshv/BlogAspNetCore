@@ -118,22 +118,44 @@ export class PostsListComponent implements OnInit {
     }
   }
 
-   /**
-   * Like post event.
+  /**
+   * Like post by id.
    * @param id number
    * @returns void
    */
   public like(id: number): void {
-    this.posts[id].likes += 1;
+    if (this.loggedIn) {
+      this._postService.like(id).subscribe(
+        (response: any) => {
+          const ind = this.posts.findIndex(post =>  post.id === id);
+          this.posts[ind] = response;
+          this.posts[ind].tagsList = response.tags.split(', ');
+          this.posts = this.posts;
+        },
+        (error) => {
+        }
+      );
+    }
   }
 
   /**
-   * Dislike post event.
+   * Dislike post by id.
    * @param id number
    * @returns void
    */
   public dislike(id: number): void {
-    this.posts[id].dislikes += 1;
+    if (this.loggedIn) {
+      this._postService.dislike(id).subscribe(
+        (response: any) => {
+          const ind = this.posts.findIndex(post =>  post.id === id);
+          this.posts[ind] = response;
+          this.posts[ind].tagsList = response.tags.split(', ');
+          this.posts = this.posts;
+        },
+        (error) => {
+        }
+      );
+    }
   }
 
   /**

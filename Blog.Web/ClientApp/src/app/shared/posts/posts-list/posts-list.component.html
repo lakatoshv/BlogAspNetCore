@@ -71,8 +71,8 @@
                         Написав: <b><a routerLink="/blog/profile/{{post.authorId}}">{{post.author.firstName + " " + post.author.lastName}}</a><i>
                 10.11.2018</i></b>
                     </p>
-                    <button class="btn btn-xs btn-info" (click)="like(post.Id)"><span class="fa fa-thumbs-up"></span> Подобається</button>
-                    <button class="btn btn-sm btn-danger" (click)="dislike(post.Id)"><span class="fa fa-thumbs-down"></span> Неподобається</button>
+                    <button class="btn btn-xs btn-info" (click)="like(post.id)" *ngIf="loggedIn"><span class="fa fa-thumbs-up"></span> Подобається</button>
+                    <button class="btn btn-sm btn-danger" (click)="dislike(post.id)" *ngIf="loggedIn"><span class="fa fa-thumbs-down"></span> Неподобається</button>
                 </div>
                 <hr>
 

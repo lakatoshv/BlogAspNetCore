@@ -75,6 +75,38 @@ export class ShowComponent implements OnInit {
   }
 
   /**
+   * Like post by id.
+   * @param id number
+   * @returns void
+   */
+  public like(id: number): void {
+    this._postService.like(this.postId).subscribe(
+      (response: any) => {
+        this.post = response;
+        this.post.tagsList = response.tags.split(', ');
+      },
+      (error) => {
+      }
+    );
+  }
+
+  /**
+   * Dislike post by id.
+   * @param id number
+   * @returns void
+   */
+  public dislike(id: number): void {
+    this._postService.dislike(this.postId).subscribe(
+      (response: any) => {
+        this.post = response;
+        this.post.tagsList = response.tags.split(', ');
+      },
+      (error) => {
+      }
+    );
+  }
+
+  /**
    * Delete post.
    */
   public deleteAction() {

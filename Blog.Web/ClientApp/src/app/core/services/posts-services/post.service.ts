@@ -64,6 +64,24 @@ export class PostService {
   }
 
   /**
+   * Like post by id
+   * @param id number
+   * @returns Observable<any>
+   */
+  public like(id: number): Observable<any> {
+    return this._httpClient.put(HttpClientService.LIKE_POST.concat('/', id.toString()));
+  }
+
+  /**
+   * Dislike post by id.
+   * @param id number
+   * @returns Observable<any>
+   */
+  public dislike(id: number): Observable<any> {
+    return this._httpClient.put(HttpClientService.DISLIKE_POST.concat('/', id.toString()));
+  }
+
+  /**
    * Edit post by id.
    * @param id number
    * @param model any
