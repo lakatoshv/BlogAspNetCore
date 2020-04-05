@@ -20,3 +20,4 @@ D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Data.Core\obj\Debug\netcor
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Data.Core\obj\Debug\netcoreapp2.2\Blog.Data.Core.csproj.CopyComplete
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Data.Core\obj\Debug\netcoreapp2.2\Blog.Data.Core.dll
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Data.Core\obj\Debug\netcoreapp2.2\Blog.Data.Core.pdb
+D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Data.Core\obj\Debug\netcoreapp2.2\Blog.Data.Core.csproj.CoreCompileInputs.cache

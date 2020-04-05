@@ -65,7 +65,7 @@ export class AuthorizationComponent implements OnInit {
    */
   public succesLogin(jwt: JwtToken): void {
     this._usersService.saveToken(jwt['auth_token'], jwt['refresh_token']);
-    const initializeSubscription = this._accountService.initialize(this._globalService._currentUser.Id).subscribe(
+    const initializeSubscription = this._accountService.initialize(this._globalService._currentUser.id).subscribe(
         (initializationData: any) => {
             this._globalService.initializeData(initializationData);
             this._router.navigate(['/']);

@@ -29,3 +29,4 @@ D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Data.Models\obj\Debug\netc
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Data.Models\obj\Debug\netcoreapp2.2\Blog.Data.Models.dll
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Data.Models\obj\Debug\netcoreapp2.2\Blog.Data.Models.pdb
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Data.Models\obj\Debug\netcoreapp2.2\Blog.Data.Models.genruntimeconfig.cache
+D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Data.Models\obj\Debug\netcoreapp2.2\Blog.Data.Models.csproj.CoreCompileInputs.cache

@@ -14,7 +14,6 @@ using Blog.Services.Identity.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -42,6 +41,8 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Rewrite;
+using Blog.Services.Interfaces;
+using Blog.Services;
 
 namespace Blog.Web
 {
@@ -234,8 +235,11 @@ namespace Blog.Web
             services.AddTransient<IRegistrationService, RegistrationService>();
             services.AddTransient<IEmailTemplateProvider, SimpleEmailTemplateProvider>();
 
+            services.AddTransient<IPostsService, PostsService>();
+
             services.AddTransient<IRepository<RefreshToken>, TableMethods<RefreshToken>>();
             services.AddTransient<IRepository<Setting>, TableMethods<Setting>>();
+            services.AddTransient<IRepository<Post>, TableMethods<Post>>();
 
             services.AddTransient(x => x.GetService<IOptions<BlogConfiguration>>().Value);
             services.AddTransient<HostingConfig>();

@@ -4,7 +4,7 @@
         <p id="profile-name" class="profile-name-card"></p>
         <b class="text-center">Авторизація</b><br>
         <p id="profile-name" class="profile-name-card"></p>
-        <form #registration="ngForm" [formGroup]="_authorizationForm" (ngSubmit)="authorization(f.value)" #f="ngForm" class="form-signin">
+        <form #registration="ngForm" [formGroup]="authorizationForm" (ngSubmit)="authorization(f.value)" #f="ngForm" class="form-signin">
             <span id="reauth-email" class="reauth-email"></span>
             <div class="form-group">
                 <input type="email" id="email" class="form-control" placeholder="Електронна пошта" formControlName="email" required autofocus>

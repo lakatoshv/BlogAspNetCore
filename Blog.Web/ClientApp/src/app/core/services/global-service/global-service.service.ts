@@ -71,7 +71,7 @@ export class GlobalService {
     if (token) {
       this._currentUser = this.decode(token);
       // this._avatarUrl = this._currentUser.AvatarUrl;
-      this._roles = this._currentUser.Roles;
+      this._roles = this._currentUser.roles;
       // this.onAvatarChanged.next(this._currentUser.AvatarUrl);
 
     } else {
@@ -90,13 +90,13 @@ export class GlobalService {
     const username = decoded['sub'];
     let user = new User(id, username);
 
-    user.Email = decoded['email'];
-    user.FirstName = decoded['firstName'];
-    user.LastName = decoded['lastName'];
-    user.PhoneNumber = decoded['phoneNumber'];
+    user.email = decoded['email'];
+    user.firstName = decoded['firstName'];
+    user.lastName = decoded['lastName'];
+    user.phoneNumber = decoded['phoneNumber'];
     // user.IsEmailVerified = decoded['isEmailVerified'] == 'True';
     // user. = decoded['avatarUrl'];
-    user.Roles = decoded['roles'];
+    user.roles = decoded['roles'];
 
     return user;
   }
