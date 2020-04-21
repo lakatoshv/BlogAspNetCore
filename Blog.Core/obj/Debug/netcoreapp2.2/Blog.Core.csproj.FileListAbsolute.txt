@@ -13,10 +13,10 @@ D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\bin\Debug\netcoreapp2
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\bin\Debug\netcoreapp2.2\Blog.Core.runtimeconfig.dev.json
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\bin\Debug\netcoreapp2.2\Blog.Core.dll
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\bin\Debug\netcoreapp2.2\Blog.Core.pdb
+D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\obj\Debug\netcoreapp2.2\Blog.Core.csprojAssemblyReference.cache
+D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\obj\Debug\netcoreapp2.2\Blog.Core.csproj.CoreCompileInputs.cache
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\obj\Debug\netcoreapp2.2\Blog.Core.AssemblyInfoInputs.cache
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\obj\Debug\netcoreapp2.2\Blog.Core.AssemblyInfo.cs
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\obj\Debug\netcoreapp2.2\Blog.Core.dll
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\obj\Debug\netcoreapp2.2\Blog.Core.pdb
-D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\obj\Debug\netcoreapp2.2\Blog.Core.csprojAssemblyReference.cache
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\obj\Debug\netcoreapp2.2\Blog.Core.genruntimeconfig.cache
-D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Core\obj\Debug\netcoreapp2.2\Blog.Core.csproj.CoreCompileInputs.cache

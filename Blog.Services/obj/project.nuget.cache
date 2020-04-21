@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "b8sFps9galcg7FOvknewfB/ajOMiz2PkeiS5t6s791P6WZTyw6yThMVN2Ke0le4XTwcsHpuw7BGJSluDdqfOyw==",
+  "dgSpecHash": "7YqryOH88jtfLQewG486I1BUF6fIoyZRa5YnG3i87iyK99d6h6dgum3gVo1QGXodMytStlqzFqJp4rIQzfw02Q==",
   "success": true,
   "projectFilePath": "D:\\Projects\\AspNet\\BlogAspNetCore\\BlogAspNetCore\\Blog.Services\\Blog.Services.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Vital\\.nuget\\packages\\automapper\\6.2.2\\automapper.6.2.2.nupkg.sha512",
+    "C:\\Users\\Vital\\.nuget\\packages\\identitymodel\\4.1.1\\identitymodel.4.1.1.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\libuv\\1.10.0\\libuv.1.10.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\messagepack\\1.7.3.4\\messagepack.1.7.3.4.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.applicationinsights\\2.4.0\\microsoft.applicationinsights.2.4.0.nupkg.sha512",
@@ -324,7 +325,7 @@
     "C:\\Users\\Vital\\.nuget\\packages\\system.text.encoding\\4.3.0\\system.text.encoding.4.3.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.text.encoding.codepages\\4.5.0\\system.text.encoding.codepages.4.5.0.nupkg.sha512",
     "C:\\Users\\Vital\\.nuget\\packages\\system.text.encoding.extensions\\4.3.0\\system.text.encoding.extensions.4.3.0.nupkg.sha512",
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.text.encodings.web\\4.5.0\\system.text.encodings.web.4.5.0.nupkg.sha512",
+    "C:\\Users\\Vital\\.nuget\\packages\\system.text.encodings.web\\4.6.0\\system.text.encodings.web.4.6.0.nupkg.sha512",
     "C:\\Users\\Vital\\.nuget\\packages\\system.text.regularexpressions\\4.3.0\\system.text.regularexpressions.4.3.0.nupkg.sha512",
     "C:\\Users\\Vital\\.nuget\\packages\\system.threading\\4.3.0\\system.threading.4.3.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\system.threading.channels\\4.5.0\\system.threading.channels.4.5.0.nupkg.sha512",

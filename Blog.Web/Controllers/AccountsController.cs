@@ -1,11 +1,11 @@
-﻿using Blog.Web.VIewModels.AspNetUser;
+﻿using Blog.Services.ControllerContext;
+using Blog.Web.VIewModels.AspNetUser;
 
 namespace Blog.Web.Controllers
 {
     using Data.Models;
     using Services.Identity.Auth;
     using Services.Identity.Registration;
-    using Core.ControllerContext;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;

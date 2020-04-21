@@ -1,8 +1,9 @@
-﻿namespace Blog.Web.Controllers
+﻿using Blog.Services.ControllerContext;
+
+namespace Blog.Web.Controllers
 {
     using Data.Models;
     using Blog.Services.Core.Utilities;
-    using Core.ControllerContext;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.ModelBinding;

@@ -35,10 +35,10 @@ D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\bin\Debug\netcore
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\bin\Debug\netcoreapp2.2\Blog.Core.pdb
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\bin\Debug\netcoreapp2.2\Blog.Data.Core.pdb
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\obj\Debug\netcoreapp2.2\Blog.Services.csprojAssemblyReference.cache
+D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\obj\Debug\netcoreapp2.2\Blog.Services.csproj.CoreCompileInputs.cache
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\obj\Debug\netcoreapp2.2\Blog.Services.AssemblyInfoInputs.cache
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\obj\Debug\netcoreapp2.2\Blog.Services.AssemblyInfo.cs
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\obj\Debug\netcoreapp2.2\Blog.Services.csproj.CopyComplete
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\obj\Debug\netcoreapp2.2\Blog.Services.dll
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\obj\Debug\netcoreapp2.2\Blog.Services.pdb
 D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\obj\Debug\netcoreapp2.2\Blog.Services.genruntimeconfig.cache
-D:\Projects\AspNet\BlogAspNetCore\BlogAspNetCore\Blog.Services\obj\Debug\netcoreapp2.2\Blog.Services.csproj.CoreCompileInputs.cache
