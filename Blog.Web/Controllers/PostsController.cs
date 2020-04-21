@@ -255,6 +255,8 @@ namespace Blog.Web.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> EditAsync(int id, [FromBody] PostViewModel model)
         {
+            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
+            if (!model.AuthorId.Equals(CurrentUser.Id)) return BadRequest(new { ErrorMessage = "You are not an author of the post." });
             /*
             var originPost = await _postService.GetPostWithoutCommentsAsync(id);
             if (!model.ApplicationUserId.Equals(originPost.ApplicationUserId))
