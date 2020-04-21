@@ -202,6 +202,8 @@ namespace Blog.Web.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> LikePostAsync(int id)
         {
+            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
+
             var model = await _postsService.GetPostAsync(id);
             if (model == null)
                 return NotFound();
@@ -223,6 +225,8 @@ namespace Blog.Web.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> DislikeCommentAsync(int id)
         {
+            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
+
             var model = await _postsService.GetPostAsync(id);
             if (model == null)
                 return NotFound();
