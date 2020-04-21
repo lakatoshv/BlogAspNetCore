@@ -1,4 +1,8 @@
-﻿namespace Blog.Web.Core.ControllerContext
+﻿// <copyright file="IControllerContext.cs" company="Blog">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace Blog.Services.ControllerContext
 {
     using Data.Models;
 

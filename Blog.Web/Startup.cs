@@ -31,7 +31,6 @@ using Blog.Services.Core.Caching;
 using Blog.Core.Interfaces;
 using Blog.Core;
 using Blog.Core.Infrastructure;
-using Blog.Web.Core.ControllerContext;
 using Microsoft.AspNetCore.Authorization;
 using Blog.Services.Core.Security;
 using AutoMapper;
@@ -43,6 +42,7 @@ using System.IO;
 using Microsoft.AspNetCore.Rewrite;
 using Blog.Services.Interfaces;
 using Blog.Services;
+using Blog.Services.ControllerContext;
 
 namespace Blog.Web
 {
@@ -88,6 +88,9 @@ namespace Blog.Web
             #region JWT
             // TODO: Extract to external extension method .AddJWT()
 
+            // Get options from app settings            
+            var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
+
             // TODO: Get this from somewhere secure, possibly configuration !!!
             // TODO: Implement some kind of keyvault service to store Secret
             var secretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH";
@@ -99,8 +102,8 @@ namespace Blog.Web
             // Configure JwtIssuerOptions
             services.Configure<JwtIssuerOptions>(options =>
             {
-                options.Issuer = Configuration["Issuer"];
-                options.Audience = Configuration["Audience"];
+                options.Issuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
+                options.Audience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)];
                 options.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
             });
 
@@ -108,10 +111,10 @@ namespace Blog.Web
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidIssuer = Configuration["Issuer"],
+                ValidIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)],
 
                 ValidateAudience = true,
-                ValidAudience = Configuration["Audience"],
+                ValidAudience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)],
 
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = signingKey,
@@ -128,9 +131,10 @@ namespace Blog.Web
 
             }).AddJwtBearer(configureOptions =>
             {
-                configureOptions.ClaimsIssuer = Configuration["Issuer"];
+                configureOptions.ClaimsIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
                 configureOptions.TokenValidationParameters = tokenValidationParameters;
                 configureOptions.SaveToken = true;
+                /*
                 configureOptions.Events = new JwtBearerEvents
                 {
 
@@ -157,13 +161,22 @@ namespace Blog.Web
                         }
                         return Task.CompletedTask;
                     }
-                };
+                };*/
             });
 
             // api user claim policy
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("ApiUser", policy => policy.RequireClaim(JwtClaimTypes.Rol, JwtClaims.ApiAccess));
+            });
+            services.AddCors(options =>
+            {
+                options.AddPolicy("EnableCORS", bilder =>
+                {
+                    bilder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
             });
             #endregion
 
@@ -279,6 +292,8 @@ namespace Blog.Web
                 app.UseHsts();
             }
 
+            app.UseAuthentication();
+
             // TODO: Implement more advanced Error Handling
             // TODO: Extract implementations to external files
             app.UseExceptionHandler(builder =>
@@ -337,6 +352,7 @@ namespace Blog.Web
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+            app.UseCors("EnableCORS");
 
             app.UseSpa(spa =>
             {

@@ -1,11 +1,12 @@
-﻿namespace Blog.Web.Controllers
+﻿using Blog.Services.ControllerContext;
+
+namespace Blog.Web.Controllers
 {
     using System.Threading.Tasks;
     using AutoMapper;
     using Data.Models;
     using Blog.Services.Core.Dtos;
     using Services.Interfaces;
-    using Core.ControllerContext;
     using VIewModels.Posts;
     using Microsoft.AspNetCore.Mvc;
 
