@@ -1,4 +1,5 @@
 ﻿using Blog.Services.ControllerContext;
+using Microsoft.AspNetCore.Identity;
 
 namespace Blog.Web.Controllers
 {
@@ -186,13 +187,12 @@ namespace Blog.Web.Controllers
         [ProducesResponseType(404)]
         public IActionResult CreateAsync([FromBody] Post model)
         {
-            if (ModelState.IsValid && !string.IsNullOrWhiteSpace(model.AuthorId))
-            {
-                _postsService.Insert(model);
+            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
+            if (!ModelState.IsValid || string.IsNullOrWhiteSpace(model.AuthorId)) return NotFound();
+            model.AuthorId = CurrentUser.Id;
+            _postsService.Insert(model);
 
-                return Ok();
-            }
-            return NotFound();
+            return Ok();
         }
 
         [HttpPut("like/{id}")]
