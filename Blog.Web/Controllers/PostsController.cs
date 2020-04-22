@@ -1,4 +1,6 @@
 ﻿using Blog.Services.ControllerContext;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Blog.Web.Controllers
 {
@@ -15,6 +17,7 @@ namespace Blog.Web.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class PostsController : BaseController
     {
         /// <summary>
@@ -180,28 +183,29 @@ namespace Blog.Web.Controllers
         /// <param name="model">model.</param>
         /// <returns>IActionResult.</returns>
         [HttpPost]
-        // [Authorize]
+        [Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public IActionResult CreateAsync([FromBody] Post model)
         {
-            if (ModelState.IsValid && !string.IsNullOrWhiteSpace(model.AuthorId))
-            {
-                _postsService.Insert(model);
+            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
+            if (!ModelState.IsValid || string.IsNullOrWhiteSpace(model.AuthorId)) return NotFound();
+            model.AuthorId = CurrentUser.Id;
+            _postsService.Insert(model);
 
-                return Ok();
-            }
-            return NotFound();
+            return Ok();
         }
 
         [HttpPut("like/{id}")]
-        // [Authorize]
+        [Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> LikePostAsync(int id)
         {
+            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
+
             var model = await _postsService.GetPostAsync(id);
             if (model == null)
                 return NotFound();
@@ -217,12 +221,14 @@ namespace Blog.Web.Controllers
         }
 
         [HttpPut("dislike/{id}")]
-        // [Authorize]
+        [Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> DislikeCommentAsync(int id)
         {
+            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
+
             var model = await _postsService.GetPostAsync(id);
             if (model == null)
                 return NotFound();
@@ -245,12 +251,14 @@ namespace Blog.Web.Controllers
         /// <param name="model">model.</param>
         /// <returns>Task.</returns>
         [HttpPut("{id}")]
-        // [Authorize]
+        [Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> EditAsync(int id, [FromBody] PostViewModel model)
         {
+            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
+            if (!model.AuthorId.Equals(CurrentUser.Id)) return BadRequest(new { ErrorMessage = "You are not an author of the post." });
             /*
             var originPost = await _postService.GetPostWithoutCommentsAsync(id);
             if (!model.ApplicationUserId.Equals(originPost.ApplicationUserId))
@@ -279,19 +287,20 @@ namespace Blog.Web.Controllers
         /// <param name="authorId"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        // [Authorize]
+        [Authorize]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteAsync(int id, string authorId)
         {
+            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
             var post = await _postsService.GetPostAsync(id);
             // var comments = await _commentsService.GetCommentsForPostAsync(id);
             // comments.ForEach(comment => _commentsService.Delete(comment));
             await _postsService.GetPostAsync(id);
 
-            if (!post.AuthorId.Equals(authorId))
+            if (!post.AuthorId.Equals(CurrentUser.Id))
             {
-                return NotFound();
+                return BadRequest(new { ErrorMessage = "You are not an author of the post." });
             }
 
             _postsService.Delete(post);
