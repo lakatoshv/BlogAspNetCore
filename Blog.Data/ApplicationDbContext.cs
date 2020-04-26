@@ -52,6 +52,14 @@ namespace Blog.Data
         public DbSet<Post> Posts { get; set; }
 
         /// <summary>
+        /// Gets or sets the comments.
+        /// </summary>
+        /// <value>
+        /// The comments.
+        /// </value>
+        public DbSet<Comment> Comments { get; set; }
+
+        /// <summary>
         /// Save changes.
         /// </summary>
         /// <returns>int.</returns>

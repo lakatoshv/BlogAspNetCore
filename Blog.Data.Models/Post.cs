@@ -1,4 +1,6 @@
-﻿namespace Blog.Data.Models
+﻿using System.Collections.Generic;
+
+namespace Blog.Data.Models
 {
     using System;
     using Core;
@@ -62,5 +64,13 @@
         /// Gets or sets created at.
         /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// Gets or sets the comments.
+        /// </summary>
+        /// <value>
+        /// The comments.
+        /// </value>
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }
