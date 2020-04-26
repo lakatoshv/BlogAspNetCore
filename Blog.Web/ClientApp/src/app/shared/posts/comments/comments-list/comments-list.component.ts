@@ -114,6 +114,7 @@ export class CommentsListComponent implements OnInit {
    */
   public paginate(page: number): void {
     this.pageInfo.pageNumber = page;
+    this.list(page);
   }
 
   /**
@@ -122,7 +123,8 @@ export class CommentsListComponent implements OnInit {
    * @returns void
    */
   onAddAction(comment: Comment): void {
-    this.comments.unshift(comment);
-    this.pageInfo.totalItems += 1;
+    /*this.comments.unshift(comment);
+    this.pageInfo.totalItems += 1;*/
+    this.list();
   }
 }

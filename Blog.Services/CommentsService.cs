@@ -64,5 +64,15 @@ namespace Blog.Services
 
             return commentsViewModel;
         }
+
+        /// <inheritdoc/>
+        public async Task<Comment> GetCommentAsync(int id)
+        {
+            return await this.Repository.Table
+                .Where(x => x.Id.Equals(id))
+                .Include(x => x.User)
+                .FirstOrDefaultAsync();
+
+        }
     }
 }

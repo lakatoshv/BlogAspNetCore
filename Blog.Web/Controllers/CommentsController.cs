@@ -71,6 +71,18 @@ namespace Blog.Web.Controllers
             return Ok(comments);
         }
 
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [HttpGet("{id}", Name = "get-comment")]
+        // GET: Posts/Show/5
+        public async Task<ActionResult> GetComment(int id)
+        {
+            var comment = await _commentService.GetCommentAsync(id);
+            if (comment == null)
+                return NotFound();
+            return Ok(comment);
+        }
+
         // POST: Comments/Create        
         /// <summary>
         /// Creates the asynchronous.
@@ -94,7 +106,7 @@ namespace Blog.Web.Controllers
 
             await _commentService.InsertAsync(comment);
 
-            return CreatedAtRoute("getComment", new { id = comment.Id }, comment);
+            return CreatedAtRoute("get-comment", new { id = comment.Id }, comment);
         }
     }
 }

@@ -109,6 +109,12 @@ export class HttpClientService {
   public static readonly CREATE_COMMENT = HttpClientService.COMMENTS_CONTROLLER + '/create';
 
   /**
+   * Get comment by id.
+   * @param GET_COMMENT string
+   */
+  public static readonly GET_COMMENT = HttpClientService.COMMENTS_CONTROLLER + '/get-comment';
+
+  /**
    * @param _httpClient HttpClient
    * @param _router Router
    */

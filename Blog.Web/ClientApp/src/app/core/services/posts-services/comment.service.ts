@@ -1,7 +1,7 @@
 import { Comment } from './../../models/Comment';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, ReplaySubject, from, of, range , throwError } from 'rxjs';
-import { map, filter, switchMap, catchError } from 'rxjs/operators';
+import { map, filter, switchMap, catchError, mergeMap, retry } from 'rxjs/operators';
 import { HttpClientService } from '../global-service/http-client-services/http-client.service';
 
 /**
@@ -34,10 +34,6 @@ export class CommentService {
    * @returns Observable<any>
    */
   public add(model?: any): Observable<any> {
-    return this._httpClient.post(HttpClientService.CREATE_COMMENT, model)
-        .pipe(
-          map((response: any) => response),
-          catchError((e:Response)=> throwError(e))
-        );
+    return this._httpClient.post(HttpClientService.CREATE_COMMENT, model).pipe(map(res => res.json()));
   }
 }

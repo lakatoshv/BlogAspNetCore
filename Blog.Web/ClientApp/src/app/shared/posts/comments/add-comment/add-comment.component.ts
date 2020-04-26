@@ -74,10 +74,11 @@ export class AddCommentComponent implements OnInit {
 
       this._commentService.add(comment).subscribe(
         (response: any) => {
-          this.onAdd.emit(response);
+          this.onAdd.emit(response.json());
         },
         (error) => {}
       );
+      this.onAdd.emit(null);
     }
   }
 }
