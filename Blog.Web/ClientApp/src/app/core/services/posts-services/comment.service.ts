@@ -36,4 +36,14 @@ export class CommentService {
   public add(model?: any): Observable<any> {
     return this._httpClient.post(HttpClientService.CREATE_COMMENT, model).pipe(map(res => res.json()));
   }
+
+  /**
+   * Edit comment by id.
+   * @param id number
+   * @param model any
+   * @returns Observable<any>
+   */
+  public edit(id: number, model?: any): Observable<any> {
+    return this._httpClient.put(HttpClientService.COMMENTS_CONTROLLER.concat('/', id.toString()), model);
+  }
 }

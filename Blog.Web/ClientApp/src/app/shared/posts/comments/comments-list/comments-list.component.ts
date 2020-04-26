@@ -127,4 +127,39 @@ export class CommentsListComponent implements OnInit {
     this.pageInfo.totalItems += 1;*/
     this.list();
   }
+
+  /**
+   * Edit comment event
+   * @param comment Comment
+   * @returns void
+   */
+  onEditAction(comment: Comment): void {
+    const index = this.comments.findIndex(x => x.id === comment.id);
+    if (index > -1) {
+      this.comments[index] = comment;
+      this.isLoadEdit = false;
+    }
+  }
+
+  /**
+   * Edit comment event
+   * @param comment Comment
+   * @returns void
+   */
+  editAction(comment: Comment): void {
+    debugger
+    if (this.loggedIn && this.user.id === comment.userId) {
+      this.editPostId = comment.id;
+      this.comment = comment;
+      this.isLoadEdit = true;
+    }
+  }
+
+  /**
+   * Load edit component event
+   * @returns void
+   */
+  private _onLoadEditAction(): void {
+    this.isLoadEdit = true;
+  }
 }

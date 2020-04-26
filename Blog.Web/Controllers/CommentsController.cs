@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using Blog.Data.Models;
 using Blog.Services.ControllerContext;
@@ -107,6 +108,34 @@ namespace Blog.Web.Controllers
             await _commentService.InsertAsync(comment);
 
             return CreatedAtRoute("get-comment", new { id = comment.Id }, comment);
+        }
+
+        /// <summary>
+        /// Edits the asynchronous.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [Authorize]
+        public async Task<IActionResult> EditAsync(int id, [FromBody] CommentViewModel model)
+        {
+            var originComment = await _commentService.GetCommentAsync(id);
+            if (!originComment.UserId.Equals(model.UserId))
+            {
+                return NotFound();
+            }
+            model.CreatedAt = DateTime.Now;
+            var updatedComment = _mapper.Map(model, originComment);
+            _commentService.Update(updatedComment);
+
+            var comment = await _commentService.GetCommentAsync(id);
+
+            var mappedComment = _mapper.Map<CommentViewModel>(comment);
+            return Ok(mappedComment);
         }
     }
 }

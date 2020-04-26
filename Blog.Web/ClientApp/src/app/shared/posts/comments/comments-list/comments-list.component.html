@@ -34,6 +34,8 @@
                                         </p>
                                     </div>
                                 </div>
+                                <app-edit-comment [comment]="comment" (onEdit)="onEditAction($event)" *ngIf="isLoadEdit && editPostId === comment.id">
+                                </app-edit-comment>
                                 <!-- Reply - ->
                                   <ul class="comment_list">
                                     <li class="comment">

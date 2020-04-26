@@ -14,6 +14,10 @@ const routes: Routes = [
   {
     path: 'add',
     component: AddCommentComponent
+  },
+  {
+    path: 'edit/:comment-id',
+    component: EditCommentComponent
   }
 ];
 
