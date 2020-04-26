@@ -31,6 +31,11 @@ export class ShowComponent implements OnInit {
   public loggedIn = false;
 
   /**
+   * @param isLoaded boolean
+   */
+  public isLoaded = false;
+
+  /**
    * @param postId number
    */
   public postId: number;
@@ -135,9 +140,10 @@ export class ShowComponent implements OnInit {
     this._postService.showPost(this.postId).subscribe(
       (response: any) => {
         this.post = response.post;
-        this.post.comments = response.comments;
+        this.post.comments = response.comments.comments;
         this.post.tagsList = response.post.tags.split(', ');
         this.pageInfo = response.comments.pageInfo;
+        this.isLoaded = true;
       },
       () => {}
     );

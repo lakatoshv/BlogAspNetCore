@@ -1,6 +1,5 @@
 ﻿using Blog.Services.ControllerContext;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 
 namespace Blog.Web.Controllers
 {
@@ -166,7 +165,7 @@ namespace Blog.Web.Controllers
                 PageSize = 10
             };
 
-            var post = await _postsService.GetPostWithComments(id, sortParameters);
+            var post = await _postsService.GetPost(id, sortParameters);
 
             if (post == null)
             {

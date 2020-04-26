@@ -2,6 +2,14 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Blog.Core.Helpers;
+using Blog.Services.Core.Dtos;
+using Blog.Services.Core.Dtos.Posts;
+using Microsoft.EntityFrameworkCore;
+
 namespace Blog.Services
 {
     using Data.Models;
@@ -24,6 +32,37 @@ namespace Blog.Services
                 IRepository<Comment> repo)
             : base(repo)
         {
+        }
+
+        /// <inheritdoc/>
+        public async Task<CommentsViewDto> GetPagedCommentsByPostId(int postId, SortParametersDto sortParameters)
+        {
+            var comments = await this.Repository.TableNoTracking
+                .Where(comment => comment.PostId.Equals(postId))
+                .Include(x => x.User).ToListAsync();
+
+            var commentsViewModel = new CommentsViewDto
+            {
+                Comments = comments,
+            };
+
+            if (sortParameters.CurrentPage == null || sortParameters.PageSize == null)
+            {
+                return commentsViewModel;
+            }
+
+            commentsViewModel.Comments = commentsViewModel.Comments
+                .Skip((sortParameters.CurrentPage.Value - 1) * sortParameters.PageSize.Value)
+                .Take(sortParameters.PageSize.Value).ToList();
+
+            commentsViewModel.PageInfo = new PageInfo
+            {
+                PageNumber = sortParameters.CurrentPage.Value,
+                PageSize = sortParameters.PageSize.Value,
+                TotalItems = comments.Count,
+            };
+
+            return commentsViewModel;
         }
     }
 }
