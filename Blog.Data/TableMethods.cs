@@ -186,6 +186,46 @@ namespace Blog.Data
         }
 
         /// <inheritdoc/>
+        public async Task InsertAsync(TEntity entity)
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            try
+            {
+                this.Entities.Add(entity);
+                await this._context.SaveChangesAsync();
+            }
+            catch (DbUpdateException exception)
+            {
+                // ensure that the detailed error text is saved in the Log
+                throw new Exception(this.GetFullErrorTextAndRollbackEntityChanges(exception), exception);
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task InsertAsync(IEnumerable<TEntity> entities)
+        {
+            if (entities == null)
+            {
+                throw new ArgumentNullException(nameof(entities));
+            }
+
+            try
+            {
+                this.Entities.AddRange(entities);
+                await this._context.SaveChangesAsync();
+            }
+            catch (DbUpdateException exception)
+            {
+                // ensure that the detailed error text is saved in the Log
+                throw new Exception(this.GetFullErrorTextAndRollbackEntityChanges(exception), exception);
+            }
+        }
+
+        /// <inheritdoc/>
         public virtual void Update(TEntity entity)
         {
             if (entity == null)
@@ -226,6 +266,46 @@ namespace Blog.Data
         }
 
         /// <inheritdoc/>
+        public async Task UpdateAsync(TEntity entity)
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            try
+            {
+                this.Entities.Update(entity);
+                await this._context.SaveChangesAsync();
+            }
+            catch (DbUpdateException exception)
+            {
+                // ensure that the detailed error text is saved in the Log
+                throw new Exception(this.GetFullErrorTextAndRollbackEntityChanges(exception), exception);
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task UpdateAsync(IEnumerable<TEntity> entities)
+        {
+            if (entities == null)
+            {
+                throw new ArgumentNullException(nameof(entities));
+            }
+
+            try
+            {
+                this.Entities.UpdateRange(entities);
+                await this._context.SaveChangesAsync();
+            }
+            catch (DbUpdateException exception)
+            {
+                // ensure that the detailed error text is saved in the Log
+                throw new Exception(this.GetFullErrorTextAndRollbackEntityChanges(exception), exception);
+            }
+        }
+
+        /// <inheritdoc/>
         public virtual void Delete(TEntity entity)
         {
             if (entity == null)
@@ -257,6 +337,46 @@ namespace Blog.Data
             {
                 this.Entities.RemoveRange(entities);
                 this._context.SaveChanges();
+            }
+            catch (DbUpdateException exception)
+            {
+                // ensure that the detailed error text is saved in the Log
+                throw new Exception(this.GetFullErrorTextAndRollbackEntityChanges(exception), exception);
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task DeleteAsync(TEntity entity)
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            try
+            {
+                this.Entities.Remove(entity);
+                await this._context.SaveChangesAsync();
+            }
+            catch (DbUpdateException exception)
+            {
+                // ensure that the detailed error text is saved in the Log
+                throw new Exception(this.GetFullErrorTextAndRollbackEntityChanges(exception), exception);
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task DeleteAsync(IEnumerable<TEntity> entities)
+        {
+            if (entities == null)
+            {
+                throw new ArgumentNullException(nameof(entities));
+            }
+
+            try
+            {
+                this.Entities.RemoveRange(entities);
+                await this._context.SaveChangesAsync();
             }
             catch (DbUpdateException exception)
             {

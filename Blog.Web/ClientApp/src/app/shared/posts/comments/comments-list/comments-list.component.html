@@ -2,6 +2,8 @@
     <!-- Similar Posts -->
     <div class="similar_posts">
 
+        <app-add-comment [user]="user" [postId]="postId" (onAdd)="onAddAction($event)"></app-add-comment>
+
         <!-- Comments -->
         <div class="comments" *ngIf="comments">
             <div class="comments_title">Comments <span>{{comments.length}}</span></div>
@@ -21,7 +23,7 @@
                                     </div>
                                     <div class="comment_content">
                                         <p>{{comment.commentBody}}</p>
-                                        <p class="pull-right buttons" *ngIf="loggedIn && comment.Author.Id === user.id">
+                                        <p class="pull-right buttons" *ngIf="loggedIn && comment.userId === user.id">
                                             <button type="button" class="btn btn-sm text-white btn-primary" (click)="editAction(comment)" title="Редагувати">
                                               <i class="fa fa-edit"></i>
                                             </button>

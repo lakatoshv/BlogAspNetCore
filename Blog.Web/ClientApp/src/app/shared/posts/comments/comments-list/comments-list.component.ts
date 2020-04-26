@@ -115,4 +115,14 @@ export class CommentsListComponent implements OnInit {
   public paginate(page: number): void {
     this.pageInfo.pageNumber = page;
   }
+
+  /**
+   * Add comment event
+   * @param comment Comment
+   * @returns void
+   */
+  onAddAction(comment: Comment): void {
+    this.comments.unshift(comment);
+    this.pageInfo.totalItems += 1;
+  }
 }

@@ -1,9 +1,13 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
+using Blog.Data.Models;
 using Blog.Services.ControllerContext;
 using Blog.Services.Core.Dtos;
 using Blog.Services.Interfaces;
+using Blog.Web.VIewModels.Posts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static System.DateTime;
 
 namespace Blog.Web.Controllers
 {
@@ -40,8 +44,14 @@ namespace Blog.Web.Controllers
             _mapper = mapper;
         }
 
+        // GET: Posts        
+        /// <summary>
+        /// Gets the comments by post asynchronous.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="sortParameters">The sort parameters.</param>
+        /// <returns>Task.</returns>
         [HttpPost("get-comments-by-post/{id}")]
-        // GET: Posts
         public async Task<ActionResult> GetCommentsByPostAsync(int id, [FromBody] SortParametersDto sortParameters)
         {
             if (sortParameters is null)
@@ -59,6 +69,32 @@ namespace Blog.Web.Controllers
             }
 
             return Ok(comments);
+        }
+
+        // POST: Comments/Create        
+        /// <summary>
+        /// Creates the asynchronous.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Task.</returns>
+        [HttpPost("create")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [Authorize]
+        public async Task<IActionResult> CreateAsync([FromBody] CommentViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Bad(ModelState);
+            }
+
+            model.CreatedAt = Now;
+
+            var comment = _mapper.Map<Comment>(model);
+
+            await _commentService.InsertAsync(comment);
+
+            return CreatedAtRoute("getComment", new { id = comment.Id }, comment);
         }
     }
 }

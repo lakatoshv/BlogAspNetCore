@@ -27,4 +27,17 @@ export class CommentService {
 
     return this._httpClient.get(HttpClientService.COMMENTS_CONTROLLER);
   }
+
+  /**
+   * Add new comment.
+   * @param model any
+   * @returns Observable<any>
+   */
+  public add(model?: any): Observable<any> {
+    return this._httpClient.post(HttpClientService.CREATE_COMMENT, model)
+        .pipe(
+          map((response: any) => response),
+          catchError((e:Response)=> throwError(e))
+        );
+  }
 }

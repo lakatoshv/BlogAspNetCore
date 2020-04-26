@@ -17,8 +17,8 @@ export class Comment {
    * @param email string
    * Post Comment string
    * @param name string
-   * Post Comment Content
-   * @param content string
+   * Post Comment commentBody
+   * @param commentBody string
    * Post Comment Created At
    * @param createdAt Date
    */
@@ -29,7 +29,7 @@ export class Comment {
     public user?: User,
     public email?: string,
     public name?: string,
-    public content: string = '',
+    public commentBody: string = '',
     public createdAt?: Date
   ) {}
 }

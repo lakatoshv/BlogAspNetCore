@@ -45,6 +45,20 @@ namespace Blog.Services.GeneralService
         void Insert(IEnumerable<T> entities);
 
         /// <summary>
+        /// Inserts the asynchronous.
+        /// </summary>
+        /// <param name="entity">The enumerable.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task InsertAsync(T entity);
+
+        /// <summary>
+        /// Inserts the asynchronous.
+        /// </summary>
+        /// <param name="entities">The enumerable.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task InsertAsync(IEnumerable<T> entities);
+
+        /// <summary>
         /// Update item.
         /// </summary>
         /// <param name="entity">entity.</param>
@@ -55,6 +69,26 @@ namespace Blog.Services.GeneralService
         /// </summary>
         /// <param name="entities">entities.</param>
         void Update(IEnumerable<T> entities);
+
+        /// <summary>
+        /// Update item.
+        /// </summary>
+        /// <param name="entity">entity.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task UpdateAsync(T entity);
+
+        /// <summary>
+        /// Update IEnumerable.
+        /// </summary>
+        /// <param name="entities">entities.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task UpdateAsync(IEnumerable<T> entities);
+
+        /// <summary>
+        /// Delete item.
+        /// </summary>
+        /// <param name="id">entity.</param>
+        void Delete(int id);
 
         /// <summary>
         /// Delete item.
@@ -69,6 +103,27 @@ namespace Blog.Services.GeneralService
         void Delete(IEnumerable<T> entities);
 
         /// <summary>
+        /// Delete item.
+        /// </summary>
+        /// <param name="id">entity.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task DeleteAsync(int id);
+
+        /// <summary>
+        /// Delete item.
+        /// </summary>
+        /// <param name="entity">entity.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task DeleteAsync(T entity);
+
+        /// <summary>
+        /// Delete IEnumerable.
+        /// </summary>
+        /// <param name="entities">IEnumerable.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task DeleteAsync(IEnumerable<T> entities);
+
+        /// <summary>
         /// Async search.
         /// </summary>
         /// <param name="searchQuery">searchQuery.</param>
@@ -81,7 +136,7 @@ namespace Blog.Services.GeneralService
         /// <param name="searchQuery">searchQuery.</param>
         /// <param name="sequence">sequence.</param>
         /// <returns>Task.</returns>
-        Task<PagedListResult<T>> SearchBySquenceAsync(
+        Task<PagedListResult<T>> SearchBySequenceAsync(
             SearchQuery<T> searchQuery,
             IQueryable<T> sequence);
 

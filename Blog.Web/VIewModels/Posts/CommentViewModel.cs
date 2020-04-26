@@ -1,33 +1,30 @@
-﻿// <copyright file="Comment.cs" company="Blog">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using Blog.Data.Models;
 
-namespace Blog.Data.Models
+namespace Blog.Web.VIewModels.Posts
 {
-    using System;
-    using Core;
-
     /// <summary>
-    /// Comment model.
+    /// Comment view model.
     /// </summary>
-    /// <seealso cref="Entity" />
-    public class Comment : Entity
+    public class CommentViewModel
     {
+        /// <summary>
+        /// Gets or sets the identifier.
+        /// </summary>
+        /// <value>
+        /// The identifier.
+        /// </value>
+        public int? Id { get; set; }
+
         /// <summary>
         /// Gets or sets the post identifier.
         /// </summary>
         /// <value>
         /// The post identifier.
         /// </value>
+        [Required]
         public int PostId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the post.
-        /// </summary>
-        /// <value>
-        /// The post.
-        /// </value>
-        public virtual Post Post { get; set; }
 
         /// <summary>
         /// Gets or sets the comment body.
@@ -35,6 +32,7 @@ namespace Blog.Data.Models
         /// <value>
         /// The comment body.
         /// </value>
+        [Required]
         public string CommentBody { get; set; }
 
         /// <summary>
@@ -43,6 +41,7 @@ namespace Blog.Data.Models
         /// <value>
         /// The created at.
         /// </value>
+        [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
 
         /// <summary>

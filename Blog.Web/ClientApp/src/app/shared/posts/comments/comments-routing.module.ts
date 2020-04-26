@@ -11,6 +11,10 @@ const routes: Routes = [
     path: '',
     component: CommentsListComponent
   },
+  {
+    path: 'add',
+    component: AddCommentComponent
+  }
 ];
 
 @NgModule({
