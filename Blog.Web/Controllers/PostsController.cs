@@ -258,15 +258,6 @@ namespace Blog.Web.Controllers
         {
             if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
             if (!model.AuthorId.Equals(CurrentUser.Id)) return BadRequest(new { ErrorMessage = "You are not an author of the post." });
-            /*
-            var originPost = await _postService.GetPostWithoutCommentsAsync(id);
-            if (!model.ApplicationUserId.Equals(originPost.ApplicationUserId))
-            {
-                return NotFound();
-            }
-
-            model.Comments = originPost.Comments;
-            */
 
             var post = await _postsService.GetPostAsync(id);
             var updatedModel = _mapper.Map(model, post);

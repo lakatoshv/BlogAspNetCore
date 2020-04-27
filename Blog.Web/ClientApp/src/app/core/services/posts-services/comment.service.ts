@@ -46,4 +46,13 @@ export class CommentService {
   public edit(id: number, model?: any): Observable<any> {
     return this._httpClient.put(HttpClientService.COMMENTS_CONTROLLER.concat('/', id.toString()), model);
   }
+
+  /**
+   * Delete comment by id.
+   * @param id number
+   * @returns Observable<any>
+   */
+  public delete(id: number): Observable<any> {
+    return this._httpClient.delete(HttpClientService.COMMENTS_CONTROLLER.concat("/", id.toString()));
+  }
 }

@@ -156,6 +156,34 @@ export class CommentsListComponent implements OnInit {
   }
 
   /**
+   * Delete comment event
+   * @param comment Comment
+   * @returns void
+   */
+  deleteAction(comment: Comment): void {
+    this._commentService.delete(comment.id).subscribe(
+      (response: any) => {
+        this.onDeleteCommentAction(response.id);
+      },
+      (error: any) => {}
+    );
+  }
+
+  /**
+   * On comment deleted event.
+   * @param commentId number
+   * @returns void
+   */
+  onDeleteCommentAction(commentId: number): void {
+    const index = this.comments.findIndex(x => x.id === commentId);
+    if (index > -1) {
+      this.comments.splice(index, 1);
+    }
+
+    this.pageInfo.totalItems -= 1;
+  }
+
+  /**
    * Load edit component event
    * @returns void
    */

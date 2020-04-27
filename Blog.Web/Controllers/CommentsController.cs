@@ -115,7 +115,7 @@ namespace Blog.Web.Controllers
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <param name="model">The model.</param>
-        /// <returns></returns>
+        /// <returns>Task.</returns>
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
@@ -136,6 +136,28 @@ namespace Blog.Web.Controllers
 
             var mappedComment = _mapper.Map<CommentViewModel>(comment);
             return Ok(mappedComment);
+        }
+
+        // POST: Comments/Delete/5
+        /// <summary>
+        /// Deletes the asynchronous.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Task.</returns>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            var comment = await _commentService.GetCommentAsync(id);
+
+
+            _commentService.Delete(comment);
+
+            return Ok(new
+            {
+                id = id
+            });
         }
     }
 }
