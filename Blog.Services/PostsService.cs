@@ -90,8 +90,8 @@ namespace Blog.Services
         /// <inheritdoc/>
         public async Task<PostsViewDto> GetPostsAsync(SearchParametersDto searchParameters)
         {
-            PostsViewDto posts = new PostsViewDto();
-            var postsList = await this.Repository.TableNoTracking.Include(x => x.Author)./*Include(table => table.Comments).*/ToListAsync();
+            var posts = new PostsViewDto();
+            var postsList = await this.Repository.TableNoTracking.Include(x => x.Author).Include(table => table.Comments).ToListAsync();
             if (!string.IsNullOrEmpty(searchParameters.Search))
             {
                 postsList = postsList.Where(post => post.Title.ToLower().Contains(searchParameters.Search.ToLower())).ToList();
@@ -123,8 +123,7 @@ namespace Blog.Services
                     Tags = post.Tags,
                     AuthorId = post.AuthorId,
                     Author = post.Author,
-
-                    // CommentsCount = post.Comments.Count
+                    CommentsCount = post.Comments.Count
                 };
                 posts.Posts.Add(p);
             });
@@ -145,8 +144,11 @@ namespace Blog.Services
         /// <inheritdoc/>
         public async Task<PostsViewDto> GetUserPostsAsync(string userId, SearchParametersDto searchParameters)
         {
-            PostsViewDto posts = new PostsViewDto();
-            var postsList = await this.Repository.TableNoTracking.Include(x => x.Author)./*Include(table => table.Comments).*/Where(post => post.AuthorId.Equals(userId)).ToListAsync();
+            var posts = new PostsViewDto();
+            var postsList = await this.Repository.TableNoTracking
+                .Where(post => post.AuthorId.Equals(userId))
+                .Include(x => x.Author)
+                .Include(x => x.Comments).ToListAsync();
 
             if (!string.IsNullOrEmpty(searchParameters.Search))
             {

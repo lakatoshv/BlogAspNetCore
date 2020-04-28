@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 
 namespace Blog.Services.Core.Dtos.Posts
 {
@@ -72,8 +73,7 @@ namespace Blog.Services.Core.Dtos.Posts
         /// Gets or sets created at.
         /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-        // public int CommentsCount { get; set; }
-        // public IList<Comment> Comments { get; set; }
+        public int CommentsCount { get; set; }
+        public IList<Comment> Comments { get; set; }
     }
 }
