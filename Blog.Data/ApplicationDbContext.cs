@@ -129,6 +129,11 @@ namespace Blog.Data
             {
                 foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
             }
+
+            builder.Entity<Comment>()
+                .HasOne(p => p.Post)
+                .WithMany(t => t.Comments)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         /// <summary>
