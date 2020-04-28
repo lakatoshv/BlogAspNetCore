@@ -25,6 +25,12 @@ export class HttpClientService {
    */
   public static readonly POSTS_CONTROLLER = HttpClientService.API + '/posts';
 
+  /**
+   * Comments controller url.
+   * @param COMMENTS_CONTROLLER string
+   */
+  public static readonly COMMENTS_CONTROLLER = HttpClientService.API + '/comments';
+
   // Methods
 
   // Accounts controller methods
@@ -89,6 +95,25 @@ export class HttpClientService {
    */
   public static readonly USER_POSTS = HttpClientService.POSTS_CONTROLLER + '/user_posts';
 
+  // Comments controller methods
+  /**
+   * Get comment by post method.
+   * @param GET_COMMENTS_BY_POST string
+   */
+  public static readonly GET_COMMENTS_BY_POST = HttpClientService.COMMENTS_CONTROLLER + '/get-comments-by-post';
+
+  /**
+   * Create new comment.
+   * @param CREATE_COMMENT string
+   */
+  public static readonly CREATE_COMMENT = HttpClientService.COMMENTS_CONTROLLER + '/create';
+
+  /**
+   * Get comment by id.
+   * @param GET_COMMENT string
+   */
+  public static readonly GET_COMMENT = HttpClientService.COMMENTS_CONTROLLER + '/get-comment';
+
   /**
    * @param _httpClient HttpClient
    * @param _router Router
@@ -109,7 +134,9 @@ export class HttpClientService {
     url: string,
     params?: any | null
   ): Observable<any> {
-    return this._httpClient.get(url, this._getOptions(params));
+
+
+    return this._httpClient.get(url);
   }
 
   /**
@@ -159,13 +186,34 @@ export class HttpClientService {
 
   /**
    * Get options.
-   * @param params params
+   * @param params any
+   * @param isFormData any
+   * @param isNonAuthRequest any
    * @returns object
    */
-  private _getOptions(params?: any): object {
-    const options = {
-      params: params
-    };
-    return options;
+  private _getOptions(
+    params?,
+    isFormData?,
+    isNonAuthRequest?): object {
+      const options = {
+        headers: this._getAuthHeaders(isFormData, isNonAuthRequest),
+        params: params
+      };
+      return options;
+  }
+
+  /**
+   * Get auth headers.
+   * @param isFormData boolean
+   * @param isNonAuthRequest boolean
+   */
+  private _getAuthHeaders(isFormData?: boolean, isNonAuthRequest?: boolean): HttpHeaders {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + JSON.parse(JSON.stringify(token))
+    });
+
+    return headers;
   }
 }

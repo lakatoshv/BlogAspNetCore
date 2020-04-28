@@ -51,6 +51,7 @@ namespace Blog.Services.GeneralService
         {
             return this.Repository.GetById(id);
         }
+
         /// <inheritdoc/>
         public async Task<T> FindAsync(object id)
         {
@@ -70,6 +71,18 @@ namespace Blog.Services.GeneralService
         }
 
         /// <inheritdoc/>
+        public async Task InsertAsync(T entity)
+        {
+            await this.Repository.InsertAsync(entity);
+        }
+
+        /// <inheritdoc/>
+        public async Task InsertAsync(IEnumerable<T> entities)
+        {
+            await this.Repository.InsertAsync(entities);
+        }
+
+        /// <inheritdoc/>
         public void Update(T entity)
         {
             this.Repository.Update(entity);
@@ -79,6 +92,24 @@ namespace Blog.Services.GeneralService
         public void Update(IEnumerable<T> entities)
         {
             this.Repository.Update(entities);
+        }
+
+        /// <inheritdoc/>
+        public async Task UpdateAsync(T entity)
+        {
+            await this.Repository.UpdateAsync(entity);
+        }
+
+        /// <inheritdoc/>
+        public async Task UpdateAsync(IEnumerable<T> entities)
+        {
+            await this.Repository.UpdateAsync(entities);
+        }
+
+        /// <inheritdoc/>
+        public void Delete(int id)
+        {
+            this.Repository.Delete(this.Find(id));
         }
 
         /// <inheritdoc/>
@@ -94,13 +125,31 @@ namespace Blog.Services.GeneralService
         }
 
         /// <inheritdoc/>
+        public async Task DeleteAsync(int id)
+        {
+            await this.Repository.DeleteAsync(await this.FindAsync(id));
+        }
+
+        /// <inheritdoc/>
+        public async Task DeleteAsync(T entity)
+        {
+            await this.Repository.DeleteAsync(entity);
+        }
+
+        /// <inheritdoc/>
+        public async Task DeleteAsync(IEnumerable<T> entities)
+        {
+            await this.Repository.DeleteAsync(entities);
+        }
+
+        /// <inheritdoc/>
         public async Task<PagedListResult<T>> SearchAsync(SearchQuery<T> searchQuery)
         {
             return await this.Repository.SearchAsync(searchQuery);
         }
 
         /// <inheritdoc/>
-        public async Task<PagedListResult<T>> SearchBySquenceAsync(
+        public async Task<PagedListResult<T>> SearchBySequenceAsync(
             SearchQuery<T> searchQuery,
             IQueryable<T> sequence)
         {

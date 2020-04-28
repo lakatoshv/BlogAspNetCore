@@ -93,6 +93,20 @@ namespace Blog.Data.Repository
         void Insert(IEnumerable<T> entities);
 
         /// <summary>
+        /// Inserts the asynchronous.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task InsertAsync(T entity);
+
+        /// <summary>
+        /// Inserts the asynchronous.
+        /// </summary>
+        /// <param name="entities">The entities.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task InsertAsync(IEnumerable<T> entities);
+
+        /// <summary>
         /// Update item.
         /// </summary>
         /// <param name="entity">entity.</param>
@@ -105,6 +119,20 @@ namespace Blog.Data.Repository
         void Update(IEnumerable<T> entities);
 
         /// <summary>
+        /// Updates the asynchronous.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task UpdateAsync(T entity);
+
+        /// <summary>
+        /// Updates the asynchronous.
+        /// </summary>
+        /// <param name="entities">The entities.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task UpdateAsync(IEnumerable<T> entities);
+
+        /// <summary>
         /// Delete item.
         /// </summary>
         /// <param name="entity">entity.</param>
@@ -115,6 +143,20 @@ namespace Blog.Data.Repository
         /// </summary>
         /// <param name="entities">entities.</param>
         void Delete(IEnumerable<T> entities);
+
+        /// <summary>
+        /// Deletes the asynchronous.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task DeleteAsync(T entity);
+
+        /// <summary>
+        /// Deletes the asynchronous.
+        /// </summary>
+        /// <param name="entities">The entities.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task DeleteAsync(IEnumerable<T> entities);
 
         /// <summary>
         /// Check on any.

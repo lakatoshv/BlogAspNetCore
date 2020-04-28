@@ -1,4 +1,4 @@
-<div class="container" *ngIf="post">
+<div class="container" *ngIf="isLoaded">
     <div class="row">
         <div class="col-lg-12 col-md-10 mx-auto">
             <div class="post-preview">
@@ -35,4 +35,4 @@
         </div>
     </div>
 </div>
-<app-comments-list [post-id]="postId"></app-comments-list>
+<app-comments-list *ngIf="isLoaded" [post-id]="postId" [comments]="post?.comments" [pageInfo]="pageInfo"></app-comments-list>

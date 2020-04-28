@@ -35,7 +35,7 @@ namespace Blog.Services.Interfaces
         /// <param name="postId">postId.</param>
         /// <param name="sortParameters">sortParameters.</param>
         /// <returns>Task.</returns>
-        Task<PostShowViewDto> GetPostWithComments(int postId, SortParametersDto sortParameters);
+        Task<PostShowViewDto> GetPost(int postId, SortParametersDto sortParameters);
 
         /// <summary>
         /// Async get user posts.

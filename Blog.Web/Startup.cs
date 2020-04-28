@@ -249,10 +249,12 @@ namespace Blog.Web
             services.AddTransient<IEmailTemplateProvider, SimpleEmailTemplateProvider>();
 
             services.AddTransient<IPostsService, PostsService>();
+            services.AddTransient<ICommentsService, CommentsService>();
 
             services.AddTransient<IRepository<RefreshToken>, TableMethods<RefreshToken>>();
             services.AddTransient<IRepository<Setting>, TableMethods<Setting>>();
             services.AddTransient<IRepository<Post>, TableMethods<Post>>();
+            services.AddTransient<IRepository<Comment>, TableMethods<Comment>>();
 
             services.AddTransient(x => x.GetService<IOptions<BlogConfiguration>>().Value);
             services.AddTransient<HostingConfig>();

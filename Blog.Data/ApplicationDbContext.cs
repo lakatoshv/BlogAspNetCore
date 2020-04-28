@@ -52,6 +52,14 @@ namespace Blog.Data
         public DbSet<Post> Posts { get; set; }
 
         /// <summary>
+        /// Gets or sets the comments.
+        /// </summary>
+        /// <value>
+        /// The comments.
+        /// </value>
+        public DbSet<Comment> Comments { get; set; }
+
+        /// <summary>
         /// Save changes.
         /// </summary>
         /// <returns>int.</returns>
@@ -121,6 +129,11 @@ namespace Blog.Data
             {
                 foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
             }
+
+            builder.Entity<Comment>()
+                .HasOne(p => p.Post)
+                .WithMany(t => t.Comments)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         /// <summary>

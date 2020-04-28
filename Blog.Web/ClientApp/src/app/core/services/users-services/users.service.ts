@@ -61,9 +61,10 @@ export class UsersService {
    * @returns void
    */
   public saveToken(token: string, refreshToken: string): void {
-    if (token && refreshToken) {
+    if (token) {
       localStorage.setItem('token', token);
       localStorage.setItem('refresh_token', refreshToken);
+      sessionStorage.setItem('token', token);
       this._globalService.resetUserData();
     }
   }

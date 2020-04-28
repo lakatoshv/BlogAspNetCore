@@ -22,19 +22,22 @@ namespace Blog.Services
     /// </summary>
     public class PostsService : GeneralService<Post>, IPostsService
     {
-        // private ICommentService _commentsService;
+        /// <summary>
+        /// The comments service.
+        /// </summary>
+        private ICommentsService _commentsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PostsService"/> class.
         /// </summary>
-        /// <param name="repo">repo.</param>
+        /// <param name="repo">The repo.</param>
+        /// <param name="commentsService">The comments service.</param>
         public PostsService(
-            IRepository<Post> repo)
-
-            // ,ICommentService commentsService
+            IRepository<Post> repo,
+            ICommentsService commentsService)
             : base(repo)
         {
-            // _commentsService = commentsService;
+            this._commentsService = commentsService;
         }
 
         /// <inheritdoc/>
@@ -51,40 +54,20 @@ namespace Blog.Services
         }
 
         /// <inheritdoc/>
-        public async Task<PostShowViewDto> GetPostWithComments(int postId, SortParametersDto sortParameters)
+        public async Task<PostShowViewDto> GetPost(int postId, SortParametersDto sortParameters)
         {
-            PostShowViewDto postModel = new PostShowViewDto
+            var postModel = new PostShowViewDto
             {
                 Post = await this.Repository.Table
                     .Where(x => x.Id.Equals(postId))
                     .Include(x => x.Author)
                     .FirstOrDefaultAsync(),
+                Comments = await this._commentsService.GetPagedCommentsByPostId(postId, sortParameters),
             };
             /*
             postModel.Profile = db.Profiles.Where(pr => pr.ApplicationUser.Equals(postModel.Post.Author)).FirstOrDefault();
             */
-            if (postModel.Post == null)
-            {
-                return null;
-            }
-
-            /*
-            var store = new UserStore<ApplicationUser>(new ApplicationDbContext());
-            var userManager = new UserManager<ApplicationUser>(store);
-            var author = postModel.Post.Author;
-            ApplicationUser user = userManager.FindByIdAsync(author).Result;
-            if (user != null)
-               postModel.Post.Author = user.UserName;
-
-            var tags = db.Tags.Where(tag => tag.PostId.Equals(postId)).ToList();
-            foreach (var tag in tags)
-            {
-               postModel.Post.PostTags.Add(tag);
-            }
-            */
-
-            // postModel.Comments = await _commentsService.GetPagedCommentsByPostId(postId, sortParameters);
-            return postModel;
+            return postModel.Post == null ? null : postModel;
         }
 
         /// <summary>
@@ -107,8 +90,8 @@ namespace Blog.Services
         /// <inheritdoc/>
         public async Task<PostsViewDto> GetPostsAsync(SearchParametersDto searchParameters)
         {
-            PostsViewDto posts = new PostsViewDto();
-            var postsList = await this.Repository.TableNoTracking.Include(x => x.Author)./*Include(table => table.Comments).*/ToListAsync();
+            var posts = new PostsViewDto();
+            var postsList = await this.Repository.TableNoTracking.Include(x => x.Author).Include(table => table.Comments).ToListAsync();
             if (!string.IsNullOrEmpty(searchParameters.Search))
             {
                 postsList = postsList.Where(post => post.Title.ToLower().Contains(searchParameters.Search.ToLower())).ToList();
@@ -140,8 +123,7 @@ namespace Blog.Services
                     Tags = post.Tags,
                     AuthorId = post.AuthorId,
                     Author = post.Author,
-
-                    // CommentsCount = post.Comments.Count
+                    CommentsCount = post.Comments.Count
                 };
                 posts.Posts.Add(p);
             });
@@ -162,8 +144,11 @@ namespace Blog.Services
         /// <inheritdoc/>
         public async Task<PostsViewDto> GetUserPostsAsync(string userId, SearchParametersDto searchParameters)
         {
-            PostsViewDto posts = new PostsViewDto();
-            var postsList = await this.Repository.TableNoTracking.Include(x => x.Author)./*Include(table => table.Comments).*/Where(post => post.AuthorId.Equals(userId)).ToListAsync();
+            var posts = new PostsViewDto();
+            var postsList = await this.Repository.TableNoTracking
+                .Where(post => post.AuthorId.Equals(userId))
+                .Include(x => x.Author)
+                .Include(x => x.Comments).ToListAsync();
 
             if (!string.IsNullOrEmpty(searchParameters.Search))
             {
