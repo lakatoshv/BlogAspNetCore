@@ -60,6 +60,14 @@ namespace Blog.Data
         public DbSet<Comment> Comments { get; set; }
 
         /// <summary>
+        /// Gets or sets the profiles.
+        /// </summary>
+        /// <value>
+        /// The profiles.
+        /// </value>
+        public DbSet<Profile> Profiles { get; set; }
+
+        /// <summary>
         /// Save changes.
         /// </summary>
         /// <returns>int.</returns>
@@ -133,6 +141,11 @@ namespace Blog.Data
             builder.Entity<Comment>()
                 .HasOne(p => p.Post)
                 .WithMany(t => t.Comments)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Profile>()
+                .HasOne(p => p.User)
+                .WithOne(t => t.Profile)
                 .OnDelete(DeleteBehavior.Cascade);
         }
 

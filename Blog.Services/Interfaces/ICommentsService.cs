@@ -21,7 +21,7 @@ namespace Blog.Services.Interfaces
         /// </summary>
         /// <param name="postId">The post identifier.</param>
         /// <param name="sortParameters">The sort parameters.</param>
-        /// <returns></returns>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task<CommentsViewDto> GetPagedCommentsByPostId(int postId, SortParametersDto sortParameters);
 
         /// <summary>

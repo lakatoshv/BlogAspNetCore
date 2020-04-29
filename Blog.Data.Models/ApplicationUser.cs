@@ -87,5 +87,13 @@ namespace Blog.Data.Models
             get => this._refreshTokens ?? (this._refreshTokens = new List<RefreshToken>());
             set => this._refreshTokens = value;
         }
+
+        /// <summary>
+        /// Gets or sets the profile.
+        /// </summary>
+        /// <value>
+        /// The profile.
+        /// </value>
+        public Profile Profile { get; set; }
     }
 }
