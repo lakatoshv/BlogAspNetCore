@@ -4,14 +4,22 @@
 
 namespace Blog.Services.Interfaces
 {
+    using System.Threading.Tasks;
+    using Core.Dtos.User;
     using Data.Models;
     using GeneralService;
 
     /// <summary>
     /// Profile service interface.
     /// </summary>
-    /// <seealso cref="Blog.Services.GeneralService.IGeneralService{Profile}" />
+    /// <seealso cref="IGeneralService{Profile}" />
     public interface IProfileService : IGeneralService<Profile>
     {
+        /// <summary>
+        /// Gets the profile.
+        /// </summary>
+        /// <param name="profileId">The profile identifier.</param>
+        /// <returns>Task.</returns>
+        Task<ApplicationUserDto> GetProfile(int profileId);
     }
 }

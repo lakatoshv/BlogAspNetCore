@@ -31,6 +31,12 @@ export class HttpClientService {
    */
   public static readonly COMMENTS_CONTROLLER = HttpClientService.API + '/comments';
 
+  /**
+   * Comments controller url.
+   * @param PROFILE_CONTROLLER string
+   */
+  public static readonly PROFILE_CONTROLLER = HttpClientService.API + '/profile';
+
   // Methods
 
   // Accounts controller methods

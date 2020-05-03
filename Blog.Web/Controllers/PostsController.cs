@@ -102,16 +102,6 @@ namespace Blog.Web.Controllers
             searchParameters.SortParameters.PageSize = 10;
             var posts = await _postsService.GetPostsAsync(searchParameters);
 
-            // var postsModel = _mapper.Map<IList<PostViewModel>>(posts);
-            /*var mappedPosts = _mapper.Map<PostViewModel>(posts);
-
-            var model = new PostViewModel
-            {
-                Posts = mappedPosts,
-                RecordsFiltered = jobs.Count
-            };
-            */
-
             if (posts == null)
             {
                 return NotFound();

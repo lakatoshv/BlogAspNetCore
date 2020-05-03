@@ -1,4 +1,6 @@
-﻿namespace Blog.Web.Mappers.AspNetUser
+﻿using Blog.Services.Core.Dtos.Posts;
+
+namespace Blog.Web.Mappers.AspNetUser
 {
     using Data.Models;
     using Blog.Services.Core.Dtos.User;
@@ -17,6 +19,8 @@
             CreateMap<ApplicationUser, UserItemViewModel>();
             CreateMap<UserItemViewModel, ApplicationUser>();
             CreateMap<UserRegistrationDto, ApplicationUser>();
+            CreateMap<ApplicationUser, ApplicationUserDto>();
+            CreateMap<ApplicationUserDto, ApplicationUser>();
         }
     }
 }

@@ -130,4 +130,14 @@ export class UsersService {
     return moment(expiresAt);
   }
   */
+
+  /**
+   * Get profile by id.
+   * @param id number
+   * @returns Observable<any>
+   */
+  public getProfile(id: number): Observable<any> {
+    return this._httpClient.get(HttpClientService.PROFILE_CONTROLLER.concat('/', id.toString()));
+  }
+
 }

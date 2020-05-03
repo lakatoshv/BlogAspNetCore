@@ -43,6 +43,7 @@ using Microsoft.AspNetCore.Rewrite;
 using Blog.Services.Interfaces;
 using Blog.Services;
 using Blog.Services.ControllerContext;
+using Profile = Blog.Data.Models.Profile;
 
 namespace Blog.Web
 {
@@ -250,11 +251,13 @@ namespace Blog.Web
 
             services.AddTransient<IPostsService, PostsService>();
             services.AddTransient<ICommentsService, CommentsService>();
+            services.AddTransient<IProfileService, ProfileService>();
 
             services.AddTransient<IRepository<RefreshToken>, TableMethods<RefreshToken>>();
             services.AddTransient<IRepository<Setting>, TableMethods<Setting>>();
             services.AddTransient<IRepository<Post>, TableMethods<Post>>();
             services.AddTransient<IRepository<Comment>, TableMethods<Comment>>();
+            services.AddTransient<IRepository<Profile>, TableMethods<Profile>>();
 
             services.AddTransient(x => x.GetService<IOptions<BlogConfiguration>>().Value);
             services.AddTransient<HostingConfig>();
