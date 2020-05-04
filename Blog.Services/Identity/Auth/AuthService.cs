@@ -2,6 +2,8 @@
 // Copyright (c) Blog. All rights reserved.
 // </copyright>
 
+using Blog.Services.Interfaces;
+
 namespace Blog.Services.Identity.Auth
 {
     using System;
@@ -39,19 +41,27 @@ namespace Blog.Services.Identity.Auth
         private readonly JwtIssuerOptions _jwtOptions;
 
         /// <summary>
+        /// The profile service.
+        /// </summary>
+        private readonly IProfileService _profileService;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="AuthService"/> class.
         /// </summary>
         /// <param name="userManager">userManager.</param>
         /// <param name="jwtFactory">jwtFactory.</param>
         /// <param name="jwtOptions">jwtOptions.</param>
+        /// <param name="profileService">jwtOptions.</param>
         public AuthService(
             UserManager<ApplicationUser> userManager,
             IJwtFactory jwtFactory,
-            IOptions<JwtIssuerOptions> jwtOptions)
+            IOptions<JwtIssuerOptions> jwtOptions,
+            IProfileService profileService)
         {
             this._userManager = userManager;
             this._jwtFactory = jwtFactory;
             this._jwtOptions = jwtOptions.Value;
+            this._profileService = profileService;
         }
 
         /// <inheritdoc/>
@@ -125,6 +135,8 @@ namespace Blog.Services.Identity.Auth
                 return await Task.FromResult<ClaimsIdentity>(null);
             }
 
+            userToVerify.Profile = this._profileService.FirstOrDefault(x => x.UserId.Equals(userToVerify.Id));
+
             var claimsIdentityUserModel = this.GetIdentityClaims(userToVerify, userName);
 
             return await Task.FromResult(this._jwtFactory.GenerateClaimsIdentity(claimsIdentityUserModel));
@@ -150,6 +162,8 @@ namespace Blog.Services.Identity.Auth
             {
                 return await Task.FromResult<ClaimsIdentity>(null);
             }
+
+            userToVerify.Profile = this._profileService.FirstOrDefault(x => x.UserId.Equals(userToVerify.Id));
 
             var claimsIdentityUserModel = this.GetIdentityClaims(userToVerify, userName);
 
@@ -178,6 +192,7 @@ namespace Blog.Services.Identity.Auth
                 UserName = userToVerify.UserName,
                 PhoneNumber = userToVerify.PhoneNumber,
                 IsEmailVerified = userToVerify.EmailConfirmed,
+                ProfileId = userToVerify.Profile.Id,
             };
         }
     }

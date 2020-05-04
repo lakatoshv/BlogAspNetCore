@@ -38,5 +38,10 @@ namespace Blog.Services.Core.Identity.Auth
         /// IsEmailVerified.
         /// </summary>
         public const string IsEmailVerified = "isEmailVerified";
+
+        /// <summary>
+        /// The profile identifier.
+        /// </summary>
+        public const string ProfileId = "profileId";
     }
 }

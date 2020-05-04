@@ -72,6 +72,7 @@ namespace Blog.Services.Core.Identity.Auth
                 identity.FindFirst(JwtClaimTypes.Email),
                 identity.FindFirst(JwtClaimTypes.PhoneNumber),
                 identity.FindFirst(JwtClaimTypes.IsEmailVerified),
+                identity.FindFirst(JwtClaimTypes.ProfileId),
             });
 
             var user = await this._userManager.FindByNameAsync(userName);
@@ -123,7 +124,8 @@ namespace Blog.Services.Core.Identity.Auth
                     new Claim(JwtClaimTypes.UserName, claimsIdentityUserModel.UserName),
                     new Claim(JwtClaimTypes.Email, claimsIdentityUserModel.Email),
                     new Claim(JwtClaimTypes.PhoneNumber, claimsIdentityUserModel.PhoneNumber ?? string.Empty),
-                    new Claim(JwtClaimTypes.IsEmailVerified, claimsIdentityUserModel.IsEmailVerified.ToString())
+                    new Claim(JwtClaimTypes.IsEmailVerified, claimsIdentityUserModel.IsEmailVerified.ToString()),
+                    new Claim(JwtClaimTypes.ProfileId, claimsIdentityUserModel.ProfileId.ToString()),
                 });
         }
 
