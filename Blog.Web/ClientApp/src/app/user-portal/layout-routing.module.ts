@@ -37,6 +37,10 @@ const routes: Routes = [
       {
         path: 'profile',
         loadChildren: '../user-portal/profile/profile.module#ProfileModule'
+      },
+      {
+        path: 'my-profile',
+        component: ProfilePageComponent
       }
     ]
   }

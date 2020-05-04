@@ -79,11 +79,14 @@ export class ProfilePageComponent implements OnInit {
     if (!this.isForCurrentUser) {
       if (this._profileId !== null) {
         this._getProfile(this._profileId);
+        this._getPosts();
       } else {
         this._router.navigateByUrl('/');
       }
     } else if (!this.isLoggedIn) {
       this._router.navigateByUrl('/authorization');
+    } else {
+      this._getProfile(this.user.profile.id);
     }
   }
 
@@ -94,6 +97,23 @@ export class ProfilePageComponent implements OnInit {
       },
       () => {}
     );
+  }
+
+  /**
+   * Get all posts
+   * @returns void
+   */
+  private _getPosts(): void {
+    /*this._postService.userPosts(this.user.id, null).subscribe(
+      (response: any) => {
+        this.posts = response.posts;
+        this.pageInfo = response.pageInfo;
+        this.isLoaded = true;
+      },
+      (error) => {}
+    );
+
+    this.pageInfo.totalItems = this.posts.length;*/
   }
 
   /**
