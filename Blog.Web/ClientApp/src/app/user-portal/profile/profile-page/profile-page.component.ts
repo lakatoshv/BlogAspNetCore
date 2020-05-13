@@ -5,6 +5,8 @@ import { User } from 'src/app/core/models/User';
 import { Post } from 'src/app/core/models/Post';
 import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
 import { UsersService } from 'src/app/core/services/users-services/users.service';
+import { PostService } from 'src/app/core/services/posts-services/post.service';
+import { PageInfo } from 'src/app/core/models/PageInfo';
 
 @Component({
   selector: 'app-profile-page',
@@ -16,11 +18,6 @@ export class ProfilePageComponent implements OnInit {
    * @param user User
    */
   public user: User = null;
-
-  /**
-   * @param posts Post[]
-   */
-  public posts: Post[] = [];
 
   /**
    * @param topTab string
@@ -43,6 +40,14 @@ export class ProfilePageComponent implements OnInit {
   public isLoggedIn = false;
 
   /**
+   * @param isLoaded boolean
+   */
+  public isLoaded = false;
+
+  public postsCount = 0;
+
+
+  /**
    * @param _profileId number
    */
   private _profileId?: number;
@@ -59,7 +64,8 @@ export class ProfilePageComponent implements OnInit {
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
     private _globalService: GlobalService,
-    private _usersService: UsersService
+    private _usersService: UsersService,
+    private _postService: PostService
   ) { }
 
   /**
@@ -79,7 +85,6 @@ export class ProfilePageComponent implements OnInit {
     if (!this.isForCurrentUser) {
       if (this._profileId !== null) {
         this._getProfile(this._profileId);
-        this._getPosts();
       } else {
         this._router.navigateByUrl('/');
       }
@@ -97,23 +102,6 @@ export class ProfilePageComponent implements OnInit {
       },
       () => {}
     );
-  }
-
-  /**
-   * Get all posts
-   * @returns void
-   */
-  private _getPosts(): void {
-    /*this._postService.userPosts(this.user.id, null).subscribe(
-      (response: any) => {
-        this.posts = response.posts;
-        this.pageInfo = response.pageInfo;
-        this.isLoaded = true;
-      },
-      (error) => {}
-    );
-
-    this.pageInfo.totalItems = this.posts.length;*/
   }
 
   /**

@@ -63,7 +63,7 @@
                                 <tbody>
                                     <tr>
                                         <td>Мої пости:</td>
-                                        <td><b>{{posts.length}}</b></td>
+                                        <td><b>{{postsCount}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Збережені пости:</td>
@@ -78,35 +78,7 @@
                             <div class="tab-content">
                                 <div *ngIf="postsTab === 'my'" [ngClass]="{'active': postsTab === 'my'}" class="tab-pane active" id="my">
                                     <p><b>Пости</b></p>
-                                    <table class="table table-hover table-condensed">
-                                        <thead>
-                                            <tr>
-                                                <th style="width:35%"><b>Назва:</b></th>
-                                                <th style="width:10%"><b>Кількість переглядів:</b></th>
-                                                <th style="width:10%"><b>Кількість лайків:</b></th>
-                                                <th style="width:10%"><b>Кількість дизлайків:</b></th>
-                                                <th style="width:15%"><b>Дата створення:</b></th>
-                                                <th style="width:20%"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr *ngFor="let post of posts">
-                                                <td>
-                                                    <a routerLink="/blog/posts/show/{{post.id}}">{{post.title}}</a>
-                                                </td>
-                                                <td>{{post.seen}}</td>
-                                                <td>{{post.likes}}</td>
-                                                <td>{{post.dislikes}}</td>
-                                                <td>12.12.2019</td>
-                                                <td class="actions" data-th="">
-                                                    <a class="btn btn-primary" routerLink="/blog/edit"><i class="fa fa-edit"></i></a>
-                                                    <button type="button" class="btn btn-sm text-white btn-danger" id="1">
-                              <i class="fa fa-trash"></i>
-                          </button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <app-posts-table [userId]="user.profile.userId" (postsCount)="postsCount = $event"></app-posts-table>
                                 </div>
                                 <div *ngIf="postsTab === 'saved'" [ngClass]="{'active': postsTab === 'saved'}" class="tab-pane" id="saved">
                                     Збережені пости
