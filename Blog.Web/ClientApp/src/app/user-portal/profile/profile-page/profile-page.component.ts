@@ -95,6 +95,11 @@ export class ProfilePageComponent implements OnInit {
     }
   }
 
+  /**
+   * Get user profile by id.
+   * @param id number
+   * @returns void
+   */
   private _getProfile(id: number): void {
     this._usersService.getProfile(id).subscribe(
       (response: any) => {

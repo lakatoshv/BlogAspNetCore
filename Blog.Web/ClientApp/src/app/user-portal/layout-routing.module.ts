@@ -41,6 +41,10 @@ const routes: Routes = [
       {
         path: 'my-profile',
         component: ProfilePageComponent
+      },
+      {
+        path: 'my-profile/edit',
+        component: EditProfileComponent
       }
     ]
   }
