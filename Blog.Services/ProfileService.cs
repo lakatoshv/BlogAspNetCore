@@ -44,7 +44,6 @@ namespace Blog.Services
         {
             var profile = await this.Table.Where(x => x.Id == profileId).Include(x => x.User).FirstOrDefaultAsync();
             var user = this._mapper.Map<ApplicationUser, ApplicationUserDto>(profile.User);
-            user.Profile.User = null;
             return user;
         }
     }

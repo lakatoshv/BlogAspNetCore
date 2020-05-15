@@ -21,6 +21,7 @@ import { CoreModule } from 'src/app/core/core.module';
   ],
   declarations: [
     ProfilePageComponent,
+    EditProfileComponent
   ],
   exports: [ProfilePageComponent]
 })

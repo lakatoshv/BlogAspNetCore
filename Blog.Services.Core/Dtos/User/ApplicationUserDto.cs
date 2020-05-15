@@ -37,6 +37,14 @@ namespace Blog.Services.Core.Dtos.User
         public ICollection<IdentityUserRole<string>> Roles { get; set; }
 
         /// <summary>
+        /// Gets or sets the phone number.
+        /// </summary>
+        /// <value>
+        /// The phone number.
+        /// </value>
+        public string PhoneNumber { get; set; }
+
+        /// <summary>
         /// Gets or sets the profile.
         /// </summary>
         /// <value>

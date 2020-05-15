@@ -68,6 +68,7 @@ export class EditProfileComponent implements OnInit {
   private _getProfile(id: number): void {
     this._usersService.getProfile(id).subscribe(
       (response: any) => {
+        debugger
         this.user = response;
         this._setFormData();
       },
@@ -86,14 +87,25 @@ export class EditProfileComponent implements OnInit {
       } else { console.error('Different passwords'); }
     }
 
-    this._usersService.updateProfile(this._globalService._currentUser.id, profileModel)
-    /*this._globalService._currentUser.userName = profileModel.firstName + ' ' + profileModel.lastName;
-    this._globalService._currentUser.email = profileModel.email;
-    this._globalService._currentUser.firstName = profileModel.firstName;
-    this._globalService._currentUser.lastName = profileModel.lastName;
-    this._globalService._currentUser.phoneNumber = profileModel.phoneNumber;
-    this._globalService._currentUser.profile.about = profileModel.about;
-    // this._usersService.saveUser(JSON.stringify(this._globalService._currentUser));*/
+    const profile = new ProfileViewDto(
+      profileModel.email,
+      profileModel.firstName,
+       profileModel.lastName,
+       profileModel.phoneNumber,
+       profileModel.newPassword,
+       profileModel.about);
+    this._usersService.updateProfile(this._globalService._currentUser.profile.id, profile).subscribe(
+      (result: any) => {
+        this._globalService._currentUser.userName = result.firstName + ' ' + result.lastName;
+        this._globalService._currentUser.email = result.email;
+        this._globalService._currentUser.firstName = result.firstName;
+        this._globalService._currentUser.lastName = result.lastName;
+        this._globalService._currentUser.phoneNumber = result.phoneNumber;
+        this._globalService._currentUser.profile.about = result.about;
+        // this._usersService.saveUser(JSON.stringify(this._globalService._currentUser));*/
+      },
+      (error) => {}
+    );
   }
 
   /**
@@ -106,8 +118,6 @@ export class EditProfileComponent implements OnInit {
     this.profileForm.get('lastName').setValue(this.user.lastName);
     this.profileForm.get('phoneNumber').setValue(this.user.phoneNumber);
     this.profileForm.get('about').setValue(this.user.profile.about);
-
-    this._usersService.
   }
 
   /**
