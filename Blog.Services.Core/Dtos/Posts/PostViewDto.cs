@@ -2,11 +2,11 @@
 // Copyright (c) Blog. All rights reserved.
 // </copyright>
 
-using System;
-using System.Collections.Generic;
-
 namespace Blog.Services.Core.Dtos.Posts
 {
+    using System;
+    using System.Collections.Generic;
+    using User;
     using Data.Models;
 
     /// <summary>
@@ -67,7 +67,7 @@ namespace Blog.Services.Core.Dtos.Posts
         /// <summary>
         /// Gets or sets application user.
         /// </summary>
-        public virtual ApplicationUser Author { get; set; }
+        public virtual ApplicationUserDto Author { get; set; }
 
         /// <summary>
         /// Gets or sets created at.

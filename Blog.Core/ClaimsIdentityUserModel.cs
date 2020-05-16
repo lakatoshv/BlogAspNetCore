@@ -33,5 +33,13 @@ namespace Blog.Core
         /// Gets or sets a value indicating whether is email verified.
         /// </summary>
         public bool IsEmailVerified { get; set; }
+
+        /// <summary>
+        /// Gets or sets the profile identifier.
+        /// </summary>
+        /// <value>
+        /// The profile identifier.
+        /// </value>
+        public int ProfileId { get; set; }
     }
 }

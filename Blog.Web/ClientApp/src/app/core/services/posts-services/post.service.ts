@@ -51,7 +51,7 @@ export class PostService {
       return this._httpClient.post(HttpClientService.USER_POSTS.concat('/', userId.toString()), model);
     }
 
-    return this._httpClient.post(HttpClientService.USER_POSTS.concat('/', userId.toString()));
+    return this._httpClient.post(HttpClientService.USER_POSTS.concat('/', userId.toString()), null);
   }
 
   /**

@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { AboutComponent } from './default-pages/about/about.component';
 import { ContactsComponent } from './default-pages/contacts/contacts.component';
+import { ProfileModule } from './profile/profile.module';
 // import { SharedModule } from "@app/shared";
 
 @NgModule({
@@ -17,7 +18,8 @@ import { ContactsComponent } from './default-pages/contacts/contacts.component';
     AngularFontAwesomeModule,
     ReactiveFormsModule,
     EditorModule,
-    UserModule
+    UserModule,
+    ProfileModule
   ],
   declarations: [
     LayoutComponentComponent,

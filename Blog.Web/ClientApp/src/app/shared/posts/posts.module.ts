@@ -15,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { PostService } from 'src/app/core/services/posts-services/post.service';
 import { CommentService } from 'src/app/core/services/posts-services/comment.service';
 import { HttpClientService } from 'src/app/core/services/global-service/http-client-services/http-client.service';
+import { PostsTableComponent } from './posts-table/posts-table.component';
 
 @NgModule({
   imports: [
@@ -32,11 +33,13 @@ import { HttpClientService } from 'src/app/core/services/global-service/http-cli
     ShowComponent,
     AddPostComponent,
     EditPostComponent,
-    MyPostsComponent
+    MyPostsComponent,
+    PostsTableComponent
   ],
   exports: [
     AddPostComponent,
-    EditPostComponent
+    EditPostComponent,
+    PostsTableComponent
   ],
   providers: [PostService, CommentService, HttpClientService]
 })

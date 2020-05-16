@@ -7,12 +7,14 @@ namespace Blog.Services
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using AutoMapper;
     using Blog.Core.Helpers;
-    using Data.Models;
-    using Data.Repository;
+    using Core.Dtos.User;
     using Core;
     using Core.Dtos;
     using Core.Dtos.Posts;
+    using Data.Models;
+    using Data.Repository;
     using GeneralService;
     using Interfaces;
     using Microsoft.EntityFrameworkCore;
@@ -28,16 +30,24 @@ namespace Blog.Services
         private ICommentsService _commentsService;
 
         /// <summary>
+        /// The mapper.
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="PostsService"/> class.
         /// </summary>
         /// <param name="repo">The repo.</param>
         /// <param name="commentsService">The comments service.</param>
+        /// <param name="mapper">The mapper.</param>
         public PostsService(
             IRepository<Post> repo,
-            ICommentsService commentsService)
+            ICommentsService commentsService,
+            IMapper mapper)
             : base(repo)
         {
             this._commentsService = commentsService;
+            _mapper = mapper;
         }
 
         /// <inheritdoc/>
@@ -61,6 +71,7 @@ namespace Blog.Services
                 Post = await this.Repository.Table
                     .Where(x => x.Id.Equals(postId))
                     .Include(x => x.Author)
+                    .ThenInclude(x => x.Profile)
                     .FirstOrDefaultAsync(),
                 Comments = await this._commentsService.GetPagedCommentsByPostId(postId, sortParameters),
             };
@@ -82,6 +93,7 @@ namespace Blog.Services
                 // .Include(c => c.Comments)
                 .Where(x => x.Id.Equals(id))
                 .Include(x => x.Author)
+                .ThenInclude(x => x.Profile)
 
                 // .OrderByDescending(d => d.) comments order by date descending
                 .FirstOrDefaultAsync();
@@ -91,7 +103,11 @@ namespace Blog.Services
         public async Task<PostsViewDto> GetPostsAsync(SearchParametersDto searchParameters)
         {
             var posts = new PostsViewDto();
-            var postsList = await this.Repository.TableNoTracking.Include(x => x.Author).Include(table => table.Comments).ToListAsync();
+            var postsList = await this.Repository.TableNoTracking
+                .Include(x => x.Author)
+                .ThenInclude(x => x.Profile)
+                .Include(table => table.Comments)
+                .ToListAsync();
             if (!string.IsNullOrEmpty(searchParameters.Search))
             {
                 postsList = postsList.Where(post => post.Title.ToLower().Contains(searchParameters.Search.ToLower())).ToList();
@@ -110,7 +126,7 @@ namespace Blog.Services
             posts.Posts = new List<PostViewDto>();
             postsList.ForEach(post =>
             {
-                PostViewDto p = new PostViewDto()
+                var p = new PostViewDto()
                 {
                     Id = post.Id,
                     Title = post.Title,
@@ -122,9 +138,10 @@ namespace Blog.Services
                     ImageUrl = post.ImageUrl,
                     Tags = post.Tags,
                     AuthorId = post.AuthorId,
-                    Author = post.Author,
-                    CommentsCount = post.Comments.Count
+                    Author = this._mapper.Map<ApplicationUser, ApplicationUserDto>(post.Author),
+                    CommentsCount = post.Comments.Count,
                 };
+                post.Author.Profile.User = null;
                 posts.Posts.Add(p);
             });
 
@@ -148,6 +165,7 @@ namespace Blog.Services
             var postsList = await this.Repository.TableNoTracking
                 .Where(post => post.AuthorId.Equals(userId))
                 .Include(x => x.Author)
+                .ThenInclude(x => x.Profile)
                 .Include(x => x.Comments).ToListAsync();
 
             if (!string.IsNullOrEmpty(searchParameters.Search))
@@ -169,7 +187,7 @@ namespace Blog.Services
             posts.Posts = new List<PostViewDto>();
             postsList.ForEach(post =>
             {
-                PostViewDto p = new PostViewDto()
+                var p = new PostViewDto
                 {
                     Id = post.Id,
                     Title = post.Title,
@@ -181,10 +199,10 @@ namespace Blog.Services
                     ImageUrl = post.ImageUrl,
                     Tags = post.Tags,
                     AuthorId = post.AuthorId,
-                    Author = post.Author,
-
-                    // CommentsCount = post.Comments.Count
+                    Author = _mapper.Map<ApplicationUser, ApplicationUserDto>(post.Author),
+                    CommentsCount = post.Comments.Count,
                 };
+                post.Author.Profile.User = null;
                 posts.Posts.Add(p);
             });
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { User } from '../../models/User';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Profile } from '../../models/Profile';
 
 @Injectable({
   providedIn: 'root'
@@ -94,6 +95,7 @@ export class GlobalService {
     user.firstName = decoded['firstName'];
     user.lastName = decoded['lastName'];
     user.phoneNumber = decoded['phoneNumber'];
+    user.profile = new Profile(parseInt(decoded['profileId'], null), id);
     // user.IsEmailVerified = decoded['isEmailVerified'] == 'True';
     // user. = decoded['avatarUrl'];
     user.roles = decoded['roles'];

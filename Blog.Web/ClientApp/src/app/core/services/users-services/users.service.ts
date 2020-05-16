@@ -7,6 +7,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { HttpClientService } from '../global-service/http-client-services/http-client.service';
 import { GlobalService } from '../global-service/global-service.service';
 import { User } from '../../models/User';
+import { ProfileViewDto } from '../../Dto/ProfileViewDto';
 
 @Injectable()
 export class UsersService {
@@ -130,4 +131,24 @@ export class UsersService {
     return moment(expiresAt);
   }
   */
+
+  /**
+   * Get profile by id.
+   * @param id number
+   * @returns Observable<any>
+   */
+  public getProfile(id: number): Observable<any> {
+    return this._httpClient.get(HttpClientService.PROFILE_CONTROLLER.concat('/', id.toString()));
+  }
+
+  /**
+   * Update profile by id.
+   * @param id number
+   * @param model ProfileViewDto
+   * @returns Observable<any>
+   */
+  public updateProfile(id: number, model: ProfileViewDto): Observable<any> {
+    return this._httpClient.put(HttpClientService.PROFILE_CONTROLLER.concat('/', id.toString()), model);
+  }
+
 }

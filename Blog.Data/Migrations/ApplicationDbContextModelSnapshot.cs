@@ -180,6 +180,27 @@ namespace Blog.Data.Migrations
                     b.ToTable("Posts");
                 });
 
+            modelBuilder.Entity("Blog.Data.Models.Profile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("About");
+
+                    b.Property<string>("ProfileImg");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
+
+                    b.ToTable("Profiles");
+                });
+
             modelBuilder.Entity("Blog.Data.Models.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
@@ -315,6 +336,14 @@ namespace Blog.Data.Migrations
                     b.HasOne("Blog.Data.Models.ApplicationUser", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId");
+                });
+
+            modelBuilder.Entity("Blog.Data.Models.Profile", b =>
+                {
+                    b.HasOne("Blog.Data.Models.ApplicationUser", "User")
+                        .WithOne("Profile")
+                        .HasForeignKey("Blog.Data.Models.Profile", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Blog.Data.Models.RefreshToken", b =>

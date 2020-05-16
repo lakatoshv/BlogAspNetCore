@@ -68,7 +68,7 @@
                     <p class="post-meta">Теги: {{post.tags}}
                     </p>
                     <p class="post-meta">
-                        Написав: <b><a routerLink="/blog/profile/{{post.authorId}}">{{post.author.firstName + " " + post.author.lastName}}</a><i>
+                        Написав: <b><a routerLink="/blog/profile/{{post.author.profile?.id}}">{{post.author.firstName + " " + post.author.lastName}}</a><i>
                 10.11.2018</i></b>
                     </p>
                     <button class="btn btn-xs btn-info" (click)="like(post.id)" *ngIf="loggedIn"><span class="fa fa-thumbs-up"></span> Подобається</button>

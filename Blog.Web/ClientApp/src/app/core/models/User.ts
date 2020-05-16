@@ -1,3 +1,5 @@
+import { Profile } from './Profile';
+
 /**
  * User model.
  */
@@ -19,8 +21,10 @@ export class User {
    * @param roles Array<string>
    * User password
    * @param password string
-   * User about
-   * @param about string
+   * User profile id
+   * @param profileId number
+   * User profile
+   * @param profile Profile
    */
   constructor(
       public id: string,
@@ -30,9 +34,8 @@ export class User {
       public firstName?: string,
       public lastName?: string,
       public phoneNumber?: string,
-      // public ProfileImg?: string,
       public roles: Array<string> = [],
       public password?: string,
-      public about?: string
+      public profile?: Profile
   ) { }
 }
