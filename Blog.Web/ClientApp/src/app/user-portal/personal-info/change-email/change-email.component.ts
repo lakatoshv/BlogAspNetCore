@@ -1,20 +1,20 @@
+import { FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/core/models/User';
-import { Router } from '@angular/router';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
-import { FormGroup } from '@angular/forms';
 import { ProfileForm } from 'src/app/core/forms/user/ProfileForm';
 import { TinyMCEOptionsObject } from 'src/app/core/models/TinyMCEOptionsObject';
 import { TinyMCEOptions } from 'src/app/core/data/TinyMCEOptions';
+import { Router } from '@angular/router';
+import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
 import { UsersService } from 'src/app/core/services/users-services/users.service';
 import { ProfileViewDto } from 'src/app/core/Dto/ProfileViewDto';
 
 @Component({
-  selector: 'app-edit-profile',
-  templateUrl: './edit-profile.component.html',
-  styleUrls: ['./edit-profile.component.css']
+  selector: 'app-change-email',
+  templateUrl: './change-email.component.html',
+  styleUrls: ['./change-email.component.css']
 })
-export class EditProfileComponent implements OnInit {
+export class ChangeEmailComponent implements OnInit {
   /**
    * @param user User
    */
@@ -68,7 +68,6 @@ export class EditProfileComponent implements OnInit {
   private _getProfile(id: number): void {
     this._usersService.getProfile(id).subscribe(
       (response: any) => {
-        debugger
         this.user = response;
         this._setFormData();
       },
@@ -77,9 +76,8 @@ export class EditProfileComponent implements OnInit {
   }
 
   /**
-   * Change user data.
+   * Change user email.
    * @param profileModel any
-   * @returns void
    */
   edit(profileModel: any): void {
     if (profileModel.oldPassword !== null && profileModel.newPassword !== null) {
@@ -90,11 +88,11 @@ export class EditProfileComponent implements OnInit {
 
     const profile = new ProfileViewDto(
       this.user.email,
-      profileModel.firstName,
-       profileModel.lastName,
-       profileModel.phoneNumber,
-       profileModel.newPassword,
-       profileModel.about);
+      this.user.firstName,
+      this.user.lastName,
+      this.user.phoneNumber,
+      profileModel.newPassword,
+      this.user.profile.about);
     this._usersService.updateProfile(this._globalService._currentUser.profile.id, profile).subscribe(
       (result: any) => {
         this._globalService._currentUser.userName = result.firstName + ' ' + result.lastName;
@@ -114,16 +112,11 @@ export class EditProfileComponent implements OnInit {
    * @returns void
    */
   private _setFormData(): void {
-    this.profileForm.get('userName').setValue(this.user.firstName + ' ' + this.user.lastName);
     this.profileForm.get('email').setValue(this.user.email);
-    this.profileForm.get('firstName').setValue(this.user.firstName);
-    this.profileForm.get('lastName').setValue(this.user.lastName);
-    this.profileForm.get('phoneNumber').setValue(this.user.phoneNumber);
-    this.profileForm.get('about').setValue(this.user.profile.about);
   }
 
   /**
-   * Clear form data
+   * Clear form data.
    * @returns void
    */
   private clearFormData(): void {

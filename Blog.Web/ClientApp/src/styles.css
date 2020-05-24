@@ -710,3 +710,7 @@ ul.socialIcons {
     margin-top: 0px !important;
     margin-bottom: 0px !important;
 }
+
+.table td {
+    line-height: 43px;
+}

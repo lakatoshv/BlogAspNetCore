@@ -12,6 +12,9 @@
                 <div class=" col-md-9 col-lg-9">
                     <ul class="nav nav-tabs">
                         <li class="active"><a data-toggle="tab" (click)="selectTab('main-info', 'top')">Осовна інформація</a></li>
+                        <li *ngIf="isForCurrentUser">
+                            <a data-toggle="tab" (click)="selectTab('personal-info', 'top')">Особиста інформація</a>
+                        </li>
                         <li><a data-toggle="tab" (click)="selectTab('posts', 'top')">Пости</a></li>
                         <li><a data-toggle="tab" (click)="selectTab('comments', 'top')">Коментарі</a></li>
                     </ul>
@@ -56,6 +59,39 @@
                                 <div [innerHTML]="user.profile.about">
                                 </div>
                             </div>
+                        </div>
+                        <div *ngIf="topTab === 'personal-info'" [ngClass]="{'active': topTab === 'personal-info'}" class="tab-pane active" id="main-info">
+                            <table class="table table-user-information">
+                                <tbody>
+                                    <tr>
+                                        <td>Електронна пошта:</td>
+                                        <td>
+                                            <b>{{user.email}}</b>
+                                        </td>
+                                        <td>
+                                            <a routerLink="personal-info/change-email"><b><i class="fa fa-edit"></i></b></a>
+                                            <a class="btn btn-default">Підтвердити</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Телефон:</td>
+                                        <td>
+                                            <b>{{user.phoneNumber}}</b>
+                                        </td>
+                                        <td>
+                                            <a routerLink="personal-info/change-phone-number"><b><i class="fa fa-edit"></i></b></a>
+                                            <a class="btn btn-default">Підтвердити</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a routerLink="personal-info/change-password"><b><i class="fa fa-edit"></i> Змінити пароль</b></a>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                         <div *ngIf="topTab === 'posts'" [ngClass]="{'active': topTab === 'posts'}" class="tab-pane" id="posts">
                             <p><b>Статистика</b></p>
