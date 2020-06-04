@@ -8,6 +8,7 @@ import { HttpClientService } from '../global-service/http-client-services/http-c
 import { GlobalService } from '../global-service/global-service.service';
 import { User } from '../../models/User';
 import { ProfileViewDto } from '../../Dto/ProfileViewDto';
+import { ChangePasswordDto } from '../../Dto/ChangePasswordDto';
 
 @Injectable()
 export class UsersService {
@@ -149,6 +150,10 @@ export class UsersService {
    */
   public updateProfile(id: number, model: ProfileViewDto): Observable<any> {
     return this._httpClient.put(HttpClientService.PROFILE_CONTROLLER.concat('/', id.toString()), model);
+  }
+
+  public changePassword(model: ChangePasswordDto): Observable<any> {
+    return this._httpClient.put(HttpClientService.CHANGE_PASSWORD, model);
   }
 
 }

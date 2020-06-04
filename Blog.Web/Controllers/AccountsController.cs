@@ -1,5 +1,8 @@
 ﻿using Blog.Services.ControllerContext;
+using Blog.Services.Core.Utilities;
+using Blog.Services.Identity.User;
 using Blog.Web.VIewModels.AspNetUser;
+using BLog.Web.ViewModels.Manage;
 
 namespace Blog.Web.Controllers
 {
@@ -24,7 +27,7 @@ namespace Blog.Web.Controllers
     [Authorize]
     public class AccountsController : BaseController
     {
-        // private readonly IUserService _userService;
+        private readonly IUserService _userService;
         // private readonly IEmailExtensionService _emailExtensionService;
         // private readonly IMapper _mapper;
         private readonly IRegistrationService _registrationService;
@@ -38,12 +41,13 @@ namespace Blog.Web.Controllers
             IRegistrationService registrationService,
             IAuthService authService,
             UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager)
+            RoleManager<ApplicationRole> roleManager,
+            IUserService userService)
             : base(controllerContext)
         {
             _userManager = userManager;
             _roleManager = roleManager;
-            // _userService = userService;
+            _userService = userService;
             // _emailExtensionService = emailService;
             // _mapper = mapper;
             _registrationService = registrationService;
@@ -192,6 +196,24 @@ namespace Blog.Web.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
+        }
+
+        // PUT: api/Users/5
+        [HttpPut("change-password")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> UpdateAsync([FromBody]ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return Bad(ModelState);
+
+            var changePasswordResult = await _userService.ChangePasswordAsync(CurrentUser.UserName, model.OldPassword, model.NewPassword);
+            if (!changePasswordResult.Succeeded)
+            {
+                ModelState.AddModelError(changePasswordResult.Errors);
+                return Bad(ModelState);
+            }
+            return NoContent();
         }
 
         // DELETE: api/ApiWithActions/5

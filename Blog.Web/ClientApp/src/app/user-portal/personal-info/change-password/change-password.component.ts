@@ -1,20 +1,20 @@
-import { FormGroup } from '@angular/forms';
+import { ChangePasswordDto } from './../../../core/Dto/ChangePasswordDto';
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/core/models/User';
-import { ProfileForm } from 'src/app/core/forms/user/ProfileForm';
+import { FormGroup } from '@angular/forms';
 import { TinyMCEOptionsObject } from 'src/app/core/models/TinyMCEOptionsObject';
 import { TinyMCEOptions } from 'src/app/core/data/TinyMCEOptions';
 import { Router } from '@angular/router';
 import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
 import { UsersService } from 'src/app/core/services/users-services/users.service';
-import { ProfileViewDto } from 'src/app/core/Dto/ProfileViewDto';
+import { ChangePasswordForm } from 'src/app/core/forms/user/ChangePasswordForm';
 
 @Component({
-  selector: 'app-change-email',
-  templateUrl: './change-email.component.html',
-  styleUrls: ['./change-email.component.css']
+  selector: 'app-change-password',
+  templateUrl: './change-password.component.html',
+  styleUrls: ['./change-password.component.css']
 })
-export class ChangeEmailComponent implements OnInit {
+export class ChangePasswordComponent implements OnInit {
   /**
    * @param user User
    */
@@ -28,7 +28,7 @@ export class ChangeEmailComponent implements OnInit {
   /**
    * @param profileForm FormGroup
    */
-  public profileForm: FormGroup = new ProfileForm().profileForm;
+  public profileForm: FormGroup = new ChangePasswordForm().profileForm;
 
   /**
    * @param tinyMCEOptions TinyMCEOptionsObject
@@ -80,25 +80,23 @@ export class ChangeEmailComponent implements OnInit {
    * @param profileModel any
    */
   edit(profileModel: any): void {
-    const profile = new ProfileViewDto(
-      profileModel.email,
-      this.user.firstName,
-      this.user.lastName,
-      this.user.phoneNumber,
-      this._globalService._currentUser.password,
-      this.user.profile.about);
-    this._usersService.updateProfile(this._globalService._currentUser.profile.id, profile).subscribe(
-      (result: any) => {
-        this._globalService._currentUser.userName = result.firstName + ' ' + result.lastName;
-        this._globalService._currentUser.email = result.email;
-        this._globalService._currentUser.firstName = result.firstName;
-        this._globalService._currentUser.lastName = result.lastName;
-        this._globalService._currentUser.phoneNumber = result.phoneNumber;
-        this._globalService._currentUser.profile.about = result.about;
-        // this._usersService.saveUser(JSON.stringify(this._globalService._currentUser));*/
-      },
-      (error) => {}
-    );
+    if (profileModel.oldPassword !== null
+        && profileModel.newPassword !== null
+        && profileModel.confirmPassword != null
+        && profileModel.newPassword === profileModel.confirmPassword) {
+      // if (profileModel.oldPassword === this.user.password) {
+      //  password = profileModel.newPassword;
+      // } else { console.error('Different passwords'); }
+      const profile = new ChangePasswordDto(
+        profileModel.oldPassword,
+        profileModel.newPassword);
+      this._usersService.changePassword(profile).subscribe(
+        () => {
+          // this._usersService.saveUser(JSON.stringify(this._globalService._currentUser));*/
+        },
+        (error) => {}
+      );
+    }
   }
 
   /**
@@ -106,7 +104,6 @@ export class ChangeEmailComponent implements OnInit {
    * @returns void
    */
   private _setFormData(): void {
-    this.profileForm.get('email').setValue(this.user.email);
   }
 
   /**
