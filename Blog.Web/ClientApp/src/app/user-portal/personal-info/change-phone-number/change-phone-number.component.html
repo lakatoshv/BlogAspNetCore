@@ -1,0 +1,19 @@
+<div class="container">
+    <div class="row" data-ref="container">
+        <div class="col-lg-12">
+            <h2 class="text-center" id="form-header">Редагувати пост</h2>
+            <form #f="ngForm" [formGroup]="profileForm" (ngSubmit)="edit(f.value)">
+                <div class="form-group">
+                    <label for="phoneNumber" tag="" class="optional">
+                      Номер телефону:
+                  </label>
+
+                    <input type="text" name="phoneNumber" id="phoneNumber" value="" class="form-control" formControlName="phoneNumber">
+                </div>
+
+                <a class="btn btn-default">Підтвердити телефон</a>
+                <input type="submit" name="submit" id="submit" value="Редагувати" class="btn btn-default">
+            </form>
+        </div>
+    </div>
+</div>

@@ -64,6 +64,12 @@ export class HttpClientService {
    */
   public static readonly GET_ALL_USERS = HttpClientService.ACCOUNTS_CONTROLLER + '/get-all-users';
 
+  /**
+   * Change password method.
+   * @param CHANGE_PASSWORD string
+   */
+  public static readonly CHANGE_PASSWORD = HttpClientService.ACCOUNTS_CONTROLLER + '/change-password';
+
   // Posts controller methods
   /**
    * Create post method.

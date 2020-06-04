@@ -1,3 +1,4 @@
+import { ChangePhoneNumberComponent } from './personal-info/change-phone-number/change-phone-number.component';
 import { ChangePasswordComponent } from './personal-info/change-password/change-password.component';
 import { ChangeEmailComponent } from './personal-info/change-email/change-email.component';
 import { NgModule } from '@angular/core';
@@ -56,6 +57,10 @@ const routes: Routes = [
         path: 'my-profile/personal-info/change-password',
         component: ChangePasswordComponent
       },
+      {
+        path: 'my-profile/personal-info/change-phone-number',
+        component: ChangePhoneNumberComponent
+      }
     ]
   }
 ];
