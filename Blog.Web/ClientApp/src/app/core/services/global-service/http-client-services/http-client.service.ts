@@ -70,6 +70,12 @@ export class HttpClientService {
    */
   public static readonly CHANGE_PASSWORD = HttpClientService.ACCOUNTS_CONTROLLER + '/change-password';
 
+  /**
+   * Send confirmation email.
+   * @param SEND_CONFIRMATION_EMAIL string
+   */
+  public static readonly SEND_CONFIRMATION_EMAIL = HttpClientService.ACCOUNTS_CONTROLLER + '/send-confirmation-email';
+
   // Posts controller methods
   /**
    * Create post method.

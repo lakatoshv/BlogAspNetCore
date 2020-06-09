@@ -1,3 +1,4 @@
+import { AccountsService } from 'src/app/core/services/users-services/account.sevice';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { User } from 'src/app/core/models/User';
@@ -39,11 +40,13 @@ export class ChangeEmailComponent implements OnInit {
    * @param _router Router
    * @param _globalService GlobalService
    * @param _usersService UsersService
+   * @param _accountsService: AccountsService
    */
   constructor(
     private _router: Router,
     private _globalService: GlobalService,
-    private _usersService: UsersService
+    private _usersService: UsersService,
+    private _accountsService: AccountsService
   ) { }
 
   /**
@@ -96,6 +99,19 @@ export class ChangeEmailComponent implements OnInit {
         this._globalService._currentUser.phoneNumber = result.phoneNumber;
         this._globalService._currentUser.profile.about = result.about;
         // this._usersService.saveUser(JSON.stringify(this._globalService._currentUser));*/
+      },
+      (error) => {}
+    );
+  }
+
+  /**
+   * Verify email.
+   * @returns void.
+   */
+  public verifyEmail(): void {
+    this._accountsService.sendConfirmationEmail().subscribe(
+      (result: any) => {
+        debugger
       },
       (error) => {}
     );
