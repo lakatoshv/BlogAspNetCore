@@ -70,8 +70,9 @@
                                         </td>
                                         <td>
                                             <a routerLink="personal-info/change-email"><b><i class="fa fa-edit"></i></b></a>
-                                            <a class="btn btn-default">Підтвердити</a>
+                                            <a class="btn btn-default" (click)="verifyEmail()">Підтвердити</a>
                                         </td>
+                                        <td><i *ngIf="user.emailConfirmed" class="fa fa-check text-success"></i></td>
                                     </tr>
                                     <tr>
                                         <td>Телефон:</td>
@@ -82,11 +83,13 @@
                                             <a routerLink="personal-info/change-phone-number"><b><i class="fa fa-edit"></i></b></a>
                                             <a class="btn btn-default">Підтвердити</a>
                                         </td>
+                                        <td></td>
                                     </tr>
                                     <tr>
                                         <td>
                                             <a routerLink="personal-info/change-password"><b><i class="fa fa-edit"></i> Змінити пароль</b></a>
                                         </td>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                     </tr>

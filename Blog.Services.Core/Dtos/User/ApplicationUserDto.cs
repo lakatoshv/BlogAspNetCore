@@ -32,6 +32,14 @@ namespace Blog.Services.Core.Dtos.User
         public string Email { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether [email confirmed].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [email confirmed]; otherwise, <c>false</c>.
+        /// </value>
+        public bool EmailConfirmed { get; set; }
+
+        /// <summary>
         /// Gets or sets roles.
         /// </summary>
         public ICollection<IdentityUserRole<string>> Roles { get; set; }
@@ -43,6 +51,14 @@ namespace Blog.Services.Core.Dtos.User
         /// The phone number.
         /// </value>
         public string PhoneNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [phone number confirmed].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [phone number confirmed]; otherwise, <c>false</c>.
+        /// </value>
+        public bool PhoneNumberConfirmed { get; set; }
 
         /// <summary>
         /// Gets or sets the profile.

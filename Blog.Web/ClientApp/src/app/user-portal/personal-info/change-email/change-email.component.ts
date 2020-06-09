@@ -13,7 +13,7 @@ import { ProfileViewDto } from 'src/app/core/Dto/ProfileViewDto';
 @Component({
   selector: 'app-change-email',
   templateUrl: './change-email.component.html',
-  styleUrls: ['./change-email.component.css']
+  styleUrls: ['./change-email.component.scss']
 })
 export class ChangeEmailComponent implements OnInit {
   /**

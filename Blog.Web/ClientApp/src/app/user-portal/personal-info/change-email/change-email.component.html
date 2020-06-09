@@ -11,6 +11,19 @@
 
                     <input type="email" name="email" id="email" value="" class="form-control" formControlName="email">
                 </div>
+
+                <div class="col-12" *ngIf="user.emailConfirmed">
+                    <div class="success-checkmark">
+                        <div class="check-icon">
+                            <span class="icon-line line-tip"></span>
+                            <span class="icon-line line-long"></span>
+                            <div class="icon-circle"></div>
+                            <div class="icon-fix"></div>
+                            <p class="text-center" style="margin-left: 100px;">Підтверджено</p>
+                        </div>
+                    </div>
+                </div>
+
                 <a class="btn btn-default" (click)="verifyEmail()">Підтвердити електронну пошту</a>
                 <input type="submit" name="submit" id="submit" value="Редагувати" class="btn btn-default">
             </form>
