@@ -1,3 +1,6 @@
+import { ChangePhoneNumberComponent } from './personal-info/change-phone-number/change-phone-number.component';
+import { ChangePasswordComponent } from './personal-info/change-password/change-password.component';
+import { ChangeEmailComponent } from './personal-info/change-email/change-email.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
@@ -45,6 +48,18 @@ const routes: Routes = [
       {
         path: 'my-profile/edit',
         component: EditProfileComponent
+      },
+      {
+        path: 'my-profile/personal-info/change-email',
+        component: ChangeEmailComponent
+      },
+      {
+        path: 'my-profile/personal-info/change-password',
+        component: ChangePasswordComponent
+      },
+      {
+        path: 'my-profile/personal-info/change-phone-number',
+        component: ChangePhoneNumberComponent
       }
     ]
   }

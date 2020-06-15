@@ -1,5 +1,9 @@
 ﻿using Blog.Services.ControllerContext;
+using Blog.Services.Core.Utilities;
+using Blog.Services.EmailServices.Interfaces;
+using Blog.Services.Identity.User;
 using Blog.Web.VIewModels.AspNetUser;
+using BLog.Web.ViewModels.Manage;
 
 namespace Blog.Web.Controllers
 {
@@ -24,34 +28,73 @@ namespace Blog.Web.Controllers
     [Authorize]
     public class AccountsController : BaseController
     {
-        // private readonly IUserService _userService;
-        // private readonly IEmailExtensionService _emailExtensionService;
+        /// <summary>
+        /// The user service.
+        /// </summary>
+        private readonly IUserService _userService;
+
+        /// <summary>
+        /// The email extension service.
+        /// </summary>
+        private readonly IEmailExtensionService _emailExtensionService;
         // private readonly IMapper _mapper;
+
+        /// <summary>
+        /// The registration service.
+        /// </summary>
         private readonly IRegistrationService _registrationService;
+
+        /// <summary>
+        /// The authentication service.
+        /// </summary>
         private readonly IAuthService _authService;
+
+        /// <summary>
+        /// The user manager.
+        /// </summary>
         private readonly UserManager<ApplicationUser> _userManager;
+
+        /// <summary>
+        /// The role manager.
+        /// </summary>
         private readonly RoleManager<ApplicationRole> _roleManager;
         // private readonly IRefreshTokenService _refreshTokenService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccountsController"/> class.
+        /// </summary>
+        /// <param name="controllerContext">The controller context.</param>
+        /// <param name="registrationService">The registration service.</param>
+        /// <param name="authService">The authentication service.</param>
+        /// <param name="userManager">The user manager.</param>
+        /// <param name="roleManager">The role manager.</param>
+        /// <param name="userService">The user service.</param>
+        /// <param name="emailService">The email service.</param>
         public AccountsController(
             IControllerContext controllerContext,
             IRegistrationService registrationService,
             IAuthService authService,
             UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager)
+            RoleManager<ApplicationRole> roleManager,
+            IUserService userService,
+            IEmailExtensionService emailService)
             : base(controllerContext)
         {
             _userManager = userManager;
             _roleManager = roleManager;
-            // _userService = userService;
-            // _emailExtensionService = emailService;
+            _userService = userService;
+            _emailExtensionService = emailService;
             // _mapper = mapper;
             _registrationService = registrationService;
             _authService = authService;
             // _refreshTokenService = refreshTokenService;
         }
 
-        // GET: api/Users
+        // GET: api/Users        
+        /// <summary>
+        /// Gets this instance.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         public IEnumerable<string> Get()
@@ -87,13 +130,6 @@ namespace Blog.Web.Controllers
             return Ok(jsonResult);
         }
 
-        // GET: api/Users/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         /// <summary>
         /// Get all users list.
         /// </summary>
@@ -104,6 +140,20 @@ namespace Blog.Web.Controllers
         {
             var users = await _userManager.Users.Include(u => u.Roles).ToListAsync();
             return Ok(users);
+        }
+
+        /// <summary>
+        /// Sends the verification email asynchronous.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("send-confirmation-email")]
+        [ProducesResponseType(204)]
+        public async Task<IActionResult> SendVerificationEmailAsync()
+        {
+            var token = await _userService.GetEmailVerificationTokenAsync(CurrentUser.Email);
+            await _emailExtensionService.SendVerificationEmailAsync(UserName, token);
+
+            return NoContent();
         }
 
         /// <summary>
@@ -188,16 +238,27 @@ namespace Blog.Web.Controllers
             return NoContent();
         }
 
-        // PUT: api/Users/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT: api/Users/5        
+        /// <summary>
+        /// Updates the asynchronous.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPut("change-password")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> UpdateAsync([FromBody]ChangePasswordViewModel model)
         {
-        }
+            if (!ModelState.IsValid)
+                return Bad(ModelState);
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            var changePasswordResult = await _userService.ChangePasswordAsync(CurrentUser.UserName, model.OldPassword, model.NewPassword);
+            if (!changePasswordResult.Succeeded)
+            {
+                ModelState.AddModelError(changePasswordResult.Errors);
+                return Bad(ModelState);
+            }
+            return NoContent();
         }
     }
 }

@@ -23,7 +23,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
-using System.Threading.Tasks;
 using Blog.Core.Configuration;
 using Microsoft.Extensions.Options;
 using Blog.Services.Core.Caching.Interfaces;
@@ -43,6 +42,7 @@ using Microsoft.AspNetCore.Rewrite;
 using Blog.Services.Interfaces;
 using Blog.Services;
 using Blog.Services.ControllerContext;
+using Blog.Services.Core.Utilities;
 using Profile = Blog.Data.Models.Profile;
 
 namespace Blog.Web
@@ -209,20 +209,24 @@ namespace Blog.Web
             services.AddSingleton<IEmailService, SmtpEmailService>();
 
             // Configure SmtpOptions
+            var smtpOptions = Configuration.GetSection(nameof(SmtpOptions));
+
+            // Configure SmtpOptions
             services.Configure<SmtpOptions>(options =>
             {
-                options.Host = Configuration["Host"];
-                options.Port = int.Parse(Configuration["Port"]);
-                options.UserName = Configuration["EmailUserName"];
-                options.Password = Configuration["Password"];
-                //options.EnableSsl = bool.Parse(Configuration["EnableSsl"]);
+                options.Host = smtpOptions[nameof(SmtpOptions.Host)];
+                options.Port = smtpOptions[nameof(SmtpOptions.Port)].ToInt();
+                options.UserName = smtpOptions[nameof(SmtpOptions.UserName)];
+                options.Password = smtpOptions[nameof(SmtpOptions.Password)];
+                options.EnableSsl = smtpOptions[nameof(SmtpOptions.EnableSsl)].ToBool();
             });
 
             // Configure SystemEmailOptions
+            var systemEmailOptions = Configuration.GetSection(nameof(EmailExtensionOptions));
             services.Configure<EmailExtensionOptions>(options =>
             {
-                options.BaseUrl = Configuration["BaseUrl"];
-                options.From = Configuration["From"];
+                options.BaseUrl = systemEmailOptions[nameof(EmailExtensionOptions.BaseUrl)];
+                options.From = systemEmailOptions[nameof(EmailExtensionOptions.From)];
             });
 
             #endregion

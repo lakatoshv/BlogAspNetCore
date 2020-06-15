@@ -9,6 +9,7 @@ import { EditorModule } from '@tinymce/tinymce-angular';
 import { AboutComponent } from './default-pages/about/about.component';
 import { ContactsComponent } from './default-pages/contacts/contacts.component';
 import { ProfileModule } from './profile/profile.module';
+import { PersonalInfoModule } from './personal-info/personal-info.module';
 // import { SharedModule } from "@app/shared";
 
 @NgModule({
@@ -19,7 +20,8 @@ import { ProfileModule } from './profile/profile.module';
     ReactiveFormsModule,
     EditorModule,
     UserModule,
-    ProfileModule
+    ProfileModule,
+    PersonalInfoModule
   ],
   declarations: [
     LayoutComponentComponent,

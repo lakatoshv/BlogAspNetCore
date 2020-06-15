@@ -7,6 +7,7 @@ import { GlobalService } from 'src/app/core/services/global-service/global-servi
 import { UsersService } from 'src/app/core/services/users-services/users.service';
 import { PostService } from 'src/app/core/services/posts-services/post.service';
 import { PageInfo } from 'src/app/core/models/PageInfo';
+import { AccountsService } from 'src/app/core/services/users-services/account.sevice';
 
 @Component({
   selector: 'app-profile-page',
@@ -58,6 +59,7 @@ export class ProfilePageComponent implements OnInit {
    * @param _router Router
    * @param _globalService GlobalService
    * @param _usersService UsersService
+   * @param _accountsService: AccountsService
    */
   constructor(
     private _generalService: GeneralServiceService,
@@ -65,7 +67,8 @@ export class ProfilePageComponent implements OnInit {
     private _router: Router,
     private _globalService: GlobalService,
     private _usersService: UsersService,
-    private _postService: PostService
+    private _postService: PostService,
+    private _accountsService: AccountsService
   ) { }
 
   /**
@@ -123,5 +126,17 @@ export class ProfilePageComponent implements OnInit {
         this.postsTab = selectedTab;
         break;
     }
+  }
+
+  /**
+   * Verify email.
+   * @returns void.
+   */
+  public verifyEmail(): void {
+    this._accountsService.sendConfirmationEmail().subscribe(
+      (result: any) => {
+      },
+      (error) => {}
+    );
   }
 }
