@@ -95,5 +95,38 @@ namespace Blog.Data.Models
         /// The profile.
         /// </value>
         public Profile Profile { get; set; }
+
+        /// <summary>
+        /// Gets or sets the posts.
+        /// </summary>
+        /// <value>
+        /// The posts.
+        /// </value>
+        public ICollection<Post> Posts { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the comments.
+        /// </summary>
+        /// <value>
+        /// The comments.
+        /// </value>
+        public ICollection<Comment> Comments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the received messages.
+        /// </summary>
+        /// <value>
+        /// The received messages.
+        /// </value>
+        public ICollection<Message> ReceivedMessages { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sent messages.
+        /// </summary>
+        /// <value>
+        /// The sent messages.
+        /// </value>
+        public ICollection<Message> SentMessages { get; set; }
     }
 }
