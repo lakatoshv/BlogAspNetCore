@@ -6,18 +6,18 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class MessageForm {
     public messageForm = new FormGroup({
         /**
-         * Name input field.
+         * Sender Name input field.
          */
-        name: new FormControl(''),
+        senderName: new FormControl(''),
 
         /**
-         * Email input field.
+         * Sender Email input field.
          */
-        email: new FormControl(''),
+        senderEmail: new FormControl(''),
 
         /**
-         * Message input field.
+         * Subject input field.
          */
-        message: new FormControl('')
+        subject: new FormControl('')
     });
 }

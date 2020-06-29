@@ -37,6 +37,12 @@ export class HttpClientService {
    */
   public static readonly PROFILE_CONTROLLER = HttpClientService.API + '/profile';
 
+  /**
+   * Messages controller url.
+   * @param MESSAGES_CONTROLLER string
+   */
+  public static readonly MESSAGES_CONTROLLER = HttpClientService.API + '/messages';
+
   // Methods
 
   // Accounts controller methods

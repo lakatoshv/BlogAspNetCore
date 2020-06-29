@@ -68,6 +68,14 @@ namespace Blog.Data
         public DbSet<Profile> Profiles { get; set; }
 
         /// <summary>
+        /// Gets or sets the messages.
+        /// </summary>
+        /// <value>
+        /// The messages.
+        /// </value>
+        public DbSet<Message> Messages { get; set; }
+
+        /// <summary>
         /// Save changes.
         /// </summary>
         /// <returns>int.</returns>
@@ -147,6 +155,21 @@ namespace Blog.Data
                 .HasOne(p => p.User)
                 .WithOne(t => t.Profile)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<ApplicationUser>()
+                .HasMany(p => p.Posts)
+                .WithOne(t => t.Author)
+                .HasForeignKey(x => x.AuthorId);
+
+            builder.Entity<ApplicationUser>()
+                .HasMany(p => p.SentMessages)
+                .WithOne(t => t.Sender)
+                .HasForeignKey(x => x.SenderId);
+
+            builder.Entity<ApplicationUser>()
+                .HasMany(p => p.ReceivedMessages)
+                .WithOne(t => t.Recipient)
+                .HasForeignKey(x => x.RecipientId);
         }
 
         /// <summary>

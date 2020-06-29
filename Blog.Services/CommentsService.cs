@@ -2,20 +2,18 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Blog.Core.Helpers;
-using Blog.Services.Core.Dtos;
-using Blog.Services.Core.Dtos.Posts;
-using Microsoft.EntityFrameworkCore;
-
 namespace Blog.Services
 {
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Blog.Core.Helpers;
+    using Core.Dtos;
+    using Core.Dtos.Posts;
     using Data.Models;
     using Data.Repository;
     using GeneralService;
     using Interfaces;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Comments service.

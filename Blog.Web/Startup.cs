@@ -256,12 +256,14 @@ namespace Blog.Web
             services.AddTransient<IPostsService, PostsService>();
             services.AddTransient<ICommentsService, CommentsService>();
             services.AddTransient<IProfileService, ProfileService>();
+            services.AddTransient<IMessagesService, MessagesService>();
 
             services.AddTransient<IRepository<RefreshToken>, TableMethods<RefreshToken>>();
             services.AddTransient<IRepository<Setting>, TableMethods<Setting>>();
             services.AddTransient<IRepository<Post>, TableMethods<Post>>();
             services.AddTransient<IRepository<Comment>, TableMethods<Comment>>();
             services.AddTransient<IRepository<Profile>, TableMethods<Profile>>();
+            services.AddTransient<IRepository<Message>, TableMethods<Message>>();
 
             services.AddTransient(x => x.GetService<IOptions<BlogConfiguration>>().Value);
             services.AddTransient<HostingConfig>();
