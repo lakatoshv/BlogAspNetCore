@@ -2,6 +2,8 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using Blog.Core.Enums;
+
 namespace Blog.Data.Models
 {
     using Core;
@@ -75,5 +77,13 @@ namespace Blog.Data.Models
         /// The body.
         /// </value>
         public string Body { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the message.
+        /// </summary>
+        /// <value>
+        /// The type of the message.
+        /// </value>
+        public MessageType MessageType { get; set; }
     }
 }

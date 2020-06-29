@@ -1,3 +1,4 @@
+import { MessagesService } from 'src/app/core/services/messages-service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -10,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     DefaultPagesRoutingModule
-  ]
+  ],
+  providers: [MessagesService]
 })
 export class DefaultPagesModule { }

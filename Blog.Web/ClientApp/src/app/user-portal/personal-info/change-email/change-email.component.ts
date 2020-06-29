@@ -111,7 +111,6 @@ export class ChangeEmailComponent implements OnInit {
   public verifyEmail(): void {
     this._accountsService.sendConfirmationEmail().subscribe(
       (result: any) => {
-        debugger
       },
       (error) => {}
     );

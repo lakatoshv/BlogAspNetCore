@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using System.Threading.Tasks;
+using Blog.Data.Models;
 using Blog.Services.ControllerContext;
-using Blog.Services.Core.Dtos;
 using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,8 +20,6 @@ namespace Blog.Web.Controllers
         /// The messages service.
         /// </summary>
         private readonly IMessagesService _messagesService;
-
-        // private readonly ICommentService _commentsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessagesController"/> class.
@@ -94,6 +90,26 @@ namespace Blog.Web.Controllers
             }
 
             return Ok(messages);
+        }
+
+        /// <summary>
+        /// Async create new post.
+        /// </summary>
+        /// <param name="model">model.</param>
+        /// <returns>IActionResult.</returns>
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> CreateAsync([FromBody] Message model)
+        {
+            if (CurrentUser != null)
+            {
+                model.SenderId = CurrentUser.Id;
+            }
+            await _messagesService.InsertAsync(model);
+
+            return Ok();
         }
     }
 }
