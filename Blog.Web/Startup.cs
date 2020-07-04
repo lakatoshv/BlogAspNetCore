@@ -43,6 +43,7 @@ using Blog.Services.Interfaces;
 using Blog.Services;
 using Blog.Services.ControllerContext;
 using Blog.Services.Core.Utilities;
+using Microsoft.OpenApi.Models;
 using Profile = Blog.Data.Models.Profile;
 
 namespace Blog.Web
@@ -287,6 +288,29 @@ namespace Blog.Web
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            // Swagger Configuration
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Blog Web Api",
+                    Description = "Blog Web Api Endpoints",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Vitalii Lakatosh",
+                        Email = string.Empty,
+                        Url = new Uri("http://lakatoshv.byethost8.com/resume.php"),
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Use under LICX",
+                        Url = new Uri("https://example.com/license"),
+                    }
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -302,6 +326,14 @@ namespace Blog.Web
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
+
+            var swaggerOptions = new SwaggerOptions();
+            Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
+            app.UseSwagger(option => { option.RouteTemplate = swaggerOptions.JsonRoute; });
+            app.UseSwaggerUI(option =>
+            {
+                option.SwaggerEndpoint(swaggerOptions.UiEndpoint, swaggerOptions.Description);
+            });
 
             app.UseAuthentication();
 
