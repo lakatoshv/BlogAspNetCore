@@ -5,18 +5,19 @@ using Blog.Data.Models;
 using Blog.Services.ControllerContext;
 using Blog.Services.Core.Dtos;
 using Blog.Services.Interfaces;
+using Blog.Web.Contracts.V1;
 using Blog.Web.VIewModels.Posts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static System.DateTime;
 
-namespace Blog.Web.Controllers
+namespace Blog.Web.Controllers.V1
 {
     /// <summary>
     /// Comments controller.
     /// </summary>
     /// <seealso cref="ControllerBase" />
-    [Route("api/[controller]")]
+    [Route(ApiRoutes.CommentsController.Comments)]
     [ApiController]
     public class CommentsController : BaseController
     {
@@ -52,7 +53,7 @@ namespace Blog.Web.Controllers
         /// <param name="id">The identifier.</param>
         /// <param name="sortParameters">The sort parameters.</param>
         /// <returns>Task.</returns>
-        [HttpPost("get-comments-by-post/{id}")]
+        [HttpPost(ApiRoutes.CommentsController.GetCommentsByPost)]
         public async Task<ActionResult> GetCommentsByPostAsync(int id, [FromBody] SortParametersDto sortParameters)
         {
             if (sortParameters is null)
@@ -74,7 +75,7 @@ namespace Blog.Web.Controllers
 
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        [HttpGet("{id}", Name = "get-comment")]
+        [HttpGet("{id}", Name = ApiRoutes.CommentsController.GetComment)]
         // GET: Posts/Show/5
         public async Task<ActionResult> GetComment(int id)
         {
@@ -90,7 +91,7 @@ namespace Blog.Web.Controllers
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns>Task.</returns>
-        [HttpPost("create")]
+        [HttpPost(ApiRoutes.CommentsController.CreateComment)]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [Authorize]
@@ -107,7 +108,7 @@ namespace Blog.Web.Controllers
 
             await _commentService.InsertAsync(comment);
 
-            return CreatedAtRoute("get-comment", new { id = comment.Id }, comment);
+            return CreatedAtRoute(ApiRoutes.CommentsController.GetComment, new { id = comment.Id }, comment);
         }
 
         /// <summary>

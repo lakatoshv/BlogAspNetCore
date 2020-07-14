@@ -1,7 +1,8 @@
 ﻿using Blog.Services.ControllerContext;
+using Blog.Web.Contracts.V1;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Blog.Web.Controllers
+namespace Blog.Web.Controllers.V1
 {
     using System.Threading.Tasks;
     using AutoMapper;
@@ -14,7 +15,7 @@ namespace Blog.Web.Controllers
     /// <summary>
     /// Posts controller.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route(ApiRoutes.PostsController.Posts)]
     [ApiController]
     [AllowAnonymous]
     public class PostsController : BaseController
@@ -91,7 +92,7 @@ namespace Blog.Web.Controllers
         /// </summary>
         /// <param name="searchParameters">searchParameters.</param>
         /// <returns>Task.</returns>
-        [HttpPost("get-posts")]
+        [HttpPost(ApiRoutes.PostsController.GetPosts)]
         public async Task<ActionResult> GetPosts([FromBody] SearchParametersDto searchParameters)
         {
             if (searchParameters.SortParameters is null)
@@ -119,7 +120,7 @@ namespace Blog.Web.Controllers
         /// <returns>Task.</returns>
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        [HttpPost("user_posts/{id}")]
+        [HttpPost(ApiRoutes.PostsController.UserPosts)]
         public async Task<ActionResult> GetUserPosts(string id, [FromBody] SearchParametersDto searchParameters)
         {
             if (searchParameters.SortParameters is null)
@@ -146,7 +147,7 @@ namespace Blog.Web.Controllers
         /// <returns>Task</returns>
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        [HttpGet("show/{id}")]
+        [HttpGet(ApiRoutes.PostsController.Show)]
         public async Task<ActionResult> Show(int id)
         {
             var sortParameters = new SortParametersDto
@@ -186,7 +187,7 @@ namespace Blog.Web.Controllers
             return Ok();
         }
 
-        [HttpPut("like/{id}")]
+        [HttpPut(ApiRoutes.PostsController.LikePost)]
         [Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
@@ -209,12 +210,12 @@ namespace Blog.Web.Controllers
             return Ok(mappedPost);
         }
 
-        [HttpPut("dislike/{id}")]
+        [HttpPut(ApiRoutes.PostsController.DislikePost)]
         [Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> DislikeCommentAsync(int id)
+        public async Task<IActionResult> DislikePostAsync(int id)
         {
             if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
 

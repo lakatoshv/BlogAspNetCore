@@ -11,37 +11,49 @@ export class HttpClientService {
    */
   private static readonly API: string = 'api';
 
+/**
+ * VERSION url.
+ * @param VERSION string
+ */
+  private static readonly VERSION: string = 'v1';
+
+/**
+ * BASE url.
+ * @param BASE string
+ */
+  private static readonly BASE: string = HttpClientService.API + "/" + HttpClientService.VERSION;
+
   // Controllers
 
   /**
    * Accounts controller url.
    * @param ACCOUNTS_CONTROLLER string
    */
-  public static readonly ACCOUNTS_CONTROLLER = HttpClientService.API + '/accounts';
+  public static readonly ACCOUNTS_CONTROLLER = HttpClientService.BASE + '/accounts';
 
   /**
    * Posts controller url.
    * @param POSTS_CONTROLLER string
    */
-  public static readonly POSTS_CONTROLLER = HttpClientService.API + '/posts';
+  public static readonly POSTS_CONTROLLER = HttpClientService.BASE + '/posts';
 
   /**
    * Comments controller url.
    * @param COMMENTS_CONTROLLER string
    */
-  public static readonly COMMENTS_CONTROLLER = HttpClientService.API + '/comments';
+  public static readonly COMMENTS_CONTROLLER = HttpClientService.BASE + '/comments';
 
   /**
    * Comments controller url.
    * @param PROFILE_CONTROLLER string
    */
-  public static readonly PROFILE_CONTROLLER = HttpClientService.API + '/profile';
+  public static readonly PROFILE_CONTROLLER = HttpClientService.BASE + '/profile';
 
   /**
    * Messages controller url.
    * @param MESSAGES_CONTROLLER string
    */
-  public static readonly MESSAGES_CONTROLLER = HttpClientService.API + '/messages';
+  public static readonly MESSAGES_CONTROLLER = HttpClientService.BASE + '/messages';
 
   // Methods
 

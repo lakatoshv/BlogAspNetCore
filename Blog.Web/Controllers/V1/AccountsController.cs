@@ -2,10 +2,11 @@
 using Blog.Services.Core.Utilities;
 using Blog.Services.EmailServices.Interfaces;
 using Blog.Services.Identity.User;
+using Blog.Web.Contracts.V1;
 using Blog.Web.VIewModels.AspNetUser;
 using BLog.Web.ViewModels.Manage;
 
-namespace Blog.Web.Controllers
+namespace Blog.Web.Controllers.V1
 {
     using Data.Models;
     using Services.Identity.Auth;
@@ -23,7 +24,7 @@ namespace Blog.Web.Controllers
     /// Accounts controller.
     /// Registration and login user.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route(ApiRoutes.AccountsController.Accounts)]
     [ApiController]
     [Authorize]
     public class AccountsController : BaseController
@@ -95,7 +96,7 @@ namespace Blog.Web.Controllers
         /// Gets this instance.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet(ApiRoutes.AccountsController.Accounts)]
         [AllowAnonymous]
         public IEnumerable<string> Get()
         {
@@ -107,10 +108,10 @@ namespace Blog.Web.Controllers
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>user json.</returns>
-        [HttpGet("initialize/{userId}")]
+        [HttpGet(ApiRoutes.AccountsController.Initialize)]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> InitializeAsync(string userId)
+        public IActionResult Initialize(string userId)
         {
             if (string.IsNullOrEmpty(userId))
             {
@@ -134,7 +135,7 @@ namespace Blog.Web.Controllers
         /// Get all users list.
         /// </summary>
         /// <returns>users.</returns>
-        [HttpGet("get-all-users")]
+        [HttpGet(ApiRoutes.AccountsController.GetAllUsers)]
         [AllowAnonymous]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -146,7 +147,7 @@ namespace Blog.Web.Controllers
         /// Sends the verification email asynchronous.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("send-confirmation-email")]
+        [HttpGet(ApiRoutes.AccountsController.SendConfirmationEmail)]
         [ProducesResponseType(204)]
         public async Task<IActionResult> SendVerificationEmailAsync()
         {
@@ -161,7 +162,7 @@ namespace Blog.Web.Controllers
         /// </summary>
         /// <param name="credentials">credentials.</param>
         /// <returns>jwt token.</returns>
-        [HttpPost("login")]
+        [HttpPost(ApiRoutes.AccountsController.Login)]
         [AllowAnonymous]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -185,7 +186,7 @@ namespace Blog.Web.Controllers
         /// </summary>
         /// <param name="model">model.</param>
         /// <returns>status.</returns>
-        [HttpPost("register")]
+        [HttpPost(ApiRoutes.AccountsController.Register)]
         [AllowAnonymous]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
@@ -244,7 +245,7 @@ namespace Blog.Web.Controllers
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        [HttpPut("change-password")]
+        [HttpPut(ApiRoutes.AccountsController.ChangePassword)]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> UpdateAsync([FromBody]ChangePasswordViewModel model)

@@ -1,35 +1,37 @@
-﻿using AutoMapper;
-using Blog.Services.ControllerContext;
+﻿using Blog.Services.ControllerContext;
 using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Blog.Data.Models;
+using Blog.Web.Contracts.V1;
 using Blog.Web.VIewModels.AspNetUser;
-using Blog.Web.VIewModels.Posts;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 
-namespace Blog.Web.Controllers
+namespace Blog.Web.Controllers.V1
 {
     /// <summary>
     /// 
     /// </summary>
     /// <seealso cref="BaseController" />
-    [Route("api/[controller]")]
+    [Route(ApiRoutes.ProfileController.Profile)]
     [ApiController]
     public class ProfileController : BaseController
     {
+        /// <summary>
+        /// The profile service.
+        /// </summary>
         private readonly IProfileService _profileService;
-        private readonly UserManager<ApplicationUser> _userManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProfileController"/> class.
+        /// </summary>
+        /// <param name="controllerContext">The controller context.</param>
+        /// <param name="profileService">The profile service.</param>
         public ProfileController(
             IControllerContext controllerContext,
-            IProfileService profileService,
-            UserManager<ApplicationUser> userManager) 
+            IProfileService profileService) 
             : base(controllerContext)
         {
             _profileService = profileService;
-            _userManager = userManager;
         }
 
         // GET: Profile/5        
