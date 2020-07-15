@@ -163,6 +163,12 @@ namespace Blog.Services.GeneralService
         }
 
         /// <inheritdoc/>
+        public async Task<ICollection<T>> GetAllAsync()
+        {
+            return await this.Repository.GetAll().ToListAsync();
+        }
+
+        /// <inheritdoc/>
         public async Task<ICollection<T>> GetAllAsync(Expression<Func<T, bool>> expression)
         {
             return await this.Repository.GetAll(expression).ToListAsync();

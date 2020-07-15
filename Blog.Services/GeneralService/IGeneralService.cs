@@ -162,6 +162,12 @@ namespace Blog.Services.GeneralService
         ICollection<T> GetAll(Expression<Func<T, bool>> expression);
 
         /// <summary>
+        /// Gets all asynchronous.
+        /// </summary>
+        /// <returns>Task.</returns>
+        Task<ICollection<T>> GetAllAsync();
+
+        /// <summary>
         /// Async get all items by expression.
         /// </summary>
         /// <param name="expression">expression.</param>

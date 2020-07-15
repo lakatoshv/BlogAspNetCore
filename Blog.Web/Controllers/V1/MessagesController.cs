@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Blog.Data.Models;
 using Blog.Services.ControllerContext;
 using Blog.Services.Interfaces;
@@ -43,7 +44,7 @@ namespace Blog.Web.Controllers.V1
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            var messages = await _messagesService.GetAllAsync(null).ConfigureAwait(false);
+            var messages = await _messagesService.GetAllAsync().ConfigureAwait(false);
 
             if (messages == null)
             {

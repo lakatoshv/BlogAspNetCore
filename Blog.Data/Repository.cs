@@ -20,7 +20,7 @@ namespace Blog.Data
     /// Table methods.
     /// </summary>
     /// <typeparam name="TEntity">TEntity.</typeparam>
-    public class TableMethods<TEntity> : IRepository<TEntity>
+    public class Repository<TEntity> : IRepository<TEntity>
         where TEntity : class, IEntity
     {
         /// <summary>
@@ -46,24 +46,13 @@ namespace Blog.Data
         /// <summary>
         /// Gets entities.
         /// </summary>
-        protected virtual DbSet<TEntity> Entities
-        {
-            get
-            {
-                if (this._entities == null)
-                {
-                    this._entities = this._context.Set<TEntity>();
-                }
-
-                return this._entities;
-            }
-        }
+        protected virtual DbSet<TEntity> Entities => this._entities ?? (this._entities = this._context.Set<TEntity>());
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TableMethods{TEntity}"/> class.
+        /// Initializes a new instance of the <see cref="Repository{TEntity}"/> class.
         /// </summary>
         /// <param name="context">context.</param>
-        public TableMethods(ApplicationDbContext context)
+        public Repository(ApplicationDbContext context)
         {
             this._context = context;
         }
