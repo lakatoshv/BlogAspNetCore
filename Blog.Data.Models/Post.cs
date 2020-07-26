@@ -46,11 +46,6 @@ namespace Blog.Data.Models
         public string ImageUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets tags.
-        /// </summary>
-        public string Tags { get; set; }
-
-        /// <summary>
         /// Gets or sets author id.
         /// </summary>
         public string AuthorId { get; set; }
@@ -72,5 +67,13 @@ namespace Blog.Data.Models
         /// The comments.
         /// </value>
         public virtual ICollection<Comment> Comments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the posts tags relations.
+        /// </summary>
+        /// <value>
+        /// The posts tags relations.
+        /// </value>
+        public virtual ICollection<PostsTagsRelations> PostsTagsRelations { get; set; }
     }
 }
