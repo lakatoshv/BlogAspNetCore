@@ -2,6 +2,8 @@
 // Copyright (c) Blog. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
+
 namespace Blog.Services.Interfaces
 {
     using System.Threading.Tasks;
@@ -44,5 +46,13 @@ namespace Blog.Services.Interfaces
         /// <param name="searchParameters">searchParameters.</param>
         /// <returns>Task.</returns>
         Task<PostsViewDto> GetUserPostsAsync(string userId, SearchParametersDto searchParameters);
+
+        /// <summary>
+        /// Inserts the asynchronous.
+        /// </summary>
+        /// <param name="post">The post.</param>
+        /// <param name="tags">The tags.</param>
+        /// <returns>Task.</returns>
+        Task InsertAsync(Post post, IEnumerable<string> tags);
     }
 }

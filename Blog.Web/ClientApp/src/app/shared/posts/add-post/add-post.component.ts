@@ -157,7 +157,7 @@ export class AddPostComponent implements OnInit {
    */
   add() {
     this.postForm.value.id = 0;
-    this.postForm.value.tags = this.tagsList.join(', ');
+    this.postForm.value.tags = this.tagsList;
     this.postForm.value.authorId = this.user.id;
     this._postService.add({
       ...this.postForm.value
