@@ -1,3 +1,4 @@
+import { Tag } from './Tag';
 import { User } from './User';
 
 /**
@@ -29,7 +30,7 @@ export class Post {
    * Post Image Url
    * @param imageUrl string
    * Post Tags
-   * @param tags string
+   * @param tags Tag[]
    * Post Tags List
    * @param tagsList string
    * Post Comments
@@ -50,10 +51,9 @@ export class Post {
     public likes: number,
     public dislikes: number,
     public imageUrl: string,
-    public tags: string,
     public createdAt: string,
     public commentsCount: number,
     public comments?: Comment[],
-    public tagsList?: string[],
+    public tags?: Tag[],
   ) {}
 }

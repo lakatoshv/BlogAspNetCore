@@ -55,11 +55,6 @@ namespace Blog.Services.Core.Dtos.Posts
         public string ImageUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets tags.
-        /// </summary>
-        public string Tags { get; set; }
-
-        /// <summary>
         /// Gets or sets author id.
         /// </summary>
         public string AuthorId { get; set; }
@@ -73,7 +68,29 @@ namespace Blog.Services.Core.Dtos.Posts
         /// Gets or sets created at.
         /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// Gets or sets the comments count.
+        /// </summary>
+        /// <value>
+        /// The comments count.
+        /// </value>
         public int CommentsCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the comments.
+        /// </summary>
+        /// <value>
+        /// The comments.
+        /// </value>
         public IList<Comment> Comments { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tags.
+        /// </summary>
+        /// <value>
+        /// The tags.
+        /// </value>
+        public IList<TagViewDto> Tags { get; set; }
     }
 }
