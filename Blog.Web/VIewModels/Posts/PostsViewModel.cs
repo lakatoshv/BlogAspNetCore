@@ -1,7 +1,7 @@
 ﻿namespace Blog.Web.VIewModels.Posts
 {
     using System.Collections.Generic;
-    using Blog.Core.Helpers;
+    using Core.Helpers;
 
     /// <summary>
     /// Posts view model.

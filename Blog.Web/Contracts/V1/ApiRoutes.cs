@@ -159,5 +159,31 @@
             /// </summary>
             public const string Profile = Base + "/profile";
         }
+
+        /// <summary>
+        /// Tags controller routes constants.
+        /// </summary>
+        public static class TagsController
+        {
+            /// <summary>
+            /// The tags.
+            /// </summary>
+            public const string Tags = Base + "/tags";
+
+            /// <summary>
+            /// The get tags.
+            /// </summary>
+            public const string GetTags = "get-tags";
+
+            /// <summary>
+            /// The get tag.
+            /// </summary>
+            public const string GetTag = "get-tag";
+
+            /// <summary>
+            /// The create tag.
+            /// </summary>
+            public const string CreateTag = "create";
+        }
     }
 }

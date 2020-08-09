@@ -9,7 +9,7 @@ export class Tag {
    * @param Title string
    */
   constructor (
-      public Id: number,
-      public Title: string,
+      public id: number,
+      public title: string,
   ) {}
 }

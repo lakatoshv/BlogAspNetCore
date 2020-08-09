@@ -1,4 +1,5 @@
-﻿using Blog.Services.ControllerContext;
+﻿using System.Linq;
+using Blog.Services.ControllerContext;
 using Blog.Web.Contracts.V1;
 using Microsoft.AspNetCore.Authorization;
 
@@ -177,12 +178,13 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult CreateAsync([FromBody] Post model)
+        public async Task<IActionResult> CreateAsync([FromBody] PostViewModel model)
         {
             if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
             if (!ModelState.IsValid || string.IsNullOrWhiteSpace(model.AuthorId)) return NotFound();
             model.AuthorId = CurrentUser.Id;
-            _postsService.Insert(model);
+            var postToCreate = _mapper.Map<Post>(model);
+            await _postsService.InsertAsync(postToCreate, model.Tags.Distinct());
 
             return Ok();
         }

@@ -52,11 +52,6 @@
         public string ImageUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets tags.
-        /// </summary>
-        public string Tags { get; set; }
-
-        /// <summary>
         /// Gets or sets author id.
         /// </summary>
         public string AuthorId { get; set; }
@@ -72,6 +67,8 @@
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
 
+        public string[] Tags { get; set; }
+
         // public int CommentsCount { get; set; }
         // public IList<Comment> Comments { get; set; }
 
@@ -84,7 +81,7 @@
             model.Description = Description;
             model.Content = Content;
             model.ImageUrl = ImageUrl;
-            model.Tags = Tags;
+            // model.Tags = Tags;
             model.AuthorId = AuthorId;
             return model;
         }

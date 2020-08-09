@@ -129,7 +129,6 @@ export class PostsListComponent implements OnInit {
         (response: any) => {
           const ind = this.posts.findIndex(post =>  post.id === id);
           this.posts[ind] = response;
-          this.posts[ind].tagsList = response.tags.split(', ');
           this.posts = this.posts;
         },
         (error) => {
@@ -149,7 +148,6 @@ export class PostsListComponent implements OnInit {
         (response: any) => {
           const ind = this.posts.findIndex(post =>  post.id === id);
           this.posts[ind] = response;
-          this.posts[ind].tagsList = response.tags.split(', ');
           this.posts = this.posts;
         },
         (error) => {

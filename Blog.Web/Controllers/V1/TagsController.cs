@@ -48,7 +48,7 @@ namespace Blog.Web.Controllers.V1
         /// Gets the tags.
         /// </summary>
         /// <returns></returns>
-        [HttpPost(ApiRoutes.TagsController.GetTags)]
+        [HttpGet(ApiRoutes.TagsController.GetTags)]
         public async Task<ActionResult> GetTags()
         {
             var tags = await _tagsService.GetAllAsync();
