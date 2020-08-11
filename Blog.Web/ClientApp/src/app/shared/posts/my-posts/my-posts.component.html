@@ -44,7 +44,7 @@
                     <a routerLink="/blog/post/{{post.id}}">
                         <h2 class="post-title" [innerHTML]="post.title"></h2>
                     </a>
-                    <div class="pull-right" *ngIf="isLoggedIn && post.author.id === user.id">
+                    <div class="pull-right" *ngIf="isLoggedIn && post.authorId === user.id">
                         <a class="btn btn-sm text-white btn-primary" routerLink="/blog/post/{{post.id}}/edit">
                             <i class="fa fa-edit"></i> Редагувати
                         </a>

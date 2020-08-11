@@ -5,7 +5,7 @@
                 <h2 class="post-title text-center">
                     {{post.title}}
                 </h2>
-                <div class="pull-right" *ngIf="loggedIn && post.author.id === user.id">
+                <div class="pull-right" *ngIf="loggedIn && post.authorId === user.id">
                     <a class="btn btn-sm text-white btn-primary" routerLink="/blog/post/edit/{{post.id}}">
                         <i class="fa fa-edit"></i> Редагувати
                     </a>
