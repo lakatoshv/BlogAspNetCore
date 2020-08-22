@@ -89,6 +89,11 @@ namespace Blog.Web.Controllers.V1
                 return Bad(ModelState);
             }
 
+            if (await _tagsService.AnyAsync(x => x.Title.ToLower().Equals(model.Title.ToLower())))
+            {
+                return Bad(ModelState);
+            }
+
             await _tagsService.InsertAsync(model);
 
             return CreatedAtRoute(ApiRoutes.TagsController.GetTag, new { id = model.Id }, model);

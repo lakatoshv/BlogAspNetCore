@@ -386,6 +386,17 @@ namespace Blog.Data
         }
 
         /// <inheritdoc/>
+        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression)
+        {
+            if (expression == null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
+            return await this.Entities.AnyAsync(expression);
+        }
+
+        /// <inheritdoc/>
         public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> expression)
         {
             if (expression == null)
