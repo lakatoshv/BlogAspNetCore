@@ -109,7 +109,10 @@
                       {{tagLabel}}:
                   </label>
 
-                    <input type="text" name="tags" id="tags" #tag value="{{selectedTag['value']}}" class="form-control">
+                    <input type="text" name="tags" id="tags" #tag value="{{selectedTag['value']}}" class="form-control" list="tags-list">
+                    <datalist id="tags-list">
+                      <option *ngFor="let tag of availableTags">{{tag.Title}}</option>
+                    </datalist>
 
                     <input type="button" name="tagAction" id="tagAction" value="{{tagLabel}}" class="btn btn-default" (click)="tagAction(tag.value, action)">
                 </div>
