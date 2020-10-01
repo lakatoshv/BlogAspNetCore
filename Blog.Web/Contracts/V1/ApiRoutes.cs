@@ -176,6 +176,11 @@
             public const string GetTags = "get-tags";
 
             /// <summary>
+            /// The get available tags.
+            /// </summary>
+            public const string GetAvailableTags = "get-available-tags";
+
+            /// <summary>
             /// The get tag.
             /// </summary>
             public const string GetTag = "get-tag";

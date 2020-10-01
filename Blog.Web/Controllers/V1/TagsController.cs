@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Blog.Data.Models;
 using Blog.Services.ControllerContext;
@@ -52,6 +53,24 @@ namespace Blog.Web.Controllers.V1
         public async Task<ActionResult> GetTags()
         {
             var tags = await _tagsService.GetAllAsync();
+
+            if (tags == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(tags);
+        }
+
+        /// <summary>
+        /// Gets the available tags.
+        /// </summary>
+        /// <param name="postId">The post identifier.</param>
+        /// <returns></returns>
+        [HttpGet(ApiRoutes.TagsController.GetAvailableTags)]
+        public async Task<ActionResult> GetAvailableTags(int postId)
+        {
+            var tags = await _tagsService.GetAllAsync(x => x.PostsTagsRelations == null || x.PostsTagsRelations.Any(y => y.PostId != postId));
 
             if (tags == null)
             {
