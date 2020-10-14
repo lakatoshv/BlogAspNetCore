@@ -37,7 +37,29 @@ namespace Blog.Services
         {
             var comments = await this.Repository.TableNoTracking
                 .Where(comment => comment.PostId.Equals(postId))
-                .Include(x => x.User).ToListAsync();
+                .Include(x => x.User)
+                .Select(x => new Comment
+                {
+                    Id = x.Id,
+                    CommentBody = x.CommentBody,
+                    CreatedAt = x.CreatedAt,
+                    Dislikes = x.Dislikes,
+                    Email = x.Email,
+                    Name = x.Name,
+                    Likes = x.Likes,
+                    PostId = x.PostId,
+                    UserId = x.UserId,
+                    User = x.User == null
+                           ? new ApplicationUser()
+                           : new ApplicationUser
+                           {
+                               Id = x.User.Id,
+                               Email = x.User.Email,
+                               FirstName = x.User.FirstName,
+                               LastName = x.User.LastName,
+                               PhoneNumber = x.User.PhoneNumber,
+                           },
+                }).ToListAsync();
 
             var commentsViewModel = new CommentsViewDto
             {
