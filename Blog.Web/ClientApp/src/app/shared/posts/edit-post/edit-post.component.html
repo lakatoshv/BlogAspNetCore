@@ -114,7 +114,7 @@
 
                     <input type="text" name="tags" id="tags" #tag value="{{selectedTag['value']}}" class="form-control" list="tags-list">
                     <datalist id="tags-list">
-                      <option *ngFor="let tag of availableTags">{{tag.Title}}</option>
+                      <option *ngFor="let tag of availableTags">{{tag.title}}</option>
                     </datalist>
 
                     <input type="button" name="tagAction" id="tagAction" value="{{tagLabel}}" class="btn btn-default" (click)="tagAction(tag.value, action)">

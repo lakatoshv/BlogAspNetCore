@@ -208,9 +208,10 @@ export class EditPostComponent implements OnInit {
    * @returns void
    */
   onAddTagAction(tag: string): void {
-    if (tag !== '' && this.availableTags.findIndex(x => x.title === tag) === -1) {
+    if (tag !== '' && this.availableTags.findIndex(x => x.title === tag) !== -1) {
       const index = this.availableTags.findIndex(x => x.title === tag);
       if (index > -1) {
+        this.post.tags = this.post.tags === null ? [] : this.post.tags;
         this.post.tags.unshift(this.availableTags[index]);
         this._removeFromAvailableTags(this.availableTags[index]);
       } else {
