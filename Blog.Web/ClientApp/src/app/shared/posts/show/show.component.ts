@@ -1,5 +1,5 @@
 import { PostService } from './../../../core/services/posts-services/post.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { GeneralServiceService } from 'src/app/core';
@@ -15,6 +15,11 @@ import { PageInfo } from 'src/app/core/models/PageInfo';
   styleUrls: ['./show.component.css']
 })
 export class ShowComponent implements OnInit {
+  /**
+   * @param tagInput ElementRef
+   */
+  @ViewChild('tag') tagInput: ElementRef;
+
   /**
    * @param post Post
    */
@@ -88,7 +93,6 @@ export class ShowComponent implements OnInit {
     this._postService.like(this.postId).subscribe(
       (response: any) => {
         this.post = response;
-        this.post.tagsList = response.tags.split(', ');
       },
       (error) => {
       }
@@ -104,7 +108,6 @@ export class ShowComponent implements OnInit {
     this._postService.dislike(this.postId).subscribe(
       (response: any) => {
         this.post = response;
-        this.post.tagsList = response.tags.split(', ');
       },
       (error) => {
       }
@@ -139,9 +142,10 @@ export class ShowComponent implements OnInit {
   private _getPost() {
     this._postService.showPost(this.postId).subscribe(
       (response: any) => {
+        debugger
         this.post = response.post;
+        this.post.tags = response.tags;
         this.post.comments = response.comments.comments;
-        this.post.tagsList = response.post.tags.split(', ');
         this.pageInfo = response.comments.pageInfo;
         this.isLoaded = true;
       },

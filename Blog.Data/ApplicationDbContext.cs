@@ -76,6 +76,22 @@ namespace Blog.Data
         public DbSet<Message> Messages { get; set; }
 
         /// <summary>
+        /// Gets or sets the tags.
+        /// </summary>
+        /// <value>
+        /// The tags.
+        /// </value>
+        public DbSet<Tag> Tags { get; set; }
+
+        /// <summary>
+        /// Gets or sets the posts tags relations.
+        /// </summary>
+        /// <value>
+        /// The posts tags relations.
+        /// </value>
+        public DbSet<PostsTagsRelations> PostsTagsRelations { get; set; }
+
+        /// <summary>
         /// Save changes.
         /// </summary>
         /// <returns>int.</returns>
@@ -170,6 +186,19 @@ namespace Blog.Data
                 .HasMany(p => p.ReceivedMessages)
                 .WithOne(t => t.Recipient)
                 .HasForeignKey(x => x.RecipientId);
+
+            builder.Entity<PostsTagsRelations>()
+                .HasKey(x => new { x.PostId, x.TagId });
+            builder.Entity<PostsTagsRelations>()
+                .HasOne(bc => bc.Tag)
+                .WithMany(b => b.PostsTagsRelations)
+                .HasForeignKey(bc => bc.TagId)
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<PostsTagsRelations>()
+                .HasOne(bc => bc.Post)
+                .WithMany(c => c.PostsTagsRelations)
+                .HasForeignKey(bc => bc.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         /// <summary>

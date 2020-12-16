@@ -166,6 +166,13 @@ namespace Blog.Data.Repository
         bool Any(Expression<Func<T, bool>> expression);
 
         /// <summary>
+        /// Asynchronous check on any.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns>Task.</returns>
+        Task<bool> AnyAsync(Expression<Func<T, bool>> expression);
+
+        /// <summary>
         /// Get first or default.
         /// </summary>
         /// <param name="expression">expression.</param>

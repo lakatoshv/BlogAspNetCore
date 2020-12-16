@@ -1,4 +1,5 @@
 ﻿using Blog.Data.Models;
+using Blog.Services.Core.Dtos.Posts;
 using Blog.Web.VIewModels.Posts;
 
 namespace Blog.Web.Mappers.Posts
@@ -15,6 +16,7 @@ namespace Blog.Web.Mappers.Posts
         {
             CreateMap<PostViewModel, Post>();
             CreateMap<Post, PostViewModel>();
+            CreateMap<Post, PostViewDto>();
         }
     }
 }

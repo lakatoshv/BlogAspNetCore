@@ -1,4 +1,6 @@
-﻿namespace Blog.Web.VIewModels.Posts
+﻿using System.Collections.Generic;
+
+namespace Blog.Web.VIewModels.Posts
 {
     using System;
     using System.ComponentModel.DataAnnotations;
@@ -52,11 +54,6 @@
         public string ImageUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets tags.
-        /// </summary>
-        public string Tags { get; set; }
-
-        /// <summary>
         /// Gets or sets author id.
         /// </summary>
         public string AuthorId { get; set; }
@@ -72,6 +69,8 @@
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
 
+        public IList<Tag> Tags { get; set; }
+
         // public int CommentsCount { get; set; }
         // public IList<Comment> Comments { get; set; }
 
@@ -84,7 +83,7 @@
             model.Description = Description;
             model.Content = Content;
             model.ImageUrl = ImageUrl;
-            model.Tags = Tags;
+            // model.Tags = Tags;
             model.AuthorId = AuthorId;
             return model;
         }

@@ -1,3 +1,4 @@
+import { TagsService } from './../../core/services/posts-services/tags.service';
 import { CommentsModule } from './comments/comments.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -41,6 +42,6 @@ import { PostsTableComponent } from './posts-table/posts-table.component';
     EditPostComponent,
     PostsTableComponent
   ],
-  providers: [PostService, CommentService, HttpClientService]
+  providers: [PostService, CommentService, HttpClientService, TagsService]
 })
 export class PostsModule { }

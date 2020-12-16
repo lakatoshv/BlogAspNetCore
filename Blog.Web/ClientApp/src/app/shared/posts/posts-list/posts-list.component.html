@@ -46,7 +46,7 @@
                     <a routerLink="/blog/post/{{post.id}}">
                         <h2 class="post-title" [innerHTML]="post.title"></h2>
                     </a>
-                    <div class="pull-right" *ngIf="loggedIn && post.author.id === user.id">
+                    <div class="pull-right" *ngIf="loggedIn && post.authorId === user.id">
                         <a class="btn btn-sm text-white btn-primary" routerLink="/blog/post/{{post.id}}/edit">
                             <i class="fa fa-edit"></i> Редагувати
                         </a>
@@ -65,7 +65,8 @@
                         <span><i class="fa fa-fw fa-thumbs-down"></i> {{post.dislikes}}</span>
                         <span><i class="fa fa-fw fa-comment"></i>{{post.commentsCount}}</span>
                     </p>
-                    <p class="post-meta">Теги: {{post.tags}}
+                    <p class="post-meta">Теги:
+                        <a routerLink="/blog/posts/{{tag.title}}" *ngFor="let tag of post.tags; let isLast=last"> {{tag.title}}{{isLast ? '' : ', '}}</a>
                     </p>
                     <p class="post-meta">
                         Написав: <b><a routerLink="/blog/profile/{{post.author.profile?.id}}">{{post.author.firstName + " " + post.author.lastName}}</a><i>

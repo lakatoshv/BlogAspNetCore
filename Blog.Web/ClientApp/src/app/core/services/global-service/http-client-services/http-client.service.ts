@@ -21,7 +21,7 @@ export class HttpClientService {
  * BASE url.
  * @param BASE string
  */
-  private static readonly BASE: string = HttpClientService.API + "/" + HttpClientService.VERSION;
+  private static readonly BASE: string = HttpClientService.API + '/' + HttpClientService.VERSION;
 
   // Controllers
 
@@ -54,6 +54,12 @@ export class HttpClientService {
    * @param MESSAGES_CONTROLLER string
    */
   public static readonly MESSAGES_CONTROLLER = HttpClientService.BASE + '/messages';
+
+  /**
+   * Tags controller url.
+   * @param TAGS_CONTROLLER string
+   */
+  public static readonly TAGS_CONTROLLER = HttpClientService.BASE + '/tags';
 
   // Methods
 
@@ -129,7 +135,7 @@ export class HttpClientService {
    * Users posts method.
    * @param USER_POSTS string
    */
-  public static readonly USER_POSTS = HttpClientService.POSTS_CONTROLLER + '/user_posts';
+  public static readonly USER_POSTS = HttpClientService.POSTS_CONTROLLER + '/user-posts';
 
   // Comments controller methods
   /**
@@ -149,6 +155,25 @@ export class HttpClientService {
    * @param GET_COMMENT string
    */
   public static readonly GET_COMMENT = HttpClientService.COMMENTS_CONTROLLER + '/get-comment';
+
+   // Tags controller methods
+  /**
+   * Get tags.
+   * @param GET_TAGS string
+   */
+  public static readonly GET_TAGS = HttpClientService.TAGS_CONTROLLER + '/get-tags';
+
+  /**
+   * Create new comment.
+   * @param CREATE_TAG string
+   */
+  public static readonly CREATE_TAG = HttpClientService.TAGS_CONTROLLER + '/create';
+
+  /**
+   * Get comment by id.
+   * @param GET_TAG string
+   */
+  public static readonly GET_TAG = HttpClientService.TAGS_CONTROLLER + '/get-tag';
 
   /**
    * @param _httpClient HttpClient

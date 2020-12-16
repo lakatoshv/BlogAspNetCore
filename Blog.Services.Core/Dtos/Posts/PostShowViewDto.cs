@@ -2,10 +2,10 @@
 // Copyright (c) Blog. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
+
 namespace Blog.Services.Core.Dtos.Posts
 {
-    using Data.Models;
-
     /// <summary>
     /// Post show view dto.
     /// </summary>
@@ -14,7 +14,7 @@ namespace Blog.Services.Core.Dtos.Posts
         /// <summary>
         /// Gets or sets post.
         /// </summary>
-        public Post Post { get; set; }
+        public PostViewDto Post { get; set; }
 
         /// <summary>
         /// Gets or sets the comments.
@@ -27,5 +27,13 @@ namespace Blog.Services.Core.Dtos.Posts
         // public Comment Comment { get; set; }
         // public int CommentsCount { get; set; }
         // public Profile Profile { get; set; }
+
+        /// <summary>
+        /// Gets or sets the tags.
+        /// </summary>
+        /// <value>
+        /// The tags.
+        /// </value>
+        public IList<TagViewDto> Tags { get; set; }
     }
 }

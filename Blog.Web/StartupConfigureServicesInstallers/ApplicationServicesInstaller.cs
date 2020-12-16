@@ -65,6 +65,8 @@ namespace Blog.Web.StartupConfigureServicesInstallers
             services.AddTransient<ICommentsService, CommentsService>();
             services.AddTransient<IProfileService, ProfileService>();
             services.AddTransient<IMessagesService, MessagesService>();
+            services.AddTransient<ITagsService, TagsService>();
+            services.AddTransient<IPostsTagsRelationsService, PostsTagsRelationsService>();
         }
     }
 }

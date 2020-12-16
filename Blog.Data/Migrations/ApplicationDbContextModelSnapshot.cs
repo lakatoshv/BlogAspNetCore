@@ -198,8 +198,6 @@ namespace Blog.Data.Migrations
 
                     b.Property<int>("Seen");
 
-                    b.Property<string>("Tags");
-
                     b.Property<string>("Title");
 
                     b.HasKey("Id");
@@ -207,6 +205,21 @@ namespace Blog.Data.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("Blog.Data.Models.PostsTagsRelations", b =>
+                {
+                    b.Property<int>("PostId");
+
+                    b.Property<int>("TagId");
+
+                    b.Property<int>("Id");
+
+                    b.HasKey("PostId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("PostsTagsRelations");
                 });
 
             modelBuilder.Entity("Blog.Data.Models.Profile", b =>
@@ -260,6 +273,19 @@ namespace Blog.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Settings");
+                });
+
+            modelBuilder.Entity("Blog.Data.Models.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Title");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -376,6 +402,19 @@ namespace Blog.Data.Migrations
                     b.HasOne("Blog.Data.Models.ApplicationUser", "Author")
                         .WithMany("Posts")
                         .HasForeignKey("AuthorId");
+                });
+
+            modelBuilder.Entity("Blog.Data.Models.PostsTagsRelations", b =>
+                {
+                    b.HasOne("Blog.Data.Models.Post", "Post")
+                        .WithMany("PostsTagsRelations")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Blog.Data.Models.Tag", "Tag")
+                        .WithMany("PostsTagsRelations")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Blog.Data.Models.Profile", b =>

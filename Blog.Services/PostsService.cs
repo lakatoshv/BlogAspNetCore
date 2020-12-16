@@ -2,6 +2,8 @@
 // Copyright (c) Blog. All rights reserved.
 // </copyright>
 
+using System.Collections.ObjectModel;
+
 namespace Blog.Services
 {
     using System.Collections.Generic;
@@ -27,27 +29,31 @@ namespace Blog.Services
         /// <summary>
         /// The comments service.
         /// </summary>
-        private ICommentsService _commentsService;
+        private readonly ICommentsService _commentsService;
 
         /// <summary>
         /// The mapper.
         /// </summary>
         private readonly IMapper _mapper;
+        private readonly IPostsTagsRelationsService _postsTagsRelationsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PostsService"/> class.
         /// </summary>
         /// <param name="repo">The repo.</param>
         /// <param name="commentsService">The comments service.</param>
+        /// <param name="tagsService">The tags service.</param>
         /// <param name="mapper">The mapper.</param>
         public PostsService(
             IRepository<Post> repo,
             ICommentsService commentsService,
-            IMapper mapper)
+            IMapper mapper,
+            IPostsTagsRelationsService postsTagsRelationsService)
             : base(repo)
         {
             this._commentsService = commentsService;
-            _mapper = mapper;
+            this._postsTagsRelationsService = postsTagsRelationsService;
+            this._mapper = mapper;
         }
 
         /// <inheritdoc/>
@@ -58,6 +64,8 @@ namespace Blog.Services
                 // .Include(c => c.Comments)
                 .Where(x => x.Id.Equals(id))
                 .Include(x => x.Author)
+                .Include(x => x.PostsTagsRelations)
+                .ThenInclude(x => x.Tag)
 
                 // .OrderByDescending(d => d.) comments order by date descending
                 .FirstOrDefaultAsync();
@@ -66,18 +74,29 @@ namespace Blog.Services
         /// <inheritdoc/>
         public async Task<PostShowViewDto> GetPost(int postId, SortParametersDto sortParameters)
         {
+            var post = await this.Repository.Table
+                .Where(x => x.Id.Equals(postId))
+                .Include(x => x.Author)
+                .ThenInclude(x => x.Profile)
+                .Include(x => x.PostsTagsRelations)
+                .ThenInclude(x => x.Tag)
+                .FirstOrDefaultAsync();
+
             var postModel = new PostShowViewDto
             {
-                Post = await this.Repository.Table
-                    .Where(x => x.Id.Equals(postId))
-                    .Include(x => x.Author)
-                    .ThenInclude(x => x.Profile)
-                    .FirstOrDefaultAsync(),
+                Tags = post.PostsTagsRelations.Select(x => new TagViewDto
+                {
+                    Id = x.Tag.Id,
+                    Title = x.Tag.Title,
+                }).ToList(),
                 Comments = await this._commentsService.GetPagedCommentsByPostId(postId, sortParameters),
             };
-            /*
-            postModel.Profile = db.Profiles.Where(pr => pr.ApplicationUser.Equals(postModel.Post.Author)).FirstOrDefault();
-            */
+
+            post.PostsTagsRelations = null;
+            postModel.Post = this._mapper.Map<Post, PostViewDto>(post);
+            postModel.Post.Author = this._mapper.Map<ApplicationUser, ApplicationUserDto>(post.Author);
+            postModel.Post.Author.Profile.User = null;
+
             return postModel.Post == null ? null : postModel;
         }
 
@@ -105,9 +124,12 @@ namespace Blog.Services
             var posts = new PostsViewDto();
             var postsList = await this.Repository.TableNoTracking
                 .Include(x => x.Author)
-                .ThenInclude(x => x.Profile)
+                    .ThenInclude(x => x.Profile)
                 .Include(table => table.Comments)
+                .Include(x => x.PostsTagsRelations)
+                    .ThenInclude(x => x.Tag)
                 .ToListAsync();
+
             if (!string.IsNullOrEmpty(searchParameters.Search))
             {
                 postsList = postsList.Where(post => post.Title.ToLower().Contains(searchParameters.Search.ToLower())).ToList();
@@ -136,10 +158,14 @@ namespace Blog.Services
                     Likes = post.Likes,
                     Dislikes = post.Dislikes,
                     ImageUrl = post.ImageUrl,
-                    Tags = post.Tags,
                     AuthorId = post.AuthorId,
                     Author = this._mapper.Map<ApplicationUser, ApplicationUserDto>(post.Author),
                     CommentsCount = post.Comments.Count,
+                    Tags = post.PostsTagsRelations.Select(x => new TagViewDto
+                    {
+                        Id = x.Tag.Id,
+                        Title = x.Tag.Title,
+                    }).ToList(),
                 };
                 post.Author.Profile.User = null;
                 posts.Posts.Add(p);
@@ -165,8 +191,11 @@ namespace Blog.Services
             var postsList = await this.Repository.TableNoTracking
                 .Where(post => post.AuthorId.Equals(userId))
                 .Include(x => x.Author)
-                .ThenInclude(x => x.Profile)
-                .Include(x => x.Comments).ToListAsync();
+                    .ThenInclude(x => x.Profile)
+                .Include(x => x.Comments)
+                .Include(x => x.PostsTagsRelations)
+                    .ThenInclude(x => x.Tag)
+                .ToListAsync();
 
             if (!string.IsNullOrEmpty(searchParameters.Search))
             {
@@ -197,10 +226,14 @@ namespace Blog.Services
                     Likes = post.Likes,
                     Dislikes = post.Dislikes,
                     ImageUrl = post.ImageUrl,
-                    Tags = post.Tags,
                     AuthorId = post.AuthorId,
-                    Author = _mapper.Map<ApplicationUser, ApplicationUserDto>(post.Author),
+                    Author = this._mapper.Map<ApplicationUser, ApplicationUserDto>(post.Author),
                     CommentsCount = post.Comments.Count,
+                    Tags = post.PostsTagsRelations.Select(x => new TagViewDto
+                    {
+                        Id = x.Tag.Id,
+                        Title = x.Tag.Title,
+                    }).ToList(),
                 };
                 post.Author.Profile.User = null;
                 posts.Posts.Add(p);
@@ -217,6 +250,14 @@ namespace Blog.Services
             }
 
             return posts;
+        }
+
+        /// <inheritdoc/>
+        public async Task InsertAsync(Post post, IEnumerable<Tag> tags)
+        {
+            await this.InsertAsync(post);
+            post.PostsTagsRelations = new Collection<PostsTagsRelations>();
+            await this._postsTagsRelationsService.AddTagsToPost(post.Id, post.PostsTagsRelations.ToList(), tags).ConfigureAwait(false);
         }
     }
 }

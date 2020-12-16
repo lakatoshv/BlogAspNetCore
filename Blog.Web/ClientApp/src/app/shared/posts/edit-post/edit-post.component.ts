@@ -1,5 +1,5 @@
 import { PostService } from './../../../core/services/posts-services/post.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl } from '@angular/forms';
 import { PostForm } from '../../../core/forms/posts/PostForm';
@@ -9,6 +9,8 @@ import { Post } from 'src/app/core/models/Post';
 import { TinyMCEOptionsObject } from 'src/app/core/models/TinyMCEOptionsObject';
 import { TinyMCEOptions } from 'src/app/core/data/TinyMCEOptions';
 import { UsersService } from 'src/app/core/services/users-services/users.service';
+import { Tag } from 'src/app/core/models/Tag';
+import { TagsService } from 'src/app/core/services/posts-services/tags.service';
 
 @Component({
   selector: 'app-edit-post',
@@ -16,6 +18,11 @@ import { UsersService } from 'src/app/core/services/users-services/users.service
   styleUrls: ['./edit-post.component.css']
 })
 export class EditPostComponent implements OnInit {
+  /**
+   * @param tagInput ElementRef
+   */
+  @ViewChild('tag') tagInput: ElementRef;
+
   /**
    * @param postForm FormGroup
    */
@@ -25,6 +32,11 @@ export class EditPostComponent implements OnInit {
    * @param post Post
    */
   post: Post;
+
+  /**
+   * @param availableTags Tag[]
+   */
+  public availableTags: Tag[] = [];
 
   /**
    * @param isLoggedIn boolean
@@ -80,13 +92,15 @@ export class EditPostComponent implements OnInit {
    * @param _postService PostService
    * @param _usersService UsersService
    * @param _globalService GlobalService
+   * @param _tagsService TagsService
    */
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
     private _postService: PostService,
     private _usersService: UsersService,
-    private _globalService: GlobalService
+    private _globalService: GlobalService,
+    private _tagsService: TagsService
   ) { }
 
   /**
@@ -103,6 +117,7 @@ export class EditPostComponent implements OnInit {
       this._router.navigateByUrl('/authorization');
     }
     this._getPost();
+    this._getTags();
   }
 
   /**
@@ -135,7 +150,7 @@ export class EditPostComponent implements OnInit {
   edit(post: Post): void {
     if (this.isCurrentUserPost) {
       post.id = this._postId;
-      post.tags = this.post.tagsList.join(', ');
+      post.tags = this.post.tags;
       post.authorId = this.user.id;
       this._postService.edit(this._postId, post).subscribe(
         () => {
@@ -180,9 +195,9 @@ export class EditPostComponent implements OnInit {
    * @param tag string
    * @returns void
    */
-  editTag(tag: string): void {
-    this.selectedTag['value'] = tag;
-    this.selectedTag['id'] = this.post.tagsList.indexOf(tag);
+  editTag(tag: Tag): void {
+    this.selectedTag['value'] = tag.title;
+    this.selectedTag['id'] = this.post.tags.indexOf(tag);
     this.action = 'edit';
     this.tagLabel = 'Редагувати тег';
   }
@@ -193,7 +208,16 @@ export class EditPostComponent implements OnInit {
    * @returns void
    */
   onAddTagAction(tag: string): void {
-    this.post.tagsList.unshift(tag);
+    if (tag !== '' && this.availableTags.findIndex(x => x.title === tag) !== -1) {
+      const index = this.availableTags.findIndex(x => x.title === tag);
+      if (index > -1) {
+        this.post.tags = this.post.tags === null ? [] : this.post.tags;
+        this.post.tags.unshift(this.availableTags[index]);
+        this._removeFromAvailableTags(this.availableTags[index]);
+      }
+    } else {
+      this.post.tags.unshift(new Tag(0, tag));
+    }
     this.clearFormData();
   }
 
@@ -205,7 +229,7 @@ export class EditPostComponent implements OnInit {
   onEditTagAction(tag: any): void {
     const index = this.selectedTag['id'];
     if (index > -1) {
-      this.post.tagsList[index] = tag;
+      this.post.tags[index] = tag;
       this.clearFormData();
     }
   }
@@ -215,9 +239,9 @@ export class EditPostComponent implements OnInit {
    * @param tag any
    */
   onDeleteTagAction(tag: any): void {
-    const index = this.post.tagsList.indexOf(tag);
+    const index = this.post.tags.indexOf(tag);
     if (index > -1) {
-      this.post.tagsList.splice(index, 1);
+      this.post.tags.splice(index, 1);
     }
   }
 
@@ -229,18 +253,30 @@ export class EditPostComponent implements OnInit {
     this._postService.showPost(this._postId).subscribe(
       (response: any) => {
         this.post = response.post;
-        if(! this.isLoggedIn || this.user.id !== this.post.authorId){
+        this.post.tags = response.tags;
+        if (! this.isLoggedIn || this.user.id !== this.post.authorId) {
           this._router.navigateByUrl('/');
         }
-        if(this.user.id === this.post.authorId) {
+        if (this.user.id === this.post.authorId) {
           this.isCurrentUserPost = true;
         }
-
-        this.post.tagsList = this.post.tags.split(', ');
         this._setFormData();
       },
       () => {}
     );
+  }
+
+  /**
+   * Get available tags.
+   * @returns void
+   */
+  private _getTags(): void {
+    this._tagsService.list().subscribe(
+      (response: Tag[]) => {
+        this.availableTags = response;
+      },
+      (error: any) => {
+      });
   }
 
   /**
@@ -257,6 +293,18 @@ export class EditPostComponent implements OnInit {
   }
 
   /**
+   * Remove selected tag from available tags.
+   * @param tag Tag
+   * @returns void
+   */
+  private _removeFromAvailableTags(tag: Tag): void {
+    const index = this.availableTags.indexOf(tag);
+    if (index > -1) {
+      this.availableTags.splice(index, 1);
+    }
+  }
+
+  /**
    * Clear form data.
    * @returns void
    */
@@ -265,5 +313,6 @@ export class EditPostComponent implements OnInit {
     this.action = 'add';
     this.selectedTag['value'] = '';
     this.selectedTag['id'] = null;
+    this.tagInput.nativeElement.value = '';
   }
 }

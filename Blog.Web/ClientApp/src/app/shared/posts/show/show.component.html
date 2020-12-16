@@ -5,7 +5,7 @@
                 <h2 class="post-title text-center">
                     {{post.title}}
                 </h2>
-                <div class="pull-right" *ngIf="loggedIn && post.author.id === user.id">
+                <div class="pull-right" *ngIf="loggedIn && post.authorId === user.id">
                     <a class="btn btn-sm text-white btn-primary" routerLink="/blog/post/edit/{{post.id}}">
                         <i class="fa fa-edit"></i> Редагувати
                     </a>
@@ -24,7 +24,7 @@
                 <span><i class="fa fa-fw fa-thumbs-down"></i> {{post.dislikes}}</span>
             </p>
             <p class="post-meta">Теги:
-                <a routerLink="/blog#" *ngFor="let tag of post.tagsList" class="tag">{{tag}}</a>,
+                <a routerLink="/blog/posts/{{tag.title}}" *ngFor="let tag of post.tags; let isLast=last"> {{tag.title}}{{isLast ? '' : ', '}}</a>
             </p>
             <p class="text-justify" [innerHTML]="post.content"></p>
             <p class="post-meta">

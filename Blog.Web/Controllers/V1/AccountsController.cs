@@ -111,7 +111,7 @@ namespace Blog.Web.Controllers.V1
         [HttpGet(ApiRoutes.AccountsController.Initialize)]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public IActionResult Initialize(string userId)
+        public IActionResult Initialize([FromRoute] string userId)
         {
             if (string.IsNullOrEmpty(userId))
             {
@@ -128,6 +128,7 @@ namespace Blog.Web.Controllers.V1
             {
                 roles = _roleManager.Roles,
             };
+
             return Ok(jsonResult);
         }
 
@@ -169,14 +170,21 @@ namespace Blog.Web.Controllers.V1
         public async Task<IActionResult> PostAsync([FromBody] LoginViewModel credentials)
         {
             if (!ModelState.IsValid)
+            {
                 return Bad(ModelState);
+            }
 
             var jwt = await _authService.GetJwtAsync(credentials.Email, credentials.Password);
             if (jwt == null)
+            {
                 return Bad("Invalid name or password");
+            }
+
             var user = await _authService.GetByUserNameAsync(credentials.Email);
             if (user is null)
+            {
                 return Bad("");
+            }
 
             return Ok(jwt);
         }
@@ -193,7 +201,9 @@ namespace Blog.Web.Controllers.V1
         public async Task<IActionResult> CreateAsync([FromBody] RegistrationViewModel model)
         {
             if (!ModelState.IsValid)
+            {
                 return Bad(ModelState);
+            }
 
             model.UserName = model.Email;
             // TODO Fix mapping  
@@ -210,7 +220,9 @@ namespace Blog.Web.Controllers.V1
             var result = await _registrationService.RegisterAsync(userIdentity, model.Password);
 
             if (!result.Succeeded)
+            {
                 return Bad(result);
+            }
 
 
             /*
@@ -226,13 +238,18 @@ namespace Blog.Web.Controllers.V1
             await _roleManager.CreateAsync(role3);
             */
 
-            if (model.Roles == null) model.Roles = new[] { "User" };
+            if (model.Roles == null)
+            {
+                model.Roles = new[] {"User"};
+            }
             
             foreach(var role in model.Roles)
             {
                 var ir = await _userManager.AddToRoleAsync(userIdentity, role);
                 if (!ir.Succeeded)
+                {
                     return BadRequest();
+                }
             }
 
 
@@ -248,18 +265,22 @@ namespace Blog.Web.Controllers.V1
         [HttpPut(ApiRoutes.AccountsController.ChangePassword)]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> UpdateAsync([FromBody]ChangePasswordViewModel model)
+        public async Task<IActionResult> UpdateAsync([FromBody] ChangePasswordViewModel model)
         {
             if (!ModelState.IsValid)
-                return Bad(ModelState);
-
-            var changePasswordResult = await _userService.ChangePasswordAsync(CurrentUser.UserName, model.OldPassword, model.NewPassword);
-            if (!changePasswordResult.Succeeded)
             {
-                ModelState.AddModelError(changePasswordResult.Errors);
                 return Bad(ModelState);
             }
-            return NoContent();
+
+            var changePasswordResult = await _userService.ChangePasswordAsync(CurrentUser.UserName, model.OldPassword, model.NewPassword);
+            if (changePasswordResult.Succeeded)
+            {
+                return NoContent();
+            }
+
+            ModelState.AddModelError(changePasswordResult.Errors);
+
+            return Bad(ModelState);
         }
     }
 }

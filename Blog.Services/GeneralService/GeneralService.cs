@@ -187,6 +187,12 @@ namespace Blog.Services.GeneralService
         }
 
         /// <inheritdoc/>
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> expression)
+        {
+            return await this.Repository.AnyAsync(expression);
+        }
+
+        /// <inheritdoc/>
         public T FirstOrDefault(Expression<Func<T, bool>> expression)
         {
             return this.Repository.FirstOrDefault(expression);
