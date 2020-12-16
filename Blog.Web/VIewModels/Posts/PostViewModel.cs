@@ -1,4 +1,6 @@
-﻿namespace Blog.Web.VIewModels.Posts
+﻿using System.Collections.Generic;
+
+namespace Blog.Web.VIewModels.Posts
 {
     using System;
     using System.ComponentModel.DataAnnotations;
@@ -67,7 +69,7 @@
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
 
-        public string[] Tags { get; set; }
+        public IList<Tag> Tags { get; set; }
 
         // public int CommentsCount { get; set; }
         // public IList<Comment> Comments { get; set; }

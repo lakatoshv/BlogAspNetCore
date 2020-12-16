@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Blog.Services.ControllerContext;
 using Blog.Web.Contracts.V1;
+using Blog.Web.Contracts.V1.Responses;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Blog.Web.Controllers.V1
@@ -31,22 +32,27 @@ namespace Blog.Web.Controllers.V1
         /// </summary>
         private readonly IPostsService _postsService;
 
+        private readonly IPostsTagsRelationsService _postsTagsRelationsService;
+
         // private readonly ICommentService _commentsService;
 
         /// <summary>
-        /// Applicant Controller Constructor
+        /// Initializes a new instance of the <see cref="PostsController"/> class.
         /// </summary>
-        /// <param name="controllerContext">controllerContext.</param>
-        /// <param name="postsService">postService.</param>
-        /// <param name="mapper">mapper.</param>
+        /// <param name="controllerContext">The controller context.</param>
+        /// <param name="postsService">The posts service.</param>
+        /// <param name="postsTagsRelationsService">The posts tags relations service.</param>
+        /// <param name="mapper">The mapper.</param>
         public PostsController(
             IControllerContext controllerContext,
             IPostsService postsService,
+            IPostsTagsRelationsService postsTagsRelationsService,
 
             // ICommentService commentService,
             IMapper mapper) : base(controllerContext)
         {
             _postsService = postsService;
+            _postsTagsRelationsService = postsTagsRelationsService;
 
             // _commentsService = commentService;
             _mapper = mapper;
@@ -122,7 +128,7 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [HttpPost(ApiRoutes.PostsController.UserPosts)]
-        public async Task<ActionResult> GetUserPosts(string id, [FromBody] SearchParametersDto searchParameters)
+        public async Task<ActionResult> GetUserPosts([FromRoute] string id, [FromBody] SearchParametersDto searchParameters)
         {
             if (searchParameters.SortParameters is null)
                 searchParameters.SortParameters = new SortParametersDto();
@@ -149,7 +155,7 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [HttpGet(ApiRoutes.PostsController.Show)]
-        public async Task<ActionResult> Show(int id)
+        public async Task<ActionResult> Show([FromRoute] int id)
         {
             var sortParameters = new SortParametersDto
             {
@@ -180,8 +186,16 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(404)]
         public async Task<IActionResult> CreateAsync([FromBody] PostViewModel model)
         {
-            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
-            if (!ModelState.IsValid || string.IsNullOrWhiteSpace(model.AuthorId)) return NotFound();
+            if (CurrentUser == null)
+            {
+                return BadRequest(new {ErrorMessage = "Unauthorized"});
+            }
+
+            if (!ModelState.IsValid || string.IsNullOrWhiteSpace(model.AuthorId))
+            {
+                return NotFound();
+            }
+
             model.AuthorId = CurrentUser.Id;
             var postToCreate = _mapper.Map<Post>(model);
             await _postsService.InsertAsync(postToCreate, model.Tags.Distinct());
@@ -196,19 +210,24 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(404)]
         public async Task<IActionResult> LikePostAsync(int id)
         {
-            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
+            if (CurrentUser == null)
+            {
+                return BadRequest(new {ErrorMessage = "Unauthorized"});
+            }
 
             var model = await _postsService.GetPostAsync(id);
             if (model == null)
+            {
                 return NotFound();
-            model.Likes++;
+            }
 
+            model.Likes++;
             _postsService.Update(model);
 
             var post = await _postsService.GetPostAsync(id);
-
             var mappedPost = _mapper.Map<PostViewModel>(post);
             mappedPost.Author = post.Author;
+
             return Ok(mappedPost);
         }
 
@@ -219,19 +238,24 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(404)]
         public async Task<IActionResult> DislikePostAsync(int id)
         {
-            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
+            if (CurrentUser == null)
+            {
+                return BadRequest(new {ErrorMessage = "Unauthorized"});
+            }
 
             var model = await _postsService.GetPostAsync(id);
             if (model == null)
+            {
                 return NotFound();
-            model.Dislikes++;
+            }
 
+            model.Dislikes++;
             _postsService.Update(model);
 
             var post = await _postsService.GetPostAsync(id);
-
             var mappedPost = _mapper.Map(post, new PostViewModel());
             mappedPost.Author = post.Author;
+
             return Ok(mappedPost);
         }
 
@@ -249,12 +273,25 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(404)]
         public async Task<IActionResult> EditAsync(int id, [FromBody] PostViewModel model)
         {
-            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
-            if (!model.AuthorId.Equals(CurrentUser.Id)) return BadRequest(new { ErrorMessage = "You are not an author of the post." });
+            if (CurrentUser == null)
+            {
+                return BadRequest(new {ErrorMessage = "Unauthorized"});
+            }
+
+            if (!model.AuthorId.Equals(CurrentUser.Id))
+            {
+                return BadRequest(new {ErrorMessage = "You are not an author of the post."});
+            }
+
 
             var post = await _postsService.GetPostAsync(id);
             var updatedModel = _mapper.Map(model, post);
+            // TODO Fix if possible
+            updatedModel.Author = CurrentUser;
+            // - - -
             _postsService.Update(updatedModel);
+
+            await _postsTagsRelationsService.AddTagsToPost(post.Id, post.PostsTagsRelations.ToList(), model.Tags);
 
             var postModel = await _postsService.GetPostAsync(id);
             var mappedPost = _mapper.Map<PostViewModel>(postModel);
@@ -275,12 +312,15 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteAsync(int id, string authorId)
         {
-            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
+            if (CurrentUser == null)
+            {
+                return BadRequest(new {ErrorMessage = "Unauthorized"});
+            }
+
             var post = await _postsService.GetPostAsync(id);
             // var comments = await _commentsService.GetCommentsForPostAsync(id);
             // comments.ForEach(comment => _commentsService.Delete(comment));
             await _postsService.GetPostAsync(id);
-
             if (!post.AuthorId.Equals(CurrentUser.Id))
             {
                 return BadRequest(new { ErrorMessage = "You are not an author of the post." });

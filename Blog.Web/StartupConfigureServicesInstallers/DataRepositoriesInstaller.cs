@@ -25,6 +25,7 @@ namespace Blog.Web.StartupConfigureServicesInstallers
             services.AddTransient<IRepository<Profile>, Repository<Profile>>();
             services.AddTransient<IRepository<Message>, Repository<Message>>();
             services.AddTransient<IRepository<Tag>, Repository<Tag>>();
+            services.AddTransient<IRepository<PostsTagsRelations>, Repository<PostsTagsRelations>>();
         }
     }
 }

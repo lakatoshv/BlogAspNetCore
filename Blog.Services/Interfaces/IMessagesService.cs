@@ -2,11 +2,11 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using Blog.Data.Models;
+using Blog.Services.GeneralService;
+
 namespace Blog.Services.Interfaces
 {
-    using Data.Models;
-    using GeneralService;
-
     /// <summary>
     /// Messages service interface.
     /// </summary>

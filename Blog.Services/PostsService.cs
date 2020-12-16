@@ -2,6 +2,8 @@
 // Copyright (c) Blog. All rights reserved.
 // </copyright>
 
+using System.Collections.ObjectModel;
+
 namespace Blog.Services
 {
     using System.Collections.Generic;
@@ -27,17 +29,13 @@ namespace Blog.Services
         /// <summary>
         /// The comments service.
         /// </summary>
-        private ICommentsService _commentsService;
-
-        /// <summary>
-        /// The tags service.
-        /// </summary>
-        private readonly ITagsService _tagsService;
+        private readonly ICommentsService _commentsService;
 
         /// <summary>
         /// The mapper.
         /// </summary>
         private readonly IMapper _mapper;
+        private readonly IPostsTagsRelationsService _postsTagsRelationsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PostsService"/> class.
@@ -49,12 +47,12 @@ namespace Blog.Services
         public PostsService(
             IRepository<Post> repo,
             ICommentsService commentsService,
-            ITagsService tagsService,
-            IMapper mapper)
+            IMapper mapper,
+            IPostsTagsRelationsService postsTagsRelationsService)
             : base(repo)
         {
             this._commentsService = commentsService;
-            this._tagsService = tagsService;
+            this._postsTagsRelationsService = postsTagsRelationsService;
             this._mapper = mapper;
         }
 
@@ -255,51 +253,11 @@ namespace Blog.Services
         }
 
         /// <inheritdoc/>
-        public async Task InsertAsync(Post post, IEnumerable<string> tags)
+        public async Task InsertAsync(Post post, IEnumerable<Tag> tags)
         {
             await this.InsertAsync(post);
-            await this.AddTagsToPost(post, tags).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Add tags to post.
-        /// </summary>
-        /// <param name="post">The post.</param>
-        /// <param name="tags">The tags.</param>
-        /// <returns>Task.</returns>
-        private async Task AddTagsToPost(Post post, IEnumerable<string> tags)
-        {
-            post.PostsTagsRelations = post.PostsTagsRelations ?? new List<PostsTagsRelations>();
-            var existingTags = await this._tagsService.GetAllAsync().ConfigureAwait(false);
-
-            foreach (var tagToCreate in tags)
-            {
-                var tag = existingTags.FirstOrDefault(x => x.Title.ToLower().Equals(tagToCreate.ToLower()));
-                PostsTagsRelations postsTagsRelations;
-                if (tag != null)
-                {
-                    postsTagsRelations = new PostsTagsRelations
-                    {
-                        PostId = post.Id,
-                        TagId = tag.Id,
-                    };
-                }
-                else
-                {
-                    postsTagsRelations = new PostsTagsRelations
-                    {
-                        PostId = post.Id,
-                        Tag = new Tag
-                        {
-                            Title = tagToCreate,
-                        },
-                    };
-                }
-
-                post.PostsTagsRelations.Add(postsTagsRelations);
-            }
-
-            await this.UpdateAsync(post);
+            post.PostsTagsRelations = new Collection<PostsTagsRelations>();
+            await this._postsTagsRelationsService.AddTagsToPost(post.Id, post.PostsTagsRelations.ToList(), tags).ConfigureAwait(false);
         }
     }
 }

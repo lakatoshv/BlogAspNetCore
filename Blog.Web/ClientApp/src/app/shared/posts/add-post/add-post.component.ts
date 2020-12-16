@@ -145,7 +145,7 @@ export class AddPostComponent implements OnInit {
         this.tagsList.unshift(this.availableTags[index]);
         this._removeFromAvailableTags(this.availableTags[index]);
       } else {
-        this.tagsList.unshift({id: 0, title: tag});
+        this.tagsList.unshift(new Tag(0, tag));
       }
     }
     this.clearFormData();

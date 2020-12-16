@@ -53,6 +53,6 @@ namespace Blog.Services.Interfaces
         /// <param name="post">The post.</param>
         /// <param name="tags">The tags.</param>
         /// <returns>Task.</returns>
-        Task InsertAsync(Post post, IEnumerable<string> tags);
+        Task InsertAsync(Post post, IEnumerable<Tag> tags);
     }
 }

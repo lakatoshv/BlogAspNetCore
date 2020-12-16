@@ -214,9 +214,9 @@ export class EditPostComponent implements OnInit {
         this.post.tags = this.post.tags === null ? [] : this.post.tags;
         this.post.tags.unshift(this.availableTags[index]);
         this._removeFromAvailableTags(this.availableTags[index]);
-      } else {
-        this.post.tags.unshift({id: 0, title: tag});
       }
+    } else {
+      this.post.tags.unshift(new Tag(0, tag));
     }
     this.clearFormData();
   }
@@ -253,6 +253,7 @@ export class EditPostComponent implements OnInit {
     this._postService.showPost(this._postId).subscribe(
       (response: any) => {
         this.post = response.post;
+        this.post.tags = response.tags;
         if (! this.isLoggedIn || this.user.id !== this.post.authorId) {
           this._router.navigateByUrl('/');
         }
