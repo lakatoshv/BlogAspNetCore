@@ -367,6 +367,210 @@
 					"response": []
 				}
 			],
+			"description": "Comments Collection to work with comment",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "52e58c20-186f-4e9c-963c-af9c7518ed0e",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "9444fc9d-64f1-483f-84a0-3f845b529e57",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Messages",
+			"item": [
+				{
+					"name": "GetMessages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/messages",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateMessage",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"senderId\": \"e20d993c-a568-408a-a440-5036a5787e73\",\r\n        \"sender\": null,\r\n        \"recipientId\": null,\r\n        \"recipient\": null,\r\n        \"senderEmail\": \"\",\r\n        \"senderName\": \"\",\r\n        \"subject\": \"message from postman\",\r\n        \"body\": null,\r\n        \"messageType\": 0,\r\n        \"id\": 3\r\n    }"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/messages",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMessagesBySenderEmail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/messages/get-sender-messages/some.pochta12345@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"messages",
+								"get-sender-messages",
+								"some.pochta12345@gmail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMessage",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/messages/show/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"messages",
+								"show",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateMessage",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"senderId\": \"e20d993c-a568-408a-a440-5036a5787e73\",\r\n    \"sender\": null,\r\n    \"recipientId\": null,\r\n    \"recipient\": null,\r\n    \"senderEmail\": \"\",\r\n    \"senderName\": \"\",\r\n    \"subject\": \"edited from swagger\",\r\n    \"body\": null,\r\n    \"messageType\": 0,\r\n    \"id\": 1\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/messages/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"messages",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteMessage",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/messages/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"messages",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Messages Collection to work with message",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "62fabc2e-1a16-4f6c-bae5-aa89bf360e0c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "043a900a-46bd-4916-9864-8b6645fe3459",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
 			"protocolProfileBehavior": {}
 		}
 	],
