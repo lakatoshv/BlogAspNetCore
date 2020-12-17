@@ -175,6 +175,199 @@
 			],
 			"description": "Accounts Collection to work with user",
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "GetCommentsWithFilter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"OrderBy\": \"CommentBody\",\r\n  \"SortBy\": \"CommentBody\",\r\n  \"CurrentPage\": 1,\r\n  \"PageSize\": 10,\r\n  \"DisplayType\": null\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/comments/get-comments-by-filter",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"comments",
+								"get-comments-by-filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetComments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetCommentsByPostIdWithFilter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"OrderBy\": \"CommentBody\",\r\n  \"SortBy\": \"CommentBody\",\r\n  \"CurrentPage\": 1,\r\n  \"PageSize\": 10,\r\n  \"DisplayType\": null\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/comments/get-comments-by-post/8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"comments",
+								"get-comments-by-post",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetComment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/comments/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"comments",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateComment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Id\": 0,\r\n  \"PostId\": 8,\r\n  \"CommentBody\": \"edited from postman\",\r\n  \"CreatedAt\": \"2020-12-17T08:51:55.763Z\",\r\n  \"Likes\": 0,\r\n  \"Dislikes\": 0,\r\n  \"UserId\": \"b43befae-84ae-46a0-b666-038e5372b26e\",\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/comments/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"comments",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteComment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/comments/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"comments",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateComment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Id\": 0,\r\n  \"PostId\": 8,\r\n  \"CommentBody\": \"created from postman\",\r\n  \"CreatedAt\": \"2020-12-17T08:51:55.763Z\",\r\n  \"Likes\": 0,\r\n  \"Dislikes\": 0,\r\n  \"UserId\": \"b43befae-84ae-46a0-b666-038e5372b26e\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"protocolProfileBehavior": {}
