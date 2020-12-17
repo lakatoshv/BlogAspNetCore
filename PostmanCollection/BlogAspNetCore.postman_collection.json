@@ -602,7 +602,13 @@
 					"name": "EditProfile",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n    \"firstName\": \"Vitalii\",\r\n    \"lastName\": \"Lakatosh\",\r\n    \"email\": \"some.pochta12345@gmail.com\",\r\n    \"phoneNumber\": \"0123456780\",\r\n    \"about\": \"<p>Edited from postman</p>\"\r\n}"
@@ -648,6 +654,166 @@
 					}
 				}
 			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Tags",
+			"item": [
+				{
+					"name": "GetTags",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/tags/get-tags",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"tags",
+								"get-tags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAvailableTags",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/tags/get-available-tags/8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"tags",
+								"get-available-tags",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTag",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/tags/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"tags",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateTag",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Title\": \"created from postman\",\r\n  \"PostsTagsRelations\": [\r\n  ],\r\n  \"Id\": 0\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/tags/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"tags",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTag",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Title\": \"updated from postman\",\r\n  \"PostsTagsRelations\": [\r\n  ],\r\n  \"Id\": 1\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/tags/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"tags",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteTag",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/tags/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"tags",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Tags Collection to work with tag",
 			"protocolProfileBehavior": {}
 		}
 	],
