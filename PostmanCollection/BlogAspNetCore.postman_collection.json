@@ -1,0 +1,181 @@
+{
+	"info": {
+		"_postman_id": "22534aa6-57bd-4e2b-a151-444665636bd6",
+		"name": "BlogAspNetCore",
+		"description": "Blog Asp Net Core Web Api Requests Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Accounts",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Id\": null,\r\n  \"Email\": \"user@example.com\",\r\n  \"NormalizedEmail\": null,\r\n  \"EmailConfirmed\": true,\r\n  \"Password\": \"123123\",\r\n  \"ConfirmPassword\": \"123123\",\r\n  \"PasswordHash\": null,\r\n  \"FirstName\": \"string\",\r\n  \"LastName\": \"string\",\r\n  \"UserName\": \"user@example.com\",\r\n  \"NormalizedUserName\": null,\r\n  \"PhoneNumber\": null,\r\n  \"PhoneNumberConfirmed\": true,\r\n  \"ConcurrencyStamp\": null,\r\n  \"TwoFactorEnabled\": false,\r\n  \"LockoutEnd\": null,\r\n  \"LockoutEnabled\": false,\r\n  \"AccessFailedCount\": 0,\r\n  \"SecurityStamp\": null,\r\n  \"CreatedOn\": \"2020-12-16T17:05:57.313Z\",\r\n  \"ModifiedOn\": \"2020-12-16T17:05:57.313Z\",\r\n  \"IsDeleted\": false,\r\n  \"DeletedOn\": null,\r\n  \"Roles\": [\r\n    \"User\"\r\n  ],\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/accounts/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Email\": \"user@example.com\",\r\n  \"Password\": \"123123\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/accounts/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllUsers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/accounts/get-all-users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"get-all-users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Initialize",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/accounts/initialize/0fdebece-08eb-41ed-900a-9baca7496599",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"initialize",
+								"0fdebece-08eb-41ed-900a-9baca7496599"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SendConfirmationEmail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/accounts/send-confirmation-email",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"send-confirmation-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ChangePassword",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"OldPassword\": \"123123\",\r\n  \"NewPassword\": \"12341234\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/accounts/change-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Accounts Collection to work with user",
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
