@@ -572,6 +572,83 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Profiles",
+			"item": [
+				{
+					"name": "GetProfile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/profile/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EditProfile",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Vitalii\",\r\n    \"lastName\": \"Lakatosh\",\r\n    \"email\": \"some.pochta12345@gmail.com\",\r\n    \"phoneNumber\": \"0123456780\",\r\n    \"about\": \"<p>Edited from postman</p>\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/profile/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Profiles Collection to work with profile",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1dfb5b4b-4eaa-4065-a302-0097dbe2d3ca",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "61a522fa-75cb-4ddf-98ed-1843f5c927a0",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"protocolProfileBehavior": {}
