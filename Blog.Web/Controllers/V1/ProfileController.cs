@@ -43,7 +43,7 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [HttpGet("{id}")]
-        public async Task<ActionResult> Show(int id)
+        public async Task<ActionResult> Show([FromRoute] int id)
         {
             var profile = await _profileService.GetProfile(id);
 
@@ -51,6 +51,7 @@ namespace Blog.Web.Controllers.V1
             {
                 return NotFound();
             }
+
             profile.Profile.User = null;
 
             return Ok(profile);
@@ -68,12 +69,18 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> EditAsync(int profileId, [FromBody] ProfileViewModel model)
+        public async Task<IActionResult> EditAsync([FromRoute] int profileId, [FromBody] ProfileViewModel model)
         {
-            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
+            if (CurrentUser == null)
+            {
+                return BadRequest(new {ErrorMessage = "Unauthorized"});
+            }
 
             var profile = await _profileService.GetProfile(profileId);
-            if (!profile.Profile.UserId.Equals(CurrentUser.Id)) return BadRequest(new { ErrorMessage = "You are not allowed to edit profile." });
+            if (!profile.Profile.UserId.Equals(CurrentUser.Id))
+            {
+                return BadRequest(new {ErrorMessage = "You are not allowed to edit profile."});
+            }
 
             profile.Profile.User.Email = model.Email;
             profile.Profile.User.FirstName = model.FirstName;

@@ -64,14 +64,14 @@ namespace Blog.Services.Identity.Auth
             this._profileService = profileService;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IAuthService"/>
         public string GetJwt(string username, string password)
         {
             // TODO: Either implement or remove
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IAuthService"/>
         public async Task<ApplicationUser> GetByUserNameAsync(string username)
         {
             return await this._userManager.Users
@@ -79,7 +79,7 @@ namespace Blog.Services.Identity.Auth
                 .FirstOrDefaultAsync();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IAuthService"/>
         public async Task<bool> VerifyTwoFactorTokenAsync(string username, string authenticatorCode)
         {
             var user = await this.GetByUserNameAsync(username);
@@ -87,14 +87,14 @@ namespace Blog.Services.Identity.Auth
                user, this._userManager.Options.Tokens.AuthenticatorTokenProvider, authenticatorCode);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IAuthService"/>
         public async Task<IdentityResult> RedeemTwoFactorRecoveryCodeAsync(string username, string code)
         {
             var user = await this.GetByUserNameAsync(username);
             return await this._userManager.RedeemTwoFactorRecoveryCodeAsync(user, code);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IAuthService"/>
         public async Task<string> GetJwtAsync(string username, string password)
         {
             var identity = await this.GetClaimsIdentity(username, password);
@@ -107,7 +107,7 @@ namespace Blog.Services.Identity.Auth
             return jwt;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IAuthService"/>
         public async Task<string> RefreshTokenAsync(string username)
         {
             var identity = await this.GetClaimsIdentityWithoutPassword(username);
@@ -119,7 +119,7 @@ namespace Blog.Services.Identity.Auth
             return await Tokens.GenerateJwt(identity, this._jwtFactory, username, this._jwtOptions);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IAuthService"/>
         public async Task<ClaimsIdentity> GetClaimsIdentityWithoutPassword(string userName)
         {
             if (string.IsNullOrEmpty(userName))

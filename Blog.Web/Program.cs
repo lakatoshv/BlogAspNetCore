@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Blog.Data;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Blog.Web
@@ -18,7 +20,7 @@ namespace Blog.Web
         /// Start point in application.
         /// </summary>
         /// <param name="args">args.</param>
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var host = CreateWebHostBuilder(args).Build();
 
@@ -52,16 +54,19 @@ namespace Blog.Web
                         Email = "admin@admin.admin"
                     };
 
-                    userManager.CreateAsync(adminUser, "password");
+                    await userManager.CreateAsync(adminUser, "password");
                     roles.ForEach(role => { userManager.AddToRoleAsync(adminUser, role.Name).GetAwaiter().GetResult(); });
                 }
+
+                // Migrate async.
+                await context.Database.MigrateAsync();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
 
-            host.Run();
+            await host.RunAsync();
         }
 
         /// <summary>

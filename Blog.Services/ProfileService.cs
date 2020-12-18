@@ -39,7 +39,7 @@ namespace Blog.Services
             this._mapper = mapper;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IProfileService"/>
         public async Task<ApplicationUserDto> GetProfile(int profileId)
         {
             var profile = await this.Table.Where(x => x.Id == profileId).Include(x => x.User).FirstOrDefaultAsync();

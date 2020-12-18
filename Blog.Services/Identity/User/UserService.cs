@@ -51,21 +51,21 @@ namespace Blog.Services.Identity.User
             this._mapper = mapper;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task<IdentityResult> CreateAsync(ApplicationUser user, string password)
         {
             var result = await this._userManager.CreateAsync(user, password);
             return result;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task<ApplicationUser> GetByIdAsync(string id)
         {
             var user = await this._userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
             return user;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task<IList<ApplicationUser>> GetUsersAsync(IEnumerable<string> userIds)
         {
             return await this._userManager.Users
@@ -73,14 +73,14 @@ namespace Blog.Services.Identity.User
                 .ToListAsync();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task<ApplicationUser> GetByEmailAsync(string email)
         {
             return await this._userManager.Users
                 .FirstOrDefaultAsync(m => m.Email == email);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task<IdentityResult> ChangePasswordAsync(string userName, string oldPassword, string newPassword)
         {
             var user = await this.GetByUserNameAsync(userName);
@@ -88,14 +88,14 @@ namespace Blog.Services.Identity.User
             return changePasswordResult;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task<List<ApplicationUser>> GetAllAsync()
         {
             var userList = await this._userManager.Users.ToListAsync();
             return userList;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task<string> GetAuthenticatorKeyAsync(string userName)
         {
             var user = await this.GetByUserNameAsync(userName);
@@ -104,19 +104,19 @@ namespace Blog.Services.Identity.User
             return token;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public Task<string> GetAuthenticatorKeyAsync(ApplicationUser user)
         {
             return this._userManager.GetAuthenticatorKeyAsync(user);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task<IdentityResult> ResetAuthenticatorKeyAsync(ApplicationUser user)
         {
             return await this._userManager.ResetAuthenticatorKeyAsync(user);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task<ApplicationUser> GetByUserNameAsync(string userName)
         {
             return await this._userManager.Users
@@ -124,7 +124,7 @@ namespace Blog.Services.Identity.User
                 .FirstOrDefaultAsync(u => u.UserName == userName);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task<ApplicationUser> GetByProfileIdAsync(int profileId)
         {
             return
@@ -132,7 +132,7 @@ namespace Blog.Services.Identity.User
                     .FirstOrDefaultAsync();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task DelByIdAsync(string id)
         {
             var user = await this._userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
@@ -145,7 +145,7 @@ namespace Blog.Services.Identity.User
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task<string> GetEmailVerificationTokenAsync(string userName)
         {
             var user = await this._userManager.FindByNameAsync(userName);
@@ -154,7 +154,7 @@ namespace Blog.Services.Identity.User
             return System.Convert.ToBase64String(plainTextBytes);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task<string> GetPasswordResetTokenAsync(string userName)
         {
             var user = await this._userManager.FindByNameAsync(userName);
@@ -162,7 +162,7 @@ namespace Blog.Services.Identity.User
             return token;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task<IdentityResult> UpdateAsync(string userName, ApplicationUser applicationUser)
         {
             var user = await this._userManager.Users.FirstOrDefaultAsync(u => u.UserName == userName);
@@ -172,7 +172,7 @@ namespace Blog.Services.Identity.User
             return result;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task<IdentityResult> VerifyEmailAsync(string userName, string token)
         {
             var user = await this._userManager.Users.FirstOrDefaultAsync(u => u.UserName == userName);
@@ -184,37 +184,37 @@ namespace Blog.Services.Identity.User
             return result;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public Task<int> CountRecoveryCodesAsync(ApplicationUser user)
         {
             return this._userManager.CountRecoveryCodesAsync(user);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public Task<bool> VerifyTwoFactorTokenAsync(ApplicationUser user, string tokenProvider, string token)
         {
             return this._userManager.VerifyTwoFactorTokenAsync(user, tokenProvider, token);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public string GetAuthenticationProvider()
         {
             return this._userManager.Options.Tokens.AuthenticatorTokenProvider;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public Task<IdentityResult> SetTwoFactorEnabledAsync(ApplicationUser user, bool enabled)
         {
             return this._userManager.SetTwoFactorEnabledAsync(user, enabled);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public Task<IEnumerable<string>> GenerateNewTwoFactorRecoveryCodesAsync(ApplicationUser user, int number)
         {
             return this._userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, number);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task<IdentityResult> ResetPasswordAsync(string userName, string token, string newPassword)
         {
             var user = await this.GetByUserNameAsync(userName);
@@ -222,7 +222,7 @@ namespace Blog.Services.Identity.User
             return result;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IUserService"/>
         public async Task<PagedListResult<ApplicationUser>> GetAllFilteredUsersAsync(TableFilter tableFilter)
         {
             var sequence = this._applicationUserRepository.Table;

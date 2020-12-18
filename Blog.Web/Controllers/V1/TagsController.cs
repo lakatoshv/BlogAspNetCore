@@ -6,6 +6,7 @@ using Blog.Services.ControllerContext;
 using Blog.Services.Core.Dtos.Posts;
 using Blog.Services.Interfaces;
 using Blog.Web.Contracts.V1;
+using Blog.Web.Contracts.V1.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -68,7 +69,7 @@ namespace Blog.Web.Controllers.V1
         /// <param name="postId">The post identifier.</param>
         /// <returns></returns>
         [HttpGet(ApiRoutes.TagsController.GetAvailableTags)]
-        public async Task<ActionResult> GetAvailableTags(int postId)
+        public async Task<ActionResult> GetAvailableTags([FromRoute] int postId)
         {
             var tags = await _tagsService.GetAllAsync(x => x.PostsTagsRelations == null || x.PostsTagsRelations.Any(y => y.PostId != postId));
 
@@ -89,11 +90,14 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(404)]
         [HttpGet("{id}", Name = ApiRoutes.TagsController.GetTag)]
         // GET: Posts/Show/5
-        public async Task<ActionResult> GetTag(int id)
+        public async Task<ActionResult> GetTag([FromRoute] int id)
         {
             var tag = await _tagsService.FindAsync(id);
             if (tag == null)
+            {
                 return NotFound();
+            }
+
             return Ok(tag);
         }
 
@@ -115,7 +119,12 @@ namespace Blog.Web.Controllers.V1
 
             await _tagsService.InsertAsync(model);
 
-            return CreatedAtRoute(ApiRoutes.TagsController.GetTag, new { id = model.Id }, model);
+            var response = new CreatedResponse<int> { Id = model.Id };
+
+            var baseUrl = $@"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
+            var locationUrl = baseUrl + "/" + ApiRoutes.TagsController.GetTag.Replace("{id}", model.Id.ToString());
+
+            return Created(locationUrl, response);
         }
 
         [HttpPut("{id}")]
@@ -123,15 +132,20 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [Authorize]
-        public async Task<IActionResult> EditAsync(int id, [FromBody] Tag model)
+        public async Task<IActionResult> EditAsync([FromRoute] int id, [FromBody] Tag model)
         {
             var originTag = await _tagsService.FindAsync(id);
+            if (originTag == null)
+            {
+                return NotFound();
+            }
+
             var updatedTag = _mapper.Map(model, originTag);
             _tagsService.Update(updatedTag);
 
             var tag = await _tagsService.FindAsync(id);
-
             var mappedComment = _mapper.Map<TagViewDto>(tag);
+
             return Ok(mappedComment);
         }
 
@@ -144,16 +158,18 @@ namespace Blog.Web.Controllers.V1
         [HttpDelete("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteAsync([FromRoute] int id)
         {
             var comment = await _tagsService.FindAsync(id);
+            if (comment == null)
+            {
+                return NotFound();
+            }
 
             _tagsService.Delete(comment);
+            var response = new CreatedResponse<int> {Id = id};
 
-            return Ok(new
-            {
-                id = id
-            });
+            return Ok(response);
         }
     }
 }

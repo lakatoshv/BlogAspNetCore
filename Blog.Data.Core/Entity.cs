@@ -77,7 +77,7 @@ namespace Blog.Data.Core
             return thisType.IsAssignableFrom(otherType) || otherType.IsAssignableFrom(thisType);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="object"/>
         public override int GetHashCode()
         {
             return Equals(this.Id, default(int)) ? base.GetHashCode() : this.Id.GetHashCode();

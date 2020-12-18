@@ -42,7 +42,7 @@ namespace Blog.Services
         /// </summary>
         /// <param name="repo">The repo.</param>
         /// <param name="commentsService">The comments service.</param>
-        /// <param name="tagsService">The tags service.</param>
+        /// <param name="postsTagsRelationsService">The tags service.</param>
         /// <param name="mapper">The mapper.</param>
         public PostsService(
             IRepository<Post> repo,
@@ -56,7 +56,7 @@ namespace Blog.Services
             this._mapper = mapper;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPostsService"/>
         public async Task<Post> GetPostAsync(int id)
         {
             return await this.Repository.Table
@@ -71,7 +71,7 @@ namespace Blog.Services
                 .FirstOrDefaultAsync();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPostsService"/>
         public async Task<PostShowViewDto> GetPost(int postId, SortParametersDto sortParameters)
         {
             var post = await this.Repository.Table
@@ -118,7 +118,7 @@ namespace Blog.Services
                 .FirstOrDefaultAsync();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPostsService"/>
         public async Task<PostsViewDto> GetPostsAsync(SearchParametersDto searchParameters)
         {
             var posts = new PostsViewDto();
@@ -184,7 +184,7 @@ namespace Blog.Services
             return posts;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPostsService"/>
         public async Task<PostsViewDto> GetUserPostsAsync(string userId, SearchParametersDto searchParameters)
         {
             var posts = new PostsViewDto();
@@ -252,7 +252,7 @@ namespace Blog.Services
             return posts;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IPostsService"/>
         public async Task InsertAsync(Post post, IEnumerable<Tag> tags)
         {
             await this.InsertAsync(post);

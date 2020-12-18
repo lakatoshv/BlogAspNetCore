@@ -54,7 +54,7 @@ namespace Blog.Services.Core.Identity.Auth
             ThrowIfInvalidOptions(this._jwtOptions);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IJwtFactory"/>
         public async Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity)
         {
             var claims = new List<Claim>(new[]
@@ -111,7 +111,7 @@ namespace Blog.Services.Core.Identity.Auth
             return encodedJwt;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IJwtFactory"/>
         public ClaimsIdentity GenerateClaimsIdentity(ClaimsIdentityUserModel claimsIdentityUserModel)
         {
             return new ClaimsIdentity(
@@ -129,7 +129,7 @@ namespace Blog.Services.Core.Identity.Auth
                 });
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IJwtFactory"/>
         public async Task<string> GenerateRefreshToken(string userName)
         {
             // change

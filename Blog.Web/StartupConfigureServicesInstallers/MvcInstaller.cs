@@ -10,7 +10,7 @@ namespace Blog.Web.StartupConfigureServicesInstallers
     /// <seealso cref="IInstaller" />
     public class MvcInstaller : IInstaller
     {
-        /// <inheritdoc />
+        /// <inheritdoc cref="IInstaller"/>
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

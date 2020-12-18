@@ -12,7 +12,7 @@ namespace Blog.Web.StartupConfigureServicesInstallers
     /// <seealso cref="IInstaller" />
     public class SwaggerInstaller : IInstaller
     {
-        /// <inheritdoc />
+        /// <inheritdoc cref="IInstaller"/>
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
             // Swagger Configuration

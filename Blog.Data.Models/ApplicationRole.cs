@@ -31,16 +31,16 @@ namespace Blog.Data.Models
             this.Id = Guid.NewGuid().ToString();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IAuditInfo"/>
         public DateTime CreatedOn { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IAuditInfo"/>
         public DateTime? ModifiedOn { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDeletableEntity"/>
         public bool IsDeleted { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDeletableEntity"/>
         public DateTime? DeletedOn { get; set; }
     }
 }

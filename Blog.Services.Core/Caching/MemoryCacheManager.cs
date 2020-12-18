@@ -50,13 +50,13 @@ namespace Blog.Services.Core.Caching
             this.CancellationTokenSource = new CancellationTokenSource();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual T Get<T>(string key)
         {
             return this._cache.Get<T>(key);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual void Set(string key, object data, int cacheTime)
         {
             if (data != null)
@@ -65,13 +65,13 @@ namespace Blog.Services.Core.Caching
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual bool IsSet(string key)
         {
             return this._cache.TryGetValue(key, out object _);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ILocker"/>
         public bool PerformActionWithLock(string key, TimeSpan expirationTime, Action action)
         {
             // ensure that lock is acquired
@@ -96,19 +96,19 @@ namespace Blog.Services.Core.Caching
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual void Remove(string key)
         {
             this._cache.Remove(this.RemoveKey(key));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual void RemoveByPattern(string pattern)
         {
             this.RemoveByPattern(pattern, AllKeys.Where(p => p.Value).Select(p => p.Key));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual void Clear()
         {
             // send cancellation request
@@ -121,7 +121,7 @@ namespace Blog.Services.Core.Caching
             this.CancellationTokenSource = new CancellationTokenSource();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDisposable"/>
         public virtual void Dispose()
         {
             // nothing special

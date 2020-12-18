@@ -11,39 +11,39 @@ namespace Blog.Services.Core.Caching
     /// </summary>
     public class NullCache : IStaticCacheManager
     {
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual T Get<T>(string key)
         {
             return default(T);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual void Set(string key, object data, int cacheTime)
         {
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public bool IsSet(string key)
         {
             return false;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual void Remove(string key)
         {
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual void RemoveByPattern(string pattern)
         {
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual void Clear()
         {
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual void Dispose()
         {
             // nothing special

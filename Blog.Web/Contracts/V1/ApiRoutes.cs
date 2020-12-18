@@ -77,6 +77,11 @@
             public const string GetCommentsByPost = "get-comments-by-post/{id}";
 
             /// <summary>
+            /// The get comments by filter.
+            /// </summary>
+            public const string GetCommentsByFilter = "get-comments-by-filter";
+
+            /// <summary>
             /// The get comment.
             /// </summary>
             public const string GetComment = "get-comment";
@@ -178,7 +183,7 @@
             /// <summary>
             /// The get available tags.
             /// </summary>
-            public const string GetAvailableTags = "get-available-tags";
+            public const string GetAvailableTags = "get-available-tags/{postId}";
 
             /// <summary>
             /// The get tag.

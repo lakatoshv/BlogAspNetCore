@@ -30,5 +30,12 @@ namespace Blog.Services.Interfaces
         /// <param name="id">The identifier.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task<Comment> GetCommentAsync(int id);
+
+        /// <summary>
+        /// Gets the paged comments.
+        /// </summary>
+        /// <param name="sortParameters">The sort parameters.</param>
+        /// <returns></returns>
+        Task<CommentsViewDto> GetPagedComments(SortParametersDto sortParameters);
     }
 }

@@ -43,14 +43,14 @@ namespace Blog.Services.EmailServices
             this._emailTemplateProvider = emailTemplateProvider;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IEmailExtensionService"/>
         public async Task SendPasswordResetEmailAsync(string email, string token)
         {
             var body = this._emailTemplateProvider.ResolveBody(TemplateTypes.PasswordRestore, new { token, this._options.BaseUrl, email });
             await this._emailService.SendAsync(body, "Reset Password", this._options.From, email);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IEmailExtensionService"/>
         public async Task SendVerificationEmailAsync(string email, string token)
         {
             var body = this._emailTemplateProvider.ResolveBody(TemplateTypes.EmailVerification, new { token, this._options.BaseUrl, email });

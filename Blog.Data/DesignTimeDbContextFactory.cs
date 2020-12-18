@@ -15,7 +15,7 @@ namespace Blog.Data
     /// </summary>
     public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDesignTimeDbContextFactory{ApplicationDbContext}"/>
         public ApplicationDbContext CreateDbContext(string[] args)
         {
             var configuration = new ConfigurationBuilder()

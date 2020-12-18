@@ -34,7 +34,7 @@ namespace Blog.Services.Identity.Registration
             this._userService = userService;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRegistrationService"/>
         public IdentityResult Register(ApplicationUser user, string password)
         {
             // TODO: Either implement or remove
@@ -43,7 +43,7 @@ namespace Blog.Services.Identity.Registration
 
         // TODO: Get rid of IdentityResult, introduce own IServiceResult
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRegistrationService"/>
         public async Task<IdentityResult> RegisterAsync(ApplicationUser user, string password)
         {
             user.UserName = Regex.Replace(user.UserName, @"\s+", " ").Trim();
