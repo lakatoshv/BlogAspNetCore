@@ -119,7 +119,12 @@ namespace Blog.Web.Controllers.V1
 
             await _tagsService.InsertAsync(model);
 
-            return CreatedAtRoute(ApiRoutes.TagsController.GetTag, new { id = model.Id }, model);
+            var response = new CreatedResponse<int> { Id = model.Id };
+
+            var baseUrl = $@"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
+            var locationUrl = baseUrl + "/" + ApiRoutes.TagsController.GetTag.Replace("{id}", model.Id.ToString());
+
+            return Created(locationUrl, response);
         }
 
         [HttpPut("{id}")]
@@ -164,10 +169,7 @@ namespace Blog.Web.Controllers.V1
             _tagsService.Delete(comment);
             var response = new CreatedResponse<int> {Id = id};
 
-            return Ok(new
-            {
-                id = id
-            });
+            return Ok(response);
         }
     }
 }

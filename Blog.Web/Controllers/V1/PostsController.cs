@@ -194,7 +194,12 @@ namespace Blog.Web.Controllers.V1
             var postToCreate = _mapper.Map<Post>(model);
             await _postsService.InsertAsync(postToCreate, model.Tags.Distinct());
 
-            return Ok();
+            var response = new CreatedResponse<int> { Id = postToCreate.Id };
+
+            var baseUrl = $@"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
+            var locationUrl = baseUrl + "/" + ApiRoutes.PostsController.Show.Replace("{id}", postToCreate.Id.ToString());
+
+            return Created(locationUrl, response);
         }
 
         [HttpPut(ApiRoutes.PostsController.LikePost)]
@@ -322,10 +327,9 @@ namespace Blog.Web.Controllers.V1
 
             _postsService.Delete(post);
 
-            return Ok(new
-            {
-                Id = id
-            });
+            var response = new CreatedResponse<int> {Id = id};
+
+            return Ok(response);
         }
     }
 }

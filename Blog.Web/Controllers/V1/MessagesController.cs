@@ -192,11 +192,9 @@ namespace Blog.Web.Controllers.V1
             }
 
             _messagesService.Delete(message);
+            var response = new CreatedResponse<int> { Id = id };
 
-            return Ok(new
-            {
-                Id = id
-            });
+            return Ok(response);
         }
     }
 }

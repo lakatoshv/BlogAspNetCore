@@ -136,10 +136,13 @@ namespace Blog.Web.Controllers.V1
             model.CreatedAt = Now;
 
             var comment = _mapper.Map<Comment>(model);
-
             await _commentService.InsertAsync(comment);
+            var response = new CreatedResponse<int> {Id = comment.Id};
+            var baseUrl = $@"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
+            var locationUrl = baseUrl + "/" +
+                              ApiRoutes.CommentsController.GetComment.Replace("{id}", comment.Id.ToString());
 
-            return CreatedAtRoute(ApiRoutes.CommentsController.GetComment, new { id = comment.Id }, comment);
+            return CreatedAtRoute(locationUrl, response);
         }
 
         /// <summary>
@@ -188,11 +191,9 @@ namespace Blog.Web.Controllers.V1
             }
 
             _commentService.Delete(comment);
+            var response = new CreatedResponse<int> { Id = id };
 
-            return Ok(new
-            {
-                id = id
-            });
+            return Ok(response);
         }
     }
 }
