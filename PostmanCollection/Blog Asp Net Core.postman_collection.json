@@ -1,0 +1,1097 @@
+{
+	"info": {
+		"_postman_id": "22534aa6-57bd-4e2b-a151-444665636bd6",
+		"name": "Blog Asp Net Core",
+		"description": "Blog Asp Net Core Web Api Requests Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Accounts",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Id\": null,\r\n  \"Email\": \"user@example.com\",\r\n  \"NormalizedEmail\": null,\r\n  \"EmailConfirmed\": true,\r\n  \"Password\": \"123123\",\r\n  \"ConfirmPassword\": \"123123\",\r\n  \"PasswordHash\": null,\r\n  \"FirstName\": \"string\",\r\n  \"LastName\": \"string\",\r\n  \"UserName\": \"user@example.com\",\r\n  \"NormalizedUserName\": null,\r\n  \"PhoneNumber\": null,\r\n  \"PhoneNumberConfirmed\": true,\r\n  \"ConcurrencyStamp\": null,\r\n  \"TwoFactorEnabled\": false,\r\n  \"LockoutEnd\": null,\r\n  \"LockoutEnabled\": false,\r\n  \"AccessFailedCount\": 0,\r\n  \"SecurityStamp\": null,\r\n  \"CreatedOn\": \"2020-12-16T17:05:57.313Z\",\r\n  \"ModifiedOn\": \"2020-12-16T17:05:57.313Z\",\r\n  \"IsDeleted\": false,\r\n  \"DeletedOn\": null,\r\n  \"Roles\": [\r\n    \"User\"\r\n  ],\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/accounts/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Email\": \"user@example.com\",\r\n  \"Password\": \"123123\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/accounts/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllUsers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/accounts/get-all-users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"get-all-users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Initialize",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/accounts/initialize/0fdebece-08eb-41ed-900a-9baca7496599",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"initialize",
+								"0fdebece-08eb-41ed-900a-9baca7496599"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SendConfirmationEmail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/accounts/send-confirmation-email",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"send-confirmation-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ChangePassword",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"OldPassword\": \"123123\",\r\n  \"NewPassword\": \"12341234\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/accounts/change-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"accounts",
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Accounts Collection to work with user",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "GetCommentsWithFilter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"OrderBy\": \"CommentBody\",\r\n  \"SortBy\": \"CommentBody\",\r\n  \"CurrentPage\": 1,\r\n  \"PageSize\": 10,\r\n  \"DisplayType\": null\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/comments/get-comments-by-filter",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"comments",
+								"get-comments-by-filter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetComments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetCommentsByPostIdWithFilter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"OrderBy\": \"CommentBody\",\r\n  \"SortBy\": \"CommentBody\",\r\n  \"CurrentPage\": 1,\r\n  \"PageSize\": 10,\r\n  \"DisplayType\": null\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/comments/get-comments-by-post/8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"comments",
+								"get-comments-by-post",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetComment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/comments/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"comments",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateComment",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Id\": 0,\r\n  \"PostId\": 8,\r\n  \"CommentBody\": \"edited from postman\",\r\n  \"CreatedAt\": \"2020-12-17T08:51:55.763Z\",\r\n  \"Likes\": 0,\r\n  \"Dislikes\": 0,\r\n  \"UserId\": \"b43befae-84ae-46a0-b666-038e5372b26e\",\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/comments/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"comments",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteComment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/comments/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"comments",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateComment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Id\": 0,\r\n  \"PostId\": 8,\r\n  \"CommentBody\": \"created from postman\",\r\n  \"CreatedAt\": \"2020-12-17T08:51:55.763Z\",\r\n  \"Likes\": 0,\r\n  \"Dislikes\": 0,\r\n  \"UserId\": \"b43befae-84ae-46a0-b666-038e5372b26e\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Comments Collection to work with comment",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "52e58c20-186f-4e9c-963c-af9c7518ed0e",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "9444fc9d-64f1-483f-84a0-3f845b529e57",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Messages",
+			"item": [
+				{
+					"name": "GetMessages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/messages",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateMessage",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"senderId\": \"e20d993c-a568-408a-a440-5036a5787e73\",\r\n        \"sender\": null,\r\n        \"recipientId\": null,\r\n        \"recipient\": null,\r\n        \"senderEmail\": \"\",\r\n        \"senderName\": \"\",\r\n        \"subject\": \"message from postman\",\r\n        \"body\": null,\r\n        \"messageType\": 0,\r\n        \"id\": 3\r\n    }"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/messages",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMessagesBySenderEmail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/messages/get-sender-messages/some.pochta12345@gmail.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"messages",
+								"get-sender-messages",
+								"some.pochta12345@gmail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetMessage",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/messages/show/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"messages",
+								"show",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateMessage",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"senderId\": \"e20d993c-a568-408a-a440-5036a5787e73\",\r\n    \"sender\": null,\r\n    \"recipientId\": null,\r\n    \"recipient\": null,\r\n    \"senderEmail\": \"\",\r\n    \"senderName\": \"\",\r\n    \"subject\": \"edited from swagger\",\r\n    \"body\": null,\r\n    \"messageType\": 0,\r\n    \"id\": 1\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/messages/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"messages",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteMessage",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/messages/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"messages",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Messages Collection to work with message",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "62fabc2e-1a16-4f6c-bae5-aa89bf360e0c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "043a900a-46bd-4916-9864-8b6645fe3459",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Profiles",
+			"item": [
+				{
+					"name": "GetProfile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/profile/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EditProfile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"Vitalii\",\r\n    \"lastName\": \"Lakatosh\",\r\n    \"email\": \"some.pochta12345@gmail.com\",\r\n    \"phoneNumber\": \"0123456780\",\r\n    \"about\": \"<p>Edited from postman</p>\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/profile/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Profiles Collection to work with profile",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1dfb5b4b-4eaa-4065-a302-0097dbe2d3ca",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "61a522fa-75cb-4ddf-98ed-1843f5c927a0",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Tags",
+			"item": [
+				{
+					"name": "GetTags",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/tags/get-tags",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"tags",
+								"get-tags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAvailableTags",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/tags/get-available-tags/8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"tags",
+								"get-available-tags",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTag",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/tags/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"tags",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateTag",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Title\": \"created from postman\",\r\n  \"PostsTagsRelations\": [\r\n  ],\r\n  \"Id\": 0\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/tags/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"tags",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTag",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Title\": \"updated from postman\",\r\n  \"PostsTagsRelations\": [\r\n  ],\r\n  \"Id\": 1\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/tags/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"tags",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteTag",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/tags/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"tags",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Tags Collection to work with tag",
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "GetAllPosts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPost",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts/show/2018",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"show",
+								"2018"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPostsByFilter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"search\": null,\r\n    \"sortParameters\": {\r\n        \"currentPage\": 1,\r\n        \"displayType\": null,\r\n        \"orderBy\": null,\r\n        \"pageSize\": 10,\r\n        \"sortBy\": null\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts/get-posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"get-posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUsersPostsByFilter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"search\": null,\r\n    \"sortParameters\": {\r\n        \"currentPage\": 1,\r\n        \"displayType\": null,\r\n        \"orderBy\": null,\r\n        \"pageSize\": 10,\r\n        \"sortBy\": null\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts/user-posts/e20d993c-a568-408a-a440-5036a5787e73",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"user-posts",
+								"e20d993c-a568-408a-a440-5036a5787e73"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreatePost",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"authorId\": \"e20d993c-a568-408a-a440-5036a5787e73\",\r\n    \"content\": \"<p>Created from postman</p>\",\r\n    \"date\": \"\",\r\n    \"description\": \"<p>Created from postman</p>\",\r\n    \"id\": 0,\r\n    \"imageUrl\": \"Created from postman\",\r\n    \"title\": \"Created from postman\",\r\n    \"tags\": [\r\n        {\r\n            \"id\": 0,\r\n            \"postsTagsRelations\": null,\r\n            \"title\": \"Created from postman1\"\r\n        },\r\n        {\r\n            \"id\": 1,\r\n            \"postsTagsRelations\": null,\r\n            \"title\": \"post with tags2\"\r\n        },\r\n        {\r\n            \"id\": 0,\r\n            \"postsTagsRelations\": null,\r\n            \"title\": \"Created from postman\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LikePost",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts/like/2018",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"like",
+								"2018"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DislikePost",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts/dislike/2018",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"dislike",
+								"2018"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeletePost",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts/2018",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"2018"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdatePost",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"authorId\": \"e20d993c-a568-408a-a440-5036a5787e73\",\r\n    \"content\": \"<p>Updated from postman</p>\",\r\n    \"date\": \"\",\r\n    \"description\": \"<p>Updated from postman</p>\",\r\n    \"id\": 0,\r\n    \"imageUrl\": \"Updated from postman\",\r\n    \"title\": \"Updated from postman\",\r\n    \"tags\": [\r\n        {\r\n            \"id\": 0,\r\n            \"postsTagsRelations\": null,\r\n            \"title\": \"Created from postman1\"\r\n        },\r\n        {\r\n            \"id\": 1,\r\n            \"postsTagsRelations\": null,\r\n            \"title\": \"post with tags2\"\r\n        },\r\n        {\r\n            \"id\": 0,\r\n            \"postsTagsRelations\": null,\r\n            \"title\": \"Created from postman\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts/2023",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"2023"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Posts Collection to work with post",
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "165e8f3b-edd8-4288-8487-4a65e288dd4a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "4ad03811-7c69-4548-afc7-4c12981bd790",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
