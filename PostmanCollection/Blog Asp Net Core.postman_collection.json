@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "22534aa6-57bd-4e2b-a151-444665636bd6",
-		"name": "BlogAspNetCore",
+		"name": "Blog Asp Net Core",
 		"description": "Blog Asp Net Core Web Api Requests Collection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -815,6 +815,282 @@
 			],
 			"description": "Tags Collection to work with tag",
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "GetAllPosts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPost",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts/show/2018",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"show",
+								"2018"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetPostsByFilter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"search\": null,\r\n    \"sortParameters\": {\r\n        \"currentPage\": 1,\r\n        \"displayType\": null,\r\n        \"orderBy\": null,\r\n        \"pageSize\": 10,\r\n        \"sortBy\": null\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts/get-posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"get-posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUsersPostsByFilter",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"search\": null,\r\n    \"sortParameters\": {\r\n        \"currentPage\": 1,\r\n        \"displayType\": null,\r\n        \"orderBy\": null,\r\n        \"pageSize\": 10,\r\n        \"sortBy\": null\r\n    }\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts/user-posts/e20d993c-a568-408a-a440-5036a5787e73",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"user-posts",
+								"e20d993c-a568-408a-a440-5036a5787e73"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreatePost",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"authorId\": \"e20d993c-a568-408a-a440-5036a5787e73\",\r\n    \"content\": \"<p>Created from postman</p>\",\r\n    \"date\": \"\",\r\n    \"description\": \"<p>Created from postman</p>\",\r\n    \"id\": 0,\r\n    \"imageUrl\": \"Created from postman\",\r\n    \"title\": \"Created from postman\",\r\n    \"tags\": [\r\n        {\r\n            \"id\": 0,\r\n            \"postsTagsRelations\": null,\r\n            \"title\": \"Created from postman1\"\r\n        },\r\n        {\r\n            \"id\": 1,\r\n            \"postsTagsRelations\": null,\r\n            \"title\": \"post with tags2\"\r\n        },\r\n        {\r\n            \"id\": 0,\r\n            \"postsTagsRelations\": null,\r\n            \"title\": \"Created from postman\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LikePost",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts/like/2018",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"like",
+								"2018"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DislikePost",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts/dislike/2018",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"dislike",
+								"2018"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeletePost",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts/2018",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"2018"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdatePost",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"authorId\": \"e20d993c-a568-408a-a440-5036a5787e73\",\r\n    \"content\": \"<p>Updated from postman</p>\",\r\n    \"date\": \"\",\r\n    \"description\": \"<p>Updated from postman</p>\",\r\n    \"id\": 0,\r\n    \"imageUrl\": \"Updated from postman\",\r\n    \"title\": \"Updated from postman\",\r\n    \"tags\": [\r\n        {\r\n            \"id\": 0,\r\n            \"postsTagsRelations\": null,\r\n            \"title\": \"Created from postman1\"\r\n        },\r\n        {\r\n            \"id\": 1,\r\n            \"postsTagsRelations\": null,\r\n            \"title\": \"post with tags2\"\r\n        },\r\n        {\r\n            \"id\": 0,\r\n            \"postsTagsRelations\": null,\r\n            \"title\": \"Created from postman\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:54676/api/v1/posts/2023",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "54676",
+							"path": [
+								"api",
+								"v1",
+								"posts",
+								"2023"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Posts Collection to work with post",
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "165e8f3b-edd8-4288-8487-4a65e288dd4a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "4ad03811-7c69-4548-afc7-4c12981bd790",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	],
 	"protocolProfileBehavior": {}
