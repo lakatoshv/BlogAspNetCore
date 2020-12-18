@@ -65,15 +65,9 @@ namespace Blog.Web.Controllers.V1
         /// <param name="searchParameters">searchParameters.</param>
         /// <returns>Task.</returns>
         [HttpGet]
-        public async Task<ActionResult> Index(SearchParametersDto searchParameters)
+        public async Task<ActionResult> Index()
         {
-            if (searchParameters.SortParameters is null)
-                searchParameters.SortParameters = new SortParametersDto();
-            searchParameters.SortParameters.OrderBy = searchParameters.SortParameters.OrderBy ?? "asc";
-            searchParameters.SortParameters.SortBy = searchParameters.SortParameters.SortBy ?? "Title";
-            searchParameters.SortParameters.CurrentPage = searchParameters.SortParameters.CurrentPage ?? 1;
-            searchParameters.SortParameters.PageSize = 10;
-            var posts = await _postsService.GetPostsAsync(searchParameters);
+            var posts = await _postsService.GetAllAsync().ConfigureAwait(false);
 
             // var postsModel = _mapper.Map<IList<PostViewModel>>(posts);
             /*var mappedPosts = _mapper.Map<PostViewModel>(posts);
@@ -208,7 +202,7 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> LikePostAsync(int id)
+        public async Task<IActionResult> LikePostAsync([FromRoute] int id)
         {
             if (CurrentUser == null)
             {
@@ -236,7 +230,7 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> DislikePostAsync(int id)
+        public async Task<IActionResult> DislikePostAsync([FromRoute] int id)
         {
             if (CurrentUser == null)
             {
@@ -271,7 +265,7 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> EditAsync(int id, [FromBody] PostViewModel model)
+        public async Task<IActionResult> EditAsync([FromRoute] int id, [FromBody] PostViewModel model)
         {
             if (CurrentUser == null)
             {

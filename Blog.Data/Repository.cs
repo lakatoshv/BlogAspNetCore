@@ -33,10 +33,10 @@ namespace Blog.Data
         /// </summary>
         private DbSet<TEntity> _entities;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public virtual IQueryable<TEntity> Table => this.Entities;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public virtual IQueryable<TEntity> TableNoTracking =>
 
             // AsNoTracking method temporarily doesn't work, it's a bug in EF Core 2.1 (details in https://github.com/aspnet/EntityFrameworkCore/issues/11689)
@@ -57,31 +57,31 @@ namespace Blog.Data
             this._context = context;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public IQueryable<TEntity> GetAll()
         {
             return this.Entities.AsQueryable();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> expression)
         {
             return this.Entities.Where(expression);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public virtual TEntity GetById(object id)
         {
             return this.Entities.Find(id);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public virtual async Task<TEntity> GetByIdAsync(object id)
         {
             return await this.Entities.FindAsync(id);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public virtual async Task<PagedListResult<TEntity>> SearchAsync(SearchQuery<TEntity> searchQuery)
         {
             IQueryable<TEntity> sequence = this.Entities;
@@ -99,7 +99,7 @@ namespace Blog.Data
             return await this.GetTheResult(searchQuery, sequence);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public virtual async Task<PagedListResult<TEntity>> SearchBySquenceAsync(SearchQuery<TEntity> searchQuery, IQueryable<TEntity> sequence)
         {
             // Applying filters
@@ -115,7 +115,7 @@ namespace Blog.Data
             return await this.GetTheResult(searchQuery, sequence);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public virtual SearchQuery<TEntity> GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         {
             var query = new SearchQuery<TEntity>
@@ -134,7 +134,7 @@ namespace Blog.Data
             return query;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public virtual void Insert(TEntity entity)
         {
             if (entity == null)
@@ -154,7 +154,7 @@ namespace Blog.Data
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public virtual void Insert(IEnumerable<TEntity> entities)
         {
             if (entities == null)
@@ -174,7 +174,7 @@ namespace Blog.Data
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public async Task InsertAsync(TEntity entity)
         {
             if (entity == null)
@@ -194,7 +194,7 @@ namespace Blog.Data
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public async Task InsertAsync(IEnumerable<TEntity> entities)
         {
             if (entities == null)
@@ -214,7 +214,7 @@ namespace Blog.Data
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public virtual void Update(TEntity entity)
         {
             if (entity == null)
@@ -234,7 +234,7 @@ namespace Blog.Data
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public virtual void Update(IEnumerable<TEntity> entities)
         {
             if (entities == null)
@@ -254,7 +254,7 @@ namespace Blog.Data
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public async Task UpdateAsync(TEntity entity)
         {
             if (entity == null)
@@ -274,7 +274,7 @@ namespace Blog.Data
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public async Task UpdateAsync(IEnumerable<TEntity> entities)
         {
             if (entities == null)
@@ -294,7 +294,7 @@ namespace Blog.Data
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public virtual void Delete(TEntity entity)
         {
             if (entity == null)
@@ -314,7 +314,7 @@ namespace Blog.Data
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public virtual void Delete(IEnumerable<TEntity> entities)
         {
             if (entities == null)
@@ -334,7 +334,7 @@ namespace Blog.Data
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public async Task DeleteAsync(TEntity entity)
         {
             if (entity == null)
@@ -354,7 +354,7 @@ namespace Blog.Data
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public async Task DeleteAsync(IEnumerable<TEntity> entities)
         {
             if (entities == null)
@@ -374,7 +374,7 @@ namespace Blog.Data
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public bool Any(Expression<Func<TEntity, bool>> expression)
         {
             if (expression == null)
@@ -385,7 +385,7 @@ namespace Blog.Data
             return this.Entities.Any(expression);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression)
         {
             if (expression == null)
@@ -396,7 +396,7 @@ namespace Blog.Data
             return await this.Entities.AnyAsync(expression);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> expression)
         {
             if (expression == null)
@@ -407,7 +407,7 @@ namespace Blog.Data
             return this.Entities.FirstOrDefault(expression);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public TEntity LastOrDefault(Expression<Func<TEntity, bool>> expression)
         {
             if (expression == null)

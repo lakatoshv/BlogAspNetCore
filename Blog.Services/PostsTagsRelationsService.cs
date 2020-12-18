@@ -34,7 +34,7 @@ namespace Blog.Services
             _tagsService = tagsService;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPostsTagsRelationsService"/>
         public async Task AddTagsToPost(int postId, List<PostsTagsRelations> postsTagsRelations, IEnumerable<Tag> tags)
         {
             postsTagsRelations = postsTagsRelations ?? new List<PostsTagsRelations>();

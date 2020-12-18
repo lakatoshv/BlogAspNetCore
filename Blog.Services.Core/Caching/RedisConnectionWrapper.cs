@@ -64,19 +64,19 @@ namespace Blog.Services.Core.Caching
             return this.GetConnection().GetDatabase(db ?? -1);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRedisConnectionWrapper"/>
         EndPoint[] IRedisConnectionWrapper.GetEndPoints()
         {
             return this.GetEndPoints();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRedisConnectionWrapper"/>
         public IServer GetServer(EndPoint endPoint)
         {
             return this.GetConnection().GetServer(endPoint);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRedisConnectionWrapper"/>
         IDatabase IRedisConnectionWrapper.GetDatabase(int? db)
         {
             return this.GetDatabase(db);
@@ -105,7 +105,7 @@ namespace Blog.Services.Core.Caching
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ILocker"/>
         public bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action)
         {
             // use RedLock library
@@ -124,7 +124,7 @@ namespace Blog.Services.Core.Caching
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDisposable"/>
         public void Dispose()
         {
             // dispose ConnectionMultiplexer

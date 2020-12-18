@@ -28,7 +28,7 @@ namespace Blog.Services.Core.Caching
             this._httpContextAccessor = httpContextAccessor;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual T Get<T>(string key)
         {
             var items = this.GetItems();
@@ -40,7 +40,7 @@ namespace Blog.Services.Core.Caching
             return (T)items[key];
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual void Set(string key, object data, int cacheTime)
         {
             var items = this.GetItems();
@@ -55,7 +55,7 @@ namespace Blog.Services.Core.Caching
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual bool IsSet(string key)
         {
             var items = this.GetItems();
@@ -63,7 +63,7 @@ namespace Blog.Services.Core.Caching
             return items?[key] != null;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual void Remove(string key)
         {
             var items = this.GetItems();
@@ -71,7 +71,7 @@ namespace Blog.Services.Core.Caching
             items?.Remove(key);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual void RemoveByPattern(string pattern)
         {
             var items = this.GetItems();
@@ -83,7 +83,7 @@ namespace Blog.Services.Core.Caching
             this.RemoveByPattern(pattern, items.Keys.Select(p => p.ToString()));
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual void Clear()
         {
             var items = this.GetItems();
@@ -91,7 +91,7 @@ namespace Blog.Services.Core.Caching
             items?.Clear();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ICacheManager"/>
         public virtual void Dispose()
         {
             // nothing special

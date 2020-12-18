@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Services.ControllerContext
 {
@@ -39,7 +38,7 @@ namespace Blog.Services.ControllerContext
             this._userService = userService;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IControllerContext"/>
         public ApplicationUser CurrentUser
         {
             get

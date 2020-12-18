@@ -66,7 +66,7 @@ namespace Blog.Services.Identity.RefreshToken
             this._userManager = userManager;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRefreshTokenService"/>
         public async Task<string> RefreshTokensAsync(string userName, string refreshToken)
         {
             // var user =
@@ -83,7 +83,7 @@ namespace Blog.Services.Identity.RefreshToken
             return await Tokens.GenerateJwt(identity, this._jwtFactory, userName, this._jwtOptions);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IRefreshTokenService"/>
         public async Task RemoveRefreshTokensAsync(string userName)
         {
             this._refreshTokenRepository.Table.Include(r => r.User);

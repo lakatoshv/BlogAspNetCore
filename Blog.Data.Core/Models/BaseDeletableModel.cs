@@ -46,6 +46,10 @@ namespace Blog.Data.Core.Models
             return !(x == y);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseDeletableModel{TKey}"/> class.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
         protected BaseDeletableModel(TKey id) : base(id)
         {
         }
@@ -88,7 +92,7 @@ namespace Blog.Data.Core.Models
             return thisType.IsAssignableFrom(otherType) || otherType.IsAssignableFrom(thisType);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="object"/>
         public override int GetHashCode()
         {
             return Equals(this.Id, default(int)) ? base.GetHashCode() : this.Id.GetHashCode();

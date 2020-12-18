@@ -33,14 +33,14 @@ namespace Blog.Services.EmailServices
             };
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IEmailService"/>
         public void Send(Blog.Core.Emails.Email email)
         {
             var message = this.GetMailMessage(email.Body, email.Subject, email.From, email.To);
             this._client.Send(message);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IEmailService"/>
         public void Send(string body, string subject, string from, string to)
         {
             // TODO: Investigate how smtp client from argument works
@@ -51,14 +51,14 @@ namespace Blog.Services.EmailServices
         // TODO: Think of something to get rid of this warning: This async methods lacks await operators ...
         // TODO: Refactor: Consider creating some base MailMessage type and using it instead
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IEmailService"/>
         public async Task SendAsync(Blog.Core.Emails.Email email)
         {
             var message = this.GetMailMessage(email.Body, email.Subject, email.From, email.To);
             await this._client.SendMailAsync(message);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IEmailService"/>
         public async Task SendAsync(string body, string subject, string from, string to)
         {
             var message = this.GetMailMessage(body, subject, from, to);

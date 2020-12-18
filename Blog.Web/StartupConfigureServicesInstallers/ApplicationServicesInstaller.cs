@@ -32,7 +32,7 @@ namespace Blog.Web.StartupConfigureServicesInstallers
     /// <seealso cref="IInstaller" />
     public class ApplicationServicesInstaller : IInstaller
     {
-        /// <inheritdoc />
+        /// <inheritdoc cref="IInstaller"/>
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient(x => x.GetService<IOptions<BlogConfiguration>>().Value);

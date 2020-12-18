@@ -6,6 +6,7 @@ using Blog.Services.ControllerContext;
 using Blog.Services.Core.Dtos;
 using Blog.Services.Interfaces;
 using Blog.Web.Contracts.V1;
+using Blog.Web.Contracts.V1.Responses;
 using Blog.Web.VIewModels.Posts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -46,6 +47,33 @@ namespace Blog.Web.Controllers.V1
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Gets all comments.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [HttpGet]
+        public async Task<ActionResult> GetAllComments()
+        {
+            return Ok(await _commentService.GetAllAsync().ConfigureAwait(false));
+        }
+
+        [HttpPost(ApiRoutes.CommentsController.GetCommentsByFilter)]
+        public async Task<ActionResult> GetComments([FromBody] SortParametersDto sortParameters = null)
+        {
+            if (sortParameters is null)
+            {
+                sortParameters = new SortParametersDto();
+            }
+
+            sortParameters.CurrentPage = sortParameters.CurrentPage ?? 1;
+            sortParameters.PageSize = 10;
+            var comments = await _commentService.GetPagedComments(sortParameters);
+
+            return Ok(comments);
+        }
+
         // GET: Posts        
         /// <summary>
         /// Gets the comments by post asynchronous.
@@ -54,7 +82,7 @@ namespace Blog.Web.Controllers.V1
         /// <param name="sortParameters">The sort parameters.</param>
         /// <returns>Task.</returns>
         [HttpPost(ApiRoutes.CommentsController.GetCommentsByPost)]
-        public async Task<ActionResult> GetCommentsByPostAsync(int id, [FromBody] SortParametersDto sortParameters)
+        public async Task<ActionResult> GetCommentsByPostAsync([FromRoute] int id, [FromBody] SortParametersDto sortParameters = null)
         {
             if (sortParameters is null)
             {
@@ -77,11 +105,14 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(404)]
         [HttpGet("{id}", Name = ApiRoutes.CommentsController.GetComment)]
         // GET: Posts/Show/5
-        public async Task<ActionResult> GetComment(int id)
+        public async Task<ActionResult> GetComment([FromRoute] int id)
         {
             var comment = await _commentService.GetCommentAsync(id);
             if (comment == null)
+            {
                 return NotFound();
+            }
+
             return Ok(comment);
         }
 
@@ -122,7 +153,7 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [Authorize]
-        public async Task<IActionResult> EditAsync(int id, [FromBody] CommentViewModel model)
+        public async Task<IActionResult> EditAsync([FromRoute] int id, [FromBody] CommentViewModel model)
         {
             var originComment = await _commentService.GetCommentAsync(id);
             if (!originComment.UserId.Equals(model.UserId))
@@ -148,10 +179,13 @@ namespace Blog.Web.Controllers.V1
         [HttpDelete("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteAsync([FromRoute] int id)
         {
             var comment = await _commentService.GetCommentAsync(id);
-
+            if (comment == null)
+            {
+                return NotFound();
+            }
 
             _commentService.Delete(comment);
 

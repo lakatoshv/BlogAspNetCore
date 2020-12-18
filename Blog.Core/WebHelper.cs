@@ -45,7 +45,7 @@ namespace Blog.Core
         /// </summary>
         private readonly IShareFileProvider _fileProvider;
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IWebHelper"/>
         public virtual bool IsRequestBeingRedirected
         {
             get
@@ -58,7 +58,7 @@ namespace Blog.Core
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IWebHelper"/>
         public virtual bool IsPostBeingDone
         {
             get
@@ -74,7 +74,7 @@ namespace Blog.Core
             set => this._httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] = value;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IWebHelper"/>
         public virtual string CurrentRequestProtocol => this.IsCurrentConnectionSecured() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Blog.Core
             this._fileProvider = fileProvider;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IWebHelper"/>
         public virtual string GetUrlReferrer()
         {
             if (!this.IsRequestAvailable())
@@ -105,7 +105,7 @@ namespace Blog.Core
             return this._httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Referer];
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IWebHelper"/>
         public virtual string GetCurrentIpAddress()
         {
             if (!this.IsRequestAvailable())
@@ -168,7 +168,7 @@ namespace Blog.Core
             return result;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IWebHelper"/>
         public virtual string GetThisPageUrl(bool includeQueryString, bool? useSsl = null, bool lowercaseUrl = false)
         {
             if (!this.IsRequestAvailable())
@@ -197,7 +197,7 @@ namespace Blog.Core
             return pageUrl;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IWebHelper"/>
         public virtual bool IsCurrentConnectionSecured()
         {
             if (!this.IsRequestAvailable())
@@ -221,7 +221,7 @@ namespace Blog.Core
             return this._httpContextAccessor.HttpContext.Request.IsHttps;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IWebHelper"/>
         public virtual string GetStoreHost(bool useSsl)
         {
             if (!this.IsRequestAvailable())
@@ -245,7 +245,7 @@ namespace Blog.Core
             return storeHost;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IWebHelper"/>
         public virtual string GetStoreLocation(bool? useSsl = null)
         {
             var storeLocation = string.Empty;
@@ -259,7 +259,7 @@ namespace Blog.Core
             return storeLocation;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IWebHelper"/>
         public virtual bool IsStaticResource()
         {
             if (!this.IsRequestAvailable())
@@ -276,7 +276,7 @@ namespace Blog.Core
             return contentTypeProvider.TryGetContentType(path, out string _);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IWebHelper"/>
         public virtual string ModifyQueryString(string url, string key, params string[] values)
         {
             if (string.IsNullOrEmpty(url))
@@ -304,7 +304,7 @@ namespace Blog.Core
             return url;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IWebHelper"/>
         public virtual string RemoveQueryString(string url, string key, string value = null)
         {
             if (string.IsNullOrEmpty(url))
@@ -341,7 +341,7 @@ namespace Blog.Core
             return url;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IWebHelper"/>
         public virtual T QueryString<T>(string name)
         {
             if (!this.IsRequestAvailable())
@@ -357,7 +357,7 @@ namespace Blog.Core
             return CommonHelper.To<T>(this._httpContextAccessor.HttpContext.Request.Query[name].ToString());
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IWebHelper"/>
         public virtual void RestartAppDomain(bool makeRedirect = false)
         {
             // the site will be restarted during the next request automatically
@@ -371,7 +371,7 @@ namespace Blog.Core
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IWebHelper"/>
         public virtual bool IsLocalRequest(HttpRequest req)
         {
             // source: https://stackoverflow.com/a/41242493/7860424
@@ -387,7 +387,7 @@ namespace Blog.Core
             return true;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IWebHelper"/>
         public virtual string GetRawUrl(HttpRequest request)
         {
             // first try to get the raw target from request feature

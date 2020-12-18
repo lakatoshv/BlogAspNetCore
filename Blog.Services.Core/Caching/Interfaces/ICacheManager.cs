@@ -42,7 +42,7 @@ namespace Blog.Services.Core.Caching.Interfaces
         void Remove(string key);
 
         /// <summary>
-        /// Rempove data from cache by pattern.
+        /// Remove data from cache by pattern.
         /// </summary>
         /// <param name="pattern">pattern.</param>
         void RemoveByPattern(string pattern);

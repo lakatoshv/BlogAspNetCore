@@ -13,7 +13,7 @@ namespace Blog.Services.Core.Security
     /// </summary>
     public class HasScopeHandler : AuthorizationHandler<HasScopeRequirement>
     {
-        /// <inheritdoc/>
+        /// <inheritdoc cref="AuthorizationHandler{HasScopeRequirement}"/>
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasScopeRequirement requirement)
         {
             // If user does not have the scope claim, get out of here

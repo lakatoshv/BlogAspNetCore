@@ -39,13 +39,13 @@ namespace Blog.Core.Infrastructure
             this.BaseDirectory = path;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual string Combine(params string[] paths)
         {
             return Path.Combine(paths);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual void CreateDirectory(string path)
         {
             if (!this.DirectoryExists(path))
@@ -54,7 +54,7 @@ namespace Blog.Core.Infrastructure
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual void CreateFile(string path)
         {
             if (this.FileExists(path))
@@ -68,7 +68,7 @@ namespace Blog.Core.Infrastructure
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public void DeleteDirectory(string path)
         {
             if (string.IsNullOrEmpty(path))
@@ -97,7 +97,7 @@ namespace Blog.Core.Infrastructure
             }
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual void DeleteFile(string filePath)
         {
             if (!this.FileExists(filePath))
@@ -108,19 +108,19 @@ namespace Blog.Core.Infrastructure
             File.Delete(filePath);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual bool DirectoryExists(string path)
         {
             return Directory.Exists(path);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual void DirectoryMove(string sourceDirName, string destDirName)
         {
             Directory.Move(sourceDirName, destDirName);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual IEnumerable<string> EnumerateFiles(
             string directoryPath,
             string searchPattern,
@@ -132,19 +132,19 @@ namespace Blog.Core.Infrastructure
                 topDirectoryOnly ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual void FileCopy(string sourceFileName, string destFileName, bool overwrite = false)
         {
             File.Copy(sourceFileName, destFileName, overwrite);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual bool FileExists(string filePath)
         {
             return File.Exists(filePath);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual long FileLength(string path)
         {
             if (!this.FileExists(path))
@@ -155,13 +155,13 @@ namespace Blog.Core.Infrastructure
             return new FileInfo(path).Length;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual void FileMove(string sourceFileName, string destFileName)
         {
             File.Move(sourceFileName, destFileName);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual string GetAbsolutePath(params string[] paths)
         {
             var allPaths = paths.ToList();
@@ -170,13 +170,13 @@ namespace Blog.Core.Infrastructure
             return Path.Combine(allPaths.ToArray());
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual DateTime GetCreationTime(string path)
         {
             return File.GetCreationTime(path);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual string[] GetDirectories(string path, string searchPattern = "", bool topDirectoryOnly = true)
         {
             if (string.IsNullOrEmpty(searchPattern))
@@ -190,37 +190,37 @@ namespace Blog.Core.Infrastructure
                 topDirectoryOnly ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual string GetDirectoryName(string path)
         {
             return Path.GetDirectoryName(path);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual string GetDirectoryNameOnly(string path)
         {
             return new DirectoryInfo(path).Name;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual string GetFileExtension(string filePath)
         {
             return Path.GetExtension(filePath);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual string GetFileName(string path)
         {
             return Path.GetFileName(path);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual string GetFileNameWithoutExtension(string filePath)
         {
             return Path.GetFileNameWithoutExtension(filePath);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual string[] GetFiles(string directoryPath, string searchPattern = "", bool topDirectoryOnly = true)
         {
             if (string.IsNullOrEmpty(searchPattern))
@@ -234,68 +234,68 @@ namespace Blog.Core.Infrastructure
                 topDirectoryOnly ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual DateTime GetLastAccessTime(string path)
         {
             return File.GetLastAccessTime(path);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual DateTime GetLastWriteTime(string path)
         {
             return File.GetLastWriteTime(path);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual DateTime GetLastWriteTimeUtc(string path)
         {
             return File.GetLastWriteTimeUtc(path);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual string GetParentDirectory(string directoryPath)
         {
             return Directory.GetParent(directoryPath).FullName;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual bool IsDirectory(string path)
         {
             return this.DirectoryExists(path);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual string MapPath(string path)
         {
             path = path.Replace("~/", string.Empty).TrimStart('/').Replace('/', '\\');
             return Path.Combine(this.BaseDirectory ?? string.Empty, path);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual byte[] ReadAllBytes(string filePath)
         {
             return File.Exists(filePath) ? File.ReadAllBytes(filePath) : new byte[0];
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual string ReadAllText(string path, Encoding encoding)
         {
             return File.ReadAllText(path, encoding);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc)
         {
             File.SetLastWriteTimeUtc(path, lastWriteTimeUtc);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual void WriteAllBytes(string filePath, byte[] bytes)
         {
             File.WriteAllBytes(filePath, bytes);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IServiceProvider"/>
         public virtual void WriteAllText(string path, string contents, Encoding encoding)
         {
             File.WriteAllText(path, contents, encoding);

@@ -44,7 +44,7 @@ namespace Blog.Core.Infrastructure
             this.Direction = direction;
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="ISortCriteria{T}" />
         public IOrderedQueryable<T> ApplyOrdering(IQueryable<T> qry, bool useThenBy)
         {
             IOrderedQueryable<T> result;

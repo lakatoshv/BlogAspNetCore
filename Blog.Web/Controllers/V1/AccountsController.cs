@@ -16,7 +16,6 @@ namespace Blog.Web.Controllers.V1
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using ViewModels.AspNetUser;
 
@@ -89,18 +88,6 @@ namespace Blog.Web.Controllers.V1
             _registrationService = registrationService;
             _authService = authService;
             // _refreshTokenService = refreshTokenService;
-        }
-
-        // GET: api/Users        
-        /// <summary>
-        /// Gets this instance.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet(ApiRoutes.AccountsController.Accounts)]
-        [AllowAnonymous]
-        public IEnumerable<string> Get()
-        {
-            return new[] { "value1", "value2" };
         }
 
         /// <summary>

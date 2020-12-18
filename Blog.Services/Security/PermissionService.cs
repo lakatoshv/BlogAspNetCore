@@ -24,7 +24,7 @@ namespace Blog.Services.Security
             _userManager = userManager;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IPermissionService" />
         public bool Authorize()
         {
             return Authorize(_workContext.CurrentUser);

@@ -27,13 +27,13 @@ namespace Blog.Data
         /// </summary>
         public ApplicationDbContext Context { get; set; }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDbQueryRunner"/>
         public void RunQuery(string query, params object[] parameters)
         {
             this.Context.Database.ExecuteSqlCommand(query, parameters);
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IDisposable"/>
         public void Dispose()
         {
             this.Context?.Dispose();

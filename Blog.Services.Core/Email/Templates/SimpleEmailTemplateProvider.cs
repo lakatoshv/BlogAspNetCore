@@ -22,7 +22,7 @@ namespace Blog.Services.Core.Email.Templates
 
         // TODO Need rewrite this as plugin
 
-        /// <inheritdoc/>
+        /// <inheritdoc cref="IEmailTemplateProvider"/>
         public string ResolveBody<T>(TemplateTypes templateType, T model)
         {
             var properties = typeof(T).GetProperties();

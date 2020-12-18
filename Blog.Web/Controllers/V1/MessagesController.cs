@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Blog.Data.Models;
 using Blog.Services.ControllerContext;
 using Blog.Services.Interfaces;
 using Blog.Web.Contracts.V1;
+using Blog.Web.Contracts.V1.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,7 +60,7 @@ namespace Blog.Web.Controllers.V1
         /// <param name="recipientId">The recipient identifier.</param>
         /// <returns></returns>
         [HttpGet(ApiRoutes.MessagesController.GetRecipientMessages)]
-        public async Task<ActionResult> GetRecipientMessages(string recipientId)
+        public async Task<ActionResult> GetRecipientMessages([FromRoute] string recipientId)
         {
             var messages = await _messagesService
                 .GetAllAsync(x => x.RecipientId.ToLower().Equals(recipientId.ToLower()))
@@ -80,7 +80,7 @@ namespace Blog.Web.Controllers.V1
         /// <param name="senderEmail">The sender identifier.</param>
         /// <returns></returns>
         [HttpGet(ApiRoutes.MessagesController.GetSenderMessages)]
-        public async Task<ActionResult> GetSenderMessages(string senderEmail)
+        public async Task<ActionResult> GetSenderMessages([FromRoute] string senderEmail)
         {
             var messages = await _messagesService
                 .GetAllAsync(x => x.SenderEmail.ToLower().Equals(senderEmail.ToLower()))
@@ -102,7 +102,7 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [HttpGet(ApiRoutes.MessagesController.Show)]
-        public async Task<ActionResult> Show(int id)
+        public async Task<ActionResult> Show([FromRoute] int id)
         {
             var message = await _messagesService.FindAsync(id);
             if (message == null)
@@ -128,6 +128,7 @@ namespace Blog.Web.Controllers.V1
             {
                 model.SenderId = CurrentUser.Id;
             }
+
             await _messagesService.InsertAsync(model);
 
             return Ok();
@@ -144,11 +145,17 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> EditAsync(int id, [FromBody] Message model)
+        public async Task<IActionResult> EditAsync([FromRoute] int id, [FromBody] Message model)
         {
-            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
-            if (!model.SenderId.Equals(CurrentUser.Id) || !model.RecipientId.Equals(CurrentUser.Id)) 
-                return BadRequest(new { ErrorMessage = "You are not an author or recipient of the message." });
+            if (CurrentUser == null)
+            {
+                return BadRequest(new {ErrorMessage = "Unauthorized"});
+            }
+
+            if (!model.SenderId.Equals(CurrentUser.Id) || !model.RecipientId.Equals(CurrentUser.Id))
+            {
+                return BadRequest(new {ErrorMessage = "You are not an author or recipient of the message."});
+            }
 
             //var message = await _messagesService.FindAsync(id);
             //var updatedModel = _mapper.Map(model, message);
@@ -170,9 +177,13 @@ namespace Blog.Web.Controllers.V1
         [Authorize]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> DeleteAsync(int id, string authorId)
+        public async Task<IActionResult> DeleteAsync([FromRoute] int id, [FromBody] string authorId)
         {
-            if (CurrentUser == null) return BadRequest(new { ErrorMessage = "Unauthorized" });
+            if (CurrentUser == null)
+            {
+                return BadRequest(new {ErrorMessage = "Unauthorized"});
+            }
+
             var message = await _messagesService.FindAsync(id);
 
             if (!message.SenderId.Equals(CurrentUser.Id) || !message.RecipientId.Equals(CurrentUser.Id))
