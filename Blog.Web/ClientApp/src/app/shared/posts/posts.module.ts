@@ -18,6 +18,7 @@ import { CommentService } from 'src/app/core/services/posts-services/comment.ser
 import { HttpClientService } from 'src/app/core/services/global-service/http-client-services/http-client.service';
 import { PostsTableComponent } from './posts-table/posts-table.component';
 import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
+import { PopularPostsComponent } from './popular-posts/popular-posts.component';
 
 @NgModule({
   imports: [
@@ -38,7 +39,8 @@ import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
     EditPostComponent,
     MyPostsComponent,
     PostsTableComponent,
-    RightSidebarComponent
+    RightSidebarComponent,
+    PopularPostsComponent
   ],
   exports: [
     AddPostComponent,

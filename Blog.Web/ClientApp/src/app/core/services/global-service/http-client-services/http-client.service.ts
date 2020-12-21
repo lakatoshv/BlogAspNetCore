@@ -156,12 +156,18 @@ export class HttpClientService {
    */
   public static readonly GET_COMMENT = HttpClientService.COMMENTS_CONTROLLER + '/get-comment';
 
-   // Tags controller methods
+  // Tags controller methods
   /**
    * Get tags.
    * @param GET_TAGS string
    */
   public static readonly GET_TAGS = HttpClientService.TAGS_CONTROLLER + '/get-tags';
+
+  /**
+   * Get tags by filter.
+   * @param GET_TAGS_BY_FILTER string
+   */
+  public static readonly GET_TAGS_BY_FILTER = HttpClientService.TAGS_CONTROLLER + '/get-tags-by-filter';
 
   /**
    * Create new comment.

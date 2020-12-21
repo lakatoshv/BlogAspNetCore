@@ -1,0 +1,52 @@
+.sidebar-box {
+    margin-bottom: 40px;
+    padding: 0 25px;
+    font-size: 15px;
+    width: 100%;
+}
+
+.sidebar-box h3.sidebar-heading {
+    font-size: 20px;
+    font-weight: normal;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 767.98px) {
+    .sidebar-box {
+        padding: 0;
+    }
+}
+
+.block-21 .blog-img {
+    display: block;
+    height: 50px;
+    width: 80px;
+}
+
+.block-21 .text {
+    width: calc(100% - 100px);
+}
+
+.block-21 .text .heading {
+    font-size: 16px;
+}
+
+.block-21 .text .heading a {
+    color: #000000;
+}
+
+.block-21 .text .heading a:hover,
+.block-21 .text .heading a:active,
+.block-21 .text .heading a:focus {
+    color: #0028ff;
+}
+
+.block-21 .text .meta>div {
+    display: inline-block;
+    font-size: 12px;
+    margin-right: 5px;
+}
+
+.block-21 .text .meta>div a {
+    color: gray;
+}
