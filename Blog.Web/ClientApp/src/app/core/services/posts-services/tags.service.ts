@@ -19,7 +19,11 @@ export class TagsService {
    * Get tags list.
    * @returns Observable<any>
    */
-  public list(): Observable<any> {
+  public list(model?: any): Observable<any> {
+    if (model) {
+      return this._httpClient.post(HttpClientService.GET_TAGS_BY_FILTER, model);
+    }
+
     return this._httpClient.get(HttpClientService.GET_TAGS);
   }
 

@@ -1,7 +1,7 @@
 <!-- Main Content -->
 <div class="container">
     <div class="row">
-        <div class="col-lg-10 col-md-10 mx-auto">
+        <div class="col-lg-8 col-md-8 mx-auto">
             <a routerLink="/blog/posts/add" class="btn btn-light">Написати пост</a>
             <div class="text-center" *ngIf="!posts">
                 <b>Дана категорія ще не створена або не має записів</b>
@@ -83,6 +83,9 @@
                     <a class="btn btn-primary float-right" routerLink="/blog#">Older Posts &rarr;</a>
                 </div>
             </div>
+        </div>
+        <div class="col-lg-4 col-md-4 mx-auto sidebar pt-5">
+            <app-right-sidebar></app-right-sidebar>
         </div>
     </div>
 </div>

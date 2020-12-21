@@ -1,4 +1,4 @@
-import { TagsService } from './../../core/services/posts-services/tags.service';
+import { TagsModule } from './../tags/tags.module';
 import { CommentsModule } from './comments/comments.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -17,6 +17,7 @@ import { PostService } from 'src/app/core/services/posts-services/post.service';
 import { CommentService } from 'src/app/core/services/posts-services/comment.service';
 import { HttpClientService } from 'src/app/core/services/global-service/http-client-services/http-client.service';
 import { PostsTableComponent } from './posts-table/posts-table.component';
+import { RightSidebarComponent } from './right-sidebar/right-sidebar.component';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { PostsTableComponent } from './posts-table/posts-table.component';
     NgxPaginationModule,
     CommentsModule,
     HttpClientModule,
+    TagsModule
   ],
   declarations: [
     PostsListComponent,
@@ -35,13 +37,14 @@ import { PostsTableComponent } from './posts-table/posts-table.component';
     AddPostComponent,
     EditPostComponent,
     MyPostsComponent,
-    PostsTableComponent
+    PostsTableComponent,
+    RightSidebarComponent
   ],
   exports: [
     AddPostComponent,
     EditPostComponent,
     PostsTableComponent
   ],
-  providers: [PostService, CommentService, HttpClientService, TagsService]
+  providers: [PostService, CommentService, HttpClientService]
 })
 export class PostsModule { }

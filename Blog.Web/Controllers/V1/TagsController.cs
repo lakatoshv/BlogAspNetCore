@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Blog.Data.Models;
 using Blog.Services.ControllerContext;
+using Blog.Services.Core.Dtos;
 using Blog.Services.Core.Dtos.Posts;
 using Blog.Services.Interfaces;
 using Blog.Web.Contracts.V1;
@@ -54,6 +55,30 @@ namespace Blog.Web.Controllers.V1
         public async Task<ActionResult> GetTags()
         {
             var tags = await _tagsService.GetAllAsync();
+
+            if (tags == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(tags);
+        }
+
+        /// <summary>
+        /// Gets the tags by filter.
+        /// </summary>
+        /// <param name="searchParameters">The search parameters.</param>
+        /// <returns>Task.</returns>
+        [HttpPost(ApiRoutes.TagsController.GetTagsByFilter)]
+        public async Task<ActionResult> GetTagsByFilter([FromBody] SearchParametersDto searchParameters = null)
+        {
+            if (searchParameters.SortParameters is null)
+                searchParameters.SortParameters = new SortParametersDto();
+            searchParameters.SortParameters.OrderBy = searchParameters.SortParameters.OrderBy ?? "asc";
+            searchParameters.SortParameters.SortBy = searchParameters.SortParameters.SortBy ?? "Title";
+            searchParameters.SortParameters.CurrentPage = searchParameters.SortParameters.CurrentPage ?? 1;
+            searchParameters.SortParameters.PageSize = searchParameters.SortParameters.PageSize ?? 10;
+            var tags = await _tagsService.GetTagsAsync(searchParameters);
 
             if (tags == null)
             {
