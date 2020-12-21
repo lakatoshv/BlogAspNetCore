@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { APiRoutes } from 'src/app/contracts/v1/ApiRoutes';
 import { HttpClientService } from '../global-service/http-client-services/http-client.service';
 
 
@@ -20,7 +21,7 @@ export class AccountsService {
      * @returns Observable<any>
      */
     public initialize(id: string): Observable<any> {
-        return this._httpClient.get(HttpClientService.ACCOUNTS_INITIALIZE.concat('/', id.toString()));
+        return this._httpClient.get(APiRoutes.ACCOUNTS_INITIALIZE.concat('/', id.toString()));
     }
 
     /**
@@ -28,6 +29,6 @@ export class AccountsService {
      * @returns Observable<any>
      */
     public sendConfirmationEmail(): Observable<any> {
-      return this._httpClient.get(HttpClientService.SEND_CONFIRMATION_EMAIL);
+      return this._httpClient.get(APiRoutes.SEND_CONFIRMATION_EMAIL);
   }
 }

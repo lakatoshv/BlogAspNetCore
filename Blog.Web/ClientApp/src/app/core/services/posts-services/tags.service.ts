@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClientService } from '../global-service/http-client-services/http-client.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { APiRoutes } from 'src/app/contracts/v1/ApiRoutes';
 
 /**
  * Tags service.
@@ -21,10 +22,10 @@ export class TagsService {
    */
   public list(model?: any): Observable<any> {
     if (model) {
-      return this._httpClient.post(HttpClientService.GET_TAGS_BY_FILTER, model);
+      return this._httpClient.post(APiRoutes.GET_TAGS_BY_FILTER, model);
     }
 
-    return this._httpClient.get(HttpClientService.GET_TAGS);
+    return this._httpClient.get(APiRoutes.GET_TAGS);
   }
 
   /**
@@ -33,7 +34,7 @@ export class TagsService {
    * @returns Observable<any>
    */
   public add(model?: any): Observable<any> {
-    return this._httpClient.post(HttpClientService.CREATE_TAG, model).pipe(map(res => res.json()));
+    return this._httpClient.post(APiRoutes.CREATE_TAG, model).pipe(map(res => res.json()));
   }
 
   /**
@@ -43,7 +44,7 @@ export class TagsService {
    * @returns Observable<any>
    */
   public edit(id: number, model?: any): Observable<any> {
-    return this._httpClient.put(HttpClientService.TAGS_CONTROLLER.concat('/', id.toString()), model);
+    return this._httpClient.put(APiRoutes.TAGS_CONTROLLER.concat('/', id.toString()), model);
   }
 
   /**
@@ -52,6 +53,6 @@ export class TagsService {
    * @returns Observable<any>
    */
   public delete(id: number): Observable<any> {
-    return this._httpClient.delete(HttpClientService.TAGS_CONTROLLER.concat('/', id.toString()));
+    return this._httpClient.delete(APiRoutes.TAGS_CONTROLLER.concat('/', id.toString()));
   }
 }

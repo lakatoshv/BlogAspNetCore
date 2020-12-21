@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject, ReplaySubject, from, of, range , throwError } from 'rxjs';
 import { map, filter, switchMap, catchError, mergeMap, retry } from 'rxjs/operators';
 import { HttpClientService } from '../global-service/http-client-services/http-client.service';
+import { APiRoutes } from 'src/app/contracts/v1/ApiRoutes';
 
 /**
  * Comments service.
@@ -22,10 +23,10 @@ export class CommentService {
    */
   public list(postId: number, model?: any): Observable<any> {
     if (model) {
-      return this._httpClient.post(HttpClientService.GET_COMMENTS_BY_POST.concat("/", postId.toString()), model);
+      return this._httpClient.post(APiRoutes.GET_COMMENTS_BY_POST.concat("/", postId.toString()), model);
     }
 
-    return this._httpClient.get(HttpClientService.COMMENTS_CONTROLLER);
+    return this._httpClient.get(APiRoutes.COMMENTS_CONTROLLER);
   }
 
   /**
@@ -34,7 +35,7 @@ export class CommentService {
    * @returns Observable<any>
    */
   public add(model?: any): Observable<any> {
-    return this._httpClient.post(HttpClientService.CREATE_COMMENT, model).pipe(map(res => res.json()));
+    return this._httpClient.post(APiRoutes.CREATE_COMMENT, model).pipe(map(res => res.json()));
   }
 
   /**
@@ -44,7 +45,7 @@ export class CommentService {
    * @returns Observable<any>
    */
   public edit(id: number, model?: any): Observable<any> {
-    return this._httpClient.put(HttpClientService.COMMENTS_CONTROLLER.concat('/', id.toString()), model);
+    return this._httpClient.put(APiRoutes.COMMENTS_CONTROLLER.concat('/', id.toString()), model);
   }
 
   /**
@@ -53,6 +54,6 @@ export class CommentService {
    * @returns Observable<any>
    */
   public delete(id: number): Observable<any> {
-    return this._httpClient.delete(HttpClientService.COMMENTS_CONTROLLER.concat("/", id.toString()));
+    return this._httpClient.delete(APiRoutes.COMMENTS_CONTROLLER.concat("/", id.toString()));
   }
 }

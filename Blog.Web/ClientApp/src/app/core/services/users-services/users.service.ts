@@ -9,6 +9,7 @@ import { GlobalService } from '../global-service/global-service.service';
 import { User } from '../../models/User';
 import { ProfileViewDto } from '../../Dto/ProfileViewDto';
 import { ChangePasswordDto } from '../../Dto/ChangePasswordDto';
+import { APiRoutes } from 'src/app/contracts/v1/ApiRoutes';
 
 @Injectable()
 export class UsersService {
@@ -53,7 +54,7 @@ export class UsersService {
    * @returns Observable<any>
    */
   public registration(model: any): Observable<any> {
-    return this._httpClient.post(HttpClientService.REGISTER_USER, model, null, false, true);
+    return this._httpClient.post(APiRoutes.REGISTER_USER, model, null, false, true);
   }
 
   /**
@@ -77,7 +78,7 @@ export class UsersService {
    * @returns Observable<JwtToken>
    */
   public login(credentials: any): Observable<JwtToken> {
-    return this._httpClient.post(HttpClientService.LOGIN_USER, credentials, null, false, true);
+    return this._httpClient.post(APiRoutes.LOGIN_USER, credentials, null, false, true);
   }
 
   /**
@@ -139,7 +140,7 @@ export class UsersService {
    * @returns Observable<any>
    */
   public getProfile(id: number): Observable<any> {
-    return this._httpClient.get(HttpClientService.PROFILE_CONTROLLER.concat('/', id.toString()));
+    return this._httpClient.get(APiRoutes.PROFILE_CONTROLLER.concat('/', id.toString()));
   }
 
   /**
@@ -149,11 +150,11 @@ export class UsersService {
    * @returns Observable<any>
    */
   public updateProfile(id: number, model: ProfileViewDto): Observable<any> {
-    return this._httpClient.put(HttpClientService.PROFILE_CONTROLLER.concat('/', id.toString()), model);
+    return this._httpClient.put(APiRoutes.PROFILE_CONTROLLER.concat('/', id.toString()), model);
   }
 
   public changePassword(model: ChangePasswordDto): Observable<any> {
-    return this._httpClient.put(HttpClientService.CHANGE_PASSWORD, model);
+    return this._httpClient.put(APiRoutes.CHANGE_PASSWORD, model);
   }
 
 }

@@ -1,3 +1,4 @@
+import { APiRoutes } from './../../../contracts/v1/ApiRoutes';
 
 import { Injectable } from '@angular/core';
 import { Observable, Subject, ReplaySubject, from, of, range , throwError } from 'rxjs';
@@ -21,10 +22,10 @@ export class PostService {
    */
   public list(model?: any): Observable<any> {
     if (model) {
-      return this._httpClient.post(HttpClientService.GET_POSTS, model);
+      return this._httpClient.post(APiRoutes.GET_POSTS, model);
     }
 
-    return this._httpClient.get(HttpClientService.POSTS_CONTROLLER);
+    return this._httpClient.get(APiRoutes.POSTS_CONTROLLER);
   }
 
   /**
@@ -34,10 +35,10 @@ export class PostService {
    */
   public sort(model?: any): Observable<any> {
     if (model) {
-      return this._httpClient.post(HttpClientService.GET_POSTS, model);
+      return this._httpClient.post(APiRoutes.GET_POSTS, model);
     }
 
-    return this._httpClient.post(HttpClientService.GET_POSTS);
+    return this._httpClient.post(APiRoutes.GET_POSTS);
   }
 
   /**
@@ -48,10 +49,10 @@ export class PostService {
    */
   public userPosts(userId: string, model?: any): Observable<any> {
     if (model) {
-      return this._httpClient.post(HttpClientService.USER_POSTS.concat('/', userId.toString()), model);
+      return this._httpClient.post(APiRoutes.USER_POSTS.concat('/', userId.toString()), model);
     }
 
-    return this._httpClient.post(HttpClientService.USER_POSTS.concat('/', userId.toString()), null);
+    return this._httpClient.post(APiRoutes.USER_POSTS.concat('/', userId.toString()), null);
   }
 
   /**
@@ -60,7 +61,7 @@ export class PostService {
    * @returns Observable<any>
    */
   public showPost(id: number): Observable<any> {
-    return this._httpClient.get(HttpClientService.SHOW_POST.concat('/', id.toString()));
+    return this._httpClient.get(APiRoutes.SHOW_POST.concat('/', id.toString()));
   }
 
   /**
@@ -69,7 +70,7 @@ export class PostService {
    * @returns Observable<any>
    */
   public like(id: number): Observable<any> {
-    return this._httpClient.put(HttpClientService.LIKE_POST.concat('/', id.toString()));
+    return this._httpClient.put(APiRoutes.LIKE_POST.concat('/', id.toString()));
   }
 
   /**
@@ -78,7 +79,7 @@ export class PostService {
    * @returns Observable<any>
    */
   public dislike(id: number): Observable<any> {
-    return this._httpClient.put(HttpClientService.DISLIKE_POST.concat('/', id.toString()));
+    return this._httpClient.put(APiRoutes.DISLIKE_POST.concat('/', id.toString()));
   }
 
   /**
@@ -88,7 +89,7 @@ export class PostService {
    * @returns Observable<any>
    */
   public edit(id: number, model: any): Observable<any> {
-    return this._httpClient.put(HttpClientService.POSTS_CONTROLLER.concat('/', id.toString()), model);
+    return this._httpClient.put(APiRoutes.POSTS_CONTROLLER.concat('/', id.toString()), model);
   }
 
   /**
@@ -97,7 +98,7 @@ export class PostService {
    * @returns Observable<any>
    */
   public add(model: any): Observable<any> {
-    return this._httpClient.post(HttpClientService.POSTS_CONTROLLER, model)
+    return this._httpClient.post(APiRoutes.POSTS_CONTROLLER, model)
         .pipe(
           map((response: any) => response),
           catchError((e: Response) => throwError(e))
@@ -114,6 +115,6 @@ export class PostService {
     const params = {
       authorId: authorId
     };
-    return this._httpClient.delete(HttpClientService.POSTS_CONTROLLER.concat('/', id.toString()), params);
+    return this._httpClient.delete(APiRoutes.POSTS_CONTROLLER.concat('/', id.toString()), params);
   }
 }
