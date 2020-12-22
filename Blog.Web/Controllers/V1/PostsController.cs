@@ -60,10 +60,9 @@ namespace Blog.Web.Controllers.V1
 
         // GET: Posts
         /// <summary>
-        /// Async get filtered and sorted posts.
+        /// Get all posts.
         /// </summary>
-        /// <param name="searchParameters">searchParameters.</param>
-        /// <returns>Task.</returns>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult> Index()
         {
@@ -101,7 +100,7 @@ namespace Blog.Web.Controllers.V1
             searchParameters.SortParameters.OrderBy = searchParameters.SortParameters.OrderBy ?? "asc";
             searchParameters.SortParameters.SortBy = searchParameters.SortParameters.SortBy ?? "Title";
             searchParameters.SortParameters.CurrentPage = searchParameters.SortParameters.CurrentPage ?? 1;
-            searchParameters.SortParameters.PageSize = 10;
+            searchParameters.SortParameters.PageSize = searchParameters.SortParameters.PageSize ?? 10;
             var posts = await _postsService.GetPostsAsync(searchParameters);
 
             if (posts == null)

@@ -1,0 +1,38 @@
+.sidebar-box {
+    margin-bottom: 40px;
+    padding: 0 25px;
+    font-size: 15px;
+    width: 100%;
+}
+
+.sidebar-box h3.sidebar-heading {
+    font-size: 20px;
+    font-weight: normal;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 767.98px) {
+    .sidebar-box {
+        padding: 0;
+    }
+}
+
+.tagcloud {
+    padding: 0;
+}
+
+.tagcloud a {
+    text-transform: uppercase;
+    display: inline-block;
+    padding: 4px 10px;
+    margin-bottom: 7px;
+    margin-right: 4px;
+    border-radius: 4px;
+    color: #000000;
+    border: 1px solid #ccc;
+    font-size: 11px;
+}
+
+.tagcloud a:hover {
+    border: 1px solid #000;
+}

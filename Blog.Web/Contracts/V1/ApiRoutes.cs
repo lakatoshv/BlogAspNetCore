@@ -181,6 +181,11 @@
             public const string GetTags = "get-tags";
 
             /// <summary>
+            /// The get tags by filter.
+            /// </summary>
+            public const string GetTagsByFilter = "get-tags-by-filter";
+
+            /// <summary>
             /// The get available tags.
             /// </summary>
             public const string GetAvailableTags = "get-available-tags/{postId}";
