@@ -35,9 +35,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Blog.Core\Blog.Core.csproj" />
-    <ProjectReference Include="..\Blog.Data.Core\Blog.Data.Core.csproj" />
-    <ProjectReference Include="..\Blog.Data.Models\Blog.Data.Models.csproj" />
-    <ProjectReference Include="..\Blog.Services\Blog.Services.csproj" />
+    <ProjectReference Include="..\Data\Blog.Data.Models\Blog.Data.Models.csproj" />
+    <ProjectReference Include="..\Services\Blog.Services.Core\Blog.Services.Core.csproj" />
+    <ProjectReference Include="..\Services\Blog.Services\Blog.Services.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

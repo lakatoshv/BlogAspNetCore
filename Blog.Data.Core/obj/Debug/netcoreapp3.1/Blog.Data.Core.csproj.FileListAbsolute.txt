@@ -1,5 +1,0 @@
-D:\Projects\AspNet\BlogAspNetCore\Blog.Data.Core\bin\Debug\netcoreapp3.1\Blog.Data.Core.deps.json
-D:\Projects\AspNet\BlogAspNetCore\Blog.Data.Core\bin\Debug\netcoreapp3.1\Blog.Data.Core.dll
-D:\Projects\AspNet\BlogAspNetCore\Blog.Data.Core\obj\Debug\netcoreapp3.1\Blog.Data.Core.AssemblyInfoInputs.cache
-D:\Projects\AspNet\BlogAspNetCore\Blog.Data.Core\obj\Debug\netcoreapp3.1\Blog.Data.Core.AssemblyInfo.cs
-D:\Projects\AspNet\BlogAspNetCore\Blog.Data.Core\obj\Debug\netcoreapp3.1\Blog.Data.Core.csprojAssemblyReference.cache
