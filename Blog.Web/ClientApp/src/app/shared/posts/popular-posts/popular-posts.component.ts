@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { PageViewDto } from 'src/app/core/Dto/PageViewDto';
 import { PageInfo } from 'src/app/core/models/PageInfo';
 import { Post } from 'src/app/core/models/Post';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
 import { PostService } from 'src/app/core/services/posts-services/post.service';
 
 @Component({
@@ -36,9 +38,11 @@ export class PopularPostsComponent implements OnInit {
 
   /**
    * @param _postsService PostService
+   * @param _customToastrService CustomToastrService
    */
   constructor(
-    private _postsService: PostService
+    private _postsService: PostService,
+    private _customToastrService: CustomToastrService
   ) { }
 
   /**
@@ -71,7 +75,8 @@ export class PopularPostsComponent implements OnInit {
           this.posts = response.posts;
           this.pageInfo = response.pageInfo;
         },
-        (error: any) => {
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
         });
   }
 }

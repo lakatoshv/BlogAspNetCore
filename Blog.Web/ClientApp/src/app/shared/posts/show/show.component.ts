@@ -8,6 +8,8 @@ import { User } from 'src/app/core/models/User';
 import { Post } from 'src/app/core/models/Post';
 import { UsersService } from 'src/app/core/services/users-services/users.service';
 import { PageInfo } from 'src/app/core/models/PageInfo';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
 
 @Component({
   selector: 'app-show',
@@ -61,6 +63,7 @@ export class ShowComponent implements OnInit {
    * @param _usersService UsersService
    * @param _globalService GlobalService
    * @param _router Router
+   * @param _customToastrService CustomToastrService
    */
   constructor(
     private _generalService: GeneralServiceService,
@@ -68,7 +71,8 @@ export class ShowComponent implements OnInit {
     private _postService: PostService,
     private _usersService: UsersService,
     private _globalService: GlobalService,
-    private _router: Router
+    private _router: Router,
+    private _customToastrService: CustomToastrService
   ) { }
 
   /**
@@ -94,9 +98,9 @@ export class ShowComponent implements OnInit {
       (response: any) => {
         this.post = response;
       },
-      (error) => {
-      }
-    );
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
+      });
   }
 
   /**
@@ -109,9 +113,9 @@ export class ShowComponent implements OnInit {
       (response: any) => {
         this.post = response;
       },
-      (error) => {
-      }
-    );
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
+      });
   }
 
   /**
@@ -123,9 +127,9 @@ export class ShowComponent implements OnInit {
         () => {
           this._router.navigateByUrl('/blog');
         },
-        (error) => {
-        }
-      );
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
     }
   }
 
@@ -142,15 +146,15 @@ export class ShowComponent implements OnInit {
   private _getPost() {
     this._postService.showPost(this.postId).subscribe(
       (response: any) => {
-        debugger
         this.post = response.post;
         this.post.tags = response.tags;
         this.post.comments = response.comments.comments;
         this.pageInfo = response.comments.pageInfo;
         this.isLoaded = true;
       },
-      () => {}
-    );
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
+      });
   }
 
 }
