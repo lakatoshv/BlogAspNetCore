@@ -73,7 +73,6 @@ export class ChangePhoneNumberComponent implements OnInit {
   private _getProfile(id: number): void {
     this._usersService.getProfile(id).subscribe(
       (response: any) => {
-        debugger
         this.user = response;
         this._setFormData();
       },

@@ -21,7 +21,7 @@ import { GlobalService } from 'src/app/core/services/global-service/global-servi
     EditorModule
   ],
   declarations: [RegistrationComponent, AuthorizationComponent],
-  providers: [UsersService, HttpClientService, AccountsService, GlobalService],
+  providers: [UsersService, HttpClientService, AccountsService],
   exports: [RegistrationComponent, AuthorizationComponent]
 })
 export class UserModule { }

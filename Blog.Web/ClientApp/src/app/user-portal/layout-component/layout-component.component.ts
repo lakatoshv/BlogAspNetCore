@@ -38,17 +38,34 @@ export class LayoutComponentComponent implements OnInit {
    * @inheritdoc
    */
   ngOnInit() {
+    this._initUser();
+
+    this._globalService.userDataChanged.subscribe(
+      () => {
+        this._initUser();
+      }
+    );
+  }
+
+  /**
+   * Toggle navbar menu
+   *
+   * @returns void
+   */
+  toggleNavbar(): void {
+    this._navbarOpen = !this._navbarOpen;
+  }
+
+  /**
+   * Init user data.
+   *
+   * @returns void
+   */
+  private _initUser(): void {
     this.loggedIn = this._usersService.isLoggedIn();
     if (this.loggedIn) {
       this._globalService.resetUserData();
       this.user = this._globalService._currentUser;
     }
-  }
-
-  /**
-   * Toggle navbar menu
-   */
-  toggleNavbar() {
-    this._navbarOpen = !this._navbarOpen;
   }
 }

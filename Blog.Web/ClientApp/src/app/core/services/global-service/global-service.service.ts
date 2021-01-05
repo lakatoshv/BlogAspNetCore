@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 import { User } from '../../models/User';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -8,6 +8,11 @@ import { Profile } from '../../models/Profile';
   providedIn: 'root'
 })
 export class GlobalService {
+  /**
+   * @param userDataChanged EventEmitter<boolean>
+   */
+  userDataChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   /**
    * @param _isLoadedData boolean
    */
@@ -58,6 +63,8 @@ export class GlobalService {
    * @returns void
    */
   public initializeData(response: any): void {
+    this.resetUserData();
+    this.userDataChanged.emit(true);
     if (response.currentUser) {
         this._currentUser = response.currentUser;
     }

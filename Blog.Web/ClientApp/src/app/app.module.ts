@@ -8,6 +8,7 @@ import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
+import { GlobalService } from './core/services/global-service/global-service.service';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { ToastrModule } from 'ngx-toastr';
   ],
   bootstrap: [AppComponent],
   providers: [
-    CustomToastrService
+    CustomToastrService,
+    GlobalService
   ]
 })
 export class AppModule { }

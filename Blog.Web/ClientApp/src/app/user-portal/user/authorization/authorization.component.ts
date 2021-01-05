@@ -73,9 +73,11 @@ export class AuthorizationComponent implements OnInit {
     this._usersService.saveToken(jwt['auth_token'], jwt['refresh_token']);
     const initializeSubscription = this._accountService.initialize(this._globalService._currentUser.id).subscribe(
         (initializationData: any) => {
-            this._globalService.initializeData(initializationData);
             this._customToastrService.displaySuccessMessage(Messages.AUTHORIZED_SUCCESSFULLY);
-            this._router.navigate(['/']);
+            this._router.navigate(['/'])
+              .then(() => {
+                this._globalService.initializeData(initializationData);
+              });;
         },
         (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
