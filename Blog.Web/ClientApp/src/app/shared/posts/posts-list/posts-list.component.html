@@ -47,7 +47,7 @@
                         <h2 class="post-title" [innerHTML]="post.title"></h2>
                     </a>
                     <div class="pull-right" *ngIf="loggedIn && post.authorId === user.id">
-                        <a class="btn btn-sm text-white btn-primary" routerLink="/blog/post/{{post.id}}/edit">
+                        <a class="btn btn-sm text-white btn-primary" routerLink="/blog/post/edit/{{post.id}}">
                             <i class="fa fa-edit"></i> Редагувати
                         </a>
                         <button type="button" class="btn btn-sm text-white btn-danger" (click)="deleteAction(post.id)">

@@ -1,3 +1,4 @@
+import { ErrorsModule } from './shared/errors/errors.module';
 import { CustomToastrService } from './core/services/custom-toastr.service';
 import { NgModule } from '@angular/core';
 
@@ -20,6 +21,7 @@ import { GlobalService } from './core/services/global-service/global-service.ser
     HttpClientModule,
     HttpModule,
     ToastrModule.forRoot(),
+    ErrorsModule
   ],
   bootstrap: [AppComponent],
   providers: [

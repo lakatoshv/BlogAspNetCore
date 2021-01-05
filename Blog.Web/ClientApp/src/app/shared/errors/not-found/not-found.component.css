@@ -1,0 +1,41 @@
+.error-404 {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.error-404 .error-code {
+    bottom: 60%;
+    color: #4686CC;
+    line-height: 100px;
+    font-weight: bold;
+    --x-shadow: 0;
+    --y-shadow: 0;
+    --x: 50%;
+    --y: 50%;
+    font-size: 15rem;
+    transition: all 0.2s ease;
+    position: relative;
+    padding: 2rem;
+}
+
+.error-404 .error-code:hover {
+    transition: all 0.2s ease;
+    text-shadow: var(--x-shadow) var(--y-shadow) 10px #1A1A1A;
+}
+
+.error-404 .error-desc {
+    font-size: 15px;
+    color: #647788;
+}
+
+.error-404 .m-b-10 {
+    margin-bottom: 10px!important;
+}
+
+.error-404 .m-b-20 {
+    margin-bottom: 20px!important;
+}
+
+.error-404 .m-t-20 {
+    margin-top: 20px!important;
+}

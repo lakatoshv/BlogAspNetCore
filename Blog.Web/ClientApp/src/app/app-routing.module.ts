@@ -10,6 +10,10 @@ const routes: Routes = [
     path: 'blog',
     loadChildren: './user-portal/layout.module#LayoutModule'
   },
+  {
+    path: '**',
+    redirectTo: 'blog/not-found'
+  }
 ];
 
 @NgModule({
