@@ -6,6 +6,9 @@ import { Router } from '@angular/router';
 import { JwtToken } from 'src/app/core/models/JwtToken';
 import { AccountsService } from 'src/app/core/services/users-services/account.sevice';
 import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { Messages } from 'src/app/core/data/Messages';
 
 @Component({
   selector: 'app-authorization',
@@ -23,12 +26,14 @@ export class AuthorizationComponent implements OnInit {
    * @param _usersService UsersService
    * @param _accountService AccountsService
    * @param _router Router
+   * @param _customToastrService CustomToastrService
    */
   constructor(
     private _globalService: GlobalService,
     private _usersService: UsersService,
     private _accountService: AccountsService,
-    private _router: Router
+    private _router: Router,
+    private _customToastrService: CustomToastrService
   ) { }
 
   /**
@@ -54,8 +59,9 @@ export class AuthorizationComponent implements OnInit {
               this.succesLogin(jwt);
             }
           },
-          (errorMessage) => {}
-        );
+          (error: ErrorResponse) => {
+            this._customToastrService.displayErrorMessage(error);
+          });
     }
   }
 
@@ -67,11 +73,15 @@ export class AuthorizationComponent implements OnInit {
     this._usersService.saveToken(jwt['auth_token'], jwt['refresh_token']);
     const initializeSubscription = this._accountService.initialize(this._globalService._currentUser.id).subscribe(
         (initializationData: any) => {
-            this._globalService.initializeData(initializationData);
-            this._router.navigate(['/']);
+            this._customToastrService.displaySuccessMessage(Messages.AUTHORIZED_SUCCESSFULLY);
+            this._router.navigate(['/'])
+              .then(() => {
+                this._globalService.initializeData(initializationData);
+              });;
         },
-        (errorMessage) => {}
-    );
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
     // this._subscription.add(initializeSubscription);
     // this._globalService.setIsLoadedData(false);
   }

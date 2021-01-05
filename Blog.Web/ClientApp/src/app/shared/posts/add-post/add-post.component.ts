@@ -1,10 +1,10 @@
+import { Messages } from './../../../core/data/Messages';
+import { ErrorResponse } from './../../../core/responses/ErrorResponse';
 import { TagsService } from './../../../core/services/posts-services/tags.service';
 import { PostService } from './../../../core/services/posts-services/post.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Location } from '@angular/common';
+import { FormGroup } from '@angular/forms';
 import { PostForm } from '../../../core/forms/posts/PostForm';
-import { Post } from '../../../core/models/Post';
 import { Router } from '@angular/router';
 import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
 import { User } from 'src/app/core/models/User';
@@ -12,6 +12,7 @@ import { TinyMCEOptionsObject } from 'src/app/core/models/TinyMCEOptionsObject';
 import { TinyMCEOptions } from 'src/app/core/data/TinyMCEOptions';
 import { UsersService } from 'src/app/core/services/users-services/users.service';
 import { Tag } from 'src/app/core/models/Tag';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
 
 @Component({
   selector: 'app-add-post',
@@ -78,14 +79,15 @@ export class AddPostComponent implements OnInit {
    * @param _usersService UsersService
    * @param _globalService GlobalService
    * @param _tagsService TagsService
+   * @param _customToastrService CustomToastrService
    */
   constructor(
     private _router: Router,
     private _postService: PostService,
     private _usersService: UsersService,
     private _globalService: GlobalService,
-    private _tagsService: TagsService
-  ) { }
+    private _tagsService: TagsService,
+    private _customToastrService: CustomToastrService) { }
 
   /**
    * @inheritdoc
@@ -187,9 +189,11 @@ export class AddPostComponent implements OnInit {
       ...this.postForm.value
     }).subscribe(
       () => {
+        this._customToastrService.displaySuccessMessage(Messages.POST_CREATED_SUCCESSFULLY);
         this._router.navigate(['/']);
       },
-      (errorMessage) => {
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
       });
   }
 
@@ -209,7 +213,8 @@ export class AddPostComponent implements OnInit {
       (response: Tag[]) => {
         this.availableTags = response;
       },
-      (error: any) => {
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
       });
   }
 

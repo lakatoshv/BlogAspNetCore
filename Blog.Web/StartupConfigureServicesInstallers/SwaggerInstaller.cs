@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using Blog.Core.Consts;
+using Blog.Web.Contracts.V1;
 
 namespace Blog.Web.StartupConfigureServicesInstallers
 {
@@ -18,32 +20,32 @@ namespace Blog.Web.StartupConfigureServicesInstallers
             // Swagger Configuration
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo
+                c.SwaggerDoc(ApiRoutes.Version, new OpenApiInfo
                 {
-                    Version = "v1",
-                    Title = "Blog Web Api",
-                    Description = "Blog Web Api Endpoints",
-                    TermsOfService = new Uri("https://example.com/terms"),
+                    Version = ApiRoutes.Version,
+                    Title = Consts.ApplicationName,
+                    Description = SwaggerConsts.Description,
+                    TermsOfService = new Uri(SwaggerConsts.TermsOfService),
                     Contact = new OpenApiContact
                     {
-                        Name = "Vitalii Lakatosh",
-                        Email = string.Empty,
-                        Url = new Uri("http://lakatoshv.byethost8.com/resume.php"),
+                        Name = SwaggerConsts.Contact.Name,
+                        Email = SwaggerConsts.Contact.Email,
+                        Url = new Uri(SwaggerConsts.Contact.Url),
                     },
                     License = new OpenApiLicense
                     {
-                        Name = "Use under LICX",
-                        Url = new Uri("https://example.com/license"),
+                        Name = SwaggerConsts.License.Name,
+                        Url = new Uri(SwaggerConsts.License.Url),
                     }
                 });
 
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                c.AddSecurityDefinition(SwaggerConsts.SecurityDefinition.Name, new OpenApiSecurityScheme
                 {
-                    Description = "Jwt Authorization header using the bearer scheme",
-                    Name = "Authorization",
+                    Description = SwaggerConsts.SecurityDefinition.OpenApiSecurityScheme.Description,
+                    Name = SwaggerConsts.SecurityDefinition.OpenApiSecurityScheme.Name,
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,
-                    Scheme = "bearer",
+                    Scheme = SwaggerConsts.SecurityDefinition.OpenApiSecurityScheme.Scheme,
                 });
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
@@ -52,7 +54,7 @@ namespace Blog.Web.StartupConfigureServicesInstallers
                         {
                             Reference = new OpenApiReference
                             {
-                                Id = "Bearer",
+                                Id = SwaggerConsts.SecurityRequirement.OpenApiSecurityRequirement.OpenApiReference.Id,
                                 Type = ReferenceType.SecurityScheme
                             }
                         }, new List<string>()

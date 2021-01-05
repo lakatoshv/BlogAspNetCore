@@ -3,6 +3,8 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { PageViewDto } from 'src/app/core/Dto/PageViewDto';
 import { PageInfo } from 'src/app/core/models/PageInfo';
 import { Post } from 'src/app/core/models/Post';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
 
 @Component({
   selector: 'app-posts-table',
@@ -41,8 +43,11 @@ export class PostsTableComponent implements OnInit {
 
   /**
    * @param _postService PostService
+   * @param _customToastrService CustomToastrService
    */
-  constructor(private _postService: PostService) { }
+  constructor(
+    private _postService: PostService,
+    private _customToastrService: CustomToastrService) { }
 
   /** @inheritdoc */
   ngOnInit() {
@@ -74,7 +79,10 @@ export class PostsTableComponent implements OnInit {
           this.postsCount.emit(this.pageInfo.totalItems);
           this.isLoaded = true;
         },
-        (error) => {});
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+          this.isLoaded = true;
+        });
     } else {
       this._postService.list(model)
         .subscribe(
@@ -84,7 +92,8 @@ export class PostsTableComponent implements OnInit {
             this.postsCount.emit(this.pageInfo.totalItems);
             this.isLoaded = true;
           },
-          (error: any) => {
+          (error: ErrorResponse) => {
+            this._customToastrService.displayErrorMessage(error);
             this.isLoaded = true;
           });
     }

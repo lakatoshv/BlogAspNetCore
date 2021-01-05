@@ -1,14 +1,14 @@
 import { PageInfo } from './../../../../core/models/PageInfo';
 import { CommentService } from './../../../../core/services/posts-services/comment.service';
 import { Component, OnInit, Input } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-
-import { GeneralServiceService } from 'src/app/core';
 
 import { Comment } from 'src/app/core/models/Comment';
 import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
 import { User } from 'src/app/core/models/User';
 import { UsersService } from 'src/app/core/services/users-services/users.service';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { Messages } from 'src/app/core/data/Messages';
 
 @Component({
   selector: 'app-comments-list',
@@ -66,13 +66,13 @@ export class CommentsListComponent implements OnInit {
    * @param _activatedRoute ActivatedRoute
    * @param _usersService UsersService
    * @param _globalService GlobalService
+   * @param _customToastrService CustomToastrService
    */
   constructor(
-    private _generalService: GeneralServiceService,
-    private _activatedRoute: ActivatedRoute,
     private _commentService: CommentService,
     private _usersService: UsersService,
-    private _globalService: GlobalService
+    private _globalService: GlobalService,
+    private _customToastrService: CustomToastrService
   ) { }
 
   /**
@@ -102,7 +102,8 @@ export class CommentsListComponent implements OnInit {
         this.comments = response.comments;
         this.pageInfo = response.pageInfo;
       },
-      error => {
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
       });
   }
 
@@ -147,7 +148,6 @@ export class CommentsListComponent implements OnInit {
    * @returns void
    */
   editAction(comment: Comment): void {
-    debugger
     if (this.loggedIn && this.user.id === comment.userId) {
       this.editPostId = comment.id;
       this.comment = comment;
@@ -164,9 +164,11 @@ export class CommentsListComponent implements OnInit {
     this._commentService.delete(comment.id).subscribe(
       (response: any) => {
         this.onDeleteCommentAction(response.id);
+        this._customToastrService.displaySuccessMessage(Messages.COMMENT_DELETED_SUCCESSFULLY);
       },
-      (error: any) => {}
-    );
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
+      });
   }
 
   /**

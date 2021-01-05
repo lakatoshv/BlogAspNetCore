@@ -1,12 +1,15 @@
 import { CommentService } from './../../../../core/services/posts-services/comment.service';
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { CommentForm } from 'src/app/core/forms/posts/CommentForm';
 
 import { Comment } from '../../../../core/models/Comment';
 import { User } from 'src/app/core/models/User';
 import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
 import { UsersService } from 'src/app/core/services/users-services/users.service';
+import { Messages } from 'src/app/core/data/Messages';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
 
 @Component({
   selector: 'app-edit-comment',
@@ -40,13 +43,16 @@ export class EditCommentComponent implements OnInit {
   commentForm: FormGroup = new CommentForm().commentForm;
 
   /**
+   * @param _commentService CommentService
    * @param _usersService UsersService
    * @param _globalService GlobalService
+   * @param _customToastrService CustomToastrService
    */
   constructor(
     private _commentService: CommentService,
     private _usersService: UsersService,
-    private _globalService: GlobalService
+    private _globalService: GlobalService,
+    private _customToastrService: CustomToastrService
   ) { }
 
   /**
@@ -85,9 +91,11 @@ export class EditCommentComponent implements OnInit {
       this._commentService.edit(this.comment.id, this.comment).subscribe(
         (response: any) => {
           this.onEdit.emit(response);
+          this._customToastrService.displaySuccessMessage(Messages.COMMENT_EDITED_SUCCESSFULLY);
         },
-        (error) => {}
-      );
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
     }
   }
 }

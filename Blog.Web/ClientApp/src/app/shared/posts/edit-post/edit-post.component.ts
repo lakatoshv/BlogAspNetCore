@@ -11,6 +11,9 @@ import { TinyMCEOptions } from 'src/app/core/data/TinyMCEOptions';
 import { UsersService } from 'src/app/core/services/users-services/users.service';
 import { Tag } from 'src/app/core/models/Tag';
 import { TagsService } from 'src/app/core/services/posts-services/tags.service';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { Messages } from 'src/app/core/data/Messages';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
 
 @Component({
   selector: 'app-edit-post',
@@ -93,6 +96,7 @@ export class EditPostComponent implements OnInit {
    * @param _usersService UsersService
    * @param _globalService GlobalService
    * @param _tagsService TagsService
+   * @param _customToastrService CustomToastrService
    */
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -100,7 +104,8 @@ export class EditPostComponent implements OnInit {
     private _postService: PostService,
     private _usersService: UsersService,
     private _globalService: GlobalService,
-    private _tagsService: TagsService
+    private _tagsService: TagsService,
+    private _customToastrService: CustomToastrService
   ) { }
 
   /**
@@ -154,10 +159,12 @@ export class EditPostComponent implements OnInit {
       post.authorId = this.user.id;
       this._postService.edit(this._postId, post).subscribe(
         () => {
+          this._customToastrService.displaySuccessMessage(Messages.POST_EDITED_SUCCESSFULLY);
           this._router.navigate(['/blog/post/' + this._postId]);
         },
-        (error) => {}
-      );
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
     }
   }
 
@@ -168,10 +175,12 @@ export class EditPostComponent implements OnInit {
     if (this.isCurrentUserPost) {
       this._postService.delete(this._postId, this._globalService._currentUser.id).subscribe(
         () => {
+          this._customToastrService.displaySuccessMessage(Messages.POST_DELETED_SUCCESSFULLY);
           this._router.navigate(['/blog']);
         },
-        () => {}
-      );
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
     }
   }
 
@@ -262,8 +271,9 @@ export class EditPostComponent implements OnInit {
         }
         this._setFormData();
       },
-      () => {}
-    );
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
+      });
   }
 
   /**
@@ -275,7 +285,8 @@ export class EditPostComponent implements OnInit {
       (response: Tag[]) => {
         this.availableTags = response;
       },
-      (error: any) => {
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
       });
   }
 

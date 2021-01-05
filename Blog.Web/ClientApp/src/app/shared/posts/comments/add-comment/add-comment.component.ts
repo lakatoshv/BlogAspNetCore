@@ -1,12 +1,14 @@
+import { Messages } from './../../../../core/data/Messages';
 import { CommentService } from './../../../../core/services/posts-services/comment.service';
 import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { CommentForm } from 'src/app/core/forms/posts/CommentForm';
 
 import { Comment } from '../../../../core/models/Comment';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
 import { User } from 'src/app/core/models/User';
 import { UsersService } from 'src/app/core/services/users-services/users.service';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
 
 @Component({
   selector: 'app-add-comment',
@@ -38,11 +40,12 @@ export class AddCommentComponent implements OnInit {
    * @param _globalService GlobalService
    * @param _commentService CommentService
    * @param _usersService UsersService
+   * @param _customToastrService CustomToastrService
    */
   constructor(
-    private _globalService: GlobalService,
     private _commentService: CommentService,
-    private _usersService: UsersService
+    private _usersService: UsersService,
+    private _customToastrService: CustomToastrService
   ) { }
 
   /**
@@ -75,9 +78,11 @@ export class AddCommentComponent implements OnInit {
       this._commentService.add(comment).subscribe(
         (response: any) => {
           this.onAdd.emit(response.json());
+          this._customToastrService.displaySuccessMessage(Messages.COMMENT_CREATED_SUCCESSFULLY);
         },
-        (error) => {}
-      );
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
       this.onAdd.emit(null);
     }
   }

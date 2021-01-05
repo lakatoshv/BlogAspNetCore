@@ -6,16 +6,16 @@ export class APiRoutes {
    */
   private static readonly API: string = 'api';
 
-/**
- * VERSION url.
- * @param VERSION string
- */
+  /**
+   * VERSION url.
+   * @param VERSION string
+   */
   private static readonly VERSION: string = 'v1';
 
-/**
- * BASE url.
- * @param BASE string
- */
+  /**
+   * BASE url.
+   * @param BASE string
+   */
   private static readonly BASE: string = APiRoutes.API + '/' + APiRoutes.VERSION;
 
   // Controllers

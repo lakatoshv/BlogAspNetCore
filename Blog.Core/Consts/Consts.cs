@@ -28,5 +28,10 @@ namespace Blog.Core.Consts
         /// DefaultCacheTimeMinutes.
         /// </summary>
         public const int DefaultCacheTimeMinutes = 60;
+
+        /// <summary>
+        /// The application name.
+        /// </summary>
+        public const string ApplicationName = "Blog Web Api";
     }
 }

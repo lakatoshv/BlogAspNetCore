@@ -11,6 +11,9 @@ import { PageInfo } from 'src/app/core/models/PageInfo';
 import { UsersService } from 'src/app/core/services/users-services/users.service';
 import { PostService } from 'src/app/core/services/posts-services/post.service';
 import { PageViewDto } from 'src/app/core/Dto/PageViewDto';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { Messages } from 'src/app/core/data/Messages';
 
 @Component({
   selector: 'app-posts-list',
@@ -78,13 +81,15 @@ export class PostsListComponent implements OnInit {
    * @param _activatedRoute ActivatedRoute
    * @param _usersService UsersService
    * @param _postService: PostService
+   * @param _customToastrService CustomToastrService
    */
   constructor(
     private _globalService: GlobalService,
     private _generalService: GeneralServiceService,
     private _activatedRoute: ActivatedRoute,
     private _usersService: UsersService,
-    private _postService: PostService
+    private _postService: PostService,
+    private _customToastrService: CustomToastrService
   ) {
   }
 
@@ -110,11 +115,12 @@ export class PostsListComponent implements OnInit {
     if (this.loggedIn && postItem.authorId === this._globalService._currentUser.id) {
       this._postService.delete(postId, this._globalService._currentUser.id).subscribe(
         (response: any) => {
+          this._customToastrService.displaySuccessMessage(Messages.POST_DELETED_SUCCESSFULLY);
           this._onDeleteCommentAction(response.id);
         },
-        (errorMessage) => {
-        }
-      );
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
     }
   }
 
@@ -131,9 +137,9 @@ export class PostsListComponent implements OnInit {
           this.posts[ind] = response;
           this.posts = this.posts;
         },
-        (error) => {
-        }
-      );
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
     }
   }
 
@@ -150,9 +156,9 @@ export class PostsListComponent implements OnInit {
           this.posts[ind] = response;
           this.posts = this.posts;
         },
-        (error) => {
-        }
-      );
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
     }
   }
 
@@ -182,7 +188,8 @@ export class PostsListComponent implements OnInit {
         this.pageInfo = this.pageInfo;
         this.isLoaded = true;
       },
-      (error: any) => {
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
         this.isLoaded = true;
       });
   }
@@ -209,9 +216,9 @@ export class PostsListComponent implements OnInit {
         this.pageInfo = response.pageInfo;
 
       },
-      error => {
-      }
-    );
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
+      });
 
   }
 
@@ -239,7 +246,8 @@ export class PostsListComponent implements OnInit {
           this.pageInfo = response.pageInfo;
           this.isLoaded = true;
         },
-        (error: any) => {
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
           this.isLoaded = true;
         });
   }

@@ -134,7 +134,7 @@ namespace Blog.Web.Controllers.V1
         /// <summary>
         /// Sends the verification email asynchronous.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Task.</returns>
         [HttpGet(ApiRoutes.AccountsController.SendConfirmationEmail)]
         [ProducesResponseType(204)]
         public async Task<IActionResult> SendVerificationEmailAsync()

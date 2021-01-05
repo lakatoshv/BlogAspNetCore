@@ -8,6 +8,9 @@ import { User } from 'src/app/core/models/User';
 import { Post } from 'src/app/core/models/Post';
 import { UsersService } from 'src/app/core/services/users-services/users.service';
 import { PageInfo } from 'src/app/core/models/PageInfo';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { Messages } from 'src/app/core/data/Messages';
 
 @Component({
   selector: 'app-my-posts',
@@ -79,13 +82,15 @@ export class MyPostsComponent implements OnInit {
    * @param _router Router
    * @param _activatedRoute ActivatedRoute
    * @param _usersService UsersService
+   * @param _customToastrService CustomToastrService
    */
   constructor(
     private _globalService: GlobalService,
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
     private _postService: PostService,
-    private _usersService: UsersService
+    private _usersService: UsersService,
+    private _customToastrService: CustomToastrService
   ) {
   }
 
@@ -125,11 +130,12 @@ export class MyPostsComponent implements OnInit {
     if (this.isLoggedIn && this.posts[postId].author.id === this.user.id) {
       this._postService.delete(postId, this._globalService._currentUser.id).subscribe(
         (response: any) => {
+          this._customToastrService.displaySuccessMessage(Messages.POST_DELETED_SUCCESSFULLY);
           this._onDeleteCommentAction(response.id);
         },
-        (errorMessage) => {
-        }
-      );
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
     }
   }
 
@@ -146,9 +152,9 @@ export class MyPostsComponent implements OnInit {
           this.posts[ind] = response;
           this.posts = this.posts;
         },
-        (error) => {
-        }
-      );
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
     }
   }
 
@@ -165,9 +171,9 @@ export class MyPostsComponent implements OnInit {
           this.posts[ind] = response;
           this.posts = this.posts;
         },
-        (error) => {
-        }
-      );
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
     }
   }
 
@@ -197,7 +203,8 @@ export class MyPostsComponent implements OnInit {
         this.pageInfo = this.pageInfo;
         this.isLoaded = true;
       },
-      (error: any) => {
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
         this.isLoaded = true;
       });
   }
@@ -224,9 +231,9 @@ export class MyPostsComponent implements OnInit {
         this.pageInfo = response.pageInfo;
 
       },
-      error => {
-      }
-    );
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
+      });
   }
 
   /**
@@ -251,8 +258,9 @@ export class MyPostsComponent implements OnInit {
         this.pageInfo = response.pageInfo;
         this.isLoaded = true;
       },
-      (error) => {}
-    );
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
+      });
 
     this.pageInfo.totalItems = this.posts.length;
   }
