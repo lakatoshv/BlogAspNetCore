@@ -1,3 +1,4 @@
+import { ErrorsModule } from './../shared/errors/errors.module';
 import { UserModule } from './user/user.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -21,7 +22,8 @@ import { PersonalInfoModule } from './personal-info/personal-info.module';
     EditorModule,
     UserModule,
     ProfileModule,
-    PersonalInfoModule
+    PersonalInfoModule,
+    ErrorsModule
   ],
   declarations: [
     LayoutComponentComponent,
