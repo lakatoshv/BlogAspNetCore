@@ -31,4 +31,10 @@ export class Messages {
    * @param COMMENT_DELETED_SUCCESSFULLY string
    */
   public static readonly COMMENT_DELETED_SUCCESSFULLY: string = 'Коментар успішно видалений!';
+
+  // Comments
+  /**
+   * @param MESSAGE_SENDED_SUCCESSFULLY string
+   */
+  public static readonly MESSAGE_SENDED_SUCCESSFULLY: string = 'Повідомлення успішно надіслане!';
 }

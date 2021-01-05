@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Tag } from 'src/app/core/models/Tag';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
 import { TagsService } from 'src/app/core/services/posts-services/tags.service';
 
 @Component({
@@ -9,7 +11,9 @@ import { TagsService } from 'src/app/core/services/posts-services/tags.service';
 })
 export class PopularTagsComponent implements OnInit {
   public tags: Tag[] = [];
-  constructor(private _tagsService: TagsService) {
+  constructor(
+    private _tagsService: TagsService,
+    private _customToastrService: CustomToastrService) {
   }
 
   ngOnInit() {
@@ -37,12 +41,8 @@ export class PopularTagsComponent implements OnInit {
         (response: any) => {
           this.tags = response.tags;
         },
-        (error: any) => {
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
         });
   }
-
-  private _getPosts(page = 1): void {
-
-  }
-
 }
