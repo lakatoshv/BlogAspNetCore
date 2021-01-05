@@ -15,7 +15,7 @@ export class GeneralServiceService {
    * @param paramName string
    * @param activatedRoute ActivatedRoute
    */
-  public getRoutePeram(paramName: string, activatedRoute: ActivatedRoute): string {
+  public getRouteParam(paramName: string, activatedRoute: ActivatedRoute): string {
     const snapshot = activatedRoute.snapshot;
     return this._getParamValue(paramName, snapshot);
   }

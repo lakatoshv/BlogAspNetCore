@@ -22,7 +22,7 @@ namespace Blog.Services.Interfaces
         /// </summary>
         /// <param name="searchParameters">searchParameters.</param>
         /// <returns>Task.</returns>
-        Task<PostsViewDto> GetPostsAsync(SearchParametersDto searchParameters);
+        Task<PostsViewDto> GetPostsAsync(PostsSearchParametersDto searchParameters);
 
         /// <summary>
         /// Async get post.
@@ -45,7 +45,7 @@ namespace Blog.Services.Interfaces
         /// <param name="userId">userId.</param>
         /// <param name="searchParameters">searchParameters.</param>
         /// <returns>Task.</returns>
-        Task<PostsViewDto> GetUserPostsAsync(string userId, SearchParametersDto searchParameters);
+        Task<PostsViewDto> GetUserPostsAsync(string userId, PostsSearchParametersDto searchParameters);
 
         /// <summary>
         /// Inserts the asynchronous.

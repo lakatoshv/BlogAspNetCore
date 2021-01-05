@@ -11,6 +11,7 @@ import { PageInfo } from 'src/app/core/models/PageInfo';
 import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
 import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
 import { Messages } from 'src/app/core/data/Messages';
+import { GeneralServiceService } from 'src/app/core';
 
 @Component({
   selector: 'app-my-posts',
@@ -78,11 +79,17 @@ export class MyPostsComponent implements OnInit {
   private _userId: string;
 
   /**
+   * @param _searchFilter any
+   */
+  private _searchFilter: any;
+
+  /**
    * @param _globalService GlobalService
    * @param _router Router
    * @param _activatedRoute ActivatedRoute
    * @param _usersService UsersService
    * @param _customToastrService CustomToastrService
+   * @param _generalService GeneralServiceService
    */
   constructor(
     private _globalService: GlobalService,
@@ -90,7 +97,8 @@ export class MyPostsComponent implements OnInit {
     private _activatedRoute: ActivatedRoute,
     private _postService: PostService,
     private _usersService: UsersService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _generalService: GeneralServiceService
   ) {
   }
 
@@ -98,6 +106,8 @@ export class MyPostsComponent implements OnInit {
    * @inheritdoc
    */
   ngOnInit() {
+    this._searchFilter = this._generalService.getRouteParam('search-filter', this._activatedRoute);
+
     this.isLoggedIn = this._usersService.isLoggedIn();
     if (this.isLoggedIn) {
       this._globalService.resetUserData();
@@ -195,6 +205,7 @@ export class MyPostsComponent implements OnInit {
     this.isLoaded = false;
     const model = {
       search: search,
+      tag: this._searchFilter,
       sortParameters: null,
     };
     this._postService.userPosts(this._userId, model).subscribe(
@@ -223,6 +234,7 @@ export class MyPostsComponent implements OnInit {
     };
     const model = {
       search: null,
+      tag: this._searchFilter,
       sortParameters: sortParameters,
     };
     this._postService.userPosts(this._userId, model).subscribe(
@@ -250,6 +262,7 @@ export class MyPostsComponent implements OnInit {
     };
     const model = {
       search: null,
+      tag: this._searchFilter,
       sortParameters: sortParameters,
     };
     this._postService.userPosts(this._userId, model).subscribe(

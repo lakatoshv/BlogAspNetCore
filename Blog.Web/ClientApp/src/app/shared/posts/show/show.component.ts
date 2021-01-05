@@ -79,7 +79,7 @@ export class ShowComponent implements OnInit {
    * @inheritdoc
    */
   ngOnInit() {
-    this.postId = parseInt(this._generalService.getRoutePeram('post-id', this._activatedRoute), null);
+    this.postId = parseInt(this._generalService.getRouteParam('post-id', this._activatedRoute), null);
     this._getPost();
     this.loggedIn = this._usersService.isLoggedIn();
     if (this.loggedIn) {
