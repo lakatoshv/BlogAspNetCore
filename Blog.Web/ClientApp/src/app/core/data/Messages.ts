@@ -37,4 +37,30 @@ export class Messages {
    * @param MESSAGE_SENDED_SUCCESSFULLY string
    */
   public static readonly MESSAGE_SENDED_SUCCESSFULLY: string = 'Повідомлення успішно надіслане!';
+
+  // Profile
+  /**
+   * @param EMAIL_CHANGED_SUCCESSFULLY string
+   */
+  public static readonly EMAIL_CHANGED_SUCCESSFULLY: string = 'Електронна пошта успішно змінена!';
+
+  /**
+   * @param EMAIL_VERIFIED_SUCCESSFULLY string
+   */
+  public static readonly EMAIL_VERIFIED_SUCCESSFULLY: string = 'Електронна пошта підтверджена!';
+
+  /**
+   * @param PASSWORD_CHANGED_SUCCESSFULLY string
+   */
+  public static readonly PASSWORD_CHANGED_SUCCESSFULLY: string = 'Пароль успішно змінений!';
+
+  /**
+   * @param PHONE_NUMBER_CHANGED_SUCCESSFULLY string
+   */
+  public static readonly PHONE_NUMBER_CHANGED_SUCCESSFULLY: string = 'Номер телефону успішно змінений!';
+
+  /**
+   * @param PHONE_NUMBER_CHANGED_SUCCESSFULLY string
+   */
+  public static readonly PROFILE_EDITED_SUCCESSFULLY: string = 'Профіль успішно змінений!';
 }

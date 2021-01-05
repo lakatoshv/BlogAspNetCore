@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { GeneralServiceService } from 'src/app/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/core/models/User';
-import { Post } from 'src/app/core/models/Post';
 import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
 import { UsersService } from 'src/app/core/services/users-services/users.service';
-import { PostService } from 'src/app/core/services/posts-services/post.service';
-import { PageInfo } from 'src/app/core/models/PageInfo';
 import { AccountsService } from 'src/app/core/services/users-services/account.sevice';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { Messages } from 'src/app/core/data/Messages';
 
 @Component({
   selector: 'app-profile-page',
@@ -60,6 +60,7 @@ export class ProfilePageComponent implements OnInit {
    * @param _globalService GlobalService
    * @param _usersService UsersService
    * @param _accountsService: AccountsService
+   * @param _customToastrService CustomToastrService
    */
   constructor(
     private _generalService: GeneralServiceService,
@@ -67,8 +68,8 @@ export class ProfilePageComponent implements OnInit {
     private _router: Router,
     private _globalService: GlobalService,
     private _usersService: UsersService,
-    private _postService: PostService,
-    private _accountsService: AccountsService
+    private _accountsService: AccountsService,
+    private _customToastrService: CustomToastrService
   ) { }
 
   /**
@@ -108,8 +109,9 @@ export class ProfilePageComponent implements OnInit {
       (response: any) => {
         this.user = response;
       },
-      () => {}
-    );
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
+      });
   }
 
   /**
@@ -134,9 +136,11 @@ export class ProfilePageComponent implements OnInit {
    */
   public verifyEmail(): void {
     this._accountsService.sendConfirmationEmail().subscribe(
-      (result: any) => {
+      () => {
+        this._customToastrService.displaySuccessMessage(Messages.EMAIL_VERIFIED_SUCCESSFULLY);
       },
-      (error) => {}
-    );
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
+      });
   }
 }

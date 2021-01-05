@@ -8,6 +8,9 @@ import { TinyMCEOptions } from 'src/app/core/data/TinyMCEOptions';
 import { Router } from '@angular/router';
 import { UsersService } from 'src/app/core/services/users-services/users.service';
 import { ProfileViewDto } from 'src/app/core/Dto/ProfileViewDto';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { Messages } from 'src/app/core/data/Messages';
 
 @Component({
   selector: 'app-change-phone-number',
@@ -39,11 +42,13 @@ export class ChangePhoneNumberComponent implements OnInit {
    * @param _router Router
    * @param _globalService GlobalService
    * @param _usersService UsersService
+   * @param _customToastrService CustomToastrService
    */
   constructor(
     private _router: Router,
     private _globalService: GlobalService,
-    private _usersService: UsersService
+    private _usersService: UsersService,
+    private _customToastrService: CustomToastrService
   ) { }
 
   /**
@@ -72,8 +77,9 @@ export class ChangePhoneNumberComponent implements OnInit {
         this.user = response;
         this._setFormData();
       },
-      () => {}
-    );
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
+      });
   }
 
   /**
@@ -99,9 +105,11 @@ export class ChangePhoneNumberComponent implements OnInit {
         this._globalService._currentUser.phoneNumber = result.phoneNumber;
         this._globalService._currentUser.profile.about = result.about;
         // this._usersService.saveUser(JSON.stringify(this._globalService._currentUser));*/
+        this._customToastrService.displaySuccessMessage(Messages.PHONE_NUMBER_CHANGED_SUCCESSFULLY);
       },
-      (error) => {}
-    );
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
+      });
   }
 
   /**
