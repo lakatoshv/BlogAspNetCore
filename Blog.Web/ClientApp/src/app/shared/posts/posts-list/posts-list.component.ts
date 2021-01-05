@@ -76,6 +76,11 @@ export class PostsListComponent implements OnInit {
   public isLoaded = false;
 
   /**
+   * @param _searchFilter any
+   */
+  private _searchFilter: any;
+
+  /**
    * @param _globalService GlobalService
    * @param _generalService GeneralServiceService
    * @param _activatedRoute ActivatedRoute
@@ -97,7 +102,9 @@ export class PostsListComponent implements OnInit {
    * @inheritdoc
    */
   ngOnInit() {
-    this._postId = parseInt(this._generalService.getRoutePeram('post', this._activatedRoute), null);
+    this._searchFilter = this._generalService.getRouteParam('search-filter', this._activatedRoute);
+
+    this._postId = parseInt(this._generalService.getRouteParam('post', this._activatedRoute), null);
     this._getPosts();
     this.loggedIn = this._usersService.isLoggedIn();
     if (this.loggedIn) {
@@ -180,6 +187,7 @@ export class PostsListComponent implements OnInit {
     this.isLoaded = false;
     const model = {
       search: search,
+      tag: this._searchFilter,
       sortParameters: null,
     };
     this._postService.list(model).subscribe(
@@ -208,6 +216,7 @@ export class PostsListComponent implements OnInit {
     };
     const model = {
       search: null,
+      tag: this._searchFilter,
       sortParameters: sortParameters,
     };
     this._postService.list(model).subscribe(
@@ -227,6 +236,7 @@ export class PostsListComponent implements OnInit {
    * @returns void
    */
   private _getPosts(page = 1): void {
+    debugger
     const sortParameters = {
       sortBy: null,
       orderBy: null,
@@ -236,6 +246,7 @@ export class PostsListComponent implements OnInit {
     };
     const model = {
       search: null,
+      tag: this._searchFilter,
       sortParameters: sortParameters
     };
 

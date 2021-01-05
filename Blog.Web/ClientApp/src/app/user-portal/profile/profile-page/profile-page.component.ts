@@ -76,7 +76,7 @@ export class ProfilePageComponent implements OnInit {
    * @inheritdoc
    */
   public ngOnInit() {
-    this._profileId = parseInt(this._generalService.getRoutePeram('profile-id', this._activatedRoute), null);
+    this._profileId = parseInt(this._generalService.getRouteParam('profile-id', this._activatedRoute), null);
     this.isLoggedIn = this._usersService.isLoggedIn();
     if (this._usersService.isLoggedIn()) {
       this._globalService.resetUserData();

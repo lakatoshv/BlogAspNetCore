@@ -119,7 +119,7 @@ namespace Blog.Services
         }
 
         /// <inheritdoc cref="IPostsService"/>
-        public async Task<PostsViewDto> GetPostsAsync(SearchParametersDto searchParameters)
+        public async Task<PostsViewDto> GetPostsAsync(PostsSearchParametersDto searchParameters)
         {
             var posts = new PostsViewDto();
             var postsList = await this.Repository.TableNoTracking
@@ -133,6 +133,12 @@ namespace Blog.Services
             if (!string.IsNullOrEmpty(searchParameters.Search))
             {
                 postsList = postsList.Where(post => post.Title.ToLower().Contains(searchParameters.Search.ToLower())).ToList();
+            }
+
+            if(!string.IsNullOrEmpty(searchParameters.Tag))
+            {
+                postsList = postsList.Where(post =>
+                    post.PostsTagsRelations.Any(x => x.Tag.Title.ToLower().Equals(searchParameters.Tag.ToLower()))).ToList();
             }
 
             var postsCount = postsList.Count;
@@ -185,7 +191,7 @@ namespace Blog.Services
         }
 
         /// <inheritdoc cref="IPostsService"/>
-        public async Task<PostsViewDto> GetUserPostsAsync(string userId, SearchParametersDto searchParameters)
+        public async Task<PostsViewDto> GetUserPostsAsync(string userId, PostsSearchParametersDto searchParameters)
         {
             var posts = new PostsViewDto();
             var postsList = await this.Repository.TableNoTracking
@@ -200,6 +206,12 @@ namespace Blog.Services
             if (!string.IsNullOrEmpty(searchParameters.Search))
             {
                 postsList = postsList.Where(post => post.Title.ToLower().Contains(searchParameters.Search.ToLower())).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(searchParameters.Tag))
+            {
+                postsList = postsList.Where(post =>
+                    post.PostsTagsRelations.Any(x => x.Tag.Title.ToLower().Equals(searchParameters.Tag.ToLower()))).ToList();
             }
 
             postsList = postsList.AsQueryable().OrderBy(searchParameters.SortParameters).ToList();

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Blog.Services.ControllerContext;
+using Blog.Services.Core.Dtos.Posts;
 using Blog.Web.Contracts.V1;
 using Blog.Web.Contracts.V1.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -93,7 +94,7 @@ namespace Blog.Web.Controllers.V1
         /// <param name="searchParameters">searchParameters.</param>
         /// <returns>Task.</returns>
         [HttpPost(ApiRoutes.PostsController.GetPosts)]
-        public async Task<ActionResult> GetPosts([FromBody] SearchParametersDto searchParameters)
+        public async Task<ActionResult> GetPosts([FromBody] PostsSearchParametersDto searchParameters)
         {
             if (searchParameters.SortParameters is null)
                 searchParameters.SortParameters = new SortParametersDto();
@@ -121,7 +122,7 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [HttpPost(ApiRoutes.PostsController.UserPosts)]
-        public async Task<ActionResult> GetUserPosts([FromRoute] string id, [FromBody] SearchParametersDto searchParameters)
+        public async Task<ActionResult> GetUserPosts([FromRoute] string id, [FromBody] PostsSearchParametersDto searchParameters)
         {
             if (searchParameters.SortParameters is null)
                 searchParameters.SortParameters = new SortParametersDto();
