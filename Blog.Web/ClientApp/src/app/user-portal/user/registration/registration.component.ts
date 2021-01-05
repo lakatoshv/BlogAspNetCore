@@ -4,6 +4,8 @@ import { RegistrationForm } from '../../../core/forms/user/RegistrationForm';
 import { UsersService } from 'src/app/core/services/users-services/users.service';
 import { Router } from '@angular/router';
 import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
+import { Messages } from 'src/app/core/data/Messages';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
 
 @Component({
   selector: 'app-registration',
@@ -20,11 +22,13 @@ export class RegistrationComponent implements OnInit {
    * @param _globalService GlobalService
    * @param _usersService UsersService
    * @param _router Router
+   * @param _customToastrService CustomToastrService
    */
   constructor(
     private _globalService: GlobalService,
     private _usersService: UsersService,
-    private _router: Router
+    private _router: Router,
+    private _customToastrService: CustomToastrService
   ) { }
 
   /**
@@ -49,6 +53,7 @@ export class RegistrationComponent implements OnInit {
           (response) => {
             // this._logIn(registerModel);
             // this.isLoginRequestSend = false;
+            this._customToastrService.displaySuccessMessage(Messages.REGISTERED_SUCCESSFULLY);
           },
           (errorMessage) => {});
     }

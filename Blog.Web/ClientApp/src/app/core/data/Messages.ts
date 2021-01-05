@@ -63,4 +63,15 @@ export class Messages {
    * @param PHONE_NUMBER_CHANGED_SUCCESSFULLY string
    */
   public static readonly PROFILE_EDITED_SUCCESSFULLY: string = 'Профіль успішно змінений!';
+
+  // Account.
+  /**
+   * @param AUTHORIZED_SUCCESSFULLY string
+   */
+  public static readonly AUTHORIZED_SUCCESSFULLY: string = 'Ви успішно авторизувались!';
+
+  /**
+   * @param REGISTERED_SUCCESSFULLY string
+   */
+  public static readonly REGISTERED_SUCCESSFULLY: string = 'Ви успішно зареєструвалиь!';
 }
