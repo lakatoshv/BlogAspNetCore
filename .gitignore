@@ -8,3 +8,4 @@
 /BlogWebApp/Services/Blog.Services/obj
 /BlogWebApp/Tests/Blog.IntegrationTests/bin/Debug/netcoreapp2.2
 /BlogWebApp/Tests/Blog.IntegrationTests/obj
+/.vs
