@@ -1,0 +1,136 @@
+<div class="container">
+    <div class="row" data-ref="container">
+        <div class="col-lg-12">
+            <h2 class="text-center" id="form-header">Додати новий пост</h2>
+            <form #f="ngForm" [formGroup]="postForm" (ngSubmit)="add()">
+                <div class="form-group">
+
+                    <label for="title" tag="" class="optional">
+                        Тема посту:
+                    </label>
+
+                    <input type="text" name="title" id="title" value="" class="form-control" formControlName="title">
+                </div>
+
+                <div class="form-group">
+                    <label for="description" tag="" class="optional">
+                        Короткий опис:
+                    </label>
+                    <editor apiKey="test" [init]="tinyMCEOptions" name="description" id="description" formControlName="description">
+                    </editor>
+                </div>
+
+                <div class="form-group">
+                    <label for="content" tag="" class="optional">
+                        Пост:
+                    </label>
+                    <editor apiKey="test" [init]="tinyMCEOptions" name="content" id="content" formControlName="content">
+                    </editor>
+                </div>
+
+                <label for="content" tag="" class="optional">
+                    Основна картинка
+                </label>
+                <!--
+                  <div class="radio">
+                    <label>
+                      <input class="form-check-input" type="radio" name="type" id="upload" value="upload">
+                      <label for="upload">Вибрати файл з комп'ютера</label>
+                    </label>
+                    <div class="upload" style="display: none;">
+                      <div id="objects">
+                        <div class="form-group" id="add-image1" >
+                          <input type="hidden" name="MAX_FILE_SIZE" value="2000000" />
+                          <label for="gallery_img" tag="" class="optional">Картинка:</label>
+                          <dd>
+                            <input type="hidden" name="MAX_FILE_SIZE" value="2097152" id="MAX_FILE_SIZE">
+                            <input type="file" name="gallery_img" id="gallery_img" class="form-control">
+                          </dd>
+                        </div>
+                      </div>
+                      <p id="add-input" class="btn btn-default">Додати ще одну картинку</p>
+                    </div>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <input class="form-check-input" type="radio" name="type" id="addurl" value="addurl">
+                      <label for="addurl">Вказати URL-адресу</label>
+                    </label>
+                    <div class="addurl" style="display: none;">
+                      <div class="form-group">
+                        <label for="img_url" tag="" class="optional">URL-адреса:</label>
+                        <input type="text" name="img_url" id="img_url" value="" class="form-control">
+                        <p>Наприклад: https://some_image.com/example.jpg</p>
+                      </div>
+                    </div>
+                  </div>
+                -->
+                <div class="addurl">
+                    <div class="form-group">
+                        <label for="imageUrl" tag="" class="optional">
+                            URL-адреса:
+                        </label>
+                        <input type="text" name="imageUrl" id="imageUrl" formControlName="imageUrl" value="" class="form-control">
+                        <p>Наприклад: https://some_image.com/example.jpg</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <span class="fa fa-list"></span> Теги:
+                        </div>
+                        <div class="panel-body">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <div class="checkbox">
+                                        <label class="optional" (click)="addTagLabel()">
+                                        Додати новий тег
+                                      </label>
+                                    </div>
+                                </li>
+                                <li class="list-group-item" *ngFor="let tag of tagsList">
+                                    <div class="checkbox">
+                                        <label>
+                                        {{tag.title}}
+                                      </label>
+                                    </div>
+                                    <div class="pull-right action-buttons">
+                                        <button type="button" (click)="editTag(tag)"><span class="fa fa-pencil"></span></button>
+                                        <button type="button" (click)="onDeleteTagAction(tag)"><span class="fa fa-trash"></span></button>
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <label for="alias" tag="" class="optional">
+                      {{tagLabel}}:
+                  </label>
+
+                    <input type="text" name="tags" id="tags" #tag value="{{selectedTag['value']}}" class="form-control" list="tags-list">
+                    <datalist id="tags-list">
+                      <option *ngFor="let tag of availableTags">{{tag.title}}</option>
+                    </datalist>
+
+                    <input type="button" name="tagAction" id="tagAction" value="{{tagLabel}}" class="btn btn-default" (click)="tagAction(tag.value, action)">
+                </div>
+
+                <div class="form-group">
+                    <label for="alias" tag="" class="optional">
+                        Тема посту на англійській і без пропусків(посилання):
+                    </label>
+                    <input type="text" name="alias" id="alias" value="" class="form-control">
+                </div>
+
+                <input type="submit" name="submit" id="submit" value="Додати" class="btn btn-default">
+
+                <button type="button" class="btn btn-sm text-white btn-secondary" (click)="backButton()">
+                  Скасувати
+                </button>
+
+            </form>
+        </div>
+    </div>
+</div>

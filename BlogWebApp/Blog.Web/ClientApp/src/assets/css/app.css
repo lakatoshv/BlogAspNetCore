@@ -1,0 +1,258 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+ul.socialIcons {
+    padding: 0;
+    text-align: center;
+}
+.socialIcons li {
+    background: yellow;
+    list-style: none;
+    display: inline-block;
+    margin: 15px;
+    margin-top: 15%;
+    border-radius: 2em;
+    overflow:hidden;
+}
+.socialIcons li a {
+    display: block;
+    padding: .5em;
+    max-width: 2.3em;
+    min-width: 2.3em;
+    height: 2.3em;
+    white-space: nowrap;
+    line-height: 1.5em;
+    transition:.5s;
+    text-decoration: none;
+    font-family: arial;
+    color: #fff;
+}
+.socialIcons li i {
+    margin-right:.5em;
+}
+.socialIcons li:hover a {
+    max-width:200px;
+    padding-right:1em;
+}
+.socialIcons .facebook, {
+    background: #3b5998;
+    box-shadow: 0 0 16px #3b5998;
+}
+#facebook {
+    background: #3b5998;
+    box-shadow: 0 0 16px #3b5998;
+    padding: .5em;
+    white-space: nowrap;
+    line-height: 1.5em;
+    transition:.5s;
+    text-decoration: none;
+    font-family: arial;
+    color: #fff;
+}
+.socialIcons .twitter {
+    background: #00aced;
+    box-shadow: 0 0 16px #00aced;
+}
+.socialIcons .instagram {
+    background: #cd486b;
+    box-shadow: 0 0 16px #cd486b;
+}
+.socialIcons .pinterest {
+    background: #c92228;
+    box-shadow: 0 0 16px #c92228;
+}
+.socialIcons .google-plus {
+    background: #dd4b39;
+    box-shadow: 0 0 16px #dd4b39;
+}
+#google-plus {
+    background: #dd4b39;
+    box-shadow: 0 0 16px #dd4b39;
+    padding: .5em;
+    white-space: nowrap;
+    line-height: 1.5em;
+    transition:.5s;
+    text-decoration: none;
+    font-family: arial;
+    color: #fff;
+}
+.socialIcons .linkedin {
+    background: #007785;
+    box-shadow: 0 0 16px #007785;
+}
+.socialIcons .skype {
+    background: #00aff0;
+    box-shadow: 0 0 16px #00aff0;
+}
+.socialIcons .yahoo {
+    background: #230052;
+    box-shadow: 0 0 16px #230052;
+}
+.socialIcons .vk {
+    background: #1a3352;
+    box-shadow: 0 0 16px #1a3352;
+}
+.socialIcons .tumblr {
+    background: #142030;
+    box-shadow: 0 0 16px #142030;
+}
+
+.hr{
+    color: #f00;
+    background-color: orange;
+    height: 2px; width: 100px;
+}
+
+.card-container.card {
+    max-width: 350px;
+    padding: 40px 40px;
+}
+
+.btn {
+    font-weight: 700;
+    height: 36px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+/*
+ * Card component
+ */
+.card {
+    background-color: #F7F7F7;
+    /* just in case there no content*/
+    padding: 20px 25px 30px;
+    margin: 0 auto 25px;
+    margin-top: 50px;
+    /* shadows and rounded borders */
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.profile-img-card {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 10px;
+    display: block;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+
+/*
+ * Form styles
+ */
+.profile-name-card {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0 0;
+    min-height: 1em;
+}
+
+.reauth-email {
+    display: block;
+    color: #404040;
+    line-height: 2;
+    margin-bottom: 10px;
+    font-size: 14px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.form-signin #inputEmail,
+.form-signin #inputPassword {
+    direction: ltr;
+    height: 44px;
+    font-size: 16px;
+}
+
+.form-signin input[type=email],
+.form-signin input[type=password],
+.form-signin input[type=text],
+.form-signin button {
+    width: 100%;
+    display: block;
+    margin-bottom: 10px;
+    z-index: 1;
+    position: relative;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.form-signin .form-control:focus {
+    border-color: rgb(104, 145, 162);
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgb(104, 145, 162);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgb(104, 145, 162);
+}
+
+.btn.btn-signin {
+    /*background-color: #4d90fe; */
+    background-color: rgb(104, 145, 162);
+    /* background-color: linear-gradient(rgb(104, 145, 162), rgb(12, 97, 33));*/
+    padding: 0px;
+    font-weight: 700;
+    font-size: 14px;
+    height: 36px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border: none;
+    -o-transition: all 0.218s;
+    -moz-transition: all 0.218s;
+    -webkit-transition: all 0.218s;
+    transition: all 0.218s;
+}
+
+.btn.btn-signin:hover,
+.btn.btn-signin:active,
+.btn.btn-signin:focus {
+    background-color: rgb(12, 97, 33);
+}
+
+.forgot-password {
+    color: rgb(104, 145, 162);
+}
+
+.forgot-password:hover,
+.forgot-password:active,
+.forgot-password:focus{
+    color: rgb(12, 97, 33);
+}
+
+.login-or {
+    position: relative;
+    font-size: 18px;
+    color: #aaa;
+    margin-top: 10px;
+            margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .span-or {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: -2px;
+    margin-left: -25px;
+    background-color: #F7F7F7;
+    width: 50px;
+    text-align: center;
+  }
+  .hr-or {
+    background-color: #cdcdcd;
+    height: 1px;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+  }

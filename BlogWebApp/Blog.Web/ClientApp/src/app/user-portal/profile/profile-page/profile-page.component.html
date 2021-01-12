@@ -1,0 +1,139 @@
+<!-- Main Content -->
+<div class="container" *ngIf="user !== null">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-3 col-lg-3 ">
+                    <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="img-circle img-responsive"><br>
+                    <h3>{{user.firstName + " " + user.lastName}}</h3>
+                </div>
+                <div class=" col-md-9 col-lg-9">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" (click)="selectTab('main-info', 'top')">Осовна інформація</a></li>
+                        <li *ngIf="isForCurrentUser">
+                            <a data-toggle="tab" (click)="selectTab('personal-info', 'top')">Особиста інформація</a>
+                        </li>
+                        <li><a data-toggle="tab" (click)="selectTab('posts', 'top')">Пости</a></li>
+                        <li><a data-toggle="tab" (click)="selectTab('comments', 'top')">Коментарі</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div *ngIf="topTab === 'main-info'" [ngClass]="{'active': topTab === 'main-info'}" class="tab-pane active" id="main-info">
+                            <table class="table table-user-information">
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td *ngIf="isForCurrentUser" class="pull-right">
+                                            <a class="" routerLink="/blog/my-profile/edit"><i class="fa fa-edit"> Редагувати</i></a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ім'я:</td>
+                                        <td><b>{{user.firstName}}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Фамілія:</td>
+                                        <td><b>{{user.lastName}}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Електронна пошта:</td>
+                                        <td><b><a routerLink="/blogmailto:test@test.test">{{user.email}}</a></b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Адреса:</td>
+                                        <td><b>Address</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Номер телефону:</td>
+                                        <td><b>{{user.phoneNumber}}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Статус:</td>
+                                        <td><b>active</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="bs-callout bs-callout-danger">
+                                <h4>Про мене:</h4>
+                                <div [innerHTML]="user.profile.about">
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="topTab === 'personal-info'" [ngClass]="{'active': topTab === 'personal-info'}" class="tab-pane active" id="main-info">
+                            <table class="table table-user-information">
+                                <tbody>
+                                    <tr>
+                                        <td>Електронна пошта:</td>
+                                        <td>
+                                            <b>{{user.email}}</b>
+                                        </td>
+                                        <td>
+                                            <a routerLink="personal-info/change-email"><b><i class="fa fa-edit"></i></b></a>
+                                            <a class="btn btn-default" (click)="verifyEmail()">Підтвердити</a>
+                                        </td>
+                                        <td><i *ngIf="user.emailConfirmed" class="fa fa-check text-success"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Телефон:</td>
+                                        <td>
+                                            <b>{{user.phoneNumber}}</b>
+                                        </td>
+                                        <td>
+                                            <a routerLink="personal-info/change-phone-number"><b><i class="fa fa-edit"></i></b></a>
+                                            <a class="btn btn-default">Підтвердити</a>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a routerLink="personal-info/change-password"><b><i class="fa fa-edit"></i> Змінити пароль</b></a>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div *ngIf="topTab === 'posts'" [ngClass]="{'active': topTab === 'posts'}" class="tab-pane" id="posts">
+                            <p><b>Статистика</b></p>
+                            <table class="table table-user-information">
+                                <tbody>
+                                    <tr>
+                                        <td>Мої пости:</td>
+                                        <td><b>{{postsCount}}</b></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Збережені пости:</td>
+                                        <td><b>15</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a data-toggle="tab" (click)="selectTab('my', 'posts')">Пости</a></li>
+                                <li><a data-toggle="tab" (click)="selectTab('saved', 'posts')">Збережені пости</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div *ngIf="postsTab === 'my'" [ngClass]="{'active': postsTab === 'my'}" class="tab-pane active" id="my">
+                                    <p><b>Пости</b></p>
+                                    <app-posts-table [userId]="user.profile.userId" (postsCount)="postsCount = $event"></app-posts-table>
+                                </div>
+                                <div *ngIf="postsTab === 'saved'" [ngClass]="{'active': postsTab === 'saved'}" class="tab-pane" id="saved">
+                                    Збережені пости
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <a data-original-title="Broadcast Message" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="fa fa-envelope"></i></a>
+            <span class="pull-right">
+        <a routerLink="/blogedit.html" data-original-title="Edit this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
+        <a data-original-title="Remove this user" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i></a>
+      </span>
+        </div>
+    </div>
+</div>

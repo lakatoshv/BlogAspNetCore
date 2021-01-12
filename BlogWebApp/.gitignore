@@ -1,0 +1,17 @@
+﻿################################################################################
+# Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Blog/v16
+/ApiTest/bin/Debug/netcoreapp3.1/Properties
+/ApiTest/bin/Debug/netcoreapp3.1
+/ApiTest/obj
+/Data/Blog.Data/bin/Debug/netcoreapp2.2
+/Data/Blog.Data/obj
+/Data/Blog.Data.Core/bin/Debug
+/Data/Blog.Data.Core/obj
+/Data/Blog.Data.Models/bin/Debug/netcoreapp2.2
+/Data/Blog.Data.Models/obj
+/Services/Blog.Services/bin/Debug/netcoreapp2.2
+/Services/Blog.Services.Core/bin/Debug/netcoreapp2.2
+/Services/Blog.Services.Core/obj
