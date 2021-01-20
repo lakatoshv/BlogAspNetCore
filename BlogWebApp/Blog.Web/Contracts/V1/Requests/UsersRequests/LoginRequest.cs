@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Blog.Web.VIewModels.AspNetUser
+namespace Blog.Web.Contracts.V1.Requests.UsersRequests
 {
     /// <summary>
-    /// Login view model.
+    /// Login request.
     /// </summary>
-    public class LoginViewModel
+    public class LoginRequest
     {
         /// <summary>
         /// Gets or sets email.

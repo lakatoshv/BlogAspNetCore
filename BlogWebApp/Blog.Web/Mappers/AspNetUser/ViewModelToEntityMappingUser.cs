@@ -1,4 +1,6 @@
-﻿using Blog.Services.Core.Dtos.Posts;
+﻿using System.Linq;
+using Blog.Web.Contracts.V1.Requests.UsersRequests;
+using Blog.Web.Contracts.V1.Responses.UsersResponses;
 
 namespace Blog.Web.Mappers.AspNetUser
 {
@@ -21,6 +23,14 @@ namespace Blog.Web.Mappers.AspNetUser
             CreateMap<UserRegistrationDto, ApplicationUser>();
             CreateMap<ApplicationUser, ApplicationUserDto>();
             CreateMap<ApplicationUserDto, ApplicationUser>();
+
+            CreateMap<ApplicationUser, AccountResponse>()
+                .ForMember(destinationMember => destinationMember.Roles, memberOptions
+                => memberOptions.MapFrom(src => src.Roles.Select(x => new RoleResponse { Id = x.RoleId })));
+
+            CreateMap<RegistrationRequest, ApplicationUser>()
+                .ForMember(destinationMember => destinationMember.Roles, memberOptions
+                    => memberOptions.Ignore());
         }
     }
 }

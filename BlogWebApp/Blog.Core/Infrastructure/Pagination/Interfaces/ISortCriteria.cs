@@ -5,7 +5,7 @@
 namespace Blog.Core.Infrastructure.Pagination.Interfaces
 {
     using System.Linq;
-    using Blog.Core.Enums;
+    using Enums;
 
     /// <summary>
     /// Sort items by criteria interface.

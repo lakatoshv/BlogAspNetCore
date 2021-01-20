@@ -19,7 +19,7 @@ namespace Blog.Data.Core.Models
         /// </summary>
         public bool IsDeleted { get; set; }
 
-        /// <summary>
+        /// <summary> 
         /// Gets or sets deleted on.
         /// </summary>
         public DateTime? DeletedOn { get; set; }

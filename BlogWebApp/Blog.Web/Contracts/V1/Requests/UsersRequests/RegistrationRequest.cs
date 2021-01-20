@@ -1,26 +1,32 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Blog.Data.Models;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace BLog.Web.ViewModels.AspNetUser
+namespace Blog.Web.Contracts.V1.Requests.UsersRequests
 {
     /// <summary>
-    /// Edit user view model.
+    /// Registration request.
     /// </summary>
-    public class EditUserModel
+    public class RegistrationRequest
     {
-        /// <summary>
-        /// Gets or sets id.
-        /// </summary>
-        public string Id { get; set; }
-
         /// <summary>
         /// Gets or sets email.
         /// </summary>
         [Required]
         [EmailAddress]
         public string Email { get; set; }
-        // public string Password { get; set; }
-        // public string ConfirmPassword { get; set; }
+
+        /// <summary>
+        /// Gets or sets password.
+        /// </summary>
+        [Required]
+        [MinLength(6)]
+        public string Password { get; set; }
+
+        /// <summary>
+        /// Gets or sets confirmPassword.
+        /// </summary>
+        [Required]
+        public string ConfirmPassword { get; set; }
 
         /// <summary>
         /// Gets or sets firstName.
@@ -37,22 +43,23 @@ namespace BLog.Web.ViewModels.AspNetUser
         public string LastName { get; set; }
 
         /// <summary>
+        /// Gets or sets userName.
+        /// </summary>
+        public string UserName { get; set; }
+
+        /// <summary>
         /// Gets or sets phoneNumber.
         /// </summary>
         public string PhoneNumber { get; set; }
 
         /// <summary>
-        /// Update user.
+        /// Gets or sets concurrencyStamp.
         /// </summary>
-        /// <param name="user">user.</param>
-        /// <returns>ApplicationUser.</returns>
-        public ApplicationUser Update(ApplicationUser user)
-        {
-            user.Email = Email;
-            user.UserName = FirstName + " " + LastName;
-            user.PhoneNumber = PhoneNumber;
-            return user;
-        }
+        public string ConcurrencyStamp { get; set; }
+
+        /// <summary>
+        /// Gets or sets roles.
+        /// </summary>
+        public IEnumerable<string> Roles { get; set; }
     }
 }
-   
