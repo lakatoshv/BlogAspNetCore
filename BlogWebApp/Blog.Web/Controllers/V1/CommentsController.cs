@@ -175,8 +175,8 @@ namespace Blog.Web.Controllers.V1
             await _commentService.UpdateAsync(updatedComment).ConfigureAwait(false);
 
             var comment = await _commentService.GetCommentAsync(id);
-
             var mappedComment = _mapper.Map<CommentResponse>(comment);
+
             return Ok(mappedComment);
         }
 
