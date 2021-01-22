@@ -2,12 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using Blog.Data.Models;
 
-namespace Blog.Web.VIewModels.Posts
+namespace Blog.Web.Contracts.V1.Responses.Posts
 {
     /// <summary>
-    /// Comment view model.
+    /// Comment response.
     /// </summary>
-    public class CommentViewModel
+    public class CommentResponse
     {
         /// <summary>
         /// Gets or sets the identifier.
