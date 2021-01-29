@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Blog.Web.Contracts.V1.Responses.CommentsResponses;
+using Blog.Web.Contracts.V1.Responses.TagsResponses;
 using Blog.Web.Contracts.V1.Responses.UsersResponses;
 
 namespace Blog.Web.Contracts.V1.Responses.PostsResponses

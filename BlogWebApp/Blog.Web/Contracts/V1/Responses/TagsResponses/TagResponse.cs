@@ -1,4 +1,4 @@
-﻿namespace Blog.Web.Contracts.V1.Responses.PostsResponses
+﻿namespace Blog.Web.Contracts.V1.Responses.TagsResponses
 {
     /// <summary>
     /// Tag response.

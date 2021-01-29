@@ -1,7 +1,7 @@
 ﻿using Blog.Data.Models;
 using Blog.Services.Core.Dtos.Posts;
 using Blog.Web.Contracts.V1.Requests.TagsRequests;
-using Blog.Web.Contracts.V1.Responses.PostsResponses;
+using Blog.Web.Contracts.V1.Responses.TagsResponses;
 
 namespace Blog.Web.Mappers.Posts
 {
@@ -17,7 +17,10 @@ namespace Blog.Web.Mappers.Posts
         public ViewModelToEntityMappingTag()
         {
             CreateMap<TagViewDto, TagResponse>();
+            CreateMap<TagsViewDto, PagedTagsResponse>();
             CreateMap<TagRequest, Tag>();
+            CreateMap<CreateTagRequest, Tag>();
+            CreateMap<UpdateTagRequest, Tag>();
         }
     }
 }
