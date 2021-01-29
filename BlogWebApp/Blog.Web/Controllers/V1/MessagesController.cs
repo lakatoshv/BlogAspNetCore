@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using Blog.Data.Models;
 using Blog.Services.ControllerContext;
 using Blog.Services.Interfaces;
-using Blog.Web.Contracts.V1;
-using Blog.Web.Contracts.V1.Responses;
+using Blog.Contracts.V1;
+using Blog.Contracts.V1.Requests.MessagesRequests;
+using Blog.Contracts.V1.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,16 +26,24 @@ namespace Blog.Web.Controllers.V1
         private readonly IMessagesService _messagesService;
 
         /// <summary>
+        /// The mapper.
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MessagesController"/> class.
         /// </summary>
         /// <param name="controllerContext">The controller context.</param>
         /// <param name="messagesService">The messages service.</param>
+        /// <param name="mapper"></param>
         public MessagesController(
             IControllerContext controllerContext,
-            IMessagesService messagesService)
+            IMessagesService messagesService,
+            IMapper mapper)
             : base(controllerContext)
         {
             _messagesService = messagesService;
+            _mapper = mapper;
         }
 
         // GET: Messages
@@ -114,22 +124,22 @@ namespace Blog.Web.Controllers.V1
         }
 
         /// <summary>
-        /// Async create new post.
+        /// Creates the asynchronous.
         /// </summary>
-        /// <param name="model">model.</param>
-        /// <returns>IActionResult.</returns>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> CreateAsync([FromBody] Message model)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateMessageRequest request)
         {
             if (CurrentUser != null)
             {
-                model.SenderId = CurrentUser.Id;
+                request.SenderId = CurrentUser.Id;
             }
 
-            await _messagesService.InsertAsync(model);
+            await _messagesService.InsertAsync(_mapper.Map<Message>(request));
 
             return Ok();
         }
@@ -138,33 +148,32 @@ namespace Blog.Web.Controllers.V1
         /// Async edit post by id.
         /// </summary>
         /// <param name="id">id.</param>
-        /// <param name="model">model.</param>
+        /// <param name="request"></param>
         /// <returns>Task.</returns>
         [HttpPut("{id}")]
         [Authorize]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> EditAsync([FromRoute] int id, [FromBody] Message model)
+        public async Task<IActionResult> EditAsync([FromRoute] int id, [FromBody] UpdateMessageRequest request)
         {
             if (CurrentUser == null)
             {
                 return BadRequest(new {ErrorMessage = "Unauthorized"});
             }
 
-            if (!model.SenderId.Equals(CurrentUser.Id) || !model.RecipientId.Equals(CurrentUser.Id))
+            if (!request.SenderId.Equals(CurrentUser.Id) || !request.RecipientId.Equals(CurrentUser.Id))
             {
                 return BadRequest(new {ErrorMessage = "You are not an author or recipient of the message."});
             }
 
             //var message = await _messagesService.FindAsync(id);
             //var updatedModel = _mapper.Map(model, message);
-            _messagesService.Update(model);
+            await _messagesService.UpdateAsync(_mapper.Map<Message>(request));
 
             var message = await _messagesService.FindAsync(id);
-            //var mappedPost = _mapper.Map<Message>(postModel);
 
-            return Ok(message);
+            return Ok(_mapper.Map<MessageResponse>(message));
         }
 
         /// <summary>
@@ -191,7 +200,7 @@ namespace Blog.Web.Controllers.V1
                 return BadRequest(new { ErrorMessage = "You are not an author of the post." });
             }
 
-            _messagesService.Delete(message);
+            await _messagesService.DeleteAsync(message);
             var response = new CreatedResponse<int> { Id = id };
 
             return Ok(response);

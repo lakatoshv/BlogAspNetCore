@@ -1,4 +1,6 @@
-﻿using Blog.Services.Core.Dtos.Posts;
+﻿using System.Linq;
+using Blog.Contracts.V1.Requests.UsersRequests;
+using Blog.Contracts.V1.Responses.UsersResponses;
 
 namespace Blog.Web.Mappers.AspNetUser
 {
@@ -16,11 +18,18 @@ namespace Blog.Web.Mappers.AspNetUser
         /// </summary>
         public ViewModelToEntityMappingUser()
         {
-            CreateMap<ApplicationUser, UserItemViewModel>();
             CreateMap<UserItemViewModel, ApplicationUser>();
             CreateMap<UserRegistrationDto, ApplicationUser>();
-            CreateMap<ApplicationUser, ApplicationUserDto>();
             CreateMap<ApplicationUserDto, ApplicationUser>();
+            CreateMap<ApplicationUserDto, ApplicationUserResponse>();
+            CreateMap<RegistrationRequest, ApplicationUser>()
+                .ForMember(destinationMember => destinationMember.Roles, memberOptions
+                    => memberOptions.Ignore());
+            CreateMap<ApplicationUser, UserItemViewModel>();
+            CreateMap<ApplicationUser, ApplicationUserDto>();
+            CreateMap<ApplicationUser, AccountResponse>()
+                .ForMember(destinationMember => destinationMember.Roles, memberOptions
+                => memberOptions.MapFrom(src => src.Roles.Select(x => new RoleResponse { Id = x.RoleId })));
         }
     }
 }

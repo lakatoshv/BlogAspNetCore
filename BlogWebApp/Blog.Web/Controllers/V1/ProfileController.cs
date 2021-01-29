@@ -2,8 +2,10 @@
 using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Blog.Web.Contracts.V1;
-using Blog.Web.VIewModels.AspNetUser;
+using AutoMapper;
+using Blog.Contracts.V1;
+using Blog.Contracts.V1.Requests.UsersRequests;
+using Blog.Contracts.V1.Responses.UsersResponses;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Blog.Web.Controllers.V1
@@ -22,16 +24,24 @@ namespace Blog.Web.Controllers.V1
         private readonly IProfileService _profileService;
 
         /// <summary>
+        /// The mapper.
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ProfileController"/> class.
         /// </summary>
         /// <param name="controllerContext">The controller context.</param>
         /// <param name="profileService">The profile service.</param>
+        /// <param name="mapper"></param>
         public ProfileController(
             IControllerContext controllerContext,
-            IProfileService profileService) 
+            IProfileService profileService,
+            IMapper mapper) 
             : base(controllerContext)
         {
             _profileService = profileService;
+            _mapper = mapper;
         }
 
         // GET: Profile/5        
@@ -46,7 +56,6 @@ namespace Blog.Web.Controllers.V1
         public async Task<ActionResult> Show([FromRoute] int id)
         {
             var profile = await _profileService.GetProfile(id);
-
             if (profile == null)
             {
                 return NotFound();
@@ -54,7 +63,7 @@ namespace Blog.Web.Controllers.V1
 
             profile.Profile.User = null;
 
-            return Ok(profile);
+            return Ok(_mapper.Map<ApplicationUserResponse>(profile));
         }
 
         // PUT: Posts/5        
@@ -69,7 +78,7 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> EditAsync([FromRoute] int profileId, [FromBody] ProfileViewModel model)
+        public async Task<IActionResult> EditAsync([FromRoute] int profileId, [FromBody] UpdateProfileRequest model)
         {
             if (CurrentUser == null)
             {
@@ -91,7 +100,7 @@ namespace Blog.Web.Controllers.V1
 
             var editedProfile = await _profileService.GetProfile(profileId);
 
-            return Ok(editedProfile);
+            return Ok(_mapper.Map<ApplicationUserResponse>(editedProfile));
         }
     }
 }

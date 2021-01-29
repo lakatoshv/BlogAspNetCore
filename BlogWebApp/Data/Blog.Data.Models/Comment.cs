@@ -8,7 +8,7 @@ namespace Blog.Data.Models
     using Core;
 
     /// <summary>
-    /// Comment model.
+    /// Comment entity.
     /// </summary>
     /// <seealso cref="Entity" />
     public class Comment : Entity

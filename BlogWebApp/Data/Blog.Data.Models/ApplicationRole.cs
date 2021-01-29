@@ -9,8 +9,11 @@ namespace Blog.Data.Models
     using Microsoft.AspNetCore.Identity;
 
     /// <summary>
-    /// ApplicationRole.
+    /// Application role entity.
     /// </summary>
+    /// <seealso cref="IdentityRole" />
+    /// <seealso cref="IAuditInfo" />
+    /// <seealso cref="IDeletableEntity" />
     public sealed class ApplicationRole : IdentityRole, IAuditInfo, IDeletableEntity
     {
         /// <summary>

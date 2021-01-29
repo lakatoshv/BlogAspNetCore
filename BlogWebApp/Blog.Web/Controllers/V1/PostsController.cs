@@ -1,8 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Blog.Services.ControllerContext;
 using Blog.Services.Core.Dtos.Posts;
-using Blog.Web.Contracts.V1;
-using Blog.Web.Contracts.V1.Responses;
+using Blog.Contracts.V1;
+using Blog.Contracts.V1.Requests.PostsRequests;
+using Blog.Contracts.V1.Responses;
+using Blog.Contracts.V1.Responses.PostsResponses;
+using Blog.Contracts.V1.Responses.UsersResponses;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Blog.Web.Controllers.V1
@@ -12,7 +16,6 @@ namespace Blog.Web.Controllers.V1
     using Data.Models;
     using Blog.Services.Core.Dtos;
     using Services.Interfaces;
-    using VIewModels.Posts;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
@@ -68,23 +71,12 @@ namespace Blog.Web.Controllers.V1
         public async Task<ActionResult> Index()
         {
             var posts = await _postsService.GetAllAsync().ConfigureAwait(false);
-
-            // var postsModel = _mapper.Map<IList<PostViewModel>>(posts);
-            /*var mappedPosts = _mapper.Map<PostViewModel>(posts);
-
-            var model = new PostViewModel
-            {
-                Posts = mappedPosts,
-                RecordsFiltered = jobs.Count
-            };
-            */
-
             if (posts == null)
             {
                 return NotFound();
             }
 
-            return Ok(posts);
+            return Ok(_mapper.Map<PostResponse>(posts.ToList()));
         }
 
         // POST: Posts/get-posts
@@ -109,7 +101,7 @@ namespace Blog.Web.Controllers.V1
                 return NotFound();
             }
 
-            return Ok(posts);
+            return Ok(_mapper.Map<PagedPostsResponse>(posts));
         }
 
         // GET: Posts/user_posts/5
@@ -130,14 +122,14 @@ namespace Blog.Web.Controllers.V1
             searchParameters.SortParameters.SortBy = searchParameters.SortParameters.SortBy ?? "Title";
             searchParameters.SortParameters.CurrentPage = searchParameters.SortParameters.CurrentPage ?? 1;
             searchParameters.SortParameters.PageSize = 10;
-            var post = await _postsService.GetUserPostsAsync(id, searchParameters);
+            var posts = await _postsService.GetUserPostsAsync(id, searchParameters);
 
-            if (post == null)
+            if (posts == null)
             {
                 return NotFound();
             }
 
-            return Ok(post);
+            return Ok(_mapper.Map<PagedPostsResponse>(posts));
         }
 
         // GET: Posts/Show/5
@@ -164,7 +156,7 @@ namespace Blog.Web.Controllers.V1
                 return NotFound();
             }
 
-            return Ok(post);
+            return Ok(_mapper.Map<PostWithPagedCommentsResponse>(post));
         }
 
         // POST: Posts
@@ -178,7 +170,7 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> CreateAsync([FromBody] PostViewModel model)
+        public async Task<IActionResult> CreateAsync([FromBody] CreatePostRequest model)
         {
             if (CurrentUser == null)
             {
@@ -192,7 +184,8 @@ namespace Blog.Web.Controllers.V1
 
             model.AuthorId = CurrentUser.Id;
             var postToCreate = _mapper.Map<Post>(model);
-            await _postsService.InsertAsync(postToCreate, model.Tags.Distinct());
+            var tags = _mapper.Map<List<Tag>>(model.Tags.Distinct());
+            await _postsService.InsertAsync(postToCreate, tags);
 
             var response = new CreatedResponse<int> { Id = postToCreate.Id };
 
@@ -224,8 +217,8 @@ namespace Blog.Web.Controllers.V1
             _postsService.Update(model);
 
             var post = await _postsService.GetPostAsync(id);
-            var mappedPost = _mapper.Map<PostViewModel>(post);
-            mappedPost.Author = post.Author;
+            var mappedPost = _mapper.Map<PostViewResponse>(post);
+            mappedPost.Author = _mapper.Map<ApplicationUserResponse>(post.Author);
 
             return Ok(mappedPost);
         }
@@ -252,8 +245,8 @@ namespace Blog.Web.Controllers.V1
             _postsService.Update(model);
 
             var post = await _postsService.GetPostAsync(id);
-            var mappedPost = _mapper.Map(post, new PostViewModel());
-            mappedPost.Author = post.Author;
+            var mappedPost = _mapper.Map<PostViewResponse>(post);
+            mappedPost.Author = _mapper.Map<ApplicationUserResponse>(post.Author);
 
             return Ok(mappedPost);
         }
@@ -270,7 +263,7 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> EditAsync([FromRoute] int id, [FromBody] PostViewModel model)
+        public async Task<IActionResult> EditAsync([FromRoute] int id, [FromBody] UpdatePostRequest model)
         {
             if (CurrentUser == null)
             {
@@ -289,11 +282,11 @@ namespace Blog.Web.Controllers.V1
             updatedModel.Author = CurrentUser;
             // - - -
             _postsService.Update(updatedModel);
-
-            await _postsTagsRelationsService.AddTagsToPost(post.Id, post.PostsTagsRelations.ToList(), model.Tags);
+            var tags = _mapper.Map<List<Tag>>(model.Tags);
+            await _postsTagsRelationsService.AddTagsToPost(post.Id, post.PostsTagsRelations.ToList(), tags);
 
             var postModel = await _postsService.GetPostAsync(id);
-            var mappedPost = _mapper.Map<PostViewModel>(postModel);
+            var mappedPost = _mapper.Map<PostViewResponse>(postModel);
 
             return Ok(mappedPost);
         }

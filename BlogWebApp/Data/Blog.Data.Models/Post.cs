@@ -6,8 +6,9 @@ namespace Blog.Data.Models
     using Core;
 
     /// <summary>
-    /// Post model.
+    /// Post entity.
     /// </summary>
+    /// <seealso cref="Entity" />
     public class Post : Entity
     {
         /// <summary>

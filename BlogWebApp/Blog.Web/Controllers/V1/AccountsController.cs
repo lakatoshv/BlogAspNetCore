@@ -1,10 +1,12 @@
-﻿using Blog.Services.ControllerContext;
+﻿using System.Collections.Generic;
+using AutoMapper;
+using Blog.Services.ControllerContext;
 using Blog.Services.Core.Utilities;
 using Blog.Services.EmailServices.Interfaces;
 using Blog.Services.Identity.User;
-using Blog.Web.Contracts.V1;
-using Blog.Web.VIewModels.AspNetUser;
-using BLog.Web.ViewModels.Manage;
+using Blog.Contracts.V1;
+using Blog.Contracts.V1.Requests.UsersRequests;
+using Blog.Contracts.V1.Responses.UsersResponses;
 
 namespace Blog.Web.Controllers.V1
 {
@@ -17,7 +19,6 @@ namespace Blog.Web.Controllers.V1
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Threading.Tasks;
-    using ViewModels.AspNetUser;
 
     /// <summary>
     /// Accounts controller.
@@ -58,6 +59,8 @@ namespace Blog.Web.Controllers.V1
         /// The role manager.
         /// </summary>
         private readonly RoleManager<ApplicationRole> _roleManager;
+
+        private readonly IMapper _mapper;
         // private readonly IRefreshTokenService _refreshTokenService;
 
         /// <summary>
@@ -70,6 +73,7 @@ namespace Blog.Web.Controllers.V1
         /// <param name="roleManager">The role manager.</param>
         /// <param name="userService">The user service.</param>
         /// <param name="emailService">The email service.</param>
+        /// <param name="mapper">The mapper.</param>
         public AccountsController(
             IControllerContext controllerContext,
             IRegistrationService registrationService,
@@ -77,14 +81,15 @@ namespace Blog.Web.Controllers.V1
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
             IUserService userService,
-            IEmailExtensionService emailService)
+            IEmailExtensionService emailService,
+            IMapper mapper)
             : base(controllerContext)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _userService = userService;
             _emailExtensionService = emailService;
-            // _mapper = mapper;
+            _mapper = mapper;
             _registrationService = registrationService;
             _authService = authService;
             // _refreshTokenService = refreshTokenService;
@@ -105,12 +110,6 @@ namespace Blog.Web.Controllers.V1
                 return Bad("Something Went Wrong");
             }
 
-            /*var notificationFilter = new StreamPageFilter
-            {
-                Length = 5,
-                PageCount = 1
-            };*/
-
             var jsonResult = new
             {
                 roles = _roleManager.Roles,
@@ -128,7 +127,8 @@ namespace Blog.Web.Controllers.V1
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userManager.Users.Include(u => u.Roles).ToListAsync();
-            return Ok(users);
+
+            return Ok(_mapper.Map<List<AccountResponse>>(users));
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Blog.Web.Controllers.V1
         [AllowAnonymous]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> PostAsync([FromBody] LoginViewModel credentials)
+        public async Task<IActionResult> PostAsync([FromBody] LoginRequest credentials)
         {
             if (!ModelState.IsValid)
             {
@@ -185,7 +185,7 @@ namespace Blog.Web.Controllers.V1
         [AllowAnonymous]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> CreateAsync([FromBody] RegistrationViewModel model)
+        public async Task<IActionResult> CreateAsync([FromBody] RegistrationRequest model)
         {
             if (!ModelState.IsValid)
             {
@@ -193,37 +193,16 @@ namespace Blog.Web.Controllers.V1
             }
 
             model.UserName = model.Email;
-            // TODO Fix mapping  
-            //var userIdentity = _mapper.Map<ApplicationUser>(model);
-            var userIdentity = new ApplicationUser {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                UserName = model.Email,
-                Email = model.Email,
-                ConcurrencyStamp = model.ConcurrencyStamp,
-                CreatedOn = DateTime.Now,
-                SecurityStamp = Guid.NewGuid().ToString(),
-            };
+
+            var userIdentity = _mapper.Map<ApplicationUser>(model);
+            userIdentity.CreatedOn = DateTime.Now;
+            userIdentity.SecurityStamp = Guid.NewGuid().ToString();
             var result = await _registrationService.RegisterAsync(userIdentity, model.Password);
 
             if (!result.Succeeded)
             {
                 return Bad(result);
             }
-
-
-            /*
-            //add all roles
-            var role0 = new ApplicationRole { Name = "User", CreatedOn = DateTime.Now };
-            await _roleManager.CreateAsync(role0);
-
-            var role1 = new ApplicationRole { Name = "Moderator", CreatedOn = DateTime.Now };
-            await _roleManager.CreateAsync(role1);
-            var role2 = new ApplicationRole { Name = "Manager", CreatedOn = DateTime.Now };
-            await _roleManager.CreateAsync(role2);
-            var role3 = new ApplicationRole { Name = "Trainer", CreatedOn = DateTime.Now };
-            await _roleManager.CreateAsync(role3);
-            */
 
             if (model.Roles == null)
             {
@@ -252,7 +231,7 @@ namespace Blog.Web.Controllers.V1
         [HttpPut(ApiRoutes.AccountsController.ChangePassword)]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> UpdateAsync([FromBody] ChangePasswordViewModel model)
+        public async Task<IActionResult> UpdateAsync([FromBody] ChangePasswordRequest model)
         {
             if (!ModelState.IsValid)
             {

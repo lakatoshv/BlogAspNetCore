@@ -1,13 +1,16 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Blog.Data.Models;
 using Blog.Services.ControllerContext;
 using Blog.Services.Core.Dtos;
-using Blog.Services.Core.Dtos.Posts;
 using Blog.Services.Interfaces;
-using Blog.Web.Contracts.V1;
-using Blog.Web.Contracts.V1.Responses;
+using Blog.Contracts.V1;
+using Blog.Contracts.V1.Requests;
+using Blog.Contracts.V1.Requests.TagsRequests;
+using Blog.Contracts.V1.Responses;
+using Blog.Contracts.V1.Responses.TagsResponses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -55,13 +58,12 @@ namespace Blog.Web.Controllers.V1
         public async Task<ActionResult> GetTags()
         {
             var tags = await _tagsService.GetAllAsync();
-
             if (tags == null)
             {
                 return NotFound();
             }
 
-            return Ok(tags);
+            return Ok(_mapper.Map<List<TagResponse>>(tags));
         }
 
         /// <summary>
@@ -70,22 +72,22 @@ namespace Blog.Web.Controllers.V1
         /// <param name="searchParameters">The search parameters.</param>
         /// <returns>Task.</returns>
         [HttpPost(ApiRoutes.TagsController.GetTagsByFilter)]
-        public async Task<ActionResult> GetTagsByFilter([FromBody] SearchParametersDto searchParameters = null)
+        public async Task<ActionResult> GetTagsByFilter([FromBody] SearchParametersRequest searchParameters = null)
         {
             if (searchParameters.SortParameters is null)
-                searchParameters.SortParameters = new SortParametersDto();
+                searchParameters.SortParameters = new SortParametersRequest();
+
             searchParameters.SortParameters.OrderBy = searchParameters.SortParameters.OrderBy ?? "asc";
             searchParameters.SortParameters.SortBy = searchParameters.SortParameters.SortBy ?? "Title";
             searchParameters.SortParameters.CurrentPage = searchParameters.SortParameters.CurrentPage ?? 1;
             searchParameters.SortParameters.PageSize = searchParameters.SortParameters.PageSize ?? 10;
-            var tags = await _tagsService.GetTagsAsync(searchParameters);
-
+            var tags = await _tagsService.GetTagsAsync(_mapper.Map<SearchParametersDto>(searchParameters));
             if (tags == null)
             {
                 return NotFound();
             }
 
-            return Ok(tags);
+            return Ok(_mapper.Map<PagedTagsResponse>(tags));
         }
 
         /// <summary>
@@ -97,13 +99,12 @@ namespace Blog.Web.Controllers.V1
         public async Task<ActionResult> GetAvailableTags([FromRoute] int postId)
         {
             var tags = await _tagsService.GetAllAsync(x => x.PostsTagsRelations == null || x.PostsTagsRelations.Any(y => y.PostId != postId));
-
             if (tags == null)
             {
                 return NotFound();
             }
 
-            return Ok(tags);
+            return Ok(_mapper.Map<List<TagResponse>>(tags));
         }
 
         /// <summary>
@@ -123,14 +124,14 @@ namespace Blog.Web.Controllers.V1
                 return NotFound();
             }
 
-            return Ok(tag);
+            return Ok(_mapper.Map<TagResponse>(tag));
         }
 
         [HttpPost(ApiRoutes.TagsController.CreateTag)]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         [Authorize]
-        public async Task<IActionResult> CreateAsync([FromBody] Tag model)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateTagRequest model)
         {
             if (!ModelState.IsValid)
             {
@@ -142,12 +143,13 @@ namespace Blog.Web.Controllers.V1
                 return Bad(ModelState);
             }
 
-            await _tagsService.InsertAsync(model);
+            var tag = _mapper.Map<Tag>(model);
+            await _tagsService.InsertAsync(tag);
 
-            var response = new CreatedResponse<int> { Id = model.Id };
+            var response = new CreatedResponse<int> { Id = tag.Id };
 
             var baseUrl = $@"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
-            var locationUrl = baseUrl + "/" + ApiRoutes.TagsController.GetTag.Replace("{id}", model.Id.ToString());
+            var locationUrl = baseUrl + "/" + ApiRoutes.TagsController.GetTag.Replace("{id}", tag.Id.ToString());
 
             return Created(locationUrl, response);
         }
@@ -157,7 +159,7 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [Authorize]
-        public async Task<IActionResult> EditAsync([FromRoute] int id, [FromBody] Tag model)
+        public async Task<IActionResult> EditAsync([FromRoute] int id, [FromBody] UpdateTagRequest model)
         {
             var originTag = await _tagsService.FindAsync(id);
             if (originTag == null)
@@ -169,9 +171,9 @@ namespace Blog.Web.Controllers.V1
             _tagsService.Update(updatedTag);
 
             var tag = await _tagsService.FindAsync(id);
-            var mappedComment = _mapper.Map<TagViewDto>(tag);
+            var mappedTag = _mapper.Map<TagResponse>(tag);
 
-            return Ok(mappedComment);
+            return Ok(mappedTag);
         }
 
         // POST: Tags/Delete/5

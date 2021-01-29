@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Blog.Web.Contracts.V1.Responses;
-using Blog.Web.VIewModels.Posts;
+using Blog.Contracts.V1.Requests.PostsRequests;
+using Blog.Contracts.V1.Responses;
 
 namespace Blog.IntegrationTests.MethodsForTests.Posts.Interfaces
 {
@@ -14,6 +14,6 @@ namespace Blog.IntegrationTests.MethodsForTests.Posts.Interfaces
         /// </summary>
         /// <param name="request">The request.</param>
         /// <returns>Task.</returns>
-        Task<CreatedResponse<int>> CreatePostAsync(PostViewModel request);
+        Task<CreatedResponse<int>> CreatePostAsync(CreatePostRequest request);
     }
 }

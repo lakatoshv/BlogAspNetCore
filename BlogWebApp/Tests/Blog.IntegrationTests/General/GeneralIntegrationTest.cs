@@ -4,9 +4,8 @@ using System.Threading.Tasks;
 using Blog.Data;
 using Blog.IntegrationTests.General.Interfaces;
 using Blog.Web;
-using Blog.Web.Contracts.V1;
-using Blog.Web.ViewModels.AspNetUser;
-using Blog.Web.VIewModels.AspNetUser;
+using Blog.Contracts.V1;
+using Blog.Contracts.V1.Requests.UsersRequests;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,7 +58,7 @@ namespace Blog.IntegrationTests.General
         /// <returns>Task.</returns>
         private async Task<string> GetJwtAsync()
         {
-            var user = new RegistrationViewModel
+            var user = new RegistrationRequest
             {
                 Email = "test@integration.com",
                 Password = "123123",
@@ -69,7 +68,7 @@ namespace Blog.IntegrationTests.General
             if (registerResponse.IsSuccessStatusCode)
             {
                 var loginResponse = await TestClient.PostAsJsonAsync(ApiRoutes.AccountsController.Login,
-                    new LoginViewModel
+                    new LoginRequest
                     {
                         Email = user.Email,
                         Password = user.Password,
@@ -81,7 +80,7 @@ namespace Blog.IntegrationTests.General
             else
             {
                 var loginResponse = await TestClient.PostAsJsonAsync(ApiRoutes.AccountsController.Login,
-                    new LoginViewModel
+                    new LoginRequest
                     {
                         Email = user.Email,
                         Password = user.Password,

@@ -1,5 +1,7 @@
 ﻿using Blog.Data.Models;
-using Blog.Web.VIewModels.Posts;
+using Blog.Services.Core.Dtos.Posts;
+using Blog.Contracts.V1.Requests.CommentsRequests;
+using Blog.Contracts.V1.Responses.CommentsResponses;
 
 namespace Blog.Web.Mappers.Posts
 {
@@ -14,8 +16,10 @@ namespace Blog.Web.Mappers.Posts
         /// </summary>
         public ViewModelToEntityMappingComment()
         {
-            CreateMap<CommentViewModel, Comment>();
-            CreateMap<Comment, PostViewModel>();
+            CreateMap<CreateCommentRequest, Comment>();
+            CreateMap<UpdateCommentRequest, Comment>();
+            CreateMap<Comment, CommentResponse>();
+            CreateMap<CommentsViewDto, PagedCommentsResponse>();
         }
     }
 }
