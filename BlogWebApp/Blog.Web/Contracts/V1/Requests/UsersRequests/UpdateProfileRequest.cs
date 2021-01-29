@@ -1,9 +1,9 @@
-﻿namespace Blog.Web.VIewModels.AspNetUser
+﻿namespace Blog.Web.Contracts.V1.Requests.UsersRequests
 {
     /// <summary>
-    /// Profile view model.
+    /// Update profile request.
     /// </summary>
-    public class ProfileViewModel
+    public class UpdateProfileRequest
     {
         /// <summary>
         /// Gets or sets the email.

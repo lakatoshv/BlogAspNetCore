@@ -1,14 +1,13 @@
-﻿using AutoMapper;
-using Blog.Services.Core.Dtos;
-using Blog.Web.Contracts.V1.Requests;
+﻿using Blog.Data.Models;
+using Blog.Web.Contracts.V1.Responses.UsersResponses;
 
 namespace Blog.Web.Mappers
 {
-    public class RequestToDomainProfile : Profile
+    public class RequestToDomainProfile : AutoMapper.Profile
     {
         public RequestToDomainProfile()
         {
-            CreateMap<SortParametersRequest, SortParametersDto>();
+            CreateMap<Profile, ProfileResponse>();
         }
     }
 }
