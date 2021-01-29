@@ -1,31 +1,37 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Blog.Web.Contracts.V1.Requests.TagsRequests;
 
-namespace Blog.Data.Models
+namespace Blog.Web.Contracts.V1.Requests.PostsRequests
 {
-    using System;
-    using Core;
-
     /// <summary>
-    /// Post entity.
+    /// Create post request.
     /// </summary>
-    /// <seealso cref="Entity" />
-    public class Post : Entity
+    public class CreatePostRequest
     {
+        /// <summary>
+        /// Gets or sets id.
+        /// </summary>
+        public int Id { get; set; }
+
         /// <summary>
         /// Gets or sets title.
         /// </summary>
+        [Required]
         public string Title { get; set; }
 
         /// <summary>
         /// Gets or sets description.
         /// </summary>
+        [Required]
         public string Description { get; set; }
 
         /// <summary>
         /// Gets or sets content.
         /// </summary>
+        [Required]
         public string Content { get; set; }
-
         /// <summary>
         /// Gets or sets seen.
         /// </summary>
@@ -52,29 +58,17 @@ namespace Blog.Data.Models
         public string AuthorId { get; set; }
 
         /// <summary>
-        /// Gets or sets application user.
-        /// </summary>
-        public virtual ApplicationUser Author { get; set; }
-
-        /// <summary>
         /// Gets or sets created at.
         /// </summary>
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        [DataType(DataType.DateTime)]
+        public DateTime CreatedAt { get; set; }
 
         /// <summary>
-        /// Gets or sets the comments.
+        /// Gets or sets the tags.
         /// </summary>
         /// <value>
-        /// The comments.
+        /// The tags.
         /// </value>
-        public virtual ICollection<Comment> Comments { get; set; }
-
-        /// <summary>
-        /// Gets or sets the posts tags relations.
-        /// </summary>
-        /// <value>
-        /// The posts tags relations.
-        /// </value>
-        public virtual ICollection<PostsTagsRelations> PostsTagsRelations { get; set; }
+        public IList<TagRequest> Tags { get; set; }
     }
 }

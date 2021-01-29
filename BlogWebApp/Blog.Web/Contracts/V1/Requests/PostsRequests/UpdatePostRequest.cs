@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Blog.Web.Contracts.V1.Requests.TagsRequests;
 
-namespace Blog.Web.VIewModels.Posts
+namespace Blog.Web.Contracts.V1.Requests.PostsRequests
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
-    using Data.Models;
-
     /// <summary>
-    /// Post view model
+    /// Update post request.
     /// </summary>
-    public class PostViewModel
+    public class UpdatePostRequest
     {
         /// <summary>
         /// Gets or sets id.
@@ -33,6 +32,7 @@ namespace Blog.Web.VIewModels.Posts
         /// </summary>
         [Required]
         public string Content { get; set; }
+
         /// <summary>
         /// Gets or sets seen.
         /// </summary>
@@ -59,33 +59,17 @@ namespace Blog.Web.VIewModels.Posts
         public string AuthorId { get; set; }
 
         /// <summary>
-        /// Gets or sets application user.
-        /// </summary>
-        public virtual ApplicationUser Author { get; set; }
-
-        /// <summary>
         /// Gets or sets created at.
         /// </summary>
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
 
-        public IList<Tag> Tags { get; set; }
-
-        // public int CommentsCount { get; set; }
-        // public IList<Comment> Comments { get; set; }
-
         /// <summary>
-        /// Update method.
+        /// Gets or sets the tags.
         /// </summary>
-        public Post Update(Post model)
-        {
-            model.Title = Title;
-            model.Description = Description;
-            model.Content = Content;
-            model.ImageUrl = ImageUrl;
-            // model.Tags = Tags;
-            model.AuthorId = AuthorId;
-            return model;
-        }
+        /// <value>
+        /// The tags.
+        /// </value>
+        public IList<TagRequest> Tags { get; set; }
     }
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Blog.Data.Models;
 using Blog.IntegrationTests.MethodsForTests.Posts;
 using Blog.Web.Contracts.V1;
-using Blog.Web.VIewModels.Posts;
+using Blog.Web.Contracts.V1.Requests.PostsRequests;
 using FluentAssertions;
 using Xunit;
 
@@ -43,7 +43,7 @@ namespace Blog.IntegrationTests.Tests.Posts
             const string name = "created from test";
             // Arrange
             await AuthenticateAsync();
-            var post = new PostViewModel
+            var post = new CreatePostRequest
             {
                 Title = "created from test",
                 Description = "created from test",

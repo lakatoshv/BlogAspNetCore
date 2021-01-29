@@ -10,7 +10,7 @@ using Blog.Web.Contracts.V1;
 using Blog.Web.Contracts.V1.Requests;
 using Blog.Web.Contracts.V1.Requests.CommentsRequests;
 using Blog.Web.Contracts.V1.Responses;
-using Blog.Web.Contracts.V1.Responses.Posts;
+using Blog.Web.Contracts.V1.Responses.CommentsResponses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static System.DateTime;

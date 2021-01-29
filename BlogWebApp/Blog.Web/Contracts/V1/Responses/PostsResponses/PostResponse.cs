@@ -1,20 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Blog.Data.Models;
+using Blog.Web.Contracts.V1.Responses.CommentsResponses;
+using Blog.Web.Contracts.V1.Responses.UsersResponses;
 
-namespace Blog.Data.Models
+namespace Blog.Web.Contracts.V1.Responses.PostsResponses
 {
-    using System;
-    using Core;
-
     /// <summary>
-    /// Post entity.
+    /// Post response.
     /// </summary>
-    /// <seealso cref="Entity" />
-    public class Post : Entity
+    public class PostResponse
     {
         /// <summary>
         /// Gets or sets title.
         /// </summary>
-        public string Title { get; set; }
+        public string Title { get; set; } 
 
         /// <summary>
         /// Gets or sets description.
@@ -54,7 +54,7 @@ namespace Blog.Data.Models
         /// <summary>
         /// Gets or sets application user.
         /// </summary>
-        public virtual ApplicationUser Author { get; set; }
+        public virtual ApplicationUserResponse Author { get; set; }
 
         /// <summary>
         /// Gets or sets created at.
@@ -67,7 +67,7 @@ namespace Blog.Data.Models
         /// <value>
         /// The comments.
         /// </value>
-        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<CommentResponse> Comments { get; set; }
 
         /// <summary>
         /// Gets or sets the posts tags relations.

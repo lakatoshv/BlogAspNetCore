@@ -1,6 +1,7 @@
 ﻿using Blog.Data.Models;
+using Blog.Services.Core.Dtos.Posts;
 using Blog.Web.Contracts.V1.Requests.CommentsRequests;
-using Blog.Web.Contracts.V1.Responses.Posts;
+using Blog.Web.Contracts.V1.Responses.CommentsResponses;
 
 namespace Blog.Web.Mappers.Posts
 {
@@ -18,6 +19,7 @@ namespace Blog.Web.Mappers.Posts
             CreateMap<CreateCommentRequest, Comment>();
             CreateMap<UpdateCommentRequest, Comment>();
             CreateMap<Comment, CommentResponse>();
+            CreateMap<CommentsViewDto, PagedCommentsResponse>();
         }
     }
 }

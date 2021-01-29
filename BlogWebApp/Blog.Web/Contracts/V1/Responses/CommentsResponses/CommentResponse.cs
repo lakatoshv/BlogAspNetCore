@@ -1,8 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Blog.Data.Models;
+using Blog.Web.Contracts.V1.Responses.UsersResponses;
 
-namespace Blog.Web.Contracts.V1.Responses.Posts
+namespace Blog.Web.Contracts.V1.Responses.CommentsResponses
 {
     /// <summary>
     /// Comment response.
@@ -74,7 +74,7 @@ namespace Blog.Web.Contracts.V1.Responses.Posts
         /// <value>
         /// The user.
         /// </value>
-        public virtual ApplicationUser User { get; set; }
+        public virtual ApplicationUserResponse User { get; set; }
 
         /// <summary>
         /// Gets or sets the name.

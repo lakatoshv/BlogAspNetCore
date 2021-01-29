@@ -13,6 +13,11 @@ namespace Blog.Data.Models
     /// <summary>
     /// Application user entity.
     /// </summary>
+    /// <seealso cref="IdentityUser" />
+    /// <seealso cref="IAuditInfo" />
+    /// <seealso>
+    ///     <cref>IEntity{string}</cref>
+    /// </seealso>
     public sealed class ApplicationUser : IdentityUser, IAuditInfo, IEntity<string>
     {
         /// <summary>

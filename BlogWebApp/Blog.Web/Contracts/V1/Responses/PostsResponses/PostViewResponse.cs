@@ -1,16 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Blog.Web.Contracts.V1.Responses.CommentsResponses;
+using Blog.Web.Contracts.V1.Responses.UsersResponses;
 
-namespace Blog.Data.Models
+namespace Blog.Web.Contracts.V1.Responses.PostsResponses
 {
-    using System;
-    using Core;
-
     /// <summary>
-    /// Post entity.
+    /// Post view response.
     /// </summary>
-    /// <seealso cref="Entity" />
-    public class Post : Entity
+    public class PostViewResponse
     {
+        /// <summary>
+        /// Gets or sets id.
+        /// </summary>
+        public int Id { get; set; }
+
         /// <summary>
         /// Gets or sets title.
         /// </summary>
@@ -54,7 +58,7 @@ namespace Blog.Data.Models
         /// <summary>
         /// Gets or sets application user.
         /// </summary>
-        public virtual ApplicationUser Author { get; set; }
+        public virtual ApplicationUserResponse Author { get; set; }
 
         /// <summary>
         /// Gets or sets created at.
@@ -62,19 +66,27 @@ namespace Blog.Data.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         /// <summary>
+        /// Gets or sets the comments count.
+        /// </summary>
+        /// <value>
+        /// The comments count.
+        /// </value>
+        public int CommentsCount { get; set; }
+
+        /// <summary>
         /// Gets or sets the comments.
         /// </summary>
         /// <value>
         /// The comments.
         /// </value>
-        public virtual ICollection<Comment> Comments { get; set; }
+        public IList<CommentResponse> Comments { get; set; }
 
         /// <summary>
-        /// Gets or sets the posts tags relations.
+        /// Gets or sets the tags.
         /// </summary>
         /// <value>
-        /// The posts tags relations.
+        /// The tags.
         /// </value>
-        public virtual ICollection<PostsTagsRelations> PostsTagsRelations { get; set; }
+        public IList<TagResponse> Tags { get; set; }
     }
 }

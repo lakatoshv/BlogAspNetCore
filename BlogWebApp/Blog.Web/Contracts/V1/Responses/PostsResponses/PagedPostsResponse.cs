@@ -1,17 +1,17 @@
-﻿namespace Blog.Web.VIewModels.Posts
-{
-    using System.Collections.Generic;
-    using Core.Helpers;
+﻿using System.Collections.Generic;
+using Blog.Core.Helpers;
 
+namespace Blog.Web.Contracts.V1.Responses.PostsResponses
+{
     /// <summary>
-    /// Posts view model.
+    /// Paged posts response.
     /// </summary>
-    public class PostsViewModel
+    public class PagedPostsResponse
     {
         /// <summary>
         /// Gets or sets posts.
         /// </summary>
-        public IList<PostViewModel> Posts { get; set; }
+        public IList<PostViewResponse> Posts { get; set; }
 
         /// <summary>
         /// Gets or sets display type.
