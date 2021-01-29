@@ -1,5 +1,5 @@
 ﻿using Blog.Data.Models;
-using Blog.Web.Contracts.V1.Responses.UsersResponses;
+using Blog.Contracts.V1.Responses.UsersResponses;
 
 namespace Blog.Web.Mappers
 {

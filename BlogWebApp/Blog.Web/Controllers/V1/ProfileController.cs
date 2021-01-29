@@ -3,9 +3,9 @@ using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using AutoMapper;
-using Blog.Web.Contracts.V1;
-using Blog.Web.Contracts.V1.Requests.UsersRequests;
-using Blog.Web.Contracts.V1.Responses.UsersResponses;
+using Blog.Contracts.V1;
+using Blog.Contracts.V1.Requests.UsersRequests;
+using Blog.Contracts.V1.Responses.UsersResponses;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Blog.Web.Controllers.V1

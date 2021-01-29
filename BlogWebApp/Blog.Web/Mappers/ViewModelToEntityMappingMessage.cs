@@ -1,6 +1,6 @@
 ﻿using Blog.Data.Models;
-using Blog.Web.Contracts.V1.Requests.MessagesRequests;
-using Blog.Web.Contracts.V1.Responses;
+using Blog.Contracts.V1.Requests.MessagesRequests;
+using Blog.Contracts.V1.Responses;
 using Profile = AutoMapper.Profile;
 
 namespace Blog.Web.Mappers

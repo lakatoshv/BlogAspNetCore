@@ -3,9 +3,9 @@ using AutoMapper;
 using Blog.Data.Models;
 using Blog.Services.ControllerContext;
 using Blog.Services.Interfaces;
-using Blog.Web.Contracts.V1;
-using Blog.Web.Contracts.V1.Requests.MessagesRequests;
-using Blog.Web.Contracts.V1.Responses;
+using Blog.Contracts.V1;
+using Blog.Contracts.V1.Requests.MessagesRequests;
+using Blog.Contracts.V1.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

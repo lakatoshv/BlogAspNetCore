@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Blog.Services.Core.Dtos;
-using Blog.Web.Contracts.V1.Requests;
+using Blog.Contracts.V1.Requests;
 
 namespace Blog.Web.Mappers
 {

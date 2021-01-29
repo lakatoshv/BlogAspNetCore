@@ -1,7 +1,7 @@
 ﻿using Blog.Data.Models;
 using Blog.Services.Core.Dtos.Posts;
-using Blog.Web.Contracts.V1.Requests.PostsRequests;
-using Blog.Web.Contracts.V1.Responses.PostsResponses;
+using Blog.Contracts.V1.Requests.PostsRequests;
+using Blog.Contracts.V1.Responses.PostsResponses;
 
 namespace Blog.Web.Mappers.Posts
 {

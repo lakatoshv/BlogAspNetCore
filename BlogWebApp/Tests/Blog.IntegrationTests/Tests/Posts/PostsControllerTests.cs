@@ -4,8 +4,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Blog.Data.Models;
 using Blog.IntegrationTests.MethodsForTests.Posts;
-using Blog.Web.Contracts.V1;
-using Blog.Web.Contracts.V1.Requests.PostsRequests;
+using Blog.Contracts.V1;
+using Blog.Contracts.V1.Requests.PostsRequests;
 using FluentAssertions;
 using Xunit;
 

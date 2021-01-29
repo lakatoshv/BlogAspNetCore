@@ -1,7 +1,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Blog.Web;
-using Blog.Web.Contracts.V1;
+using Blog.Contracts.V1;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 

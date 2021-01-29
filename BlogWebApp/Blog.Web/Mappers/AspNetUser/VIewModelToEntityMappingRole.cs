@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Blog.Web.Contracts.V1.Responses.UsersResponses;
+using Blog.Contracts.V1.Responses.UsersResponses;
 using Microsoft.AspNetCore.Identity;
 
 namespace Blog.Web.Mappers.AspNetUser

@@ -2,11 +2,11 @@
 using System.Linq;
 using Blog.Services.ControllerContext;
 using Blog.Services.Core.Dtos.Posts;
-using Blog.Web.Contracts.V1;
-using Blog.Web.Contracts.V1.Requests.PostsRequests;
-using Blog.Web.Contracts.V1.Responses;
-using Blog.Web.Contracts.V1.Responses.PostsResponses;
-using Blog.Web.Contracts.V1.Responses.UsersResponses;
+using Blog.Contracts.V1;
+using Blog.Contracts.V1.Requests.PostsRequests;
+using Blog.Contracts.V1.Responses;
+using Blog.Contracts.V1.Responses.PostsResponses;
+using Blog.Contracts.V1.Responses.UsersResponses;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Blog.Web.Controllers.V1
@@ -16,7 +16,6 @@ namespace Blog.Web.Controllers.V1
     using Data.Models;
     using Blog.Services.Core.Dtos;
     using Services.Interfaces;
-    using VIewModels.Posts;
     using Microsoft.AspNetCore.Mvc;
 
     /// <summary>

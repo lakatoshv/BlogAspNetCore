@@ -6,11 +6,11 @@ using Blog.Data.Models;
 using Blog.Services.ControllerContext;
 using Blog.Services.Core.Dtos;
 using Blog.Services.Interfaces;
-using Blog.Web.Contracts.V1;
-using Blog.Web.Contracts.V1.Requests;
-using Blog.Web.Contracts.V1.Requests.TagsRequests;
-using Blog.Web.Contracts.V1.Responses;
-using Blog.Web.Contracts.V1.Responses.TagsResponses;
+using Blog.Contracts.V1;
+using Blog.Contracts.V1.Requests;
+using Blog.Contracts.V1.Requests.TagsRequests;
+using Blog.Contracts.V1.Responses;
+using Blog.Contracts.V1.Responses.TagsResponses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

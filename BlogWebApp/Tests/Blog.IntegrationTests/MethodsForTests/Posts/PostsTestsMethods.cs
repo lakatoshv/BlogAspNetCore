@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Blog.IntegrationTests.General;
 using Blog.IntegrationTests.MethodsForTests.Posts.Interfaces;
-using Blog.Web.Contracts.V1;
-using Blog.Web.Contracts.V1.Requests.PostsRequests;
-using Blog.Web.Contracts.V1.Responses;
+using Blog.Contracts.V1;
+using Blog.Contracts.V1.Requests.PostsRequests;
+using Blog.Contracts.V1.Responses;
 
 namespace Blog.IntegrationTests.MethodsForTests.Posts
 {

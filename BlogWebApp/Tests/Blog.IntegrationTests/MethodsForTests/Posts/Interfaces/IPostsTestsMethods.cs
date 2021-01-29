@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Blog.Web.Contracts.V1.Requests.PostsRequests;
-using Blog.Web.Contracts.V1.Responses;
+using Blog.Contracts.V1.Requests.PostsRequests;
+using Blog.Contracts.V1.Responses;
 
 namespace Blog.IntegrationTests.MethodsForTests.Posts.Interfaces
 {
