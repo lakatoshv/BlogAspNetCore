@@ -46,10 +46,12 @@ namespace Blog.Web.Controllers.V1
 
         // GET: Profile/5        
         /// <summary>
-        /// Shows the specified identifier.
+        /// Gets the user profile.
         /// </summary>
         /// <param name="id">The identifier.</param>
-        /// <returns></returns>
+        /// <returns>Task.</returns>
+        /// <response code="200">Gets the user profile.</response>
+        /// <response code="404">Unable to gets the user profile.</response>
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [HttpGet("{id}")]
@@ -72,7 +74,10 @@ namespace Blog.Web.Controllers.V1
         /// </summary>
         /// <param name="profileId">The profile identifier.</param>
         /// <param name="model">The model.</param>
-        /// <returns></returns>
+        /// <returns>Task</returns>
+        /// <response code="204">Edits the user profile.</response>
+        /// <response code="400">Unable to edits the user profile, model is invalid.</response>
+        /// <response code="404">Unable to edits the user profile, profile not found.</response>
         [HttpPut("{profileId}")]
         [Authorize]
         [ProducesResponseType(204)]

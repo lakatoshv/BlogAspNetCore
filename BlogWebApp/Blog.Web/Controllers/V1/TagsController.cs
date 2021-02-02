@@ -54,7 +54,11 @@ namespace Blog.Web.Controllers.V1
         /// Gets the tags.
         /// </summary>
         /// <returns></returns>
+        /// <response code="200">Gets the tags.</response>
+        /// <response code="404">Unable to gets the tags.</response>
         [HttpGet(ApiRoutes.TagsController.GetTags)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult> GetTags()
         {
             var tags = await _tagsService.GetAllAsync();
@@ -71,7 +75,11 @@ namespace Blog.Web.Controllers.V1
         /// </summary>
         /// <param name="searchParameters">The search parameters.</param>
         /// <returns>Task.</returns>
+        /// <response code="200">Gets the tags by filter.</response>
+        /// <response code="404">Unable to gets the tags by filter.</response>
         [HttpPost(ApiRoutes.TagsController.GetTagsByFilter)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult> GetTagsByFilter([FromBody] SearchParametersRequest searchParameters = null)
         {
             if (searchParameters.SortParameters is null)
@@ -94,8 +102,12 @@ namespace Blog.Web.Controllers.V1
         /// Gets the available tags.
         /// </summary>
         /// <param name="postId">The post identifier.</param>
-        /// <returns></returns>
+        /// <returns>Task.</returns>
+        /// <response code="200">Gets the available tags.</response>
+        /// <response code="404">Unable to gets the available tags.</response>
         [HttpGet(ApiRoutes.TagsController.GetAvailableTags)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult> GetAvailableTags([FromRoute] int postId)
         {
             var tags = await _tagsService.GetAllAsync(x => x.PostsTagsRelations == null || x.PostsTagsRelations.Any(y => y.PostId != postId));
@@ -111,7 +123,9 @@ namespace Blog.Web.Controllers.V1
         /// GetTag
         /// </summary>
         /// <param name="id"></param>
-        /// <returns></returns>
+        /// <returns>Task.</returns>
+        /// <response code="200">Gets the tag by id.</response>
+        /// <response code="404">Unable to gets the tag by id.</response>
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [HttpGet("{id}", Name = ApiRoutes.TagsController.GetTag)]
@@ -127,6 +141,13 @@ namespace Blog.Web.Controllers.V1
             return Ok(_mapper.Map<TagResponse>(tag));
         }
 
+        /// <summary>
+        /// Creates the asynchronous.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Task.</returns>
+        /// <response code="201">Create the tag.</response>
+        /// <response code="400">Unable to create the tag.</response>
         [HttpPost(ApiRoutes.TagsController.CreateTag)]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
@@ -154,6 +175,15 @@ namespace Blog.Web.Controllers.V1
             return Created(locationUrl, response);
         }
 
+        /// <summary>
+        /// Edits the asynchronous.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="model">The model.</param>
+        /// <returns>Task.</returns>
+        /// <response code="204">Edits the tag.</response>
+        /// <response code="400">Unable to edits the tag, model is invalid.</response>
+        /// <response code="404">Unable to edits the tag, tag not found.</response>
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
@@ -182,6 +212,8 @@ namespace Blog.Web.Controllers.V1
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>Task.</returns>
+        /// <response code="200">Deletes the tag.</response>
+        /// <response code="404">Unable to deletes the tag, tag not found.</response>
         [HttpDelete("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]

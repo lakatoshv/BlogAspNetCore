@@ -3,8 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using Blog.Core.Consts;
-using Blog.Web.Contracts.V1;
+using Blog.Contracts.V1;
 
 namespace Blog.Web.StartupConfigureServicesInstallers
 {
@@ -60,6 +62,10 @@ namespace Blog.Web.StartupConfigureServicesInstallers
                         }, new List<string>()
                     }
                 });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
         }
     }

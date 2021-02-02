@@ -100,9 +100,11 @@ namespace Blog.Web.Controllers.V1
         /// </summary>
         /// <param name="userId"></param>
         /// <returns>user json.</returns>
+        /// <response code="200">Get user data by user id.</response>
+        /// <response code="400">Unable to get user data by user id.</response>
         [HttpGet(ApiRoutes.AccountsController.Initialize)]
         [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
         public IActionResult Initialize([FromRoute] string userId)
         {
             if (string.IsNullOrEmpty(userId))
@@ -122,8 +124,10 @@ namespace Blog.Web.Controllers.V1
         /// Get all users list.
         /// </summary>
         /// <returns>users.</returns>
+        /// <response code="200">Get all users list.</response>
         [HttpGet(ApiRoutes.AccountsController.GetAllUsers)]
         [AllowAnonymous]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userManager.Users.Include(u => u.Roles).ToListAsync();
@@ -135,6 +139,7 @@ namespace Blog.Web.Controllers.V1
         /// Sends the verification email asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
+        /// <response code="204">No content.</response>
         [HttpGet(ApiRoutes.AccountsController.SendConfirmationEmail)]
         [ProducesResponseType(204)]
         public async Task<IActionResult> SendVerificationEmailAsync()
@@ -150,6 +155,8 @@ namespace Blog.Web.Controllers.V1
         /// </summary>
         /// <param name="credentials">credentials.</param>
         /// <returns>jwt token.</returns>
+        /// <response code="200">User login.</response>
+        /// <response code="400">Unable to user login.</response>
         [HttpPost(ApiRoutes.AccountsController.Login)]
         [AllowAnonymous]
         [ProducesResponseType(200)]
@@ -181,9 +188,11 @@ namespace Blog.Web.Controllers.V1
         /// </summary>
         /// <param name="model">model.</param>
         /// <returns>status.</returns>
+        /// <response code="201">Register user.</response>
+        /// <response code="400">Unable to register user.</response>
         [HttpPost(ApiRoutes.AccountsController.Register)]
         [AllowAnonymous]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(201)]
         [ProducesResponseType(400)]
         public async Task<IActionResult> CreateAsync([FromBody] RegistrationRequest model)
         {
@@ -224,10 +233,12 @@ namespace Blog.Web.Controllers.V1
 
         // PUT: api/Users/5        
         /// <summary>
-        /// Updates the asynchronous.
+        /// Change password.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns></returns>
+        /// <returns>Task.</returns>
+        /// <response code="204">Change password.</response>
+        /// <response code="400">Unable to change password.</response>
         [HttpPut(ApiRoutes.AccountsController.ChangePassword)]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
