@@ -66,8 +66,12 @@ namespace Blog.Web.Controllers.V1
         /// <summary>
         /// Get all posts.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Task.</returns>
+        /// <response code="200">Get all posts.</response>
+        /// <response code="404">Unable to get all posts.</response>
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult> Index()
         {
             var posts = await _postsService.GetAllAsync().ConfigureAwait(false);
@@ -85,7 +89,11 @@ namespace Blog.Web.Controllers.V1
         /// </summary>
         /// <param name="searchParameters">searchParameters.</param>
         /// <returns>Task.</returns>
+        /// <response code="200">Get filtered and sorted posts.</response>
+        /// <response code="404">Unable to get filtered and sorted posts.</response>
         [HttpPost(ApiRoutes.PostsController.GetPosts)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult> GetPosts([FromBody] PostsSearchParametersDto searchParameters)
         {
             if (searchParameters.SortParameters is null)
@@ -111,6 +119,8 @@ namespace Blog.Web.Controllers.V1
         /// <param name="id">id.</param>
         /// <param name="searchParameters">searchParameters.</param>
         /// <returns>Task.</returns>
+        /// <response code="200">Get filtered and sorted user posts.</response>
+        /// <response code="404">Unable to get filtered and sorted user posts.</response>
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [HttpPost(ApiRoutes.PostsController.UserPosts)]
@@ -138,6 +148,8 @@ namespace Blog.Web.Controllers.V1
         /// </summary>
         /// <param name="id">id.</param>
         /// <returns>Task</returns>
+        /// <response code="200">Get post by id.</response>
+        /// <response code="404">Unable to get post by id.</response>
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [HttpGet(ApiRoutes.PostsController.Show)]
@@ -165,11 +177,12 @@ namespace Blog.Web.Controllers.V1
         /// </summary>
         /// <param name="model">model.</param>
         /// <returns>IActionResult.</returns>
+        /// <response code="201">Create new post.</response>
+        /// <response code="400">Unable to create new post.</response>
         [HttpPost]
         [Authorize]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(201)]
         [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
         public async Task<IActionResult> CreateAsync([FromBody] CreatePostRequest model)
         {
             if (CurrentUser == null)
@@ -195,6 +208,14 @@ namespace Blog.Web.Controllers.V1
             return Created(locationUrl, response);
         }
 
+        /// <summary>
+        /// Likes the post asynchronous.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Task.</returns>
+        /// <response code="204">Likes the post.</response>
+        /// <response code="400">Unable to likes the post, model is invalid.</response>
+        /// <response code="404">Unable to likes the post, post not found.</response>
         [HttpPut(ApiRoutes.PostsController.LikePost)]
         [Authorize]
         [ProducesResponseType(204)]
@@ -223,6 +244,14 @@ namespace Blog.Web.Controllers.V1
             return Ok(mappedPost);
         }
 
+        /// <summary>
+        /// Dislikes the post asynchronous.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Task.</returns>
+        /// <response code="204">Dislikes the post.</response>
+        /// <response code="400">Unable to dislikes the post, model is invalid.</response>
+        /// <response code="404">Unable to dislikes the post, post not found.</response>
         [HttpPut(ApiRoutes.PostsController.DislikePost)]
         [Authorize]
         [ProducesResponseType(204)]
@@ -258,6 +287,9 @@ namespace Blog.Web.Controllers.V1
         /// <param name="id">id.</param>
         /// <param name="model">model.</param>
         /// <returns>Task.</returns>
+        /// <response code="204">Edit post by id.</response>
+        /// <response code="400">Unable to edit post by id, model is invalid.</response>
+        /// <response code="404">Unable to edit post by id, post not found.</response>
         [HttpPut("{id}")]
         [Authorize]
         [ProducesResponseType(204)]
@@ -297,7 +329,9 @@ namespace Blog.Web.Controllers.V1
         /// </summary>
         /// <param name="id"></param>
         /// <param name="authorId"></param>
-        /// <returns></returns>
+        /// <returns>Task.</returns>
+        /// <response code="200">Delete post by id.</response>
+        /// <response code="404">Unable to delete post by id, post not found.</response>
         [HttpDelete("{id}")]
         [Authorize]
         [ProducesResponseType(200)]
