@@ -11,8 +11,10 @@ using Blog.Contracts.V1.Requests;
 using Blog.Contracts.V1.Requests.TagsRequests;
 using Blog.Contracts.V1.Responses;
 using Blog.Contracts.V1.Responses.TagsResponses;
+using Blog.Core.Consts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Blog.Web.Controllers.V1
 {
@@ -22,6 +24,7 @@ namespace Blog.Web.Controllers.V1
     /// <seealso cref="ControllerBase" />
     [Route(ApiRoutes.TagsController.Tags)]
     [ApiController]
+    [Produces(Consts.JsonType)]
     public class TagsController : BaseController
     {
         /// <summary>
@@ -57,7 +60,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="200">Gets the tags.</response>
         /// <response code="404">Unable to gets the tags.</response>
         [HttpGet(ApiRoutes.TagsController.GetTags)]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(List<TagResponse>), 200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult> GetTags()
         {
@@ -78,7 +81,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="200">Gets the tags by filter.</response>
         /// <response code="404">Unable to gets the tags by filter.</response>
         [HttpPost(ApiRoutes.TagsController.GetTagsByFilter)]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(PagedTagsResponse), 200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult> GetTagsByFilter([FromBody] SearchParametersRequest searchParameters = null)
         {
@@ -106,7 +109,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="200">Gets the available tags.</response>
         /// <response code="404">Unable to gets the available tags.</response>
         [HttpGet(ApiRoutes.TagsController.GetAvailableTags)]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(List<TagResponse>), 200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult> GetAvailableTags([FromRoute] int postId)
         {
@@ -126,7 +129,7 @@ namespace Blog.Web.Controllers.V1
         /// <returns>Task.</returns>
         /// <response code="200">Gets the tag by id.</response>
         /// <response code="404">Unable to gets the tag by id.</response>
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(TagResponse), 200)]
         [ProducesResponseType(404)]
         [HttpGet("{id}", Name = ApiRoutes.TagsController.GetTag)]
         // GET: Posts/Show/5
@@ -149,8 +152,8 @@ namespace Blog.Web.Controllers.V1
         /// <response code="201">Create the tag.</response>
         /// <response code="400">Unable to create the tag.</response>
         [HttpPost(ApiRoutes.TagsController.CreateTag)]
-        [ProducesResponseType(201)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(TagResponse), 201)]
+        [ProducesResponseType(typeof(ModelStateDictionary), 400)]
         [Authorize]
         public async Task<IActionResult> CreateAsync([FromBody] CreateTagRequest model)
         {
@@ -185,7 +188,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="400">Unable to edits the tag, model is invalid.</response>
         /// <response code="404">Unable to edits the tag, tag not found.</response>
         [HttpPut("{id}")]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(TagResponse), 204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [Authorize]
@@ -215,7 +218,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="200">Deletes the tag.</response>
         /// <response code="404">Unable to deletes the tag, tag not found.</response>
         [HttpDelete("{id}")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(CreatedResponse<int>), 200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteAsync([FromRoute] int id)
         {

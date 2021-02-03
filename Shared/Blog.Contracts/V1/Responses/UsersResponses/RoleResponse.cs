@@ -14,11 +14,11 @@
         public string Id { get; set; }
 
         /// <summary>
-        /// Gets or sets the role.
+        /// Gets or sets the name.
         /// </summary>
         /// <value>
-        /// The role.
+        /// The name.
         /// </value>
-        public string Role { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -33,5 +33,10 @@ namespace Blog.Core.Consts
         /// The application name.
         /// </summary>
         public const string ApplicationName = "Blog Web Api";
+
+        /// <summary>
+        /// The json type.
+        /// </summary>
+        public const string JsonType = "application/json";
     }
 }

@@ -24,3 +24,11 @@
 /Shared/Blog.Contracts/obj
 /Shared/Blog.Core/bin/Debug/netcoreapp2.2
 /Shared/Blog.Core/obj
+/BlogWebApp/Data/Blog.Data.Core/bin/Release/netcoreapp2.2
+/BlogWebApp/Data/Blog.Data/bin/Release/netcoreapp2.2
+/BlogWebApp/Services/Blog.Services/bin/Release/netcoreapp2.2
+/BlogWebApp/Services/Blog.Services.Core/bin/Release/netcoreapp2.2
+/BlogWebApp/Data/Blog.Data.Models/bin/Release/netcoreapp2.2
+/BlogWebApp/Tests/Blog.IntegrationTests/bin/Release/netcoreapp2.2
+/Shared/Blog.Contracts/bin/Release/netcoreapp2.2
+/Shared/Blog.Core/bin/Release/netcoreapp2.2

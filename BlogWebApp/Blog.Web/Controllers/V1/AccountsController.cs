@@ -7,6 +7,8 @@ using Blog.Services.Identity.User;
 using Blog.Contracts.V1;
 using Blog.Contracts.V1.Requests.UsersRequests;
 using Blog.Contracts.V1.Responses.UsersResponses;
+using Blog.Core.Consts;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Blog.Web.Controllers.V1
 {
@@ -27,6 +29,7 @@ namespace Blog.Web.Controllers.V1
     [Route(ApiRoutes.AccountsController.Accounts)]
     [ApiController]
     [Authorize]
+    [Produces(Consts.JsonType)]
     public class AccountsController : BaseController
     {
         /// <summary>
@@ -103,21 +106,18 @@ namespace Blog.Web.Controllers.V1
         /// <response code="200">Get user data by user id.</response>
         /// <response code="400">Unable to get user data by user id.</response>
         [HttpGet(ApiRoutes.AccountsController.Initialize)]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        public IActionResult Initialize([FromRoute] string userId)
+        [ProducesResponseType(typeof(List<RoleResponse>), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        public async Task<IActionResult> Initialize([FromRoute] string userId)
         {
             if (string.IsNullOrEmpty(userId))
             {
                 return Bad("Something Went Wrong");
             }
 
-            var jsonResult = new
-            {
-                roles = _roleManager.Roles,
-            };
-
-            return Ok(jsonResult);
+            var roles = await _roleManager.Roles.ToListAsync();
+                
+            return Ok(_mapper.Map<List<RoleResponse>>(roles));
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="200">Get all users list.</response>
         [HttpGet(ApiRoutes.AccountsController.GetAllUsers)]
         [AllowAnonymous]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(List<AccountResponse>), 200)]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userManager.Users.Include(u => u.Roles).ToListAsync();
@@ -159,8 +159,8 @@ namespace Blog.Web.Controllers.V1
         /// <response code="400">Unable to user login.</response>
         [HttpPost(ApiRoutes.AccountsController.Login)]
         [AllowAnonymous]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(string), 200)]
+        [ProducesResponseType(typeof(string), 400)]
         public async Task<IActionResult> PostAsync([FromBody] LoginRequest credentials)
         {
             if (!ModelState.IsValid)
@@ -193,7 +193,7 @@ namespace Blog.Web.Controllers.V1
         [HttpPost(ApiRoutes.AccountsController.Register)]
         [AllowAnonymous]
         [ProducesResponseType(201)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(IdentityResult), 400)]
         public async Task<IActionResult> CreateAsync([FromBody] RegistrationRequest model)
         {
             if (!ModelState.IsValid)
@@ -241,7 +241,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="400">Unable to change password.</response>
         [HttpPut(ApiRoutes.AccountsController.ChangePassword)]
         [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(ModelStateDictionary), 400)]
         public async Task<IActionResult> UpdateAsync([FromBody] ChangePasswordRequest model)
         {
             if (!ModelState.IsValid)

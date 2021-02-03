@@ -7,6 +7,7 @@ using Blog.Contracts.V1.Requests.PostsRequests;
 using Blog.Contracts.V1.Responses;
 using Blog.Contracts.V1.Responses.PostsResponses;
 using Blog.Contracts.V1.Responses.UsersResponses;
+using Blog.Core.Consts;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Blog.Web.Controllers.V1
@@ -24,6 +25,7 @@ namespace Blog.Web.Controllers.V1
     [Route(ApiRoutes.PostsController.Posts)]
     [ApiController]
     [AllowAnonymous]
+    [Produces(Consts.JsonType)]
     public class PostsController : BaseController
     {
         /// <summary>
@@ -70,7 +72,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="200">Get all posts.</response>
         /// <response code="404">Unable to get all posts.</response>
         [HttpGet]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(List<PostResponse>), 200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult> Index()
         {
@@ -80,7 +82,7 @@ namespace Blog.Web.Controllers.V1
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<PostResponse>(posts.ToList()));
+            return Ok(_mapper.Map<List<PostResponse>>(posts.ToList()));
         }
 
         // POST: Posts/get-posts
@@ -92,7 +94,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="200">Get filtered and sorted posts.</response>
         /// <response code="404">Unable to get filtered and sorted posts.</response>
         [HttpPost(ApiRoutes.PostsController.GetPosts)]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(PagedPostsResponse), 200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult> GetPosts([FromBody] PostsSearchParametersDto searchParameters)
         {
@@ -121,7 +123,7 @@ namespace Blog.Web.Controllers.V1
         /// <returns>Task.</returns>
         /// <response code="200">Get filtered and sorted user posts.</response>
         /// <response code="404">Unable to get filtered and sorted user posts.</response>
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(PagedPostsResponse), 200)]
         [ProducesResponseType(404)]
         [HttpPost(ApiRoutes.PostsController.UserPosts)]
         public async Task<ActionResult> GetUserPosts([FromRoute] string id, [FromBody] PostsSearchParametersDto searchParameters)
@@ -150,7 +152,7 @@ namespace Blog.Web.Controllers.V1
         /// <returns>Task</returns>
         /// <response code="200">Get post by id.</response>
         /// <response code="404">Unable to get post by id.</response>
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(PostWithPagedCommentsResponse), 200)]
         [ProducesResponseType(404)]
         [HttpGet(ApiRoutes.PostsController.Show)]
         public async Task<ActionResult> Show([FromRoute] int id)
@@ -181,8 +183,8 @@ namespace Blog.Web.Controllers.V1
         /// <response code="400">Unable to create new post.</response>
         [HttpPost]
         [Authorize]
-        [ProducesResponseType(201)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(PostResponse), 201)]
+        [ProducesResponseType(typeof(object), 400)]
         public async Task<IActionResult> CreateAsync([FromBody] CreatePostRequest model)
         {
             if (CurrentUser == null)
@@ -218,8 +220,8 @@ namespace Blog.Web.Controllers.V1
         /// <response code="404">Unable to likes the post, post not found.</response>
         [HttpPut(ApiRoutes.PostsController.LikePost)]
         [Authorize]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(PostViewResponse), 204)]
+        [ProducesResponseType(typeof(object), 400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> LikePostAsync([FromRoute] int id)
         {
@@ -254,8 +256,8 @@ namespace Blog.Web.Controllers.V1
         /// <response code="404">Unable to dislikes the post, post not found.</response>
         [HttpPut(ApiRoutes.PostsController.DislikePost)]
         [Authorize]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(PostViewResponse), 204)]
+        [ProducesResponseType(typeof(object), 400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> DislikePostAsync([FromRoute] int id)
         {
@@ -292,8 +294,8 @@ namespace Blog.Web.Controllers.V1
         /// <response code="404">Unable to edit post by id, post not found.</response>
         [HttpPut("{id}")]
         [Authorize]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(PostViewResponse), 204)]
+        [ProducesResponseType(typeof(object), 400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> EditAsync([FromRoute] int id, [FromBody] UpdatePostRequest model)
         {
@@ -334,7 +336,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="404">Unable to delete post by id, post not found.</response>
         [HttpDelete("{id}")]
         [Authorize]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(CreatedResponse<int>), 200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteAsync(int id, string authorId)
         {
