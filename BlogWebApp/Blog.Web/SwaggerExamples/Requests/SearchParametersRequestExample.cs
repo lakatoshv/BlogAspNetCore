@@ -15,13 +15,13 @@ namespace Blog.Web.SwaggerExamples.Requests
         {
             return new SearchParametersRequest
             {
-                Search = SwaggerExamplesConsts.SearchParametersRequest.Search,
+                Search = SwaggerExamplesConsts.SearchParametersRequestExample.Search,
                 SortParameters = new SortParametersRequest
                 {
-                    OrderBy = SwaggerExamplesConsts.SortParametersRequest.OrderBy,
-                    SortBy = SwaggerExamplesConsts.SortParametersRequest.SortBy,
-                    CurrentPage = SwaggerExamplesConsts.SortParametersRequest.CurrentPage,
-                    PageSize = SwaggerExamplesConsts.SortParametersRequest.PageSize,
+                    OrderBy = SwaggerExamplesConsts.SortParametersRequestExample.OrderBy,
+                    SortBy = SwaggerExamplesConsts.SortParametersRequestExample.SortBy,
+                    CurrentPage = SwaggerExamplesConsts.SortParametersRequestExample.CurrentPage,
+                    PageSize = SwaggerExamplesConsts.SortParametersRequestExample.PageSize,
                 },
             };
         }

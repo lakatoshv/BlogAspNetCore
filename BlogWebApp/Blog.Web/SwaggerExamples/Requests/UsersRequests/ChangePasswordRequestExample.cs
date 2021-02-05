@@ -16,7 +16,7 @@ namespace Blog.Web.SwaggerExamples.Requests.UsersRequests
             return new ChangePasswordRequest 
             { 
                 OldPassword = SwaggerExamplesConsts.AccountExample.Password,
-                NewPassword = SwaggerExamplesConsts.ChangePasswordRequest.NewPassword,
+                NewPassword = SwaggerExamplesConsts.ChangePasswordRequestExample.NewPassword,
             };
 
         }

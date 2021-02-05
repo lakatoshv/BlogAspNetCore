@@ -15,12 +15,12 @@ namespace Blog.Web.SwaggerExamples.Requests.UsersRequests
         {
             return new UpdateProfileRequest
             {
-                Email = SwaggerExamplesConsts.UpdateProfileRequest.Email,
-                FirstName = SwaggerExamplesConsts.UpdateProfileRequest.FirstName,
-                LastName = SwaggerExamplesConsts.UpdateProfileRequest.LastName,
-                PhoneNumber = SwaggerExamplesConsts.UpdateProfileRequest.PhoneNumber,
-                Password = SwaggerExamplesConsts.UpdateProfileRequest.Password,
-                About = SwaggerExamplesConsts.UpdateProfileRequest.About,
+                Email = SwaggerExamplesConsts.UpdateProfileRequestExample.Email,
+                FirstName = SwaggerExamplesConsts.UpdateProfileRequestExample.FirstName,
+                LastName = SwaggerExamplesConsts.UpdateProfileRequestExample.LastName,
+                PhoneNumber = SwaggerExamplesConsts.UpdateProfileRequestExample.PhoneNumber,
+                Password = SwaggerExamplesConsts.UpdateProfileRequestExample.Password,
+                About = SwaggerExamplesConsts.UpdateProfileRequestExample.About,
             };
         }
     }

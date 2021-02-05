@@ -181,9 +181,9 @@
         }
 
         /// <summary>
-        /// Update profile request.
+        /// Update profile request example.
         /// </summary>
-        public static class UpdateProfileRequest
+        public static class UpdateProfileRequestExample
         {
             /// <summary>
             /// The email.
@@ -208,7 +208,7 @@
             /// <summary>
             /// The password.
             /// </summary>
-            public const string Password = ChangePasswordRequest.NewPassword;
+            public const string Password = ChangePasswordRequestExample.NewPassword;
 
             /// <summary>
             /// The about.
@@ -217,9 +217,9 @@
         }
 
         /// <summary>
-        /// Change password request.
+        /// Change password request example.
         /// </summary>
-        public static class ChangePasswordRequest
+        public static class ChangePasswordRequestExample
         {
             /// <summary>
             /// Creates new password.
@@ -228,9 +228,9 @@
         }
 
         /// <summary>
-        /// Search parameters request.
+        /// Search parameters request example.
         /// </summary>
-        public static class SearchParametersRequest
+        public static class SearchParametersRequestExample
         {
             /// <summary>
             /// The search.
@@ -239,9 +239,9 @@
         }
 
         /// <summary>
-        /// Sort parameters request.
+        /// Sort parameters request example.
         /// </summary>
-        public static class SortParametersRequest
+        public static class SortParametersRequestExample
         {
             /// <summary>
             /// The order by.
@@ -262,6 +262,86 @@
             /// The page size.
             /// </summary>
             public const int PageSize = 10;
+        }
+
+        /// <summary>
+        /// Comment response example.
+        /// </summary>
+        public static class CommentResponseExample
+        {
+            /// <summary>
+            /// The comment body.
+            /// </summary>
+            public const string CommentBody = "Comment response.";
+        }
+
+        /// <summary>
+        /// Post view response example.
+        /// </summary>
+        public static class PostViewResponseExample
+        {
+            /// <summary>
+            /// The title.
+            /// </summary>
+            public const string Title = "Post view response";
+
+            /// <summary>
+            /// The description.
+            /// </summary>
+            public const string Description = "Post view response.";
+
+            /// <summary>
+            /// The content.
+            /// </summary>
+            public const string Content = "Post view response.";
+
+            /// <summary>
+            /// The image URL.
+            /// </summary>
+            public const string ImageUrl = "ImageUrl";
+        }
+
+        /// <summary>
+        /// Tag response example.
+        /// </summary>
+        public static class TagResponseExample
+        {
+            /// <summary>
+            /// The title.
+            /// </summary>
+            public const string Title = "Tag response";
+        }
+
+        /// <summary>
+        /// Profile response example.
+        /// </summary>
+        public static class ProfileResponseExample
+        {
+            /// <summary>
+            /// The about.
+            /// </summary>
+            public const string About = "Profile response example";
+
+            /// <summary>
+            /// The profile img.
+            /// </summary>
+            public const string ProfileImg = "ProfileImg";
+        }
+
+        /// <summary>
+        /// Message response example.
+        /// </summary>
+        public static class MessageResponseExample
+        {
+            /// <summary>
+            /// The subject.
+            /// </summary>
+            public const string Subject = "Message response example.";
+
+            /// <summary>
+            /// The body.
+            /// </summary>
+            public const string Body = "Message response example.";
         }
     }
 }
