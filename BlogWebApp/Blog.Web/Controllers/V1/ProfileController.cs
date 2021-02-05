@@ -6,6 +6,7 @@ using AutoMapper;
 using Blog.Contracts.V1;
 using Blog.Contracts.V1.Requests.UsersRequests;
 using Blog.Contracts.V1.Responses.UsersResponses;
+using Blog.Core.Consts;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Blog.Web.Controllers.V1
@@ -16,6 +17,7 @@ namespace Blog.Web.Controllers.V1
     /// <seealso cref="BaseController" />
     [Route(ApiRoutes.ProfileController.Profile)]
     [ApiController]
+    [Produces(Consts.JsonType)]
     public class ProfileController : BaseController
     {
         /// <summary>
@@ -52,7 +54,7 @@ namespace Blog.Web.Controllers.V1
         /// <returns>Task.</returns>
         /// <response code="200">Gets the user profile.</response>
         /// <response code="404">Unable to gets the user profile.</response>
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(ApplicationUserResponse), 200)]
         [ProducesResponseType(404)]
         [HttpGet("{id}")]
         public async Task<ActionResult> Show([FromRoute] int id)
@@ -80,8 +82,8 @@ namespace Blog.Web.Controllers.V1
         /// <response code="404">Unable to edits the user profile, profile not found.</response>
         [HttpPut("{profileId}")]
         [Authorize]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(ApplicationUserResponse), 204)]
+        [ProducesResponseType(typeof(object), 400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> EditAsync([FromRoute] int profileId, [FromBody] UpdateProfileRequest model)
         {

@@ -11,8 +11,10 @@ using Blog.Contracts.V1.Requests;
 using Blog.Contracts.V1.Requests.CommentsRequests;
 using Blog.Contracts.V1.Responses;
 using Blog.Contracts.V1.Responses.CommentsResponses;
+using Blog.Core.Consts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using static System.DateTime;
 
 namespace Blog.Web.Controllers.V1
@@ -23,6 +25,7 @@ namespace Blog.Web.Controllers.V1
     /// <seealso cref="ControllerBase" />
     [Route(ApiRoutes.CommentsController.Comments)]
     [ApiController]
+    [Produces(Consts.JsonType)]
     public class CommentsController : BaseController
     {
         /// <summary>
@@ -55,11 +58,11 @@ namespace Blog.Web.Controllers.V1
         /// </summary>
         /// <returns>Task.</returns>
         /// <response code="200">Get all comments.</response>
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(List<CommentResponse>), 200)]
         [HttpGet]
         public async Task<ActionResult> GetAllComments()
         {
-            return Ok(await _commentService.GetAllAsync().ConfigureAwait(false));
+            return Ok(_mapper.Map<List<CommentResponse>>(await _commentService.GetAllAsync().ConfigureAwait(false)));
         }
 
         /// <summary>
@@ -69,7 +72,7 @@ namespace Blog.Web.Controllers.V1
         /// <returns>Task.</returns>
         /// <response code="200">Gets the comments.</response>
         /// <response code="404">Unable to gets the comments.</response>
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(PagedCommentsResponse), 200)]
         [ProducesResponseType(404)]
         [HttpPost(ApiRoutes.CommentsController.GetCommentsByFilter)]
         public async Task<ActionResult> GetComments([FromBody] SortParametersRequest sortParameters = null)
@@ -87,7 +90,7 @@ namespace Blog.Web.Controllers.V1
                 return NotFound();
             }
 
-            return Ok(comments);
+            return Ok(_mapper.Map<PagedCommentsResponse>(comments));
         }
 
         // GET: Posts        
@@ -99,7 +102,7 @@ namespace Blog.Web.Controllers.V1
         /// <returns>Task.</returns>
         /// <response code="200">Gets the comments by post asynchronous.</response>
         /// <response code="404">Unable to gets the comments by post.</response>
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(CommentResponse), 200)]
         [ProducesResponseType(404)]
         [HttpPost(ApiRoutes.CommentsController.GetCommentsByPost)]
         public async Task<ActionResult> GetCommentsByPostAsync([FromRoute] int id, [FromBody] SortParametersRequest sortParameters = null)
@@ -127,7 +130,7 @@ namespace Blog.Web.Controllers.V1
         /// <returns>Task.</returns>
         /// <response code="200">Gets the comment.</response>
         /// <response code="404">Unable to gets the comment.</response>
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(CommentResponse), 200)]
         [ProducesResponseType(404)]
         [HttpGet("{id}", Name = ApiRoutes.CommentsController.GetComment)]
         // GET: Posts/Show/5
@@ -151,8 +154,8 @@ namespace Blog.Web.Controllers.V1
         /// <response code="201">Create the comment.</response>
         /// <response code="400">Unable to create the comment.</response>
         [HttpPost(ApiRoutes.CommentsController.CreateComment)]
-        [ProducesResponseType(201)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(CommentResponse), 201)]
+        [ProducesResponseType(typeof(ModelStateDictionary), 400)]
         [Authorize]
         public async Task<IActionResult> CreateAsync([FromBody] CreateCommentRequest request)
         {
@@ -161,9 +164,8 @@ namespace Blog.Web.Controllers.V1
                 return Bad(ModelState);
             }
 
-            request.CreatedAt = Now;
-
             var comment = _mapper.Map<Comment>(request);
+            comment.CreatedAt = Now;
             await _commentService.InsertAsync(comment);
             var response = new CreatedResponse<int> {Id = comment.Id};
             var baseUrl = $@"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
@@ -184,7 +186,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="400">Unable to update the comment, because model is invalid.</response>
         /// <response code="404">Unable to update the comment, because comment not found.</response>
         [HttpPut("{id}")]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(CommentResponse), 204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [Authorize]
@@ -214,7 +216,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="200">Delete the comment.</response>
         /// <response code="404">Unable to delete the comment, because comment not found.</response>
         [HttpDelete("{id}")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(CreatedResponse<int>), 200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteAsync([FromRoute] int id)
         {

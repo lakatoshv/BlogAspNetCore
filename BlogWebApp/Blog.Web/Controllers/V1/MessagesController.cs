@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Blog.Data.Models;
 using Blog.Services.ControllerContext;
@@ -6,6 +8,7 @@ using Blog.Services.Interfaces;
 using Blog.Contracts.V1;
 using Blog.Contracts.V1.Requests.MessagesRequests;
 using Blog.Contracts.V1.Responses;
+using Blog.Core.Consts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +21,7 @@ namespace Blog.Web.Controllers.V1
     [Route(ApiRoutes.MessagesController.Messages)]
     [ApiController]
     [AllowAnonymous]
+    [Produces(Consts.JsonType)]
     public class MessagesController : BaseController
     {
         /// <summary>
@@ -54,7 +58,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="200">Get all messages.</response>
         /// <response code="404">Unable to get all messages.</response>
         [HttpGet]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(List<MessageResponse>), 200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult> Index()
         {
@@ -65,7 +69,7 @@ namespace Blog.Web.Controllers.V1
                 return NotFound();
             }
 
-            return Ok(messages);
+            return Ok(_mapper.Map<List<MessageResponse>>(messages.ToList()));
         }
 
         /// <summary>
@@ -76,7 +80,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="200">Gets the recipient messages.</response>
         /// <response code="404">Unable to gets the recipient messages.</response>
         [HttpGet(ApiRoutes.MessagesController.GetRecipientMessages)]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(List<MessageResponse>), 200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult> GetRecipientMessages([FromRoute] string recipientId)
         {
@@ -89,7 +93,7 @@ namespace Blog.Web.Controllers.V1
                 return NotFound();
             }
 
-            return Ok(messages);
+            return Ok(_mapper.Map<List<MessageResponse>>(messages.ToList()));
         }
 
         /// <summary>
@@ -100,7 +104,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="200">Gets the sender messages.</response>
         /// <response code="404">Unable to gets the sender messages.</response>
         [HttpGet(ApiRoutes.MessagesController.GetSenderMessages)]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(List<MessageResponse>), 200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult> GetSenderMessages([FromRoute] string senderEmail)
         {
@@ -113,7 +117,7 @@ namespace Blog.Web.Controllers.V1
                 return NotFound();
             }
 
-            return Ok(messages);
+            return Ok(_mapper.Map<List<MessageResponse>>(messages.ToList()));
         }
 
         /// <summary>
@@ -123,7 +127,7 @@ namespace Blog.Web.Controllers.V1
         /// <returns>Task</returns>
         /// <response code="200">Gets the messages by id.</response>
         /// <response code="404">Unable to gets the messages by id.</response>
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(MessageResponse), 200)]
         [ProducesResponseType(404)]
         [HttpGet(ApiRoutes.MessagesController.Show)]
         public async Task<ActionResult> Show([FromRoute] int id)
@@ -134,7 +138,7 @@ namespace Blog.Web.Controllers.V1
                 return NotFound();
             }
 
-            return Ok(message);
+            return Ok(_mapper.Map<MessageResponse>(message));
         }
 
         /// <summary>
@@ -170,8 +174,8 @@ namespace Blog.Web.Controllers.V1
         /// <response code="404">Unable to edit the message, message not found.</response>
         [HttpPut("{id}")]
         [Authorize]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(MessageResponse), 204)]
+        [ProducesResponseType(typeof(object), 400)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> EditAsync([FromRoute] int id, [FromBody] UpdateMessageRequest request)
         {
@@ -204,7 +208,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="404">Unable to delete the message, message not found.</response>
         [HttpDelete("{id}")]
         [Authorize]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(CreatedResponse<int>), 200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteAsync([FromRoute] int id, [FromBody] string authorId)
         {

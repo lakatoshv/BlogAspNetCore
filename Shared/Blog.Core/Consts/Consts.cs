@@ -33,5 +33,21 @@ namespace Blog.Core.Consts
         /// The application name.
         /// </summary>
         public const string ApplicationName = "Blog Web Api";
+
+        /// <summary>
+        /// The json type.
+        /// </summary>
+        public const string JsonType = "application/json";
+
+        /// <summary>
+        /// Roles.
+        /// </summary>
+        public static class Roles
+        {
+            /// <summary>
+            /// The user.
+            /// </summary>
+            public const string User = "User";
+        }
     }
 }
