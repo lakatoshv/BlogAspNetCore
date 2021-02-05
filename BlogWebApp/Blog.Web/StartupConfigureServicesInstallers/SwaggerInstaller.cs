@@ -7,6 +7,7 @@ using System.IO;
 using System.Reflection;
 using Blog.Core.Consts;
 using Blog.Contracts.V1;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace Blog.Web.StartupConfigureServicesInstallers
 {
@@ -22,6 +23,8 @@ namespace Blog.Web.StartupConfigureServicesInstallers
             // Swagger Configuration
             services.AddSwaggerGen(c =>
             {
+                c.ExampleFilters();
+
                 c.SwaggerDoc(ApiRoutes.Version, new OpenApiInfo
                 {
                     Version = ApiRoutes.Version,
@@ -67,6 +70,8 @@ namespace Blog.Web.StartupConfigureServicesInstallers
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
+            services.AddSwaggerExamplesFromAssemblyOf<Startup>();
         }
     }
 }

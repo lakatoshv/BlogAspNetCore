@@ -38,5 +38,16 @@ namespace Blog.Core.Consts
         /// The json type.
         /// </summary>
         public const string JsonType = "application/json";
+
+        /// <summary>
+        /// Roles.
+        /// </summary>
+        public static class Roles
+        {
+            /// <summary>
+            /// The user.
+            /// </summary>
+            public const string User = "User";
+        }
     }
 }

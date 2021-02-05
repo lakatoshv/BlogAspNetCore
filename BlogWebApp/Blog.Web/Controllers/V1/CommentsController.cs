@@ -164,9 +164,8 @@ namespace Blog.Web.Controllers.V1
                 return Bad(ModelState);
             }
 
-            request.CreatedAt = Now;
-
             var comment = _mapper.Map<Comment>(request);
+            comment.CreatedAt = Now;
             await _commentService.InsertAsync(comment);
             var response = new CreatedResponse<int> {Id = comment.Id};
             var baseUrl = $@"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
