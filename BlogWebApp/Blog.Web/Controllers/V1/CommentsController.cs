@@ -102,7 +102,7 @@ namespace Blog.Web.Controllers.V1
         /// <returns>Task.</returns>
         /// <response code="200">Gets the comments by post asynchronous.</response>
         /// <response code="404">Unable to gets the comments by post.</response>
-        [ProducesResponseType(typeof(CommentResponse), 200)]
+        [ProducesResponseType(typeof(List<CommentResponse>), 200)]
         [ProducesResponseType(404)]
         [HttpPost(ApiRoutes.CommentsController.GetCommentsByPost)]
         public async Task<ActionResult> GetCommentsByPostAsync([FromRoute] int id, [FromBody] SortParametersRequest sortParameters = null)
@@ -185,7 +185,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="204">Update the comment.</response>
         /// <response code="400">Unable to update the comment, because model is invalid.</response>
         /// <response code="404">Unable to update the comment, because comment not found.</response>
-        [HttpPut("{id}")]
+        [HttpPut(ApiRoutes.CommentsController.EditComment)]
         [ProducesResponseType(typeof(CommentResponse), 204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -215,7 +215,7 @@ namespace Blog.Web.Controllers.V1
         /// <returns>Task.</returns>
         /// <response code="200">Delete the comment.</response>
         /// <response code="404">Unable to delete the comment, because comment not found.</response>
-        [HttpDelete("{id}")]
+        [HttpDelete(ApiRoutes.CommentsController.DeleteComment)]
         [ProducesResponseType(typeof(CreatedResponse<int>), 200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteAsync([FromRoute] int id)

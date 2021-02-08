@@ -90,6 +90,16 @@
             /// The create comment.
             /// </summary>
             public const string CreateComment = "create";
+
+            /// <summary>
+            /// The edit comment.
+            /// </summary>
+            public const string EditComment = "{id}";
+
+            /// <summary>
+            /// The delete comment.
+            /// </summary>
+            public const string DeleteComment = "{id}";
         }
 
         /// <summary>
