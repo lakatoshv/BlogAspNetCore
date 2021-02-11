@@ -12,7 +12,7 @@
         /// <summary>
         /// Gets the apis.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>IEnumerable.</returns>
         public static IEnumerable<ApiResource> GetApis() =>
             new List<ApiResource>
             {

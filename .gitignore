@@ -32,3 +32,5 @@
 /BlogWebApp/Tests/Blog.IntegrationTests/bin/Release/netcoreapp2.2
 /Shared/Blog.Contracts/bin/Release/netcoreapp2.2
 /Shared/Blog.Core/bin/Release/netcoreapp2.2
+/Sdk/Blog.Sdk/obj
+/Sdk/Blog.Sdk.ExampleUsage/obj
