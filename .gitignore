@@ -34,3 +34,13 @@
 /Shared/Blog.Core/bin/Release/netcoreapp2.2
 /Sdk/Blog.Sdk/obj
 /Sdk/Blog.Sdk.ExampleUsage/obj
+/Sdk/Blog.Sdk/bin/Debug/net5.0
+/BlogWebApp/Data/Blog.Data/bin
+/BlogWebApp/Data/Blog.Data.Core/bin/Release/net5.0
+/BlogWebApp/Data/Blog.Data.Models/bin
+/BlogWebApp/Services/Blog.Services/bin
+/BlogWebApp/Tests/Blog.IntegrationTests/bin/Release/net5.0
+/BlogWebApp/Tests/Blog.UnitTests/bin/Debug/net5.0
+/Sdk/Blog.Sdk.ExampleUsage/bin/Debug/net5.0
+/Shared/Blog.Contracts/bin
+/Shared/Blog.Core/bin

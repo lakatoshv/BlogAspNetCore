@@ -22,6 +22,7 @@ namespace Blog.Web.Mappers.Posts
             CreateMap<PostShowViewDto, PostWithPagedCommentsResponse>();
             CreateMap<CreatePostRequest, Post>();
             CreateMap<UpdatePostRequest, Post>();
+            CreateMap<PostsSearchParametersRequest, PostsSearchParametersDto>();
         }
     }
 }
