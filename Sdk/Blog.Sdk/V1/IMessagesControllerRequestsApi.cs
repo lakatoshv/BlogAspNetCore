@@ -1,13 +1,13 @@
-﻿using Blog.Contracts.V1.Responses;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Blog.Contracts.V1;
-using Blog.Contracts.V1.Requests.MessagesRequests;
-using Microsoft.AspNetCore.Mvc;
-using Refit;
-
-namespace Blog.Sdk.V1
+﻿namespace Blog.Sdk.V1
 {
+    using Blog.Contracts.V1.Responses;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Blog.Contracts.V1;
+    using Blog.Contracts.V1.Requests.MessagesRequests;
+    using Microsoft.AspNetCore.Mvc;
+    using Refit;
+
     /// <summary>
     /// Messages controller requests api interface.
     /// </summary>
