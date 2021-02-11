@@ -1,4 +1,8 @@
-﻿namespace Blog.Services.Core.Dtos.Posts
+﻿// <copyright file="PostsSearchParametersDto.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace Blog.Services.Core.Dtos.Posts
 {
     /// <summary>
     /// Posts search parameters dto.

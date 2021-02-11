@@ -2,13 +2,14 @@
 // Copyright (c) Blog. All rights reserved.
 // </copyright>
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Configuration;
+
 namespace Blog.Data
 {
     using System.IO;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Design;
-    using Microsoft.EntityFrameworkCore.Diagnostics;
-    using Microsoft.Extensions.Configuration;
 
     /// <summary>
     /// Design time database context factory.
@@ -30,7 +31,7 @@ namespace Blog.Data
             builder.UseSqlServer(connectionString);
 
             // Stop client query evaluation
-            builder.ConfigureWarnings(w => w.Throw(RelationalEventId.QueryClientEvaluationWarning));
+            builder.ConfigureWarnings(w => w.Throw(RelationalEventId.QueryPossibleUnintendedUseOfEqualsWarning));
 
             return new ApplicationDbContext(builder.Options);
         }

@@ -1,5 +1,5 @@
-﻿// <copyright file="Extensions.ModelState.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="Extensions.ModelState.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Utilities
@@ -51,6 +51,7 @@ namespace Blog.Services.Core.Utilities
         public static void AddApplicationError(this HttpResponse response, string message)
         {
             response.Headers.Add("Application-Error", message);
+
             // CORS
             response.Headers.Add("access-control-expose-headers", "Application-Error");
         }

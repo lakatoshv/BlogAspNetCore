@@ -1,11 +1,11 @@
-﻿// <copyright file="ISortCriteria.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="ISortCriteria.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Core.Infrastructure.Pagination.Interfaces
 {
     using System.Linq;
-    using Enums;
+    using Blog.Core.Enums;
 
     /// <summary>
     /// Sort items by criteria interface.

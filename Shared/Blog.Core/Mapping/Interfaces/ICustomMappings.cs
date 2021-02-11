@@ -1,5 +1,5 @@
-﻿// <copyright file="ICustomMappings.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="ICustomMappings.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Core.Mapping.Interfaces

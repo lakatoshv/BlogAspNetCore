@@ -1,5 +1,5 @@
-﻿// <copyright file="FileProvider.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="FileProvider.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Core.Infrastructure
@@ -255,7 +255,7 @@ namespace Blog.Core.Infrastructure
         /// <inheritdoc cref="IServiceProvider"/>
         public virtual string GetParentDirectory(string directoryPath)
         {
-            return Directory.GetParent(directoryPath).FullName;
+            return Directory.GetParent(directoryPath)?.FullName;
         }
 
         /// <inheritdoc cref="IServiceProvider"/>

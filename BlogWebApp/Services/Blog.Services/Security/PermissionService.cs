@@ -1,45 +1,71 @@
-﻿using Blog.Data.Models;
-using Blog.Services.ControllerContext;
-using Blog.Services.Core.Caching;
-using Blog.Services.Core.Caching.Interfaces;
-using Microsoft.AspNetCore.Identity;
+﻿// <copyright file="PermissionService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Blog.Services.Security
 {
+    using Blog.Data.Models;
+    using Blog.Services.ControllerContext;
+    using Blog.Services.Core.Caching;
+    using Blog.Services.Core.Caching.Interfaces;
+    using Microsoft.AspNetCore.Identity;
+
     /// <summary>
     /// Permission service
     /// </summary>
     public class PermissionService : IPermissionService
     {
+        /// <summary>
+        /// The work context.
+        /// </summary>
+        private readonly IControllerContext workContext;
 
-        private readonly IControllerContext _workContext;
-        private readonly IStaticCacheManager _cacheManager;
-        private readonly UserManager<ApplicationUser> _userManager;
+        /// <summary>
+        /// The cache manager.
+        /// </summary>
+        private readonly IStaticCacheManager cacheManager;
 
-        public PermissionService(IControllerContext workContext, IStaticCacheManager cacheManager,
+        /// <summary>
+        /// The user manager.
+        /// </summary>
+        private readonly UserManager<ApplicationUser> userManager;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PermissionService"/> class.
+        /// </summary>
+        /// <param name="workContext">The work context.</param>
+        /// <param name="cacheManager">The cache manager.</param>
+        /// <param name="userManager">The user manager.</param>
+        public PermissionService(
+            IControllerContext workContext,
+            IStaticCacheManager cacheManager,
             UserManager<ApplicationUser> userManager)
         {
-            _workContext = workContext;
-            _cacheManager = cacheManager;
-            _userManager = userManager;
+            this.workContext = workContext;
+            this.cacheManager = cacheManager;
+            this.userManager = userManager;
         }
 
         /// <inheritdoc cref="IPermissionService" />
         public bool Authorize()
         {
-            return Authorize(_workContext.CurrentUser);
+            return this.Authorize(this.workContext.CurrentUser);
         }
 
         private bool Authorize(ApplicationUser user)
         {
-            if (CheckIsUserAdmin(user)) return true;
+            if (this.CheckIsUserAdmin(user))
+            {
+                return true;
+            }
+
             return true;
         }
 
         private bool CheckIsUserAdmin(ApplicationUser user)
         {
             string systemAdminKey = string.Format("Admin", user.Id);
-            return _cacheManager.Get(systemAdminKey, () => _userManager.IsInRoleAsync(user, "Admin").Result);
+            return this.cacheManager.Get(systemAdminKey, () => this.userManager.IsInRoleAsync(user, "Admin").Result);
         }
     }
 }

@@ -1,21 +1,20 @@
-﻿// <copyright file="TagsService.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="TagsService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
-
-using System.Linq;
-using System.Threading.Tasks;
-using Blog.Core.Helpers;
-using Blog.Services.Core;
-using Blog.Services.Core.Dtos;
-using Blog.Services.Core.Dtos.Posts;
-using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Services
 {
-    using Data.Models;
-    using Data.Repository;
-    using GeneralService;
-    using Interfaces;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Blog.Core.Helpers;
+    using Blog.Data.Models;
+    using Blog.Data.Repository;
+    using Blog.Services.Core;
+    using Blog.Services.Core.Dtos;
+    using Blog.Services.Core.Dtos.Posts;
+    using Blog.Services.GeneralService;
+    using Blog.Services.Interfaces;
+    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Tags service.

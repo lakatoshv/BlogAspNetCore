@@ -1,15 +1,14 @@
-﻿// <copyright file="ITagsService.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="ITagsService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
-
-using System.Threading.Tasks;
-using Blog.Services.Core.Dtos;
-using Blog.Services.Core.Dtos.Posts;
 
 namespace Blog.Services.Interfaces
 {
-    using Data.Models;
-    using GeneralService;
+    using System.Threading.Tasks;
+    using Blog.Data.Models;
+    using Blog.Services.Core.Dtos;
+    using Blog.Services.Core.Dtos.Posts;
+    using Blog.Services.GeneralService;
 
     /// <summary>
     /// Tags service interface.

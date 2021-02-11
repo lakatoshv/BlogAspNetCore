@@ -2,13 +2,13 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Blog.Data.Models;
-using Blog.Services.GeneralService;
-
 namespace Blog.Services.Interfaces
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Blog.Data.Models;
+    using Blog.Services.GeneralService;
+
     /// <summary>
     /// Posts tags relations service interface.
     /// </summary>

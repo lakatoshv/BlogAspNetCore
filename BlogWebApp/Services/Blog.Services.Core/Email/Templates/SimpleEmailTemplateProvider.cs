@@ -1,5 +1,5 @@
-﻿// <copyright file="SimpleEmailTemplateProvider.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="SimpleEmailTemplateProvider.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Email.Templates
@@ -14,7 +14,7 @@ namespace Blog.Services.Core.Email.Templates
         /// <summary>
         /// Dictionary.
         /// </summary>
-        private readonly Dictionary<TemplateTypes, string> _templates = new Dictionary<TemplateTypes, string>
+        private readonly Dictionary<TemplateTypes, string> templates = new Dictionary<TemplateTypes, string>
         {
             { TemplateTypes.EmailVerification, "Please confirm your account by clicking <a href='{{BaseUrl}}account/confirm-email?email={{email}}&token={{token}}'>this link</a>" },
             { TemplateTypes.PasswordRestore, "Please reset your password by clicking <a href='{{BaseUrl}}reset-password?email={{email}}&token={{token}}'>this link</a>" },
@@ -26,7 +26,7 @@ namespace Blog.Services.Core.Email.Templates
         public string ResolveBody<T>(TemplateTypes templateType, T model)
         {
             var properties = typeof(T).GetProperties();
-            var template = this._templates[templateType];
+            var template = this.templates[templateType];
 
             foreach (var property in properties)
             {

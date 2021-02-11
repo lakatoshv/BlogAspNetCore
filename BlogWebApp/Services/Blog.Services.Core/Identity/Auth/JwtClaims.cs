@@ -1,5 +1,5 @@
-﻿// <copyright file="JwtClaimTypes.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="JwtClaims.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Identity.Auth

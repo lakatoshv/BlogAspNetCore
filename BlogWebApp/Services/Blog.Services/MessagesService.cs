@@ -4,10 +4,10 @@
 
 namespace Blog.Services
 {
-    using Data.Models;
-    using Data.Repository;
-    using GeneralService;
-    using Interfaces;
+    using Blog.Data.Models;
+    using Blog.Data.Repository;
+    using Blog.Services.GeneralService;
+    using Blog.Services.Interfaces;
 
     /// <summary>
     /// Messages service.

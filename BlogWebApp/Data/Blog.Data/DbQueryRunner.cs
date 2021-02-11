@@ -6,7 +6,6 @@ namespace Blog.Data
 {
     using System;
     using Core;
-    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// Database query runner.
@@ -30,7 +29,7 @@ namespace Blog.Data
         /// <inheritdoc cref="IDbQueryRunner"/>
         public void RunQuery(string query, params object[] parameters)
         {
-            this.Context.Database.ExecuteSqlCommand(query, parameters);
+            //this.Context.Database.ExecuteSqlCommand(query, parameters);
         }
 
         /// <inheritdoc cref="IDisposable"/>

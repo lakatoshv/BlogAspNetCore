@@ -1,16 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Blog.Services.ControllerContext;
-using Blog.Services.Core.Dtos.Posts;
-using Blog.Contracts.V1;
-using Blog.Contracts.V1.Requests.PostsRequests;
-using Blog.Contracts.V1.Responses;
-using Blog.Contracts.V1.Responses.PostsResponses;
-using Blog.Contracts.V1.Responses.UsersResponses;
-using Blog.Core.Consts;
-using Microsoft.AspNetCore.Authorization;
-
-namespace Blog.Web.Controllers.V1
+﻿namespace Blog.Web.Controllers.V1
 {
     using System.Threading.Tasks;
     using AutoMapper;
@@ -18,6 +6,18 @@ namespace Blog.Web.Controllers.V1
     using Blog.Services.Core.Dtos;
     using Services.Interfaces;
     using Microsoft.AspNetCore.Mvc;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Services.ControllerContext;
+    using Blog.Services.Core.Dtos.Posts;
+    using Blog.Contracts.V1;
+    using Blog.Contracts.V1.Requests.PostsRequests;
+    using Blog.Contracts.V1.Responses;
+    using Blog.Contracts.V1.Responses.PostsResponses;
+    using Blog.Contracts.V1.Responses.UsersResponses;
+    using Core.Consts;
+    using Microsoft.AspNetCore.Authorization;
+    using Blog.Contracts.V1.Requests;
 
     /// <summary>
     /// Posts controller.
@@ -96,15 +96,15 @@ namespace Blog.Web.Controllers.V1
         [HttpPost(ApiRoutes.PostsController.GetPosts)]
         [ProducesResponseType(typeof(PagedPostsResponse), 200)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult> GetPosts([FromBody] PostsSearchParametersDto searchParameters)
+        public async Task<ActionResult> GetPosts([FromBody] PostsSearchParametersRequest searchParameters)
         {
             if (searchParameters.SortParameters is null)
-                searchParameters.SortParameters = new SortParametersDto();
+                searchParameters.SortParameters = new SortParametersRequest();
             searchParameters.SortParameters.OrderBy = searchParameters.SortParameters.OrderBy ?? "asc";
             searchParameters.SortParameters.SortBy = searchParameters.SortParameters.SortBy ?? "Title";
             searchParameters.SortParameters.CurrentPage = searchParameters.SortParameters.CurrentPage ?? 1;
             searchParameters.SortParameters.PageSize = searchParameters.SortParameters.PageSize ?? 10;
-            var posts = await _postsService.GetPostsAsync(searchParameters);
+            var posts = await _postsService.GetPostsAsync(_mapper.Map<PostsSearchParametersDto>(searchParameters));
 
             if (posts == null)
             {
@@ -126,15 +126,15 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(typeof(PagedPostsResponse), 200)]
         [ProducesResponseType(404)]
         [HttpPost(ApiRoutes.PostsController.UserPosts)]
-        public async Task<ActionResult> GetUserPosts([FromRoute] string id, [FromBody] PostsSearchParametersDto searchParameters)
+        public async Task<ActionResult> GetUserPosts([FromRoute] string id, [FromBody] PostsSearchParametersRequest searchParameters)
         {
             if (searchParameters.SortParameters is null)
-                searchParameters.SortParameters = new SortParametersDto();
+                searchParameters.SortParameters = new SortParametersRequest();
             searchParameters.SortParameters.OrderBy = searchParameters.SortParameters.OrderBy ?? "asc";
             searchParameters.SortParameters.SortBy = searchParameters.SortParameters.SortBy ?? "Title";
             searchParameters.SortParameters.CurrentPage = searchParameters.SortParameters.CurrentPage ?? 1;
             searchParameters.SortParameters.PageSize = 10;
-            var posts = await _postsService.GetUserPostsAsync(id, searchParameters);
+            var posts = await _postsService.GetUserPostsAsync(id, _mapper.Map<PostsSearchParametersDto>(searchParameters));
 
             if (posts == null)
             {

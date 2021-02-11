@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// <copyright file="MyControllerContext.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Blog.Services.ControllerContext
 {
     using System.Security.Claims;
-    using Data.Models;
-    using Identity.User;
+    using Blog.Data.Models;
+    using Blog.Services.Identity.User;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
     /// Controller context.
@@ -15,17 +18,17 @@ namespace Blog.Services.ControllerContext
         /// <summary>
         /// Http context accessor.
         /// </summary>
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         /// <summary>
         /// User service.
         /// </summary>
-        private readonly IUserService _userService;
+        private readonly IUserService userService;
 
         /// <summary>
         /// Application user.
         /// </summary>
-        private ApplicationUser _cachedUser;
+        private ApplicationUser cachedUser;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MyControllerContext"/> class.
@@ -34,8 +37,8 @@ namespace Blog.Services.ControllerContext
         /// <param name="userService">userService.</param>
         public MyControllerContext(IHttpContextAccessor httpContextAccessor, IUserService userService)
         {
-            this._httpContextAccessor = httpContextAccessor;
-            this._userService = userService;
+            this.httpContextAccessor = httpContextAccessor;
+            this.userService = userService;
         }
 
         /// <inheritdoc cref="IControllerContext"/>
@@ -44,12 +47,12 @@ namespace Blog.Services.ControllerContext
             get
             {
                 // whether there is a cached value
-                if (this._cachedUser != null)
+                if (this.cachedUser != null)
                 {
-                    return this._cachedUser;
+                    return this.cachedUser;
                 }
 
-                var httpContextUser = this._httpContextAccessor.HttpContext.User;
+                var httpContextUser = this.httpContextAccessor.HttpContext.User;
                 var userName = httpContextUser?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
                 if (userName == null)
@@ -57,16 +60,16 @@ namespace Blog.Services.ControllerContext
                     return null;
                 }
 
-                var user = this._userService?.GetByUserNameAsync(userName).Result;
+                var user = this.userService?.GetByUserNameAsync(userName).Result;
 
                 if (user != null)
                 {
-                    this._cachedUser = user;
+                    this.cachedUser = user;
                 }
 
-                return this._cachedUser;
+                return this.cachedUser;
             }
-            set => this._cachedUser = value;
+            set => this.cachedUser = value;
         }
     }
 }

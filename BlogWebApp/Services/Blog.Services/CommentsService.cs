@@ -7,12 +7,12 @@ namespace Blog.Services
     using System.Linq;
     using System.Threading.Tasks;
     using Blog.Core.Helpers;
-    using Core.Dtos;
-    using Core.Dtos.Posts;
-    using Data.Models;
-    using Data.Repository;
-    using GeneralService;
-    using Interfaces;
+    using Blog.Data.Models;
+    using Blog.Data.Repository;
+    using Blog.Services.Core.Dtos;
+    using Blog.Services.Core.Dtos.Posts;
+    using Blog.Services.GeneralService;
+    using Blog.Services.Interfaces;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
@@ -144,7 +144,6 @@ namespace Blog.Services
                 .Where(x => x.Id.Equals(id))
                 .Include(x => x.User)
                 .FirstOrDefaultAsync();
-
         }
     }
 }

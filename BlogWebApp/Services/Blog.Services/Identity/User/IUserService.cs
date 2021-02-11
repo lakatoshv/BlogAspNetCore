@@ -1,5 +1,5 @@
-﻿// <copyright file="IUserService.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="IUserService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Identity.User
@@ -8,7 +8,7 @@ namespace Blog.Services.Identity.User
     using System.Threading.Tasks;
     using Blog.Core.Infrastructure.Pagination;
     using Blog.Core.TableFilters;
-    using Data.Models;
+    using Blog.Data.Models;
     using Microsoft.AspNetCore.Identity;
 
     /// <summary>

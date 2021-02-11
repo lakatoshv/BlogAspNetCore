@@ -1,5 +1,5 @@
-﻿// <copyright file="UserRegistrationDto.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="UserRegistrationDto.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Dtos.User

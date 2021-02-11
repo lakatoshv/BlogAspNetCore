@@ -1,11 +1,11 @@
-﻿// <copyright file="FieldSortOrder.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="FieldSortOrder.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Core.Infrastructure
 {
     using System.Linq;
-    using Enums;
+    using Blog.Core.Enums;
     using Blog.Core.Infrastructure.Pagination.Interfaces;
 
     /// <summary>

@@ -1,23 +1,23 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Blog.Data.Models;
-using Blog.Services.ControllerContext;
-using Blog.Services.Core.Dtos;
-using Blog.Services.Interfaces;
-using Blog.Contracts.V1;
-using Blog.Contracts.V1.Requests;
-using Blog.Contracts.V1.Requests.TagsRequests;
-using Blog.Contracts.V1.Responses;
-using Blog.Contracts.V1.Responses.TagsResponses;
-using Blog.Core.Consts;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-
-namespace Blog.Web.Controllers.V1
+﻿namespace Blog.Web.Controllers.V1
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using AutoMapper;
+    using Blog.Data.Models;
+    using Blog.Services.ControllerContext;
+    using Blog.Services.Core.Dtos;
+    using Blog.Services.Interfaces;
+    using Blog.Contracts.V1;
+    using Blog.Contracts.V1.Requests;
+    using Blog.Contracts.V1.Requests.TagsRequests;
+    using Blog.Contracts.V1.Responses;
+    using Blog.Contracts.V1.Responses.TagsResponses;
+    using Blog.Core.Consts;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+
     /// <summary>
     /// Tags controller.
     /// </summary>
@@ -56,7 +56,7 @@ namespace Blog.Web.Controllers.V1
         /// <summary>
         /// Gets the tags.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Task.</returns>
         /// <response code="200">Gets the tags.</response>
         /// <response code="404">Unable to gets the tags.</response>
         [HttpGet(ApiRoutes.TagsController.GetTags)]

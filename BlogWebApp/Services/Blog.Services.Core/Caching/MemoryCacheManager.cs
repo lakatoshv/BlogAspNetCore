@@ -1,5 +1,5 @@
-﻿// <copyright file="MemoryCacheManager.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="MemoryCacheManager.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Caching
@@ -8,7 +8,7 @@ namespace Blog.Services.Core.Caching
     using System.Collections.Concurrent;
     using System.Linq;
     using System.Threading;
-    using Interfaces;
+    using Blog.Services.Core.Caching.Interfaces;
     using Microsoft.Extensions.Caching.Memory;
     using Microsoft.Extensions.Primitives;
 
@@ -25,12 +25,12 @@ namespace Blog.Services.Core.Caching
         /// <summary>
         /// Memory cache.
         /// </summary>
-        private readonly IMemoryCache _cache;
+        private readonly IMemoryCache cache;
 
         /// <summary>
         /// Cancellation token source.
         /// </summary>
-        protected CancellationTokenSource CancellationTokenSource;
+        public CancellationTokenSource CancellationTokenSource;
 
         /// <summary>
         /// Initializes static members of the <see cref="MemoryCacheManager"/> class.
@@ -46,14 +46,14 @@ namespace Blog.Services.Core.Caching
         /// <param name="cache">cache.</param>
         public MemoryCacheManager(IMemoryCache cache)
         {
-            this._cache = cache;
+            this.cache = cache;
             this.CancellationTokenSource = new CancellationTokenSource();
         }
 
         /// <inheritdoc cref="ICacheManager"/>
         public virtual T Get<T>(string key)
         {
-            return this._cache.Get<T>(key);
+            return this.cache.Get<T>(key);
         }
 
         /// <inheritdoc cref="ICacheManager"/>
@@ -61,14 +61,14 @@ namespace Blog.Services.Core.Caching
         {
             if (data != null)
             {
-                this._cache.Set(this.AddKey(key), data, this.GetMemoryCacheEntryOptions(TimeSpan.FromMinutes(cacheTime)));
+                this.cache.Set(this.AddKey(key), data, this.GetMemoryCacheEntryOptions(TimeSpan.FromMinutes(cacheTime)));
             }
         }
 
         /// <inheritdoc cref="ICacheManager"/>
         public virtual bool IsSet(string key)
         {
-            return this._cache.TryGetValue(key, out object _);
+            return this.cache.TryGetValue(key, out object _);
         }
 
         /// <inheritdoc cref="ILocker"/>
@@ -82,7 +82,7 @@ namespace Blog.Services.Core.Caching
 
             try
             {
-                this._cache.Set(key, key, this.GetMemoryCacheEntryOptions(expirationTime));
+                this.cache.Set(key, key, this.GetMemoryCacheEntryOptions(expirationTime));
 
                 // perform action
                 action();
@@ -99,7 +99,7 @@ namespace Blog.Services.Core.Caching
         /// <inheritdoc cref="ICacheManager"/>
         public virtual void Remove(string key)
         {
-            this._cache.Remove(this.RemoveKey(key));
+            this.cache.Remove(this.RemoveKey(key));
         }
 
         /// <inheritdoc cref="ICacheManager"/>

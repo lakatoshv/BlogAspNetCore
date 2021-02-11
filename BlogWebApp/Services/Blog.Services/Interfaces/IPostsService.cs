@@ -1,16 +1,15 @@
-﻿// <copyright file="IPostsService.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="IPostsService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
-
-using System.Collections.Generic;
 
 namespace Blog.Services.Interfaces
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Core.Dtos;
-    using Core.Dtos.Posts;
-    using Data.Models;
-    using GeneralService;
+    using Blog.Data.Models;
+    using Blog.Services.Core.Dtos;
+    using Blog.Services.Core.Dtos.Posts;
+    using Blog.Services.GeneralService;
 
     /// <summary>
     /// Posts service interfaces

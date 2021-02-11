@@ -1,5 +1,5 @@
-﻿// <copyright file="IGeneralService.cs" company="Blog">
-// Copyright (c) BLog. All rights reserved.
+﻿// <copyright file="IGeneralService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.GeneralService

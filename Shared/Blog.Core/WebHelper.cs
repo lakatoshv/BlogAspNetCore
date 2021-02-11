@@ -1,5 +1,5 @@
-﻿// <copyright file="WebHelper.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="WebHelper.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Core
@@ -8,10 +8,10 @@ namespace Blog.Core
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
-    using Configuration;
-    using Helpers;
-    using Infrastructure;
-    using Interfaces;
+    using Blog.Core.Configuration;
+    using Blog.Core.Helpers;
+    using Blog.Core.Infrastructure;
+    using Blog.Core.Interfaces;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Http.Extensions;
     using Microsoft.AspNetCore.Http.Features;
@@ -33,24 +33,24 @@ namespace Blog.Core
         /// <summary>
         /// Http context accessor.
         /// </summary>
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         /// <summary>
         /// Hosting config.
         /// </summary>
-        private readonly HostingConfig _hostingConfig;
+        private readonly HostingConfig hostingConfig;
 
         /// <summary>
         /// _File provider.
         /// </summary>
-        private readonly IShareFileProvider _fileProvider;
+        private readonly IShareFileProvider fileProvider;
 
         /// <inheritdoc cref="IWebHelper"/>
         public virtual bool IsRequestBeingRedirected
         {
             get
             {
-                var response = this._httpContextAccessor.HttpContext.Response;
+                var response = this.httpContextAccessor.HttpContext.Response;
 
                 // ASP.NET 4 style - return response.IsRequestBeingRedirected;
                 int[] redirectionStatusCodes = { StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found };
@@ -63,15 +63,15 @@ namespace Blog.Core
         {
             get
             {
-                if (this._httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] == null)
+                if (this.httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] == null)
                 {
                     return false;
                 }
 
-                return Convert.ToBoolean(this._httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"]);
+                return Convert.ToBoolean(this.httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"]);
             }
 
-            set => this._httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] = value;
+            set => this.httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] = value;
         }
 
         /// <inheritdoc cref="IWebHelper"/>
@@ -88,9 +88,9 @@ namespace Blog.Core
             IHttpContextAccessor httpContextAccessor,
             IShareFileProvider fileProvider)
         {
-            this._hostingConfig = hostingConfig;
-            this._httpContextAccessor = httpContextAccessor;
-            this._fileProvider = fileProvider;
+            this.hostingConfig = hostingConfig;
+            this.httpContextAccessor = httpContextAccessor;
+            this.fileProvider = fileProvider;
         }
 
         /// <inheritdoc cref="IWebHelper"/>
@@ -102,7 +102,7 @@ namespace Blog.Core
             }
 
             // URL referrer is null in some case (for example, in IE 8)
-            return this._httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Referer];
+            return this.httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Referer];
         }
 
         /// <inheritdoc cref="IWebHelper"/>
@@ -117,19 +117,19 @@ namespace Blog.Core
             try
             {
                 // first try to get IP address from the forwarded header
-                if (this._httpContextAccessor.HttpContext.Request.Headers != null)
+                if (this.httpContextAccessor.HttpContext.Request.Headers != null)
                 {
                     // the X-Forwarded-For (XFF) HTTP header field is a de facto standard for identifying the originating IP address of a client
                     // connecting to a web server through an HTTP proxy or load balancer
                     var forwardedHttpHeaderKey = "X-FORWARDED-FOR";
-                    if (!string.IsNullOrEmpty(this._hostingConfig.ForwardedHttpHeader))
+                    if (!string.IsNullOrEmpty(this.hostingConfig.ForwardedHttpHeader))
                     {
                         // but in some cases server use other HTTP header
                         // in these cases an administrator can specify a custom Forwarded HTTP header (e.g. CF-Connecting-IP, X-FORWARDED-PROTO, etc)
-                        forwardedHttpHeaderKey = this._hostingConfig.ForwardedHttpHeader;
+                        forwardedHttpHeaderKey = this.hostingConfig.ForwardedHttpHeader;
                     }
 
-                    var forwardedHeader = this._httpContextAccessor.HttpContext.Request.Headers[forwardedHttpHeaderKey];
+                    var forwardedHeader = this.httpContextAccessor.HttpContext.Request.Headers[forwardedHttpHeaderKey];
                     if (!StringValues.IsNullOrEmpty(forwardedHeader))
                     {
                         result = forwardedHeader.FirstOrDefault();
@@ -137,9 +137,9 @@ namespace Blog.Core
                 }
 
                 // if this header not exists try get connection remote IP address
-                if (string.IsNullOrEmpty(result) && this._httpContextAccessor.HttpContext.Connection.RemoteIpAddress != null)
+                if (string.IsNullOrEmpty(result) && this.httpContextAccessor.HttpContext.Connection.RemoteIpAddress != null)
                 {
-                    result = this._httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
+                    result = this.httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
                 }
             }
             catch
@@ -180,12 +180,12 @@ namespace Blog.Core
             var storeLocation = this.GetStoreLocation(useSsl ?? this.IsCurrentConnectionSecured());
 
             // add local path to the URL
-            var pageUrl = $"{storeLocation.TrimEnd('/')}{this._httpContextAccessor.HttpContext.Request.Path}";
+            var pageUrl = $"{storeLocation.TrimEnd('/')}{this.httpContextAccessor.HttpContext.Request.Path}";
 
             // add query string to the URL
             if (includeQueryString)
             {
-                pageUrl = $"{pageUrl}{this._httpContextAccessor.HttpContext.Request.QueryString}";
+                pageUrl = $"{pageUrl}{this.httpContextAccessor.HttpContext.Request.QueryString}";
             }
 
             // whether to convert the URL to lower case
@@ -207,18 +207,18 @@ namespace Blog.Core
 
             // check whether hosting uses a load balancer
             // use HTTP_CLUSTER_HTTPS?
-            if (this._hostingConfig.UseHttpClusterHttps)
+            if (this.hostingConfig.UseHttpClusterHttps)
             {
-                return this._httpContextAccessor.HttpContext.Request.Headers["HTTP_CLUSTER_HTTPS"].ToString().Equals("on", StringComparison.OrdinalIgnoreCase);
+                return this.httpContextAccessor.HttpContext.Request.Headers["HTTP_CLUSTER_HTTPS"].ToString().Equals("on", StringComparison.OrdinalIgnoreCase);
             }
 
             // use HTTP_X_FORWARDED_PROTO?
-            if (this._hostingConfig.UseHttpXForwardedProto)
+            if (this.hostingConfig.UseHttpXForwardedProto)
             {
-                return this._httpContextAccessor.HttpContext.Request.Headers["X-Forwarded-Proto"].ToString().Equals("https", StringComparison.OrdinalIgnoreCase);
+                return this.httpContextAccessor.HttpContext.Request.Headers["X-Forwarded-Proto"].ToString().Equals("https", StringComparison.OrdinalIgnoreCase);
             }
 
-            return this._httpContextAccessor.HttpContext.Request.IsHttps;
+            return this.httpContextAccessor.HttpContext.Request.IsHttps;
         }
 
         /// <inheritdoc cref="IWebHelper"/>
@@ -230,7 +230,7 @@ namespace Blog.Core
             }
 
             // try to get host from the request HOST header
-            var hostHeader = this._httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
+            var hostHeader = this.httpContextAccessor.HttpContext.Request.Headers[HeaderNames.Host];
             if (StringValues.IsNullOrEmpty(hostHeader))
             {
                 return string.Empty;
@@ -267,7 +267,7 @@ namespace Blog.Core
                 return false;
             }
 
-            string path = this._httpContextAccessor.HttpContext.Request.Path;
+            string path = this.httpContextAccessor.HttpContext.Request.Path;
 
             // a little workaround. FileExtensionContentTypeProvider contains most of static file extensions. So we can use it
             // source: https://github.com/aspnet/StaticFiles/blob/dev/src/Microsoft.AspNetCore.StaticFiles/FileExtensionContentTypeProvider.cs
@@ -349,12 +349,12 @@ namespace Blog.Core
                 return default(T);
             }
 
-            if (StringValues.IsNullOrEmpty(this._httpContextAccessor.HttpContext.Request.Query[name]))
+            if (StringValues.IsNullOrEmpty(this.httpContextAccessor.HttpContext.Request.Query[name]))
             {
                 return default(T);
             }
 
-            return CommonHelper.To<T>(this._httpContextAccessor.HttpContext.Request.Query[name].ToString());
+            return CommonHelper.To<T>(this.httpContextAccessor.HttpContext.Request.Query[name].ToString());
         }
 
         /// <inheritdoc cref="IWebHelper"/>
@@ -409,14 +409,14 @@ namespace Blog.Core
         /// <returns>bool.</returns>
         protected virtual bool IsRequestAvailable()
         {
-            if (this._httpContextAccessor?.HttpContext == null)
+            if (this.httpContextAccessor?.HttpContext == null)
             {
                 return false;
             }
 
             try
             {
-                if (this._httpContextAccessor.HttpContext.Request == null)
+                if (this.httpContextAccessor.HttpContext.Request == null)
                 {
                     return false;
                 }
@@ -447,7 +447,7 @@ namespace Blog.Core
         {
             try
             {
-                this._fileProvider.SetLastWriteTimeUtc(this._fileProvider.MapPath("~/web.config"), DateTime.UtcNow);
+                this.fileProvider.SetLastWriteTimeUtc(this.fileProvider.MapPath("~/web.config"), DateTime.UtcNow);
                 return true;
             }
             catch

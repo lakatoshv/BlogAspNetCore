@@ -1,5 +1,5 @@
-﻿// <copyright file="PagedListResult.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="PagedListResult.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Core.Infrastructure.Pagination

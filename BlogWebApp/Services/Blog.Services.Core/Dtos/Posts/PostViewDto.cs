@@ -1,13 +1,13 @@
-﻿// <copyright file="PostViewDto.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="PostViewDto.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Dtos.Posts
 {
     using System;
     using System.Collections.Generic;
-    using User;
-    using Data.Models;
+    using Blog.Data.Models;
+    using Blog.Services.Core.Dtos.User;
 
     /// <summary>
     /// Post view dto.

@@ -1,4 +1,4 @@
-﻿// <copyright file="CommentsViewDto.cs" company="Blog">
+﻿// <copyright file="CommentsViewDto.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
@@ -6,7 +6,7 @@ namespace Blog.Services.Core.Dtos.Posts
 {
     using System.Collections.Generic;
     using Blog.Core.Helpers;
-    using Data.Models;
+    using Blog.Data.Models;
 
     /// <summary>
     /// Comments view dto.

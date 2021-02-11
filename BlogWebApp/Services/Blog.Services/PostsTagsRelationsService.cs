@@ -2,16 +2,16 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-using Blog.Data.Models;
-using Blog.Data.Repository;
-using Blog.Services.GeneralService;
-using Blog.Services.Interfaces;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace Blog.Services
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Blog.Data.Models;
+    using Blog.Data.Repository;
+    using Blog.Services.GeneralService;
+    using Blog.Services.Interfaces;
+
     /// <summary>
     /// Posts tags relations service.
     /// </summary>
@@ -19,7 +19,10 @@ namespace Blog.Services
     /// <seealso cref="IPostsTagsRelationsService" />
     public class PostsTagsRelationsService : GeneralService<PostsTagsRelations>, IPostsTagsRelationsService
     {
-        private readonly ITagsService _tagsService;
+        /// <summary>
+        /// The tags service.
+        /// </summary>
+        private readonly ITagsService tagsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PostsTagsRelationsService"/> class.
@@ -31,14 +34,14 @@ namespace Blog.Services
             ITagsService tagsService)
             : base(repo)
         {
-            _tagsService = tagsService;
+            this.tagsService = tagsService;
         }
 
         /// <inheritdoc cref="IPostsTagsRelationsService"/>
         public async Task AddTagsToPost(int postId, List<PostsTagsRelations> postsTagsRelations, IEnumerable<Tag> tags)
         {
             postsTagsRelations = postsTagsRelations ?? new List<PostsTagsRelations>();
-            var existingTags = await this._tagsService.GetAllAsync().ConfigureAwait(false);
+            var existingTags = await this.tagsService.GetAllAsync().ConfigureAwait(false);
 
             foreach (var tag in tags)
             {
@@ -67,7 +70,7 @@ namespace Blog.Services
                     {
                         Title = tag.Title,
                     };
-                    await this._tagsService.InsertAsync(tagToCreate);
+                    await this.tagsService.InsertAsync(tagToCreate);
                     postsTagsRelation = new PostsTagsRelations
                     {
                         PostId = postId,

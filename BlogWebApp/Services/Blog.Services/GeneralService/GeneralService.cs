@@ -1,5 +1,5 @@
-﻿// <copyright file="GeneralService.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="GeneralService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.GeneralService
@@ -12,7 +12,7 @@ namespace Blog.Services.GeneralService
     using Blog.Core.Infrastructure.Pagination;
     using Blog.Core.TableFilters;
     using Blog.Data.Core;
-    using Data.Repository;
+    using Blog.Data.Repository;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
@@ -25,7 +25,7 @@ namespace Blog.Services.GeneralService
         /// <summary>
         /// Repository.
         /// </summary>
-        protected IRepository<T> Repository;
+        public IRepository<T> Repository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeneralService{T}"/> class.

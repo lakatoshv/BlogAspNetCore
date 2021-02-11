@@ -1,5 +1,5 @@
-﻿// <copyright file="RedisConnectionWrapper.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="RedisConnectionWrapper.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Caching
@@ -8,7 +8,7 @@ namespace Blog.Services.Core.Caching
     using System.Linq;
     using System.Net;
     using Blog.Core.Configuration;
-    using Interfaces;
+    using Blog.Services.Core.Caching.Interfaces;
     using RedLockNet.SERedis;
     using RedLockNet.SERedis.Configuration;
     using StackExchange.Redis;
@@ -21,27 +21,27 @@ namespace Blog.Services.Core.Caching
         /// <summary>
         /// Blog configuration.
         /// </summary>
-        private readonly BlogConfiguration _config;
+        private readonly BlogConfiguration config;
 
         /// <summary>
         /// Lazy connection.
         /// </summary>
-        private readonly Lazy<string> _connectionString;
+        private readonly Lazy<string> connectionString;
 
         /// <summary>
         /// Lock object.
         /// </summary>
-        private readonly object _lock = new object();
-
-        /// <summary>
-        /// Connection multiplexer.
-        /// </summary>
-        private volatile ConnectionMultiplexer _connection;
+        private readonly object @lock = new object();
 
         /// <summary>
         /// RedLock factory.
         /// </summary>
-        private volatile RedLockFactory _redisLockFactory;
+        private readonly RedLockFactory redisLockFactory;
+
+        /// <summary>
+        /// Connection multiplexer.
+        /// </summary>
+        private volatile ConnectionMultiplexer connection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisConnectionWrapper"/> class.
@@ -49,9 +49,9 @@ namespace Blog.Services.Core.Caching
         /// <param name="config">config.</param>
         public RedisConnectionWrapper(BlogConfiguration config)
         {
-            this._config = config;
-            this._connectionString = new Lazy<string>(this.GetConnectionString);
-            this._redisLockFactory = this.CreateRedisLockFactory();
+            this.config = config;
+            this.connectionString = new Lazy<string>(this.GetConnectionString);
+            this.redisLockFactory = this.CreateRedisLockFactory();
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Blog.Services.Core.Caching
         public bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action)
         {
             // use RedLock library
-            using (var redisLock = this._redisLockFactory.CreateLock(resource, expirationTime))
+            using (var redisLock = this.redisLockFactory.CreateLock(resource, expirationTime))
             {
                 // ensure that lock is acquired
                 if (!redisLock.IsAcquired)
@@ -128,10 +128,10 @@ namespace Blog.Services.Core.Caching
         public void Dispose()
         {
             // dispose ConnectionMultiplexer
-            this._connection?.Dispose();
+            this.connection?.Dispose();
 
             // dispose RedLock factory
-            this._redisLockFactory?.Dispose();
+            this.redisLockFactory?.Dispose();
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Blog.Services.Core.Caching
         /// <returns>string.</returns>
         protected string GetConnectionString()
         {
-            return this._config.RedisCachingConnectionString;
+            return this.config.RedisCachingConnectionString;
         }
 
         /// <summary>
@@ -149,26 +149,26 @@ namespace Blog.Services.Core.Caching
         /// <returns>ConnectionMultiplexer.</returns>
         protected ConnectionMultiplexer GetConnection()
         {
-            if (this._connection != null && this._connection.IsConnected)
+            if (this.connection != null && this.connection.IsConnected)
             {
-                return this._connection;
+                return this.connection;
             }
 
-            lock (this._lock)
+            lock (this.@lock)
             {
-                if (this._connection != null && this._connection.IsConnected)
+                if (this.connection != null && this.connection.IsConnected)
                 {
-                    return this._connection;
+                    return this.connection;
                 }
 
                 // Connection disconnected. Disposing connection...
-                this._connection?.Dispose();
+                this.connection?.Dispose();
 
                 // Creating new instance of Redis Connection
-                this._connection = ConnectionMultiplexer.Connect(this._connectionString.Value);
+                this.connection = ConnectionMultiplexer.Connect(this.connectionString.Value);
             }
 
-            return this._connection;
+            return this.connection;
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Blog.Services.Core.Caching
         protected RedLockFactory CreateRedisLockFactory()
         {
             // get RedLock endpoints
-            var configurationOptions = ConfigurationOptions.Parse(this._connectionString.Value);
+            var configurationOptions = ConfigurationOptions.Parse(this.connectionString.Value);
             var redLockEndPoints = this.GetEndPoints().Select(endPoint => new RedLockEndPoint
             {
                 EndPoint = endPoint,

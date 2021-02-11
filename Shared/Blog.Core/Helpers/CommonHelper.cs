@@ -1,5 +1,5 @@
-﻿// <copyright file="CommonHelper.cs" company="Blog">
-// Copyright (c) BLog. All rights reserved.
+﻿// <copyright file="CommonHelper.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Core.Helpers
@@ -13,7 +13,7 @@ namespace Blog.Core.Helpers
     using System.Reflection;
     using System.Security.Cryptography;
     using System.Text.RegularExpressions;
-    using Infrastructure;
+    using Blog.Core.Infrastructure;
 
     /// <summary>
     /// Common Helper.
@@ -331,7 +331,7 @@ namespace Blog.Core.Helpers
             var destinationConverter = TypeDescriptor.GetConverter(destinationType);
             if (destinationConverter.CanConvertFrom(value.GetType()))
             {
-                return destinationConverter.ConvertFrom(null, culture, value);
+                return destinationConverter.ConvertFrom(null!, culture, value);
             }
 
             var sourceConverter = TypeDescriptor.GetConverter(sourceType);
@@ -441,7 +441,7 @@ namespace Blog.Core.Helpers
 
             if (string.IsNullOrEmpty(fieldName))
             {
-                throw new ArgumentException("fieldName", "The field name cannot be null or empty.");
+                throw new ArgumentException("The field name cannot be null or empty.", "fieldName");
             }
 
             var t = target.GetType();

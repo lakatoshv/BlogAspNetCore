@@ -1,5 +1,5 @@
-﻿// <copyright file="IEmailExtensionService.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="IEmailExtensionService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.EmailServices.Interfaces

@@ -1,5 +1,5 @@
-﻿// <copyright file="AutoMapperConfig.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="AutoMapperConfig.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Core.Mapping
@@ -10,7 +10,7 @@ namespace Blog.Core.Mapping
     using System.Reflection;
 
     using AutoMapper;
-    using Interfaces;
+    using Blog.Core.Mapping.Interfaces;
 
     /// <summary>
     /// AutoMapper Configuration.

@@ -1,5 +1,5 @@
-﻿// <copyright file="CacheExtensions.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="CacheExtensions.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Caching
@@ -9,7 +9,7 @@ namespace Blog.Services.Core.Caching
     using System.Linq;
     using System.Text.RegularExpressions;
     using Blog.Core.Consts;
-    using Interfaces;
+    using Blog.Services.Core.Caching.Interfaces;
 
     /// <summary>
     /// Cache extensions.

@@ -1,5 +1,5 @@
-﻿// <copyright file="Consts.cs" company="Blog">
-// Copyright (c) BLog. All rights reserved.
+﻿// <copyright file="Consts.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Core.Consts

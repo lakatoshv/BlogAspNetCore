@@ -1,5 +1,5 @@
-﻿// <copyright file="TemplateTypes.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="TemplateTypes.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Email.Templates

@@ -1,4 +1,4 @@
-﻿// <copyright file="TagViewDto.cs" company="Blog">
+﻿// <copyright file="TagViewDto.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
