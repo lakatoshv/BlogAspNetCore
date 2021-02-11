@@ -1,15 +1,15 @@
-﻿using Blog.Contracts.V1;
-using Blog.Contracts.V1.Requests;
-using Blog.Contracts.V1.Requests.CommentsRequests;
-using Blog.Contracts.V1.Responses;
-using Blog.Contracts.V1.Responses.CommentsResponses;
-using Microsoft.AspNetCore.Mvc;
-using Refit;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Blog.Sdk.V1
+﻿namespace Blog.Sdk.V1
 {
+    using Blog.Contracts.V1;
+    using Blog.Contracts.V1.Requests;
+    using Blog.Contracts.V1.Requests.CommentsRequests;
+    using Blog.Contracts.V1.Responses;
+    using Blog.Contracts.V1.Responses.CommentsResponses;
+    using Microsoft.AspNetCore.Mvc;
+    using Refit;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Comments controller requests api interface.
     /// </summary>
