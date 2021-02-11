@@ -13,7 +13,7 @@ namespace Blog.Sdk.V1
     /// <summary>
     /// Account controller requests api interface.
     /// </summary>
-    public interface IAccountControllerRequestsApi
+    public interface IAccountsControllerRequestsApi
     {
         /// <summary>
         /// Initializes the specified user identifier.
