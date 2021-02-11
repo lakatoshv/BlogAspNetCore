@@ -1,8 +1,6 @@
-﻿// <copyright file="AuthService.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="AuthService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
-
-using Blog.Services.Interfaces;
 
 namespace Blog.Services.Identity.Auth
 {
@@ -11,8 +9,9 @@ namespace Blog.Services.Identity.Auth
     using System.Security.Claims;
     using System.Threading.Tasks;
     using Blog.Core;
-    using Data.Models;
+    using Blog.Data.Models;
     using Blog.Services.Core.Identity.Auth;
+    using Blog.Services.Interfaces;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Options;
@@ -28,22 +27,22 @@ namespace Blog.Services.Identity.Auth
         /// <summary>
         /// User manager.
         /// </summary>
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<ApplicationUser> userManager;
 
         /// <summary>
         /// Jwt factory.
         /// </summary>
-        private readonly IJwtFactory _jwtFactory;
+        private readonly IJwtFactory jwtFactory;
 
         /// <summary>
         /// Jwt issuer options.
         /// </summary>
-        private readonly JwtIssuerOptions _jwtOptions;
+        private readonly JwtIssuerOptions jwtOptions;
 
         /// <summary>
         /// The profile service.
         /// </summary>
-        private readonly IProfileService _profileService;
+        private readonly IProfileService profileService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthService"/> class.
@@ -51,17 +50,17 @@ namespace Blog.Services.Identity.Auth
         /// <param name="userManager">userManager.</param>
         /// <param name="jwtFactory">jwtFactory.</param>
         /// <param name="jwtOptions">jwtOptions.</param>
-        /// <param name="profileService">jwtOptions.</param>
+        /// <param name="profileService">profileService.</param>
         public AuthService(
             UserManager<ApplicationUser> userManager,
             IJwtFactory jwtFactory,
             IOptions<JwtIssuerOptions> jwtOptions,
             IProfileService profileService)
         {
-            this._userManager = userManager;
-            this._jwtFactory = jwtFactory;
-            this._jwtOptions = jwtOptions.Value;
-            this._profileService = profileService;
+            this.userManager = userManager;
+            this.jwtFactory = jwtFactory;
+            this.jwtOptions = jwtOptions.Value;
+            this.profileService = profileService;
         }
 
         /// <inheritdoc cref="IAuthService"/>
@@ -74,7 +73,7 @@ namespace Blog.Services.Identity.Auth
         /// <inheritdoc cref="IAuthService"/>
         public async Task<ApplicationUser> GetByUserNameAsync(string username)
         {
-            return await this._userManager.Users
+            return await this.userManager.Users
                 .Where(x => x.Email.Equals(username))
                 .FirstOrDefaultAsync();
         }
@@ -83,15 +82,15 @@ namespace Blog.Services.Identity.Auth
         public async Task<bool> VerifyTwoFactorTokenAsync(string username, string authenticatorCode)
         {
             var user = await this.GetByUserNameAsync(username);
-            return await this._userManager.VerifyTwoFactorTokenAsync(
-               user, this._userManager.Options.Tokens.AuthenticatorTokenProvider, authenticatorCode);
+            return await this.userManager.VerifyTwoFactorTokenAsync(
+               user, this.userManager.Options.Tokens.AuthenticatorTokenProvider, authenticatorCode);
         }
 
         /// <inheritdoc cref="IAuthService"/>
         public async Task<IdentityResult> RedeemTwoFactorRecoveryCodeAsync(string username, string code)
         {
             var user = await this.GetByUserNameAsync(username);
-            return await this._userManager.RedeemTwoFactorRecoveryCodeAsync(user, code);
+            return await this.userManager.RedeemTwoFactorRecoveryCodeAsync(user, code);
         }
 
         /// <inheritdoc cref="IAuthService"/>
@@ -103,7 +102,7 @@ namespace Blog.Services.Identity.Auth
                 return null;
             }
 
-            var jwt = await Tokens.GenerateJwt(identity, this._jwtFactory, username, this._jwtOptions);
+            var jwt = await Tokens.GenerateJwt(identity, this.jwtFactory, username, this.jwtOptions);
             return jwt;
         }
 
@@ -116,7 +115,7 @@ namespace Blog.Services.Identity.Auth
                 return null;
             }
 
-            return await Tokens.GenerateJwt(identity, this._jwtFactory, username, this._jwtOptions);
+            return await Tokens.GenerateJwt(identity, this.jwtFactory, username, this.jwtOptions);
         }
 
         /// <inheritdoc cref="IAuthService"/>
@@ -128,18 +127,18 @@ namespace Blog.Services.Identity.Auth
             }
 
             // get the user to verifty
-            var userToVerify = await this._userManager.FindByNameAsync(userName);
+            var userToVerify = await this.userManager.FindByNameAsync(userName);
 
             if (userToVerify == null)
             {
                 return await Task.FromResult<ClaimsIdentity>(null);
             }
 
-            userToVerify.Profile = this._profileService.FirstOrDefault(x => x.UserId.Equals(userToVerify.Id));
+            userToVerify.Profile = this.profileService.FirstOrDefault(x => x.UserId.Equals(userToVerify.Id));
 
             var claimsIdentityUserModel = this.GetIdentityClaims(userToVerify, userName);
 
-            return await Task.FromResult(this._jwtFactory.GenerateClaimsIdentity(claimsIdentityUserModel));
+            return await Task.FromResult(this.jwtFactory.GenerateClaimsIdentity(claimsIdentityUserModel));
         }
 
         /// <summary>
@@ -156,21 +155,21 @@ namespace Blog.Services.Identity.Auth
             }
 
             // get the user to verifty
-            var userToVerify = await this._userManager.FindByNameAsync(userName);
+            var userToVerify = await this.userManager.FindByNameAsync(userName);
 
             if (userToVerify == null)
             {
                 return await Task.FromResult<ClaimsIdentity>(null);
             }
 
-            userToVerify.Profile = this._profileService.FirstOrDefault(x => x.UserId.Equals(userToVerify.Id));
+            userToVerify.Profile = this.profileService.FirstOrDefault(x => x.UserId.Equals(userToVerify.Id));
 
             var claimsIdentityUserModel = this.GetIdentityClaims(userToVerify, userName);
 
             // check the credentials
-            if (await this._userManager.CheckPasswordAsync(userToVerify, password))
+            if (await this.userManager.CheckPasswordAsync(userToVerify, password))
             {
-                return await Task.FromResult(this._jwtFactory.GenerateClaimsIdentity(claimsIdentityUserModel));
+                return await Task.FromResult(this.jwtFactory.GenerateClaimsIdentity(claimsIdentityUserModel));
             }
 
             // Credentials are invalid, or account doesn't exist

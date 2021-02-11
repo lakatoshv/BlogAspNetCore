@@ -1,5 +1,5 @@
-﻿// <copyright file="Email.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="Email.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Core.Emails

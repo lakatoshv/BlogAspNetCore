@@ -1,24 +1,23 @@
-﻿// <copyright file="PostsServices.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="PostsService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
-
-using System.Collections.ObjectModel;
 
 namespace Blog.Services
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
     using Blog.Core.Helpers;
-    using Core.Dtos.User;
-    using Core;
-    using Core.Dtos;
-    using Core.Dtos.Posts;
-    using Data.Models;
-    using Data.Repository;
-    using GeneralService;
-    using Interfaces;
+    using Blog.Data.Models;
+    using Blog.Data.Repository;
+    using Blog.Services.Core;
+    using Blog.Services.Core.Dtos;
+    using Blog.Services.Core.Dtos.Posts;
+    using Blog.Services.Core.Dtos.User;
+    using Blog.Services.GeneralService;
+    using Blog.Services.Interfaces;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
@@ -29,13 +28,17 @@ namespace Blog.Services
         /// <summary>
         /// The comments service.
         /// </summary>
-        private readonly ICommentsService _commentsService;
+        private readonly ICommentsService commentsService;
 
         /// <summary>
         /// The mapper.
         /// </summary>
-        private readonly IMapper _mapper;
-        private readonly IPostsTagsRelationsService _postsTagsRelationsService;
+        private readonly IMapper mapper;
+
+        /// <summary>
+        /// The posts tags relations service.
+        /// </summary>
+        private readonly IPostsTagsRelationsService postsTagsRelationsService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PostsService"/> class.
@@ -51,9 +54,9 @@ namespace Blog.Services
             IPostsTagsRelationsService postsTagsRelationsService)
             : base(repo)
         {
-            this._commentsService = commentsService;
-            this._postsTagsRelationsService = postsTagsRelationsService;
-            this._mapper = mapper;
+            this.commentsService = commentsService;
+            this.postsTagsRelationsService = postsTagsRelationsService;
+            this.mapper = mapper;
         }
 
         /// <inheritdoc cref="IPostsService"/>
@@ -89,12 +92,12 @@ namespace Blog.Services
                     Id = x.Tag.Id,
                     Title = x.Tag.Title,
                 }).ToList(),
-                Comments = await this._commentsService.GetPagedCommentsByPostId(postId, sortParameters),
+                Comments = await this.commentsService.GetPagedCommentsByPostId(postId, sortParameters),
             };
 
             post.PostsTagsRelations = null;
-            postModel.Post = this._mapper.Map<Post, PostViewDto>(post);
-            postModel.Post.Author = this._mapper.Map<ApplicationUser, ApplicationUserDto>(post.Author);
+            postModel.Post = this.mapper.Map<Post, PostViewDto>(post);
+            postModel.Post.Author = this.mapper.Map<ApplicationUser, ApplicationUserDto>(post.Author);
             postModel.Post.Author.Profile.User = null;
 
             return postModel.Post == null ? null : postModel;
@@ -135,7 +138,7 @@ namespace Blog.Services
                 postsList = postsList.Where(post => post.Title.ToLower().Contains(searchParameters.Search.ToLower())).ToList();
             }
 
-            if(!string.IsNullOrEmpty(searchParameters.Tag))
+            if (!string.IsNullOrEmpty(searchParameters.Tag))
             {
                 postsList = postsList.Where(post =>
                     post.PostsTagsRelations.Any(x => x.Tag.Title.ToLower().Equals(searchParameters.Tag.ToLower()))).ToList();
@@ -165,7 +168,7 @@ namespace Blog.Services
                     Dislikes = post.Dislikes,
                     ImageUrl = post.ImageUrl,
                     AuthorId = post.AuthorId,
-                    Author = this._mapper.Map<ApplicationUser, ApplicationUserDto>(post.Author),
+                    Author = this.mapper.Map<ApplicationUser, ApplicationUserDto>(post.Author),
                     CommentsCount = post.Comments.Count,
                     Tags = post.PostsTagsRelations.Select(x => new TagViewDto
                     {
@@ -239,7 +242,7 @@ namespace Blog.Services
                     Dislikes = post.Dislikes,
                     ImageUrl = post.ImageUrl,
                     AuthorId = post.AuthorId,
-                    Author = this._mapper.Map<ApplicationUser, ApplicationUserDto>(post.Author),
+                    Author = this.mapper.Map<ApplicationUser, ApplicationUserDto>(post.Author),
                     CommentsCount = post.Comments.Count,
                     Tags = post.PostsTagsRelations.Select(x => new TagViewDto
                     {
@@ -269,7 +272,7 @@ namespace Blog.Services
         {
             await this.InsertAsync(post);
             post.PostsTagsRelations = new Collection<PostsTagsRelations>();
-            await this._postsTagsRelationsService.AddTagsToPost(post.Id, post.PostsTagsRelations.ToList(), tags).ConfigureAwait(false);
+            await this.postsTagsRelationsService.AddTagsToPost(post.Id, post.PostsTagsRelations.ToList(), tags).ConfigureAwait(false);
         }
     }
 }

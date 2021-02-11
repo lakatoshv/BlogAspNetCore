@@ -7,11 +7,11 @@ namespace Blog.Services
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
-    using Data.Models;
-    using Data.Repository;
-    using Core.Dtos.User;
-    using GeneralService;
-    using Interfaces;
+    using Blog.Data.Models;
+    using Blog.Data.Repository;
+    using Blog.Services.Core.Dtos.User;
+    using Blog.Services.GeneralService;
+    using Blog.Services.Interfaces;
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
@@ -24,7 +24,7 @@ namespace Blog.Services
         /// <summary>
         /// The mapper.
         /// </summary>
-        private readonly IMapper _mapper;
+        private readonly IMapper mapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProfileService"/> class.
@@ -36,14 +36,14 @@ namespace Blog.Services
             IMapper mapper)
             : base(repo)
         {
-            this._mapper = mapper;
+            this.mapper = mapper;
         }
 
         /// <inheritdoc cref="IProfileService"/>
         public async Task<ApplicationUserDto> GetProfile(int profileId)
         {
             var profile = await this.Table.Where(x => x.Id == profileId).Include(x => x.User).FirstOrDefaultAsync();
-            var user = this._mapper.Map<ApplicationUser, ApplicationUserDto>(profile.User);
+            var user = this.mapper.Map<ApplicationUser, ApplicationUserDto>(profile.User);
             return user;
         }
     }

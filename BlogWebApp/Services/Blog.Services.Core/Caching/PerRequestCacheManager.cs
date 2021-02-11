@@ -1,12 +1,12 @@
-﻿// <copyright file="PerRequestCacheManager.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="PerRequestCacheManager.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Caching
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Interfaces;
+    using Blog.Services.Core.Caching.Interfaces;
     using Microsoft.AspNetCore.Http;
 
     /// <summary>
@@ -17,7 +17,7 @@ namespace Blog.Services.Core.Caching
         /// <summary>
         /// Http context accessor.
         /// </summary>
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PerRequestCacheManager"/> class.
@@ -25,7 +25,7 @@ namespace Blog.Services.Core.Caching
         /// <param name="httpContextAccessor">httpContextAccessor.</param>
         public PerRequestCacheManager(IHttpContextAccessor httpContextAccessor)
         {
-            this._httpContextAccessor = httpContextAccessor;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         /// <inheritdoc cref="ICacheManager"/>
@@ -103,7 +103,7 @@ namespace Blog.Services.Core.Caching
         /// <returns>IDictionary.</returns>
         protected virtual IDictionary<object, object> GetItems()
         {
-            return this._httpContextAccessor.HttpContext?.Items;
+            return this.httpContextAccessor.HttpContext?.Items;
         }
     }
 }

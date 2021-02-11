@@ -1,4 +1,8 @@
-﻿namespace Blog.Services.Security
+﻿// <copyright file="IEncryptionService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace Blog.Services.Security
 {
     /// <summary>
     /// Encryption service

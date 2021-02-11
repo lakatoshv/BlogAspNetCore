@@ -44,3 +44,4 @@
 /Sdk/Blog.Sdk.ExampleUsage/bin/Debug/net5.0
 /Shared/Blog.Contracts/bin
 /Shared/Blog.Core/bin
+/BlogWebApp/Services/Blog.Services.Core/bin

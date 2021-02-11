@@ -1,5 +1,5 @@
-﻿// <copyright file="QueryableExtensions.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="QueryableExtensions.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core
@@ -7,7 +7,7 @@ namespace Blog.Services.Core
     using System;
     using System.Linq;
     using System.Linq.Expressions;
-    using Dtos;
+    using Blog.Services.Core.Dtos;
 
     /// <summary>
     /// Queriable extensions.

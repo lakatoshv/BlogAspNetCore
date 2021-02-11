@@ -1,5 +1,5 @@
-﻿// <copyright file="VerifyInvitationResult.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="VerifyInvitationResult.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Email.Invitation

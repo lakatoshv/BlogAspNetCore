@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
-using Blog.Core.Helpers;
+﻿// <copyright file="TagsViewDto.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace Blog.Services.Core.Dtos.Posts
 {
+    using System.Collections.Generic;
+    using Blog.Core.Helpers;
+
     /// <summary>
     /// Tags view dto.
     /// </summary>

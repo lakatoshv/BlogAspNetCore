@@ -1,11 +1,11 @@
-﻿// <copyright file="PostShowViewDto.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="PostShowViewDto.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
-
-using System.Collections.Generic;
 
 namespace Blog.Services.Core.Dtos.Posts
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Post show view dto.
     /// </summary>

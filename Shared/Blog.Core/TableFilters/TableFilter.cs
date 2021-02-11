@@ -1,12 +1,12 @@
-﻿// <copyright file="TableFilter.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="TableFilter.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Core.TableFilters
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Enums;
+    using Blog.Core.Enums;
 
     /// <summary>
     /// Table filter.

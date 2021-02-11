@@ -1,5 +1,5 @@
-﻿// <copyright file="RegistrationService.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="RegistrationService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Identity.Registration
@@ -7,8 +7,8 @@ namespace Blog.Services.Identity.Registration
     using System;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
-    using Data.Models;
-    using User;
+    using Blog.Data.Models;
+    using Blog.Services.Identity.User;
     using Microsoft.AspNetCore.Identity;
 
     /// <summary>
@@ -19,7 +19,7 @@ namespace Blog.Services.Identity.Registration
         /// <summary>
         /// User service.
         /// </summary>
-        private readonly IUserService _userService;
+        private readonly IUserService userService;
 
         // private readonly IEmailExtensionService _emailExtensionService;
 
@@ -31,7 +31,7 @@ namespace Blog.Services.Identity.Registration
         /// <param name="userService">userService.</param>
         public RegistrationService(IUserService userService)
         {
-            this._userService = userService;
+            this.userService = userService;
         }
 
         /// <inheritdoc cref="IRegistrationService"/>
@@ -48,12 +48,12 @@ namespace Blog.Services.Identity.Registration
         {
             user.UserName = Regex.Replace(user.UserName, @"\s+", " ").Trim();
 
-            var result = await this._userService.CreateAsync(user, password);
+            var result = await this.userService.CreateAsync(user, password);
 
             if (result.Succeeded)
             {
                 // var token =
-                await this._userService.GetEmailVerificationTokenAsync(user.UserName);
+                await this.userService.GetEmailVerificationTokenAsync(user.UserName);
 
                 // await _emailExtensionService.SendVerificationEmailAsync(user.UserName, token);
             }

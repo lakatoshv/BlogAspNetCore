@@ -5,10 +5,10 @@
 namespace Blog.Services.Interfaces
 {
     using System.Threading.Tasks;
-    using Core.Dtos;
-    using Core.Dtos.Posts;
-    using Data.Models;
-    using GeneralService;
+    using Blog.Data.Models;
+    using Blog.Services.Core.Dtos;
+    using Blog.Services.Core.Dtos.Posts;
+    using Blog.Services.GeneralService;
 
     /// <summary>
     /// Comments service interface.

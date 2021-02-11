@@ -1,4 +1,8 @@
-﻿namespace Blog.Core.Consts
+﻿// <copyright file="SwaggerExamplesConsts.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace Blog.Core.Consts
 {
     /// <summary>
     /// Swagger examples consts.

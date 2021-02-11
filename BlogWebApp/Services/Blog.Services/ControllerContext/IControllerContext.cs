@@ -4,7 +4,7 @@
 
 namespace Blog.Services.ControllerContext
 {
-    using Data.Models;
+    using Blog.Data.Models;
 
     /// <summary>
     /// Controller context interface.

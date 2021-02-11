@@ -1,11 +1,11 @@
-﻿// <copyright file="IRegistrationService.cs" company="Blog">
-// Copyright (c) BLog. All rights reserved.
+﻿// <copyright file="IRegistrationService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Identity.Registration
 {
     using System.Threading.Tasks;
-    using Data.Models;
+    using Blog.Data.Models;
     using Microsoft.AspNetCore.Identity;
 
     /// <summary>

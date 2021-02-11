@@ -1,4 +1,8 @@
-﻿namespace Blog.Services.Core.Utilities
+﻿// <copyright file="Extensions.String.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace Blog.Services.Core.Utilities
 {
     /// <summary>
     /// String extensions.

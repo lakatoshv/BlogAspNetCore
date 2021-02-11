@@ -1,5 +1,5 @@
-﻿// <copyright file="IJwtFactory.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="IJwtFactory.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Identity.Auth

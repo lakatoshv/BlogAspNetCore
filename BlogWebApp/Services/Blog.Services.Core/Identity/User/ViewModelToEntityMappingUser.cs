@@ -1,10 +1,10 @@
-﻿// <copyright file="AppUserMapping.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="ViewModelToEntityMappingUser.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Identity.User
 {
-    using Data.Models;
+    using Blog.Data.Models;
 
     /// <summary>
     /// View model to entity mapping user.

@@ -1,12 +1,12 @@
-﻿// <copyright file="IAuthService.cs" company="Blog">
-// Copyright (c) BLog. All rights reserved.
+﻿// <copyright file="IAuthService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Identity.Auth
 {
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using Data.Models;
+    using Blog.Data.Models;
     using Microsoft.AspNetCore.Identity;
 
     /// <summary>

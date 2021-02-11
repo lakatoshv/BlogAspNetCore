@@ -1,10 +1,10 @@
-﻿// <copyright file="NullCache.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="NullCache.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Caching
 {
-    using Interfaces;
+    using Blog.Services.Core.Caching.Interfaces;
 
     /// <summary>
     /// Null cache.

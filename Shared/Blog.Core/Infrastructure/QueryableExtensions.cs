@@ -1,11 +1,10 @@
-﻿// <copyright file="QueryableExtensions.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="QueryableExtensions.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
-
-using System;
 
 namespace Blog.Core.Infrastructure
 {
+    using System;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;

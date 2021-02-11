@@ -1,11 +1,11 @@
-﻿// <copyright file="PostViewDto.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="ApplicationUserDto.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Dtos.User
 {
     using System.Collections.Generic;
-    using Data.Models;
+    using Blog.Data.Models;
     using Microsoft.AspNetCore.Identity;
 
     /// <summary>

@@ -5,9 +5,9 @@
 namespace Blog.Services.Interfaces
 {
     using System.Threading.Tasks;
-    using Core.Dtos.User;
-    using Data.Models;
-    using GeneralService;
+    using Blog.Data.Models;
+    using Blog.Services.Core.Dtos.User;
+    using Blog.Services.GeneralService;
 
     /// <summary>
     /// Profile service interface.

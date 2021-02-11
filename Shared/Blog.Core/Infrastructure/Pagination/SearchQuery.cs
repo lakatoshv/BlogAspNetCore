@@ -1,5 +1,5 @@
-﻿// <copyright file="SearchQuery.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="SearchQuery.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Core.Infrastructure.Pagination
@@ -7,7 +7,7 @@ namespace Blog.Core.Infrastructure.Pagination
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
-    using Interfaces;
+    using Blog.Core.Infrastructure.Pagination.Interfaces;
 
     /// <summary>
     /// Search query.

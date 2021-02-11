@@ -1,5 +1,5 @@
-﻿// <copyright file="SmtpEmailService.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="SmtpEmailService.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.EmailServices
@@ -8,8 +8,8 @@ namespace Blog.Services.EmailServices
     using System.Net.Mail;
     using System.Text;
     using System.Threading.Tasks;
-    using Core.Email.Smtp;
-    using Interfaces;
+    using Blog.Services.Core.Email.Smtp;
+    using Blog.Services.EmailServices.Interfaces;
     using Microsoft.Extensions.Options;
 
     /// <summary>
@@ -17,7 +17,7 @@ namespace Blog.Services.EmailServices
     /// </summary>
     public class SmtpEmailService : IEmailService
     {
-        private readonly SmtpClient _client;
+        private readonly SmtpClient client;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SmtpEmailService"/> class.
@@ -26,7 +26,7 @@ namespace Blog.Services.EmailServices
         public SmtpEmailService(IOptions<SmtpOptions> smtpOptions)
         {
             var options = smtpOptions.Value;
-            this._client = new SmtpClient(options.Host, options.Port)
+            this.client = new SmtpClient(options.Host, options.Port)
             {
                 Credentials = new NetworkCredential(options.UserName, options.Password),
                 EnableSsl = options.EnableSsl,
@@ -37,7 +37,7 @@ namespace Blog.Services.EmailServices
         public void Send(Blog.Core.Emails.Email email)
         {
             var message = this.GetMailMessage(email.Body, email.Subject, email.From, email.To);
-            this._client.Send(message);
+            this.client.Send(message);
         }
 
         /// <inheritdoc cref="IEmailService"/>
@@ -45,7 +45,7 @@ namespace Blog.Services.EmailServices
         {
             // TODO: Investigate how smtp client from argument works
             var message = this.GetMailMessage(body, subject, from, to);
-            this._client.Send(message);
+            this.client.Send(message);
         }
 
         // TODO: Think of something to get rid of this warning: This async methods lacks await operators ...
@@ -55,14 +55,14 @@ namespace Blog.Services.EmailServices
         public async Task SendAsync(Blog.Core.Emails.Email email)
         {
             var message = this.GetMailMessage(email.Body, email.Subject, email.From, email.To);
-            await this._client.SendMailAsync(message);
+            await this.client.SendMailAsync(message);
         }
 
         /// <inheritdoc cref="IEmailService"/>
         public async Task SendAsync(string body, string subject, string from, string to)
         {
             var message = this.GetMailMessage(body, subject, from, to);
-            await this._client.SendMailAsync(message);
+            await this.client.SendMailAsync(message);
         }
 
         /// <summary>

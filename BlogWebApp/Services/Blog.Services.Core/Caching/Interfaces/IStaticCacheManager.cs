@@ -1,5 +1,5 @@
-﻿// <copyright file="IStaticCacheManager.cs" company="Blog">
-// Copyright (c) Blog. All rights reserved.
+﻿// <copyright file="IStaticCacheManager.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Caching.Interfaces
