@@ -7,6 +7,7 @@ using Blog.Contracts.V1;
 using Blog.Contracts.V1.Requests.UsersRequests;
 using Blog.Contracts.V1.Responses.UsersResponses;
 using Blog.Core.Consts;
+using Blog.Web.Cache;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Blog.Web.Controllers.V1
@@ -57,6 +58,7 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(typeof(ApplicationUserResponse), 200)]
         [ProducesResponseType(404)]
         [HttpGet("{id}")]
+        [Cached(600)]
         public async Task<ActionResult> Show([FromRoute] int id)
         {
             var profile = await _profileService.GetProfile(id);

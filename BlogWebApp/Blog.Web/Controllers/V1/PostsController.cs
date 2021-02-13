@@ -102,12 +102,11 @@ namespace Blog.Web.Controllers.V1
         [Cached(600)]
         public async Task<ActionResult> GetPosts([FromBody] PostsSearchParametersRequest searchParameters)
         {
-            if (searchParameters.SortParameters is null)
-                searchParameters.SortParameters = new SortParametersRequest();
-            searchParameters.SortParameters.OrderBy = searchParameters.SortParameters.OrderBy ?? "asc";
-            searchParameters.SortParameters.SortBy = searchParameters.SortParameters.SortBy ?? "Title";
-            searchParameters.SortParameters.CurrentPage = searchParameters.SortParameters.CurrentPage ?? 1;
-            searchParameters.SortParameters.PageSize = searchParameters.SortParameters.PageSize ?? 10;
+            searchParameters.SortParameters ??= new SortParametersRequest();
+            searchParameters.SortParameters.OrderBy ??= "asc";
+            searchParameters.SortParameters.SortBy ??= "Title";
+            searchParameters.SortParameters.CurrentPage ??= 1;
+            searchParameters.SortParameters.PageSize ??= 10;
             var posts = await _postsService.GetPostsAsync(_mapper.Map<PostsSearchParametersDto>(searchParameters));
 
             if (posts == null)
@@ -133,11 +132,10 @@ namespace Blog.Web.Controllers.V1
         [Cached(600)]
         public async Task<ActionResult> GetUserPosts([FromRoute] string id, [FromBody] PostsSearchParametersRequest searchParameters)
         {
-            if (searchParameters.SortParameters is null)
-                searchParameters.SortParameters = new SortParametersRequest();
-            searchParameters.SortParameters.OrderBy = searchParameters.SortParameters.OrderBy ?? "asc";
-            searchParameters.SortParameters.SortBy = searchParameters.SortParameters.SortBy ?? "Title";
-            searchParameters.SortParameters.CurrentPage = searchParameters.SortParameters.CurrentPage ?? 1;
+            searchParameters.SortParameters ??= new SortParametersRequest();
+            searchParameters.SortParameters.OrderBy ??= "asc";
+            searchParameters.SortParameters.SortBy ??= "Title";
+            searchParameters.SortParameters.CurrentPage ??= 1;
             searchParameters.SortParameters.PageSize = 10;
             var posts = await _postsService.GetUserPostsAsync(id, _mapper.Map<PostsSearchParametersDto>(searchParameters));
 
