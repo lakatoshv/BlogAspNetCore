@@ -1,4 +1,6 @@
-﻿namespace Blog.Web.Controllers.V1
+﻿using Blog.Web.Cache;
+
+namespace Blog.Web.Controllers.V1
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -62,6 +64,7 @@
         [HttpGet(ApiRoutes.TagsController.GetTags)]
         [ProducesResponseType(typeof(List<TagResponse>), 200)]
         [ProducesResponseType(404)]
+        [Cached(600)]
         public async Task<ActionResult> GetTags()
         {
             var tags = await _tagsService.GetAllAsync();
@@ -83,15 +86,15 @@
         [HttpPost(ApiRoutes.TagsController.GetTagsByFilter)]
         [ProducesResponseType(typeof(PagedTagsResponse), 200)]
         [ProducesResponseType(404)]
+        [Cached(600)]
         public async Task<ActionResult> GetTagsByFilter([FromBody] SearchParametersRequest searchParameters = null)
         {
-            if (searchParameters.SortParameters is null)
-                searchParameters.SortParameters = new SortParametersRequest();
+            searchParameters.SortParameters ??= new SortParametersRequest();
 
-            searchParameters.SortParameters.OrderBy = searchParameters.SortParameters.OrderBy ?? "asc";
-            searchParameters.SortParameters.SortBy = searchParameters.SortParameters.SortBy ?? "Title";
-            searchParameters.SortParameters.CurrentPage = searchParameters.SortParameters.CurrentPage ?? 1;
-            searchParameters.SortParameters.PageSize = searchParameters.SortParameters.PageSize ?? 10;
+            searchParameters.SortParameters.OrderBy ??= "asc";
+            searchParameters.SortParameters.SortBy ??= "Title";
+            searchParameters.SortParameters.CurrentPage ??= 1;
+            searchParameters.SortParameters.PageSize ??= 10;
             var tags = await _tagsService.GetTagsAsync(_mapper.Map<SearchParametersDto>(searchParameters));
             if (tags == null)
             {
@@ -111,6 +114,7 @@
         [HttpGet(ApiRoutes.TagsController.GetAvailableTags)]
         [ProducesResponseType(typeof(List<TagResponse>), 200)]
         [ProducesResponseType(404)]
+        [Cached(600)]
         public async Task<ActionResult> GetAvailableTags([FromRoute] int postId)
         {
             var tags = await _tagsService.GetAllAsync(x => x.PostsTagsRelations == null || x.PostsTagsRelations.Any(y => y.PostId != postId));
