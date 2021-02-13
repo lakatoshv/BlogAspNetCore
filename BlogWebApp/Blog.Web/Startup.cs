@@ -95,16 +95,18 @@ namespace Blog.Web
             // with default route of '/api/[Controller]'
 
             app.UseMvcWithDefaultRoute();
-
-            app.UseMvc(routes =>
+            app.UseRouting();
+            
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    name: "areaRoute",
-                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "areaRoute",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapRazorPages();
             });
 
             // Configures application to serve the index.html file from /wwwroot
