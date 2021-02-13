@@ -1,4 +1,6 @@
-﻿namespace Blog.Web.Controllers.V1
+﻿using Blog.Web.Cache;
+
+namespace Blog.Web.Controllers.V1
 {
     using System.Threading.Tasks;
     using AutoMapper;
@@ -74,6 +76,7 @@
         [HttpGet]
         [ProducesResponseType(typeof(List<PostResponse>), 200)]
         [ProducesResponseType(404)]
+        [Cached(600)]
         public async Task<ActionResult> Index()
         {
             var posts = await _postsService.GetAllAsync().ConfigureAwait(false);
@@ -96,6 +99,7 @@
         [HttpPost(ApiRoutes.PostsController.GetPosts)]
         [ProducesResponseType(typeof(PagedPostsResponse), 200)]
         [ProducesResponseType(404)]
+        [Cached(600)]
         public async Task<ActionResult> GetPosts([FromBody] PostsSearchParametersRequest searchParameters)
         {
             if (searchParameters.SortParameters is null)
@@ -126,6 +130,7 @@
         [ProducesResponseType(typeof(PagedPostsResponse), 200)]
         [ProducesResponseType(404)]
         [HttpPost(ApiRoutes.PostsController.UserPosts)]
+        [Cached(600)]
         public async Task<ActionResult> GetUserPosts([FromRoute] string id, [FromBody] PostsSearchParametersRequest searchParameters)
         {
             if (searchParameters.SortParameters is null)
@@ -155,6 +160,7 @@
         [ProducesResponseType(typeof(PostWithPagedCommentsResponse), 200)]
         [ProducesResponseType(404)]
         [HttpGet(ApiRoutes.PostsController.Show)]
+        [Cached(600)]
         public async Task<ActionResult> Show([FromRoute] int id)
         {
             var sortParameters = new SortParametersDto
