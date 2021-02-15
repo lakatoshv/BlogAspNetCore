@@ -44,6 +44,8 @@ namespace Blog.Web
                 app.UseHsts();
             }
 
+            app.UseHealthChecks("/api/health-check");
+
             var swaggerOptions = new SwaggerOptions();
             Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
             app.UseSwagger(option => { option.RouteTemplate = swaggerOptions.JsonRoute; });
@@ -106,8 +108,10 @@ namespace Blog.Web
                     name: "areaRoute",
                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
+                endpoints.MapHealthChecks("/health");
                 endpoints.MapRazorPages();
             });
+
 
             // Configures application to serve the index.html file from /wwwroot
             // when you access the server from a browser

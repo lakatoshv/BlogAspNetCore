@@ -26,6 +26,7 @@
                 return;
             }
 
+            // services.AddSingleton<StackExchange.Redis.IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(redisCacheSettings.ConnectionString));
             services.AddStackExchangeRedisCache(options => options.Configuration = redisCacheSettings.ConnectionString);
         }
     }

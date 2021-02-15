@@ -210,5 +210,16 @@
             /// </summary>
             public const string CreateTag = "create";
         }
+
+        /// <summary>
+        /// Health controller.
+        /// </summary>
+        public static class HealthController
+        {
+            /// <summary>
+            /// The health.
+            /// </summary>
+            public const string Health = Base + "/health-check";
+        }
     }
 }
