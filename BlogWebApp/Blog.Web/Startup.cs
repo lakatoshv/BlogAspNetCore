@@ -1,3 +1,6 @@
+using Blog.Web.HealthChecks;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+
 namespace Blog.Web
 {
     using Microsoft.AspNetCore.Builder;
@@ -44,7 +47,13 @@ namespace Blog.Web
                 app.UseHsts();
             }
 
-            app.UseHealthChecks("/api/health");
+            app.UseHealthChecks("/health", new HealthCheckOptions
+            {
+                ResponseWriter = async (context, report) =>
+                {
+                    await HealthCheckHelper.GetHealthCheckResponse(context, report);
+                }
+            });
 
             var swaggerOptions = new SwaggerOptions();
             Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
@@ -108,6 +117,7 @@ namespace Blog.Web
                     name: "areaRoute",
                     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
+                endpoints.MapHealthChecks("/health");
                 endpoints.MapRazorPages();
             });
 
