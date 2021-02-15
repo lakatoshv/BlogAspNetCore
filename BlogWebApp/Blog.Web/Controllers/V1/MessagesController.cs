@@ -9,6 +9,7 @@ using Blog.Contracts.V1;
 using Blog.Contracts.V1.Requests.MessagesRequests;
 using Blog.Contracts.V1.Responses;
 using Blog.Core.Consts;
+using Blog.Web.Cache;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,6 +61,7 @@ namespace Blog.Web.Controllers.V1
         [HttpGet]
         [ProducesResponseType(typeof(List<MessageResponse>), 200)]
         [ProducesResponseType(404)]
+        [Cached(600)]
         public async Task<ActionResult> Index()
         {
             var messages = await _messagesService.GetAllAsync().ConfigureAwait(false);
@@ -82,6 +84,7 @@ namespace Blog.Web.Controllers.V1
         [HttpGet(ApiRoutes.MessagesController.GetRecipientMessages)]
         [ProducesResponseType(typeof(List<MessageResponse>), 200)]
         [ProducesResponseType(404)]
+        [Cached(600)]
         public async Task<ActionResult> GetRecipientMessages([FromRoute] string recipientId)
         {
             var messages = await _messagesService
@@ -106,6 +109,7 @@ namespace Blog.Web.Controllers.V1
         [HttpGet(ApiRoutes.MessagesController.GetSenderMessages)]
         [ProducesResponseType(typeof(List<MessageResponse>), 200)]
         [ProducesResponseType(404)]
+        [Cached(600)]
         public async Task<ActionResult> GetSenderMessages([FromRoute] string senderEmail)
         {
             var messages = await _messagesService

@@ -12,6 +12,7 @@ using Blog.Contracts.V1.Requests.CommentsRequests;
 using Blog.Contracts.V1.Responses;
 using Blog.Contracts.V1.Responses.CommentsResponses;
 using Blog.Core.Consts;
+using Blog.Web.Cache;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -60,6 +61,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="200">Get all comments.</response>
         [ProducesResponseType(typeof(List<CommentResponse>), 200)]
         [HttpGet]
+        [Cached(600)]
         public async Task<ActionResult> GetAllComments()
         {
             return Ok(_mapper.Map<List<CommentResponse>>(await _commentService.GetAllAsync().ConfigureAwait(false)));
@@ -75,13 +77,12 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(typeof(PagedCommentsResponse), 200)]
         [ProducesResponseType(404)]
         [HttpPost(ApiRoutes.CommentsController.GetCommentsByFilter)]
+        [Cached(600)]
         public async Task<ActionResult> GetComments([FromBody] SortParametersRequest sortParameters = null)
         {
-            if (sortParameters is null)
-            {
-                sortParameters = new SortParametersRequest();
-            }
-            sortParameters.CurrentPage = sortParameters.CurrentPage ?? 1;
+            sortParameters ??= new SortParametersRequest();
+
+            sortParameters.CurrentPage ??= 1;
             sortParameters.PageSize = 10;
 
             var comments = await _commentService.GetPagedComments(_mapper.Map<SortParametersDto>(sortParameters));
@@ -105,13 +106,11 @@ namespace Blog.Web.Controllers.V1
         [ProducesResponseType(typeof(List<CommentResponse>), 200)]
         [ProducesResponseType(404)]
         [HttpPost(ApiRoutes.CommentsController.GetCommentsByPost)]
+        [Cached(600)]
         public async Task<ActionResult> GetCommentsByPostAsync([FromRoute] int id, [FromBody] SortParametersRequest sortParameters = null)
         {
-            if (sortParameters is null)
-            {
-                sortParameters = new SortParametersRequest();
-            }
-            sortParameters.CurrentPage = sortParameters.CurrentPage ?? 1;
+            sortParameters ??= new SortParametersRequest();
+            sortParameters.CurrentPage ??= 1;
             sortParameters.PageSize = 10;
 
             var comments = await _commentService.GetPagedCommentsByPostId(id, _mapper.Map<SortParametersDto>(sortParameters));

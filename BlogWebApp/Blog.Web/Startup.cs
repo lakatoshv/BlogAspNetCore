@@ -1,19 +1,20 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Blog.Core.Configuration;
-using Microsoft.Extensions.Logging;
-using System.Net;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
-using System.IO;
-using Microsoft.AspNetCore.Rewrite;
-using Blog.Web.StartupConfigureServicesInstallers;
-
 namespace Blog.Web
 {
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.SpaServices.AngularCli;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Blog.Core.Configuration;
+    using Microsoft.Extensions.Logging;
+    using System.Net;
+    using Microsoft.AspNetCore.Diagnostics;
+    using Microsoft.AspNetCore.Http;
+    using System.IO;
+    using Microsoft.AspNetCore.Rewrite;
+    using Blog.Web.StartupConfigureServicesInstallers;
+    using Microsoft.Extensions.Hosting;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -30,7 +31,7 @@ namespace Blog.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             // TODO: Add development configuration
             if (env.IsDevelopment())
@@ -94,16 +95,18 @@ namespace Blog.Web
             // with default route of '/api/[Controller]'
 
             app.UseMvcWithDefaultRoute();
-
-            app.UseMvc(routes =>
+            app.UseRouting();
+            
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    name: "areaRoute",
-                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "areaRoute",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapRazorPages();
             });
 
             // Configures application to serve the index.html file from /wwwroot
@@ -131,7 +134,7 @@ namespace Blog.Web
             });
         }
 
-        private void RedirectFromHttpToHttps(IApplicationBuilder applicationBuilder)
+        private static void RedirectFromHttpToHttps(IApplicationBuilder applicationBuilder)
         {
             var options = new RewriteOptions().AddRedirectToHttps();
             applicationBuilder.UseRewriter(options);
