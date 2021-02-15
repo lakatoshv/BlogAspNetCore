@@ -1,6 +1,3 @@
-using Blog.Web.HealthChecks;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-
 namespace Blog.Web
 {
     using Microsoft.AspNetCore.Builder;
@@ -47,13 +44,7 @@ namespace Blog.Web
                 app.UseHsts();
             }
 
-            app.UseHealthChecks("/health", new HealthCheckOptions
-            {
-                ResponseWriter = async (context, report) =>
-                {
-                    await HealthCheckHelper.GetHealthCheckResponse(context, report);
-                }
-            });
+            app.UseHealthChecks("/api/health-check");
 
             var swaggerOptions = new SwaggerOptions();
             Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);

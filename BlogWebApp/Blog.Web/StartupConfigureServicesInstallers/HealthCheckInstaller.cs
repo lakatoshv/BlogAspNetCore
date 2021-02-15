@@ -15,6 +15,14 @@ namespace Blog.Web.StartupConfigureServicesInstallers
             services.AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>()
                 .AddCheck<RedisHealthCheck>("Redis");
+
+            services.Configure<HealthCheckPublisherOptions>(options =>
+            {
+                options.Delay = TimeSpan.FromSeconds(2);
+                options.Predicate = (check) => check.Tags.Contains("ready");
+            });
+
+            services.AddSingleton<IHealthCheckPublisher, ReadinessPublisher>();
         }
     }
 }
