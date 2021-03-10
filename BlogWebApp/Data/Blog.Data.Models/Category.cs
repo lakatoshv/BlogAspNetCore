@@ -17,6 +17,21 @@ namespace Blog.Data.Models
     public class Category : Entity
     {
         /// <summary>
+        /// Gets or sets the parent category id.
+        /// </summary>
+        public int? ParentCategoryId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the parent category.
+        /// </summary>
+        public virtual Category ParentCategory { get; set; }
+
+        /// <summary>
+        /// Gets or sets the categories.
+        /// </summary>
+        public virtual ICollection<Category> Categories { get; set; }
+
+        /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>
