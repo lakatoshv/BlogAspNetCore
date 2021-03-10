@@ -2,14 +2,14 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.EmailServices
+namespace Blog.CommonServices.EmailServices
 {
     using System.Net;
     using System.Net.Mail;
     using System.Text;
     using System.Threading.Tasks;
     using Blog.Services.Core.Email.Smtp;
-    using Blog.Services.EmailServices.Interfaces;
+    using Blog.CommonServices.EmailServices.Interfaces;
     using Microsoft.Extensions.Options;
 
     /// <summary>

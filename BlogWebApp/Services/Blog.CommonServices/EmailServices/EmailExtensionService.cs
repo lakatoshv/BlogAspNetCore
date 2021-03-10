@@ -2,12 +2,12 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.EmailServices
+namespace Blog.CommonServices.EmailServices
 {
     using System.Threading.Tasks;
     using Blog.Core.Emails;
     using Blog.Services.Core.Email.Templates;
-    using Blog.Services.EmailServices.Interfaces;
+    using Blog.CommonServices.EmailServices.Interfaces;
     using Microsoft.Extensions.Options;
 
     /// <summary>

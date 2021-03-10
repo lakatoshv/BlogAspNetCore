@@ -1,4 +1,4 @@
-﻿namespace Blog.Services.CacheServices
+﻿namespace Blog.CommonServices.Interfaces
 {
     using System;
     using System.Threading.Tasks;

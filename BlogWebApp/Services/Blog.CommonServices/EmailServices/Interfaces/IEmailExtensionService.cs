@@ -2,7 +2,7 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.EmailServices.Interfaces
+namespace Blog.CommonServices.EmailServices.Interfaces
 {
     using System.Threading.Tasks;
 

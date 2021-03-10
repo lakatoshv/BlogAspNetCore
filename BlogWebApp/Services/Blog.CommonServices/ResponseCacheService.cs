@@ -1,13 +1,14 @@
 ﻿// <copyright file="ResponseCacheService.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+// </copyright
 
-namespace Blog.Services.CacheServices
+namespace Blog.CommonServices
 {
     using System;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Caching.Distributed;
     using Newtonsoft.Json;
+    using Blog.CommonServices.Interfaces;
 
     /// <summary>
     /// Response cache service.
