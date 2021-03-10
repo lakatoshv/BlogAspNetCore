@@ -1,10 +1,10 @@
-﻿using Blog.Data.Models;
-using Blog.Services.Core.Dtos.Posts;
-using Blog.Contracts.V1.Requests.PostsRequests;
-using Blog.Contracts.V1.Responses.PostsResponses;
-
-namespace Blog.Web.Mappers.Posts
+﻿namespace Blog.Web.Mappers.Posts
 {
+    using Blog.Data.Models;
+    using Blog.Services.Core.Dtos.Posts;
+    using Blog.Contracts.V1.Requests.PostsRequests;
+    using Blog.Contracts.V1.Responses.PostsResponses;
+
     /// <summary>
     /// View model to entity mapping posts.
     /// </summary>

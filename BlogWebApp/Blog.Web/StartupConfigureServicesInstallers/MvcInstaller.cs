@@ -1,9 +1,9 @@
-﻿using Blog.Web.Filters;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Blog.Web.StartupConfigureServicesInstallers
+﻿namespace Blog.Web.StartupConfigureServicesInstallers
 {
+    using Blog.Web.Filters;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+
     /// <summary>
     /// Mvc installer.
     /// </summary>

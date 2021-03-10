@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Blog.Contracts.V1.Responses
+﻿namespace Blog.Contracts.V1.Responses
 {
+    using System;
+
     /// <summary>
     /// Page info response.
     /// </summary>

@@ -1,16 +1,16 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using Blog.Core.Consts;
-using Blog.Contracts.V1;
-using Swashbuckle.AspNetCore.Filters;
-
-namespace Blog.Web.StartupConfigureServicesInstallers
+﻿namespace Blog.Web.StartupConfigureServicesInstallers
 {
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.OpenApi.Models;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
+    using Blog.Core.Consts;
+    using Blog.Contracts.V1;
+    using Swashbuckle.AspNetCore.Filters;
+
     /// <summary>
     /// Swagger installer.
     /// </summary>

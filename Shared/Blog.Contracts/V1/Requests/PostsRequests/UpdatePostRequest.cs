@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Blog.Contracts.V1.Requests.TagsRequests;
-
-namespace Blog.Contracts.V1.Requests.PostsRequests
+﻿namespace Blog.Contracts.V1.Requests.PostsRequests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using Blog.Contracts.V1.Requests.TagsRequests;
+
     /// <summary>
     /// Update post request.
     /// </summary>

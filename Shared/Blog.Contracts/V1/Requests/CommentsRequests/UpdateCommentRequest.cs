@@ -1,8 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace Blog.Contracts.V1.Requests.CommentsRequests
+﻿namespace Blog.Contracts.V1.Requests.CommentsRequests
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
     /// Update comment request.
     /// </summary>

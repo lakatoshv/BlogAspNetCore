@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace Blog.Contracts.V1.Requests.UsersRequests
+﻿namespace Blog.Contracts.V1.Requests.UsersRequests
 {
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
     /// Registration request.
     /// </summary>

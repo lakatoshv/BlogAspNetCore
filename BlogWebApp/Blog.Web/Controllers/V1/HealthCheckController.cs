@@ -1,8 +1,4 @@
-﻿using System;
-using Blog.Contracts.V1.Responses.HealthChecks;
-using Blog.Core.Consts;
-
-namespace Blog.Web.Controllers.V1
+﻿namespace Blog.Web.Controllers.V1
 {
     using Microsoft.AspNetCore.Mvc;
     using System.Linq;
@@ -12,6 +8,9 @@ namespace Blog.Web.Controllers.V1
     using Blog.Services.ControllerContext;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.Extensions.Diagnostics.HealthChecks;
+    using System;
+    using Blog.Contracts.V1.Responses.HealthChecks;
+    using Blog.Core.Consts;
 
     /// <summary>
     /// Health check controller.
@@ -34,14 +33,18 @@ namespace Blog.Web.Controllers.V1
         {
             this.healthCheckService = healthCheckService;
         }
-        
+
         /// <summary>
         /// Get health check information.
         /// </summary>
         /// <returns>HealthStatus json.</returns>
         /// <response code="200">API is healthy.</response>
+        /// <response code="400">API is unhealthy.</response>
         /// <response code="503">API is unhealthy.</response>
         [HttpGet]
+        [ProducesResponseType(typeof(HealthCheckResponse), 200)]
+        [ProducesResponseType(typeof(HealthCheckResponse), 400)]
+        [ProducesResponseType(typeof(HealthCheckResponse), 503)]
         public async Task<ActionResult> Get()
         {
             try

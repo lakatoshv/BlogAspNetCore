@@ -1,11 +1,12 @@
-﻿namespace Blog.Web.Cache
+﻿using Blog.CommonServices.Interfaces;
+
+namespace Blog.Web.Cache
 {
     using System;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using Core.Configuration;
-    using Services.CacheServices;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;

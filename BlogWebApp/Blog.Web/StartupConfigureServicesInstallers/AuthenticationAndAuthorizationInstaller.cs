@@ -1,13 +1,13 @@
-﻿using System;
-using System.Text;
-using Microsoft.Extensions.Configuration;
-using Blog.Services.Core.Identity.Auth;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-
-namespace Blog.Web.StartupConfigureServicesInstallers
+﻿namespace Blog.Web.StartupConfigureServicesInstallers
 {
+    using System;
+    using System.Text;
+    using Microsoft.Extensions.Configuration;
+    using Blog.Services.Core.Identity.Auth;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.IdentityModel.Tokens;
+
     /// <summary>
     /// Authentication and authorization installer.
     /// </summary>

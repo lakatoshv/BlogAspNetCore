@@ -24,6 +24,10 @@
     <PackageReference Include="BrotliSharpLib" Version="0.3.3" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="5.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
@@ -41,8 +45,9 @@
     <ProjectReference Include="..\..\Shared\Blog.Contracts\Blog.Contracts.csproj" />
     <ProjectReference Include="..\..\Shared\Blog.Core\Blog.Core.csproj" />
     <ProjectReference Include="..\Data\Blog.Data.Models\Blog.Data.Models.csproj" />
+    <ProjectReference Include="..\Services\Blog.CommonServices\Blog.CommonServices.csproj" />
     <ProjectReference Include="..\Services\Blog.Services.Core\Blog.Services.Core.csproj" />
-    <ProjectReference Include="..\Services\Blog.Services\Blog.Services.csproj" />
+    <ProjectReference Include="..\Services\Blog.Services\Blog.EntityServices.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

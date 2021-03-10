@@ -1,12 +1,11 @@
-﻿using Blog.Contracts;
-using Blog.Contracts.V1.Responses;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Blog.Web.Filters
+﻿namespace Blog.Web.Filters
 {
+    using Blog.Contracts;
+    using Blog.Contracts.V1.Responses;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Filters;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Validation filter.

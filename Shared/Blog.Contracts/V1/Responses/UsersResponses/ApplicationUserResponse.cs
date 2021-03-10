@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
-
-namespace Blog.Contracts.V1.Responses.UsersResponses
+﻿namespace Blog.Contracts.V1.Responses.UsersResponses
 {
+    using System.Collections.Generic;
+    using Microsoft.AspNetCore.Identity;
+
     /// <summary>
     /// Application user response.
     /// </summary>

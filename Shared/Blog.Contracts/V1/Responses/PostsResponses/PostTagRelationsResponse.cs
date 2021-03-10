@@ -1,7 +1,10 @@
-﻿using Blog.Contracts.V1.Responses.TagsResponses;
-
-namespace Blog.Contracts.V1.Responses.PostsResponses
+﻿namespace Blog.Contracts.V1.Responses.PostsResponses
 {
+    using Blog.Contracts.V1.Responses.TagsResponses;
+
+    /// <summary>
+    /// Post tag relations response.
+    /// </summary>
     public class PostTagRelationsResponse
     {
         /// <summary>
