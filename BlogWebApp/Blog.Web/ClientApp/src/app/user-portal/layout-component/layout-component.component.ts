@@ -20,9 +20,9 @@ export class LayoutComponentComponent implements OnInit {
   loggedIn = false;
 
   /**
-   * @param _navbarOpen boolean
+   * @param navbarOpen boolean
    */
-  private _navbarOpen = false;
+  navbarOpen = false;
 
   /**
    * @param _usersService UsersService
@@ -53,7 +53,7 @@ export class LayoutComponentComponent implements OnInit {
    * @returns void
    */
   toggleNavbar(): void {
-    this._navbarOpen = !this._navbarOpen;
+    this.navbarOpen = !this.navbarOpen;
   }
 
   /**

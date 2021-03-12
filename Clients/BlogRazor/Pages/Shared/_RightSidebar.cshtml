@@ -1,0 +1,22 @@
+﻿<div class="col-lg-4 sidebar-widgets">
+    <div class="widget-wrap">
+        <div class="single-sidebar-widget search-widget">
+            <form class="search-form" action="#">
+                <input placeholder="Пошук" name="search" type="text" onfocus="this.placeholder = 'Пошук'" onblur="this.placeholder = 'Пошук'">
+                <button type="submit"><i class="fa fa-search"></i></button>
+            </form>
+        </div>
+
+        <partial name="Posts/_PopularPosts" />
+
+        <div class="single-sidebar-widget ads-widget">
+            <a href="#"><img class="img-fluid" src="img/blog/ads-banner.jpg" alt=""></a>
+        </div>
+
+        <partial name="Categories/_PopularCategoriesInSidebar" />
+
+        <partial name="_SubscribeForm" />
+
+        <partial name="Tags/_PopularTags" />
+    </div>
+</div>

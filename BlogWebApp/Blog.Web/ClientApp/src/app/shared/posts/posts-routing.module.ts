@@ -22,7 +22,7 @@ const routes: Routes = [
     component: ShowComponent
   },
   {
-    path: 'posts/add',
+    path: 'add-post',
     component: AddPostComponent
   },
   {
