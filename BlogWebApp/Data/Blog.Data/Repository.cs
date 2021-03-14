@@ -46,7 +46,10 @@ namespace Blog.Data
         /// <summary>
         /// Gets entities.
         /// </summary>
-        protected virtual DbSet<TEntity> Entities => this._entities ?? (this._entities = this._context.Set<TEntity>());
+        protected virtual DbSet<TEntity> Entities
+        {
+            get => this._entities ?? (this._entities = this._context.Set<TEntity>());
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Repository{TEntity}"/> class.
@@ -55,6 +58,17 @@ namespace Blog.Data
         public Repository(ApplicationDbContext context)
         {
             this._context = context;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Repository{TEntity}"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <exception cref="ArgumentNullException">context</exception>
+        public Repository(DbContext context)
+        {
+            this._context = (ApplicationDbContext)(context ?? throw new ArgumentNullException(nameof(context)));
+            this._entities = this._context.Set<TEntity>();
         }
 
         /// <inheritdoc cref="IRepository{TEntity}"/>
