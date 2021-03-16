@@ -29,8 +29,6 @@
 
             services.AddSingleton(configuration);
 
-            services.AddAutoMapper();
-
         }
     }
 }
