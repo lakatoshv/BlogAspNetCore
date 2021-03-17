@@ -1,3 +1,5 @@
+using Swashbuckle.AspNetCore.SwaggerUI;
+
 namespace Blog.Web
 {
     using Microsoft.AspNetCore.Builder;
@@ -73,6 +75,13 @@ namespace Blog.Web
             app.UseSwaggerUI(option =>
             {
                 option.SwaggerEndpoint(swaggerOptions.UiEndpoint, swaggerOptions.Description);
+
+                //option.HeadContent = $"{Blog.Web.Assembly.Git.Branch.ToUpper()} {BlogAssembly.Git.Commit.ToUpper()}";
+                option.DefaultModelExpandDepth(0);
+                option.DefaultModelRendering(ModelRendering.Model);
+                option.DefaultModelsExpandDepth(0);
+                option.DocExpansion(DocExpansion.None);
+                option.DisplayRequestDuration();
             });
 
             app.UseAuthentication();
@@ -119,7 +128,7 @@ namespace Blog.Web
 
             app.UseMvcWithDefaultRoute();
             app.UseRouting();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

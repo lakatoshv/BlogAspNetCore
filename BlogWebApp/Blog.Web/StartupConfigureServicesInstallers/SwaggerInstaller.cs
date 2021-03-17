@@ -1,4 +1,7 @@
-﻿namespace Blog.Web.StartupConfigureServicesInstallers
+﻿using System.Linq;
+using Blog.Web.Filters.SwaggerFilters;
+
+namespace Blog.Web.StartupConfigureServicesInstallers
 {
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -44,6 +47,10 @@
                     }
                 });
 
+                c.ResolveConflictingActions(x => x.First());
+
+                var url = configuration.GetSection("IdentityServer").GetValue<string>("Url");
+
                 c.AddSecurityDefinition(SwaggerConsts.SecurityDefinition.Name, new OpenApiSecurityScheme
                 {
                     Description = SwaggerConsts.SecurityDefinition.OpenApiSecurityScheme.Description,
@@ -69,6 +76,8 @@
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
+
+                c.OperationFilter<ApplySummariesOperationFilter>();
             });
 
             services.AddSwaggerExamplesFromAssemblyOf<Startup>();
