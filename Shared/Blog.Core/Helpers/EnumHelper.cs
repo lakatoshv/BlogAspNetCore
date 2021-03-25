@@ -1,4 +1,8 @@
-﻿namespace Blog.Core.Helpers
+﻿// <copyright file="EnumHelper.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace Blog.Core.Helpers
 {
     using System;
     using System.Collections.Generic;

@@ -45,3 +45,8 @@
 /Shared/Blog.Contracts/bin
 /Shared/Blog.Core/bin
 /BlogWebApp/Services/Blog.Services.Core/bin
+/BlogWebApp/Services/Blog.CommonServices/bin/Debug/net5.0
+/BlogWebApp/Services/Blog.CommonServices/obj
+/Clients/BlogRazor/bin/Debug/net5.0
+/Clients/BlogRazor/obj/Debug/net5.0/Razor/Pages/Shared/Categories/_PopularCategories.cshtml.g.cs
+/Clients/BlogRazor/obj

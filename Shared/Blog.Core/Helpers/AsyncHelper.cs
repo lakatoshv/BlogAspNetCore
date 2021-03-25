@@ -1,4 +1,8 @@
-﻿namespace Blog.Core.Helpers
+﻿// <copyright file="AsyncHelper.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace Blog.Core.Helpers
 {
     using System;
     using System.Threading;
