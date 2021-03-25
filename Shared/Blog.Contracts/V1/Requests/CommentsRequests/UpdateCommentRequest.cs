@@ -2,11 +2,12 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using Blog.Contracts.V1.Requests.Interfaces;
 
     /// <summary>
     /// Update comment request.
     /// </summary>
-    public class UpdateCommentRequest
+    public class UpdateCommentRequest : IRequest
     {
         /// <summary>
         /// Gets or sets the identifier.
