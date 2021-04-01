@@ -1,9 +1,11 @@
 ﻿namespace Blog.Contracts.V1.Requests.TagsRequests
 {
+    using Blog.Contracts.V1.Requests.Interfaces;
+
     /// <summary>
     /// Create tag request.
     /// </summary>
-    public class CreateTagRequest
+    public class CreateTagRequest : IRequest
     {
         /// <summary>
         /// Gets or sets the title.
