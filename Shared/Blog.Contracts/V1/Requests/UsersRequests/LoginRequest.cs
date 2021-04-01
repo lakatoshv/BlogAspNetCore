@@ -1,11 +1,12 @@
 ﻿namespace Blog.Contracts.V1.Requests.UsersRequests
 {
     using System.ComponentModel.DataAnnotations;
+    using Blog.Contracts.V1.Requests.Interfaces;
 
     /// <summary>
     /// Login request.
     /// </summary>
-    public class LoginRequest
+    public class LoginRequest : IRequest
     {
         /// <summary>
         /// Gets or sets email.

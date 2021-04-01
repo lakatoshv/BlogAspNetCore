@@ -2,11 +2,12 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using Blog.Contracts.V1.Requests.Interfaces;
 
     /// <summary>
     /// Registration request.
     /// </summary>
-    public class RegistrationRequest
+    public class RegistrationRequest : IRequest
     {
         /// <summary>
         /// Gets or sets email.
