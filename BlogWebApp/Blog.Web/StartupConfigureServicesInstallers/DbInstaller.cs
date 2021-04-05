@@ -1,10 +1,11 @@
-﻿using Blog.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Blog.Web.StartupConfigureServicesInstallers
+﻿namespace Blog.Web.StartupConfigureServicesInstallers
 {
+    using Blog.Data;
+    using Blog.Data.Extensions;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+
     /// <summary>
     /// Database installer.
     /// </summary>
@@ -16,6 +17,7 @@ namespace Blog.Web.StartupConfigureServicesInstallers
         {
             services.AddDbContextPool<ApplicationDbContext>(
                 options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            services.AddUnitOfWork<ApplicationDbContext>();
         }
     }
 }

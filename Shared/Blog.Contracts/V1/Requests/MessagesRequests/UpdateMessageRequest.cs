@@ -1,9 +1,11 @@
 ﻿namespace Blog.Contracts.V1.Requests.MessagesRequests
 {
+    using Blog.Contracts.V1.Requests.Interfaces;
+
     /// <summary>
     /// Update message request.
     /// </summary>
-    public class UpdateMessageRequest
+    public class UpdateMessageRequest : IRequest
     {
         /// <summary>
         /// Gets or sets the sender identifier.

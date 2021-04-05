@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Blog.Contracts.V1.Responses.TagsResponses
+﻿namespace Blog.Contracts.V1.Responses.TagsResponses
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Paged tags response.
     /// </summary>

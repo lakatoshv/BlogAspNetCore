@@ -1,16 +1,19 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using Blog.Core.Consts;
-using Blog.Contracts.V1;
-using Swashbuckle.AspNetCore.Filters;
+﻿using System.Linq;
+using Blog.Web.Filters.SwaggerFilters;
 
 namespace Blog.Web.StartupConfigureServicesInstallers
 {
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.OpenApi.Models;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
+    using Blog.Core.Consts;
+    using Blog.Contracts.V1;
+    using Swashbuckle.AspNetCore.Filters;
+
     /// <summary>
     /// Swagger installer.
     /// </summary>
@@ -44,6 +47,10 @@ namespace Blog.Web.StartupConfigureServicesInstallers
                     }
                 });
 
+                c.ResolveConflictingActions(x => x.First());
+
+                var url = configuration.GetSection("IdentityServer").GetValue<string>("Url");
+
                 c.AddSecurityDefinition(SwaggerConsts.SecurityDefinition.Name, new OpenApiSecurityScheme
                 {
                     Description = SwaggerConsts.SecurityDefinition.OpenApiSecurityScheme.Description,
@@ -69,6 +76,8 @@ namespace Blog.Web.StartupConfigureServicesInstallers
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
+
+                c.OperationFilter<ApplySummariesOperationFilter>();
             });
 
             services.AddSwaggerExamplesFromAssemblyOf<Startup>();

@@ -1,11 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Blog.Contracts.V1.Requests.UsersRequests
+﻿namespace Blog.Contracts.V1.Requests.UsersRequests
 {
+    using System.ComponentModel.DataAnnotations;
+    using Blog.Contracts.V1.Requests.Interfaces;
+
     /// <summary>
     /// Change password request.
     /// </summary>
-    public class ChangePasswordRequest
+    public class ChangePasswordRequest : IRequest
     {
         /// <summary>
         /// Gets or sets oldPassword.

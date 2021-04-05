@@ -1,9 +1,11 @@
 ﻿namespace Blog.Contracts.V1.Requests
 {
+    using Blog.Contracts.V1.Requests.Interfaces;
+
     /// <summary>
     /// Search parameters request.
     /// </summary>
-    public class SearchParametersRequest
+    public class SearchParametersRequest : IRequest
     {
         /// <summary>
         /// Gets or sets search.

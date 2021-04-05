@@ -1,12 +1,12 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace Blog.Contracts.V1.Requests.CommentsRequests
+﻿namespace Blog.Contracts.V1.Requests.CommentsRequests
 {
+    using System.ComponentModel.DataAnnotations;
+    using Blog.Contracts.V1.Requests.Interfaces;
+
     /// <summary>
     /// Create comment request.
     /// </summary>
-    public class CreateCommentRequest
+    public class CreateCommentRequest : IRequest
     {
         /// <summary>
         /// Gets or sets the post identifier.

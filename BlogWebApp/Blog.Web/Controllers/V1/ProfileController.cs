@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Blog.Web.Controllers.V1
 {
     /// <summary>
-    /// 
+    /// Profiles controller.
     /// </summary>
     /// <seealso cref="BaseController" />
     [Route(ApiRoutes.ProfileController.Profile)]

@@ -1,5 +1,10 @@
-﻿namespace Blog.Web.StartupConfigureServicesInstallers
+﻿using Blog.CommonServices;
+using Blog.CommonServices.EmailServices;
+using Blog.CommonServices.Interfaces;
+
+namespace Blog.Web.StartupConfigureServicesInstallers
 {
+    using Blog.CommonServices.EmailServices.Interfaces;
     using Blog.Core;
     using Blog.Core.Configuration;
     using Blog.Core.Infrastructure;
@@ -8,14 +13,11 @@
     using Blog.Data.Models;
     using Blog.Data.Repository;
     using Blog.Services;
-    using Blog.Services.CacheServices;
     using Blog.Services.ControllerContext;
     using Blog.Services.Core.Caching;
     using Blog.Services.Core.Caching.Interfaces;
     using Blog.Services.Core.Email.Templates;
     using Blog.Services.Core.Security;
-    using Blog.Services.EmailServices;
-    using Blog.Services.EmailServices.Interfaces;
     using Blog.Services.Identity.Auth;
     using Blog.Services.Identity.RefreshToken;
     using Blog.Services.Identity.Registration;

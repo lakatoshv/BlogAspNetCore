@@ -1,11 +1,11 @@
-﻿using Blog.Data;
-using Blog.Data.Models;
-using Blog.Data.Repository;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace Blog.Web.StartupConfigureServicesInstallers
+﻿namespace Blog.Web.StartupConfigureServicesInstallers
 {
+    using Blog.Data;
+    using Blog.Data.Models;
+    using Blog.Data.Repository;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+
     /// <summary>
     /// Data repositories installer.
     /// </summary>

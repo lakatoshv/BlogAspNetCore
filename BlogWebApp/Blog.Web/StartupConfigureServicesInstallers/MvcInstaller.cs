@@ -1,9 +1,11 @@
-﻿using Blog.Web.Filters;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Web.StartupConfigureServicesInstallers
 {
+    using Blog.Web.Filters;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+
     /// <summary>
     /// Mvc installer.
     /// </summary>
@@ -19,6 +21,7 @@ namespace Blog.Web.StartupConfigureServicesInstallers
                 options.Filters.Add<ValidationFilter>();
             });
             services.AddRazorPages();
+            services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(config =>

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Blog.Contracts.V1.Responses.HealthChecks
+﻿namespace Blog.Contracts.V1.Responses.HealthChecks
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Health check response.
     /// </summary>

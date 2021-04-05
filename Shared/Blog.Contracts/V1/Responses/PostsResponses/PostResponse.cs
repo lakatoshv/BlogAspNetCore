@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Blog.Contracts.V1.Responses.CommentsResponses;
-using Blog.Contracts.V1.Responses.UsersResponses;
-
-namespace Blog.Contracts.V1.Responses.PostsResponses
+﻿namespace Blog.Contracts.V1.Responses.PostsResponses
 {
+    using System;
+    using System.Collections.Generic;
+    using Blog.Contracts.V1.Responses.CommentsResponses;
+    using Blog.Contracts.V1.Responses.UsersResponses;
+
     /// <summary>
     /// Post response.
     /// </summary>

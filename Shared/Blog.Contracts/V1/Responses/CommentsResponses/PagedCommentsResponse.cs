@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Blog.Contracts.V1.Responses.CommentsResponses
+﻿namespace Blog.Contracts.V1.Responses.CommentsResponses
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Paged comments response.
     /// </summary>

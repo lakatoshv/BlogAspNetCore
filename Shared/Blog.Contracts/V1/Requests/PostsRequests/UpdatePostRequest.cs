@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Blog.Contracts.V1.Requests.TagsRequests;
-
-namespace Blog.Contracts.V1.Requests.PostsRequests
+﻿namespace Blog.Contracts.V1.Requests.PostsRequests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using Blog.Contracts.V1.Requests.TagsRequests;
+    using Blog.Contracts.V1.Requests.Interfaces;
+
     /// <summary>
     /// Update post request.
     /// </summary>
-    public class UpdatePostRequest
+    public class UpdatePostRequest : IRequest
     {
         /// <summary>
         /// Gets or sets id.

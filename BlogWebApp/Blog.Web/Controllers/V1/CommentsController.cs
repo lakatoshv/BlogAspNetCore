@@ -1,25 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
-using Blog.Data.Models;
-using Blog.Services.ControllerContext;
-using Blog.Services.Core.Dtos;
-using Blog.Services.Interfaces;
-using Blog.Contracts.V1;
-using Blog.Contracts.V1.Requests;
-using Blog.Contracts.V1.Requests.CommentsRequests;
-using Blog.Contracts.V1.Responses;
-using Blog.Contracts.V1.Responses.CommentsResponses;
-using Blog.Core.Consts;
-using Blog.Web.Cache;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using static System.DateTime;
-
-namespace Blog.Web.Controllers.V1
+﻿namespace Blog.Web.Controllers.V1
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using AutoMapper;
+    using Blog.Data.Models;
+    using Blog.Services.ControllerContext;
+    using Blog.Services.Core.Dtos;
+    using Blog.Services.Interfaces;
+    using Blog.Contracts.V1;
+    using Blog.Contracts.V1.Requests;
+    using Blog.Contracts.V1.Requests.CommentsRequests;
+    using Blog.Contracts.V1.Responses;
+    using Blog.Contracts.V1.Responses.CommentsResponses;
+    using Blog.Core.Consts;
+    using Blog.Web.Cache;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using static System.DateTime;
+
     /// <summary>
     /// Comments controller.
     /// </summary>

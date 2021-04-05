@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using Blog.Contracts.V1.Requests.UsersRequests;
-using Blog.Contracts.V1.Responses.UsersResponses;
-
-namespace Blog.Web.Mappers.AspNetUser
+﻿namespace Blog.Web.Mappers.AspNetUser
 {
+    using System.Linq;
+    using Blog.Contracts.V1.Requests.UsersRequests;
+    using Blog.Contracts.V1.Responses.UsersResponses;
     using Data.Models;
     using Blog.Services.Core.Dtos.User;
     using Blog.Web.ViewModels.AspNetUser;

@@ -1,8 +1,8 @@
-﻿using Blog.Core.Emails;
+﻿using Blog.CommonServices.EmailServices;
+using Blog.CommonServices.EmailServices.Interfaces;
+using Blog.Core.Emails;
 using Blog.Services.Core.Email.Smtp;
 using Blog.Services.Core.Utilities;
-using Blog.Services.EmailServices;
-using Blog.Services.EmailServices.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

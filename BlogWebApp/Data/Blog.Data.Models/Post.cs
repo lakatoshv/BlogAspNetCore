@@ -12,6 +12,22 @@ namespace Blog.Data.Models
     public class Post : Entity
     {
         /// <summary>
+        /// Gets or sets the category identifier.
+        /// </summary>
+        /// <value>
+        /// The category identifier.
+        /// </value>
+        public int? CategoryId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the category.
+        /// </summary>
+        /// <value>
+        /// The category.
+        /// </value>
+        public virtual Category Category { get; set; }
+
+        /// <summary>
         /// Gets or sets title.
         /// </summary>
         public string Title { get; set; }

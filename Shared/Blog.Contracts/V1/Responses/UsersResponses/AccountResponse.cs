@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Blog.Contracts.V1.Responses.UsersResponses
+﻿namespace Blog.Contracts.V1.Responses.UsersResponses
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// Account response.
     /// </summary>

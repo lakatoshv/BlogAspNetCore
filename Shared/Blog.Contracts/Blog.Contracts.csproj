@@ -12,4 +12,8 @@
     <ProjectReference Include="..\Blog.Core\Blog.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="V1\Requests\Interfaces\" />
+  </ItemGroup>
+
 </Project>

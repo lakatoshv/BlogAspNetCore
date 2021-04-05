@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Blog.Contracts.V1.Responses
+﻿namespace Blog.Contracts.V1.Responses
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Error response.
     /// </summary>

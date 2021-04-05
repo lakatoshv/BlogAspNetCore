@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using Blog.Contracts.V1.Responses.CommentsResponses;
-using Blog.Contracts.V1.Responses.TagsResponses;
-
-namespace Blog.Contracts.V1.Responses.PostsResponses
+﻿namespace Blog.Contracts.V1.Responses.PostsResponses
 {
+    using System.Collections.Generic;
+    using Blog.Contracts.V1.Responses.CommentsResponses;
+    using Blog.Contracts.V1.Responses.TagsResponses;
+
     /// <summary>
     /// Post with paged comments response.
     /// </summary>

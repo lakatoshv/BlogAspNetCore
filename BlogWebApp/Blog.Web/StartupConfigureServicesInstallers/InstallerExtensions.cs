@@ -1,11 +1,11 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using AutoMapper;
-using Microsoft.Extensions.Configuration;
-
-namespace Blog.Web.StartupConfigureServicesInstallers
+﻿namespace Blog.Web.StartupConfigureServicesInstallers
 {
+    using System;
+    using Microsoft.Extensions.DependencyInjection;
+    using System.Linq;
+    using AutoMapper;
+    using Microsoft.Extensions.Configuration;
+
     /// <summary>
     /// Installer extensions.
     /// </summary>
@@ -28,8 +28,6 @@ namespace Blog.Web.StartupConfigureServicesInstallers
             installers.ForEach(installer => installer.InstallServices(services, configuration));
 
             services.AddSingleton(configuration);
-
-            services.AddAutoMapper();
 
         }
     }

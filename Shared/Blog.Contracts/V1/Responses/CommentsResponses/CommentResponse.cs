@@ -1,9 +1,9 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Blog.Contracts.V1.Responses.UsersResponses;
-
-namespace Blog.Contracts.V1.Responses.CommentsResponses
+﻿namespace Blog.Contracts.V1.Responses.CommentsResponses
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using Blog.Contracts.V1.Responses.UsersResponses;
+
     /// <summary>
     /// Comment response.
     /// </summary>

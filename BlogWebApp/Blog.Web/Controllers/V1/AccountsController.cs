@@ -1,16 +1,4 @@
-﻿using System.Collections.Generic;
-using AutoMapper;
-using Blog.Services.ControllerContext;
-using Blog.Services.Core.Utilities;
-using Blog.Services.EmailServices.Interfaces;
-using Blog.Services.Identity.User;
-using Blog.Contracts.V1;
-using Blog.Contracts.V1.Requests.UsersRequests;
-using Blog.Contracts.V1.Responses.UsersResponses;
-using Blog.Core.Consts;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-
-namespace Blog.Web.Controllers.V1
+﻿namespace Blog.Web.Controllers.V1
 {
     using Data.Models;
     using Services.Identity.Auth;
@@ -21,6 +9,17 @@ namespace Blog.Web.Controllers.V1
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Threading.Tasks;
+    using Blog.CommonServices.EmailServices.Interfaces;
+    using System.Collections.Generic;
+    using AutoMapper;
+    using Blog.Services.ControllerContext;
+    using Blog.Services.Core.Utilities;
+    using Blog.Services.Identity.User;
+    using Blog.Contracts.V1;
+    using Blog.Contracts.V1.Requests.UsersRequests;
+    using Blog.Contracts.V1.Responses.UsersResponses;
+    using Blog.Core.Consts;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     /// <summary>
     /// Accounts controller.

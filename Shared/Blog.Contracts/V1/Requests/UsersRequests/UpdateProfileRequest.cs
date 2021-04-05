@@ -1,9 +1,11 @@
 ﻿namespace Blog.Contracts.V1.Requests.UsersRequests
 {
+    using Blog.Contracts.V1.Requests.Interfaces;
+
     /// <summary>
     /// Update profile request.
     /// </summary>
-    public class UpdateProfileRequest
+    public class UpdateProfileRequest : IRequest
     {
         /// <summary>
         /// Gets or sets the email.

@@ -92,6 +92,14 @@ namespace Blog.Data
         public DbSet<PostsTagsRelations> PostsTagsRelations { get; set; }
 
         /// <summary>
+        /// Gets or sets the categories.
+        /// </summary>
+        /// <value>
+        /// The categories.
+        /// </value>
+        public DbSet<Category> Categories { get; set; }
+
+        /// <summary>
         /// Save changes.
         /// </summary>
         /// <returns>int.</returns>
@@ -187,6 +195,11 @@ namespace Blog.Data
                 .WithOne(t => t.Recipient)
                 .HasForeignKey(x => x.RecipientId);
 
+            builder.Entity<Post>()
+                .HasOne(bc => bc.Category)
+                .WithMany(b => b.Posts)
+                .HasForeignKey(bc => bc.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
             builder.Entity<PostsTagsRelations>()
                 .HasKey(x => new { x.PostId, x.TagId });
             builder.Entity<PostsTagsRelations>()

@@ -1,9 +1,11 @@
 ﻿namespace Blog.Contracts.V1.Requests
 {
+    using Blog.Contracts.V1.Requests.Interfaces;
+
     /// <summary>
     /// Sort Parameters request.
     /// </summary>
-    public class SortParametersRequest
+    public class SortParametersRequest : IRequest
     {
         /// <summary>
         /// Gets or sets orderBy.
