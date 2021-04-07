@@ -1,4 +1,6 @@
-﻿namespace Blog.Web.Factories
+﻿using Blog.Data.Specifications;
+
+namespace Blog.Web.Factories
 {
     using System;
     using AutoMapper;
@@ -53,7 +55,7 @@
         /// <inheritdoc cref="RequestFactoryWithSearchParameters{T,TEntity,TSearchParametersRequest,TCreateRequest,TUpdateRequest}"/>
         public override UpdatePostRequest GenerateForUpdate(int id)
         {
-            var post = _unitOfWork.GetRepository<Post>().FirstOrDefault(x => x.Id == id);
+            var post = _unitOfWork.GetRepository<Post>().FirstOrDefault(new PostSpecification(x => x.Id == id));
             if (post == null)
             {
                 throw new MicroserviceArgumentNullException();

@@ -1,4 +1,6 @@
-﻿namespace Blog.Web.Factories
+﻿using Blog.Data.Specifications;
+
+namespace Blog.Web.Factories
 {
     using AutoMapper;
     using System;
@@ -53,7 +55,7 @@
         /// <inheritdoc cref="RequestFactory{T,TEntity,TCreateRequest,TUpdateRequest}"/>
         public override UpdateMessageRequest GenerateForUpdate(int id)
         {
-            var message = _unitOfWork.GetRepository<Message>().FirstOrDefault(x => x.Id == id);
+            var message = _unitOfWork.GetRepository<Message>().FirstOrDefault(new MessageSpecification(x => x.Id == id));
             if (message == null)
             {
                 throw new MicroserviceArgumentNullException();

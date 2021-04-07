@@ -2,6 +2,8 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using Blog.Data.Specifications;
+
 namespace Blog.Services
 {
     using System.Collections.Generic;
@@ -65,10 +67,9 @@ namespace Blog.Services
             return await this.Repository.Table
 
                 // .Include(c => c.Comments)
-                .Where(x => x.Id.Equals(id))
-                .Include(x => x.Author)
+                .Where(new PostSpecification(x => x.Id.Equals(id)).Filter)
                 .Include(x => x.PostsTagsRelations)
-                .ThenInclude(x => x.Tag)
+                    .ThenInclude(x => x.Tag)
 
                 // .OrderByDescending(d => d.) comments order by date descending
                 .FirstOrDefaultAsync();
@@ -78,7 +79,7 @@ namespace Blog.Services
         public async Task<PostShowViewDto> GetPost(int postId, SortParametersDto sortParameters)
         {
             var post = await this.Repository.Table
-                .Where(x => x.Id.Equals(postId))
+                .Where(new PostSpecification(x => x.Id.Equals(postId)).Filter)
                 .Include(x => x.Author)
                 .ThenInclude(x => x.Profile)
                 .Include(x => x.PostsTagsRelations)
@@ -113,7 +114,7 @@ namespace Blog.Services
             return await this.Repository.Table
 
                 // .Include(c => c.Comments)
-                .Where(x => x.Id.Equals(id))
+                .Where(new PostSpecification(x => x.Id.Equals(id)).Filter)
                 .Include(x => x.Author)
                 .ThenInclude(x => x.Profile)
 

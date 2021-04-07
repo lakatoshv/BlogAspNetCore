@@ -2,6 +2,8 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using Blog.Data.Specifications;
+
 namespace Blog.Services
 {
     using System.Linq;
@@ -88,8 +90,7 @@ namespace Blog.Services
         public async Task<CommentsViewDto> GetPagedCommentsByPostId(int postId, SortParametersDto sortParameters)
         {
             var comments = await this.Repository.TableNoTracking
-                .Where(comment => comment.PostId.Equals(postId))
-                .Include(x => x.User)
+                .Where(new CommentSpecification(comment => comment.PostId.Equals(postId)).Filter)
                 .Select(x => new Comment
                 {
                     Id = x.Id,
@@ -141,8 +142,7 @@ namespace Blog.Services
         public async Task<Comment> GetCommentAsync(int id)
         {
             return await this.Repository.Table
-                .Where(x => x.Id.Equals(id))
-                .Include(x => x.User)
+                .Where(new CommentSpecification(x => x.Id.Equals(id)).Filter)
                 .FirstOrDefaultAsync();
         }
     }

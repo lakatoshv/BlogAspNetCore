@@ -1,4 +1,5 @@
-﻿using Blog.Web.Cache;
+﻿using Blog.Data.Specifications;
+using Blog.Web.Cache;
 
 namespace Blog.Web.Controllers.V1
 {
@@ -117,7 +118,7 @@ namespace Blog.Web.Controllers.V1
         [Cached(600)]
         public async Task<ActionResult> GetAvailableTags([FromRoute] int postId)
         {
-            var tags = await _tagsService.GetAllAsync(x => x.PostsTagsRelations == null || x.PostsTagsRelations.Any(y => y.PostId != postId));
+            var tags = await _tagsService.GetAllAsync(new TagSpecification(x => x.PostsTagsRelations == null || x.PostsTagsRelations.Any(y => y.PostId != postId)));
             if (tags == null)
             {
                 return NotFound();
@@ -166,7 +167,7 @@ namespace Blog.Web.Controllers.V1
                 return Bad(ModelState);
             }
 
-            if (await _tagsService.AnyAsync(x => x.Title.ToLower().Equals(model.Title.ToLower())))
+            if (await _tagsService.AnyAsync(new TagSpecification(x => x.Title.ToLower().Equals(model.Title.ToLower()))))
             {
                 return Bad(ModelState);
             }
