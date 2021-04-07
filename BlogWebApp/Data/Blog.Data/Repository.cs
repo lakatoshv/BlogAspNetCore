@@ -7,14 +7,14 @@ namespace Blog.Data
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Blog.Core;
     using Blog.Core.Infrastructure;
     using Blog.Core.Infrastructure.Pagination;
     using Blog.Core.TableFilters;
-    using Repository;
+    using Blog.Data.Specifications.Base;
     using Microsoft.EntityFrameworkCore;
+    using Blog.Data.Repository;
 
     /// <summary>
     /// Table methods.
@@ -78,9 +78,9 @@ namespace Blog.Data
         }
 
         /// <inheritdoc cref="IRepository{TEntity}"/>
-        public IQueryable<TEntity> GetAll(Expression<Func<TEntity, bool>> expression)
+        public IQueryable<TEntity> GetAll(ISpecification<TEntity> specification)
         {
-            return this.Entities.Where(expression);
+            return this.ApplySpecification(specification);
         }
 
         /// <inheritdoc cref="IRepository{TEntity}"/>
@@ -389,47 +389,47 @@ namespace Blog.Data
         }
 
         /// <inheritdoc cref="IRepository{TEntity}"/>
-        public bool Any(Expression<Func<TEntity, bool>> expression)
+        public bool Any(ISpecification<TEntity> specification)
         {
-            if (expression == null)
+            if (specification.Filter == null)
             {
-                throw new ArgumentNullException(nameof(expression));
+                throw new ArgumentNullException(nameof(specification));
             }
 
-            return this.Entities.Any(expression);
+            return this.Entities.Any(specification.Filter);
         }
 
         /// <inheritdoc cref="IRepository{TEntity}"/>
-        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression)
+        public async Task<bool> AnyAsync(ISpecification<TEntity> specification)
         {
-            if (expression == null)
+            if (specification == null)
             {
-                throw new ArgumentNullException(nameof(expression));
+                throw new ArgumentNullException(nameof(specification.Filter));
             }
 
-            return await this.Entities.AnyAsync(expression);
+            return await this.Entities.AnyAsync(specification.Filter);
         }
 
         /// <inheritdoc cref="IRepository{TEntity}"/>
-        public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> expression)
+        public TEntity FirstOrDefault(ISpecification<TEntity> specification)
         {
-            if (expression == null)
+            if (specification.Filter == null)
             {
-                throw new ArgumentNullException(nameof(expression));
+                throw new ArgumentNullException(nameof(specification.Filter));
             }
 
-            return this.Entities.FirstOrDefault(expression);
+            return this.Entities.FirstOrDefault(specification.Filter);
         }
 
         /// <inheritdoc cref="IRepository{TEntity}"/>
-        public TEntity LastOrDefault(Expression<Func<TEntity, bool>> expression)
+        public TEntity LastOrDefault(ISpecification<TEntity> specification)
         {
-            if (expression == null)
+            if (specification.Filter == null)
             {
-                throw new ArgumentNullException(nameof(expression));
+                throw new ArgumentNullException(nameof(specification.Filter));
             }
 
-            return this.Entities.LastOrDefault(expression);
+            return this.Entities.LastOrDefault(specification.Filter);
         }
 
         /// <summary>
@@ -540,17 +540,25 @@ namespace Blog.Data
         /// <returns>IQueryable.</returns>
         protected virtual IQueryable<TEntity> ManageIncludeProperties(SearchQuery<TEntity> searchQuery, IQueryable<TEntity> sequence)
         {
-            if (!string.IsNullOrWhiteSpace(searchQuery.IncludeProperties))
+            if (string.IsNullOrWhiteSpace(searchQuery.IncludeProperties))
             {
-                var properties = searchQuery.IncludeProperties.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-
-                foreach (var includeProperty in properties)
-                {
-                    sequence = sequence.Include(includeProperty);
-                }
+                return sequence;
             }
 
-            return sequence;
+            var properties = searchQuery.IncludeProperties.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
+            return properties.Aggregate(sequence, (current, includeProperty) => current.Include(includeProperty));
+        }
+
+        /// <summary>
+        /// Applies the specification.
+        /// </summary>
+        /// <param name="specification">The specification.</param>
+        /// <returns>IQueryable.</returns>
+        protected IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> specification)
+        {
+            return SpecificationEvaluator<TEntity>
+                .GetQuery(this._context.Set<TEntity>().AsQueryable(), specification);
         }
     }
 }

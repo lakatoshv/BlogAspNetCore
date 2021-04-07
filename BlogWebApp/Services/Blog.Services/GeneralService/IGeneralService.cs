@@ -4,13 +4,12 @@
 
 namespace Blog.Services.GeneralService
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using Blog.Core.Infrastructure.Pagination;
     using Blog.Core.TableFilters;
+    using Blog.Data.Specifications.Base;
 
     /// <summary>
     /// General service interface.
@@ -155,11 +154,11 @@ namespace Blog.Services.GeneralService
         ICollection<T> GetAll();
 
         /// <summary>
-        /// Get all items by expression.
+        /// Get all items by specification.
         /// </summary>
-        /// <param name="expression">expression.</param>
+        /// <param name="specification">The specification.</param>
         /// <returns>ICollection.</returns>
-        ICollection<T> GetAll(Expression<Func<T, bool>> expression);
+        ICollection<T> GetAll(ISpecification<T> specification);
 
         /// <summary>
         /// Gets all asynchronous.
@@ -168,38 +167,38 @@ namespace Blog.Services.GeneralService
         Task<ICollection<T>> GetAllAsync();
 
         /// <summary>
-        /// Async get all items by expression.
+        /// Async get all items by specification.
         /// </summary>
-        /// <param name="expression">expression.</param>
+        /// <param name="specification">The specification.</param>
         /// <returns>Task.</returns>
-        Task<ICollection<T>> GetAllAsync(Expression<Func<T, bool>> expression);
+        Task<ICollection<T>> GetAllAsync(ISpecification<T> specification);
 
         /// <summary>
-        /// Check on any by expression.
+        /// Check on any by specification.
         /// </summary>
-        /// <param name="expression">expression.</param>
+        /// <param name="specification">The specification.</param>
         /// <returns>bool.</returns>
-        bool Any(Expression<Func<T, bool>> expression);
+        bool Any(ISpecification<T> specification);
 
         /// <summary>
-        /// Asynchronous check on any by expression.
+        /// Asynchronous check on any by specification.
         /// </summary>
-        /// <param name="expression">The expression.</param>
-        /// <returns></returns>
-        Task<bool> AnyAsync(Expression<Func<T, bool>> expression);
+        /// <param name="specification">The specification.</param>
+        /// <returns>Task.</returns>
+        Task<bool> AnyAsync(ISpecification<T> specification);
 
         /// <summary>
         /// Get first or default value.
         /// </summary>
-        /// <param name="expression">expression.</param>
+        /// <param name="specification">The specification.</param>
         /// <returns>Type.</returns>
-        T FirstOrDefault(Expression<Func<T, bool>> expression);
+        T FirstOrDefault(ISpecification<T> specification);
 
         /// <summary>
-        /// Get last or default value.
+        /// Lasts the or default.
         /// </summary>
-        /// <param name="expression">expression.</param>
-        /// <returns>Type.</returns>
-        T LastOrDefault(Expression<Func<T, bool>> expression);
+        /// <param name="specification">The specification.</param>
+        /// <returns>T.</returns>
+        T LastOrDefault(ISpecification<T> specification);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Blog.Web.Factories
+﻿using Blog.Data.Specifications;
+
+namespace Blog.Web.Factories
 {
     using AutoMapper;
     using Blog.Contracts.V1.Requests.CategoriesRequests;
@@ -47,7 +49,7 @@
         /// <inheritdoc cref="RequestFactory{T,TEntity,TCreateRequest,TUpdateRequest}"/>
         public override UpdateCategoryRequest GenerateForUpdate(int id)
         {
-            var category = _unitOfWork.GetRepository<Category>().FirstOrDefault(x => x.Id == id);
+            var category = _unitOfWork.GetRepository<Category>().FirstOrDefault(new CategorySpecification(x => x.Id == id));
             if (category == null)
             {
                 throw new MicroserviceArgumentNullException();

@@ -10,6 +10,7 @@ namespace Blog.Services.Identity.Auth
     using System.Threading.Tasks;
     using Blog.Core;
     using Blog.Data.Models;
+    using Blog.Data.Specifications;
     using Blog.Services.Core.Identity.Auth;
     using Blog.Services.Interfaces;
     using Microsoft.AspNetCore.Identity;
@@ -82,6 +83,7 @@ namespace Blog.Services.Identity.Auth
         public async Task<bool> VerifyTwoFactorTokenAsync(string username, string authenticatorCode)
         {
             var user = await this.GetByUserNameAsync(username);
+
             return await this.userManager.VerifyTwoFactorTokenAsync(
                user, this.userManager.Options.Tokens.AuthenticatorTokenProvider, authenticatorCode);
         }
@@ -90,6 +92,7 @@ namespace Blog.Services.Identity.Auth
         public async Task<IdentityResult> RedeemTwoFactorRecoveryCodeAsync(string username, string code)
         {
             var user = await this.GetByUserNameAsync(username);
+
             return await this.userManager.RedeemTwoFactorRecoveryCodeAsync(user, code);
         }
 
@@ -103,6 +106,7 @@ namespace Blog.Services.Identity.Auth
             }
 
             var jwt = await Tokens.GenerateJwt(identity, this.jwtFactory, username, this.jwtOptions);
+
             return jwt;
         }
 
@@ -134,7 +138,7 @@ namespace Blog.Services.Identity.Auth
                 return await Task.FromResult<ClaimsIdentity>(null);
             }
 
-            userToVerify.Profile = this.profileService.FirstOrDefault(x => x.UserId.Equals(userToVerify.Id));
+            userToVerify.Profile = this.profileService.FirstOrDefault(new ProfileSpecification(x => x.UserId.Equals(userToVerify.Id)));
 
             var claimsIdentityUserModel = this.GetIdentityClaims(userToVerify, userName);
 
@@ -162,7 +166,7 @@ namespace Blog.Services.Identity.Auth
                 return await Task.FromResult<ClaimsIdentity>(null);
             }
 
-            userToVerify.Profile = this.profileService.FirstOrDefault(x => x.UserId.Equals(userToVerify.Id));
+            userToVerify.Profile = this.profileService.FirstOrDefault(new ProfileSpecification(x => x.UserId.Equals(userToVerify.Id)));
 
             var claimsIdentityUserModel = this.GetIdentityClaims(userToVerify, userName);
 

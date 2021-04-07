@@ -2,6 +2,8 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using Blog.Data.Specifications.Base;
+
 namespace Blog.Services.GeneralService
 {
     using System;
@@ -169,39 +171,39 @@ namespace Blog.Services.GeneralService
         }
 
         /// <inheritdoc cref="IGeneralService{T}"/>
-        public async Task<ICollection<T>> GetAllAsync(Expression<Func<T, bool>> expression)
+        public async Task<ICollection<T>> GetAllAsync(ISpecification<T> specification)
         {
-            return await this.Repository.GetAll(expression).ToListAsync();
+            return await this.Repository.GetAll(specification).ToListAsync();
         }
 
         /// <inheritdoc cref="IGeneralService{T}"/>
-        public ICollection<T> GetAll(Expression<Func<T, bool>> expression)
+        public ICollection<T> GetAll(ISpecification<T> specification)
         {
-            return this.Repository.GetAll(expression).ToList();
+            return this.Repository.GetAll(specification).ToList();
         }
 
         /// <inheritdoc cref="IGeneralService{T}"/>
-        public bool Any(Expression<Func<T, bool>> expression)
+        public bool Any(ISpecification<T> specification)
         {
-            return this.Repository.Any(expression);
+            return this.Repository.Any(specification);
         }
 
         /// <inheritdoc cref="IGeneralService{T}"/>
-        public async Task<bool> AnyAsync(Expression<Func<T, bool>> expression)
+        public async Task<bool> AnyAsync(ISpecification<T> specification)
         {
-            return await this.Repository.AnyAsync(expression);
+            return await this.Repository.AnyAsync(specification);
         }
 
         /// <inheritdoc cref="IGeneralService{T}"/>
-        public T FirstOrDefault(Expression<Func<T, bool>> expression)
+        public T FirstOrDefault(ISpecification<T> specification)
         {
-            return this.Repository.FirstOrDefault(expression);
+            return this.Repository.FirstOrDefault(specification);
         }
 
         /// <inheritdoc cref="IGeneralService{T}"/>
-        public T LastOrDefault(Expression<Func<T, bool>> expression)
+        public T LastOrDefault(ISpecification<T> specification)
         {
-            return this.Repository.LastOrDefault(expression);
+            return this.Repository.LastOrDefault(specification);
         }
 
         /// <inheritdoc cref="IGeneralService{T}"/>

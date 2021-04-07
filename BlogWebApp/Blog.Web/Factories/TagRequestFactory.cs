@@ -1,4 +1,6 @@
-﻿namespace Blog.Web.Factories
+﻿using Blog.Data.Specifications;
+
+namespace Blog.Web.Factories
 {
     using AutoMapper;
     using Blog.Contracts.V1.Requests.TagsRequests;
@@ -47,7 +49,7 @@
         /// <inheritdoc cref="RequestFactoryWithSample{T,TEntity,TSampleRequest,TCreateRequest,TUpdateRequest}"/>
         public override UpdateTagRequest GenerateForUpdate(int id)
         {
-            var tag = _unitOfWork.GetRepository<Tag>().FirstOrDefault(x => x.Id == id);
+            var tag = _unitOfWork.GetRepository<Tag>().FirstOrDefault(new TagSpecification(x => x.Id == id));
             if (tag == null)
             {
                 throw new MicroserviceArgumentNullException();
