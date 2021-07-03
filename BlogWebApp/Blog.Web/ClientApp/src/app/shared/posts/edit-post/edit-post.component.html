@@ -117,7 +117,7 @@
                       <option *ngFor="let tag of availableTags">{{tag.title}}</option>
                     </datalist>
 
-                    <input type="button" name="tagAction" id="tagAction" value="{{tagLabel}}" class="btn btn-default" (click)="tagAction(tag.value, action)">
+                    <input type="button" name="tagAction" id="tagAction" value="{{tagLabel}}" class="btn btn-default" [disabled]="postForm.invalid" (click)="tagAction(tag.value, action)">
                 </div>
 
                 <input type="submit" name="submit" id="submit" value="Додати" class="btn btn-default">

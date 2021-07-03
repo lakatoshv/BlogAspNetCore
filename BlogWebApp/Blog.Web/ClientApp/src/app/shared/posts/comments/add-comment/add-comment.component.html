@@ -13,7 +13,7 @@
                     <textarea class="comment_text" placeholder="Your Comment" required="required" formControlName="content" #content>
           </textarea>
 
-                    <button type="submit" class="comment_button">
+                    <button type="submit" class="comment_button" [disabled]="commentForm.invalid">
               Post Comment
           </button>
                 </form>

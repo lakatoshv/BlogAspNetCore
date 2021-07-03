@@ -182,19 +182,21 @@ export class AddPostComponent implements OnInit {
    * @returns void
    */
   add() {
-    this.postForm.value.id = 0;
-    this.postForm.value.tags = this.tagsList;
-    this.postForm.value.authorId = this.user.id;
-    this._postService.add({
-      ...this.postForm.value
-    }).subscribe(
-      () => {
-        this._customToastrService.displaySuccessMessage(Messages.POST_CREATED_SUCCESSFULLY);
-        this._router.navigate(['/']);
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
-      });
+    if (this.postForm.valid) {
+      this.postForm.value.id = 0;
+      this.postForm.value.tags = this.tagsList;
+      this.postForm.value.authorId = this.user.id;
+      this._postService.add({
+        ...this.postForm.value
+      }).subscribe(
+        () => {
+          this._customToastrService.displaySuccessMessage(Messages.POST_CREATED_SUCCESSFULLY);
+          this._router.navigate(['/']);
+        },
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
+    }
   }
 
   /**

@@ -1,4 +1,4 @@
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 /**
  * Post add/edit form.
@@ -8,17 +8,27 @@ export class PostForm {
         /**
          * Title input field.
          */
-        title: new FormControl(''),
+        title: new FormControl('', [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(255)
+        ]),
 
         /**
          * Description input field.
          */
-        description: new FormControl(''),
+        description: new FormControl('', [
+          Validators.required,
+          Validators.minLength(3),
+        ]),
 
         /**
          * Content input field.
          */
-        content: new FormControl(''),
+        content: new FormControl('', [
+          Validators.required,
+          Validators.minLength(3),
+        ]),
 
         /**
          * imageUrl input field.

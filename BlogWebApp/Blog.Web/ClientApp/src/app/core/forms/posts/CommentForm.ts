@@ -1,4 +1,4 @@
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 /**
  * Comment add/edit form.
@@ -8,7 +8,11 @@ export class CommentForm {
         /**
          * Content input field.
          */
-        content: new FormControl(''),
+        content: new FormControl('', [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(255)
+        ]),
 
         /**
          * Email input field.
