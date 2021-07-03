@@ -44,7 +44,9 @@ export class RegistrationComponent implements OnInit {
    * Register user.
    */
   register() {
-    if (this.registrationForm.value.password === this.registrationForm.value.confirmPassword) {
+    if (
+      this.registrationForm.valid &&
+      this.registrationForm.value.password === this.registrationForm.value.confirmPassword) {
       const roles: string[] = [];
       roles.push('User');
       this.registrationForm.value.roles = roles;

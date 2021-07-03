@@ -36,7 +36,7 @@
             <div class="form-group">
                 <input type="password" id="password-confirm" class="form-control" placeholder="Підтвердження паролю" formControlName="confirmPassword" required autofocus>
             </div>
-            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">
+            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit" [disabled]="registrationForm.invalid">
               Зареєструватись
           </button>
         </form>

@@ -1,4 +1,4 @@
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 /**
  * Registration user form.
@@ -6,29 +6,50 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class RegistrationForm {
   public registrationForm = new FormGroup({
     /**
-     * First Name input field.
-     */
-    firstName: new FormControl(''),
+         * First Name input field.
+         */
+     firstName: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(255),
+    ]),
 
     /**
      * Last Name input field.
      */
-    lastName: new FormControl(''),
+    lastName: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(255),
+    ]),
 
     /**
      * Email input field.
      */
-    email: new FormControl(''),
+    email: new FormControl('', [
+        Validators.email,
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(255),
+    ]),
 
     /**
      * Password input field.
      */
-    password: new FormControl(''),
+    password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(255),
+    ]),
 
     /**
      * Confirm Password input field.
      */
-    confirmPassword: new FormControl(''),
+    confirmPassword: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(255),
+    ]),
 
     /**
      * Phone Number input field.
