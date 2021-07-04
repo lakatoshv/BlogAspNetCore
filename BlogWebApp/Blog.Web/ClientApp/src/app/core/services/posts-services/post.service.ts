@@ -1,8 +1,7 @@
 import { APiRoutes } from './../../../contracts/v1/ApiRoutes';
-
 import { Injectable } from '@angular/core';
-import { Observable, Subject, ReplaySubject, from, of, range , throwError } from 'rxjs';
-import { map, filter, switchMap, catchError } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { HttpClientService } from '../global-service/http-client-services/http-client.service';
 
 /**
