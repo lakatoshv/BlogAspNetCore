@@ -102,7 +102,7 @@
             });
             services.AddCors(options =>
             {
-                options.AddPolicy("EnableCORS", bilder =>
+                options.AddPolicy("AllowAll", bilder =>
                 {
                     bilder.AllowAnyOrigin()
                         .AllowAnyHeader()

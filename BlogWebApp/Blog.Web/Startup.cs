@@ -50,8 +50,8 @@ namespace Blog.Web
         {
             ConfigureBase.Configure(app, env);
             ConfigureSwagger.Configure(app, Configuration);
-            ConfigureRoutes.Configure(app);
             ConfigureAuthentication.Configure(app);
+            ConfigureRoutes.Configure(app);
             ConfigureSpa.Configure(app, env);
         }
     }
