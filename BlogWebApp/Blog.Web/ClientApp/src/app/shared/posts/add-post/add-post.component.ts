@@ -161,7 +161,7 @@ export class AddPostComponent implements OnInit {
   onEditTagAction(tag: any): void {
     const index = this.selectedTag['id'];
     if (index > -1) {
-      this.tagsList[index] = tag;
+      this.tagsList[index].title = tag;
       this.clearFormData();
     }
   }
