@@ -238,7 +238,7 @@ export class EditPostComponent implements OnInit {
   onEditTagAction(tag: any): void {
     const index = this.selectedTag['id'];
     if (index > -1) {
-      this.post.tags[index] = tag;
+      this.post.tags[index].title = tag;
       this.clearFormData();
     }
   }

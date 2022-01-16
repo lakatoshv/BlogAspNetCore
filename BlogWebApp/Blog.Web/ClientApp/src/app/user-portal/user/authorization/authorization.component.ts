@@ -70,6 +70,11 @@ export class AuthorizationComponent implements OnInit {
    * @param jwt JwtToken
    */
   public succesLogin(jwt: JwtToken): void {
+    if(typeof jwt === 'string') {
+      const jwtString = jwt;
+      jwt = null;
+      jwt = JSON.parse(jwtString);
+    }
     this._usersService.saveToken(jwt['auth_token'], jwt['refresh_token']);
     const initializeSubscription = this._accountService.initialize(this._globalService._currentUser.id).subscribe(
         (initializationData: any) => {
