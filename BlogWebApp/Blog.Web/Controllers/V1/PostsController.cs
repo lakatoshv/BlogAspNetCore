@@ -40,6 +40,9 @@ namespace Blog.Web.Controllers.V1
         /// </summary>
         private readonly IPostsService _postsService;
 
+        /// <summary>
+        /// The posts tags relations service.
+        /// </summary>
         private readonly IPostsTagsRelationsService _postsTagsRelationsService;
 
         // private readonly ICommentService _commentsService;
@@ -321,7 +324,7 @@ namespace Blog.Web.Controllers.V1
             // - - -
             _postsService.Update(updatedModel);
             var tags = _mapper.Map<List<Tag>>(model.Tags);
-            await _postsTagsRelationsService.AddTagsToPost(post.Id, post.PostsTagsRelations.ToList(), tags);
+            await _postsTagsRelationsService.AddTagsToExistingPost(post.Id, post.PostsTagsRelations.ToList(), tags);
 
             var postModel = await _postsService.GetPostAsync(id);
             var mappedPost = _mapper.Map<PostViewResponse>(postModel);

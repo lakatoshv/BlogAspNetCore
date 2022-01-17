@@ -156,5 +156,4 @@ export class UsersService {
   public changePassword(model: ChangePasswordDto): Observable<any> {
     return this._httpClient.put(APiRoutes.CHANGE_PASSWORD, model);
   }
-
 }

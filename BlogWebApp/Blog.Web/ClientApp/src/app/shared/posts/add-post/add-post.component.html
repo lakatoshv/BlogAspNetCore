@@ -124,7 +124,7 @@
                     <input type="text" name="alias" id="alias" value="" class="form-control">
                 </div>
 
-                <input type="submit" name="submit" id="submit" value="Додати" class="btn btn-default">
+                <input type="submit" name="submit" id="submit" value="Додати" class="btn btn-default" [disabled]="postForm.invalid">
 
                 <button type="button" class="btn btn-sm text-white btn-secondary" (click)="backButton()">
                   Скасувати

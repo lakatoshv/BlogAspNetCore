@@ -47,7 +47,7 @@
 
             app.UseETagger();
 
-            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+             app.UseMiddleware(typeof(ErrorHandlingMiddleware));
 
             app.UseHealthChecks("/api/health-check");
         }

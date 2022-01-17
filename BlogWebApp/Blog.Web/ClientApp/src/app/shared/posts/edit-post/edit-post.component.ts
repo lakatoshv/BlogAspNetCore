@@ -153,7 +153,7 @@ export class EditPostComponent implements OnInit {
    * @returns void
    */
   edit(post: Post): void {
-    if (this.isCurrentUserPost) {
+    if (this.isCurrentUserPost && this.postForm.valid) {
       post.id = this._postId;
       post.tags = this.post.tags;
       post.authorId = this.user.id;
@@ -238,7 +238,7 @@ export class EditPostComponent implements OnInit {
   onEditTagAction(tag: any): void {
     const index = this.selectedTag['id'];
     if (index > -1) {
-      this.post.tags[index] = tag;
+      this.post.tags[index].title = tag;
       this.clearFormData();
     }
   }

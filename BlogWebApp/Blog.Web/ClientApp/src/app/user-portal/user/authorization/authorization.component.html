@@ -12,7 +12,7 @@
             <div class="form-group">
                 <input type="password" id="password" class="form-control" placeholder="Пароль" formControlName="password" required>
             </div>
-            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">
+            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit" [disabled]="authorizationForm.invalid">
               Ввійти
           </button>
         </form>

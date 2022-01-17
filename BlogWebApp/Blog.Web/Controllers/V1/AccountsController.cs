@@ -107,6 +107,7 @@
         [HttpGet(ApiRoutes.AccountsController.Initialize)]
         [ProducesResponseType(typeof(List<RoleResponse>), 200)]
         [ProducesResponseType(typeof(string), 400)]
+        [AllowAnonymous]
         public async Task<IActionResult> Initialize([FromRoute] string userId)
         {
             if (string.IsNullOrEmpty(userId))

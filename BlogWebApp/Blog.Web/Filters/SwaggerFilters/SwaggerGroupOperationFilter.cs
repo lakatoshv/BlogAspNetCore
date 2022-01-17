@@ -3,7 +3,7 @@
     using System.Linq;
     using Microsoft.AspNetCore.Mvc.Controllers;
     using Microsoft.OpenApi.Models;
-    using Blog.Core.Attributes;
+    using Blog.Core.Attributes.SwaggerAttributes;
     using Swashbuckle.AspNetCore.SwaggerGen;
 
     /// <summary>

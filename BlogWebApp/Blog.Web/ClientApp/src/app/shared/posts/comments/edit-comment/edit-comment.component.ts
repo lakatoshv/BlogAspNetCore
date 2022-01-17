@@ -86,7 +86,8 @@ export class EditCommentComponent implements OnInit {
    * @returns void
    */
   public edit(): void {
-    if (this.user.id === this.comment.userId) {
+    if (this.user.id === this.comment.userId
+      && this.commentForm.valid) {
       this.comment.commentBody = this.commentForm.get('content').value;
       this._commentService.edit(this.comment.id, this.comment).subscribe(
         (response: any) => {

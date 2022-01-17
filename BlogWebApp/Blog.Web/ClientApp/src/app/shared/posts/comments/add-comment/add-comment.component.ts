@@ -63,7 +63,7 @@ export class AddCommentComponent implements OnInit {
    * @returns void
    */
   addComment(): void {
-    if (this._usersService.isLoggedIn) {
+    if (this._usersService.isLoggedIn && this.commentForm.valid) {
       const comment: Comment = new Comment ();
       comment.postId = this.postId;
       comment.commentBody = this.commentForm.get('content').value;
