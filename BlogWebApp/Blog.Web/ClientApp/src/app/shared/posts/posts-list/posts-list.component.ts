@@ -176,6 +176,7 @@ export class PostsListComponent implements OnInit {
    */
   public paginate(page: number): void {
     this.pageInfo.pageNumber = page;
+    this._getPosts(page);
   }
 
   /**
