@@ -10,6 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { GlobalService } from './core/services/global-service/global-service.service';
+import { AuthGuard } from './core/guards/AuthGuard';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { GlobalService } from './core/services/global-service/global-service.ser
   bootstrap: [AppComponent],
   providers: [
     CustomToastrService,
-    GlobalService
+    GlobalService,
+    AuthGuard
   ]
 })
 export class AppModule { }
