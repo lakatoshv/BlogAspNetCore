@@ -79,5 +79,26 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             Assert.Equal(postId, post.Id);
         }
+
+        /// <summary>
+        /// Async get post without comments.
+        /// </summary>
+        /// <param name="id">id.</param>
+        /// <returns>Task.</returns>
+        [Fact]
+        public void Find_ShouldReturnNothing_WhenPostDoesNotExists()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            _postsRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
+                .Returns(() => null);
+
+            //Act
+            var post = _postsService.Find(postId);
+
+            //Assert
+            Assert.Null(post);
+        }
     }
 }
