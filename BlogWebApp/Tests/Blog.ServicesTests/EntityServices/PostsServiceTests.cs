@@ -54,7 +54,7 @@ namespace Blog.ServicesTests.EntityServices
 
         /// <summary>
         /// Find post.
-        /// Should return post whenP post exists.
+        /// Should return post when post exists.
         /// </summary>
         [Fact]
         public void Find_ShouldReturnPost_WhenPostExists()
@@ -81,10 +81,9 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Async get post without comments.
+        /// Find post.
+        /// Should return nothing when post does not exists.
         /// </summary>
-        /// <param name="id">id.</param>
-        /// <returns>Task.</returns>
         [Fact]
         public void Find_ShouldReturnNothing_WhenPostDoesNotExists()
         {
@@ -102,9 +101,9 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Async get post without comments.
+        /// Async find post.
+        /// Should return post when post exists.
         /// </summary>
-        /// <param name="id">id.</param>
         /// <returns>Task.</returns>
         [Fact]
         public async Task FindAsync_ShouldReturnPost_WhenPostExists()
@@ -128,6 +127,27 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Equal(postId, post.Id);
+        }
+
+        /// <summary>
+        /// Async find post.
+        /// Should return nothing when post does not exists.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task FindAsync_ShouldReturnNothing_WhenPostDoesNotExists()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            _postsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(() => null);
+
+            //Act
+            var post = await _postsService.FindAsync(postId);
+
+            //Assert
+            Assert.Null(post);
         }
     }
 }
