@@ -168,11 +168,16 @@ namespace Blog.ServicesTests.EntityServices
                 ImageUrl = $"Created from ServicesTests {postId}",
             };
 
+            _postsRepositoryMock.Setup(x => x.Insert(newPost))
+                .Callback(() => {
+                    newPost.Id = postId;
+                });
+
             //Act
             _postsService.Insert(newPost);
 
             //Assert
-            Assert.Equal(0, newPost.Id);
+            Assert.NotEqual(0, newPost.Id);
         }
     }
 }
