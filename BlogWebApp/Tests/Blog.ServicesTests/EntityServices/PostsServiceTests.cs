@@ -53,6 +53,33 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
+        /// Verify that function Find has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionFind_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Id = postId,
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+            _postsRepositoryMock.Setup(x => x.GetById(postId))
+                .Returns(newPost);
+
+            //Act
+            var post = _postsService.Find(postId);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.GetById(postId), Times.Once);
+        }
+
+        /// <summary>
         /// Find post.
         /// Should return post when post exists.
         /// </summary>
