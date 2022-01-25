@@ -128,6 +128,34 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
+        /// Verify that function Find Async has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionFindAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Id = postId,
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+            _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
+                .ReturnsAsync(newPost);
+
+            //Act
+            var post = await _postsService.FindAsync(postId);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.GetByIdAsync(postId), Times.Once);
+        }
+
+        /// <summary>
         /// Async find post.
         /// Should return post when post exists.
         /// </summary>
