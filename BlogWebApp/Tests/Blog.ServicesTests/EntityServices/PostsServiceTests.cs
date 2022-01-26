@@ -206,6 +206,35 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
+        /// Verify that function Insert has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionInsert_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+
+            _postsRepositoryMock.Setup(x => x.Insert(newPost))
+                .Callback(() => {
+                    newPost.Id = postId;
+                });
+
+            //Act
+            _postsService.Insert(newPost);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.Insert(newPost), Times.Once);
+        }
+
+        /// <summary>
         /// Insert post.
         /// Should return post when post created.
         /// </summary>
