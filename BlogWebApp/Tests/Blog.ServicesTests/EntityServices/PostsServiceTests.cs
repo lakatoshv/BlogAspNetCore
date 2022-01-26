@@ -265,6 +265,36 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
+        /// Verify that function Insert Async has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionInsertAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+
+            _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
+                .Callback(() => {
+                    newPost.Id = postId;
+                });
+
+            //Act
+            await _postsService.InsertAsync(newPost);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.InsertAsync(newPost), Times.Once);
+        }
+
+        /// <summary>
         /// Async insert post.
         /// Should return post when post created.
         /// </summary>
