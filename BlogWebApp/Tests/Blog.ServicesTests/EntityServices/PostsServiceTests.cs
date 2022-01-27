@@ -92,6 +92,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Get all posts.
         /// Should return posts when posts exists.
         /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
         [Theory]
         [InlineData(0)]
         public void GetAll_ShouldReturnPosts_WhenPostsExists(int notEqualCount)
@@ -115,14 +116,33 @@ namespace Blog.ServicesTests.EntityServices
 
 
             _postsRepositoryMock.Setup(x => x.GetAll())
-                .Returns(postslist.AsQueryable());
+                .Returns(() => postslist.AsQueryable());
 
             //Act
             var posts = _postsService.GetAll();
 
             //Assert
             Assert.NotNull(posts);
+            Assert.NotEmpty(posts);
             Assert.NotEqual(notEqualCount, posts.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all posts.
+        /// Should return nothing when posts does not exists.
+        /// </summary>
+        [Fact]
+        public void GetAll_ShouldReturnNothing_WhenPostDoesNotExists()
+        {
+            //Arrange
+            _postsRepositoryMock.Setup(x => x.GetAll())
+                .Returns(() => new List<Post>().AsQueryable());
+
+            //Act
+            var posts = _postsService.GetAll();
+
+            //Assert
+            Assert.Empty(posts);
         }
 
         /// <summary>
@@ -143,7 +163,7 @@ namespace Blog.ServicesTests.EntityServices
                 ImageUrl = $"Created from ServicesTests {postId}",
             };
             _postsRepositoryMock.Setup(x => x.GetById(postId))
-                .Returns(newPost);
+                .Returns(() => newPost);
 
             //Act
             var post = _postsService.Find(postId);
@@ -171,7 +191,7 @@ namespace Blog.ServicesTests.EntityServices
                 ImageUrl = $"Created from ServicesTests {postId}",
             };
             _postsRepositoryMock.Setup(x => x.GetById(postId))
-                .Returns(newPost);
+                .Returns(() => newPost);
 
             //Act
             var post = _postsService.Find(postId);
@@ -219,7 +239,7 @@ namespace Blog.ServicesTests.EntityServices
                 ImageUrl = $"Created from ServicesTests {postId}",
             };
             _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
-                .ReturnsAsync(newPost);
+                .ReturnsAsync(() => newPost);
 
             //Act
             var post = await _postsService.FindAsync(postId);
@@ -248,7 +268,7 @@ namespace Blog.ServicesTests.EntityServices
                 ImageUrl = $"Created from ServicesTests {postId}",
             };
             _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
-                .ReturnsAsync(newPost);
+                .ReturnsAsync(() => newPost);
 
             //Act
             var post = await _postsService.FindAsync(postId);
