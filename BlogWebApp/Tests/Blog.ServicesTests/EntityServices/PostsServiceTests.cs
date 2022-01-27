@@ -452,5 +452,42 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             _postsRepositoryMock.Verify(x => x.Update(post), Times.Once);
         }
+
+        /// <summary>
+        /// Update post.
+        /// Should return post when post updated.
+        /// </summary>
+        /// <param name="newTitle">The new title.</param>
+        [Theory]
+        [InlineData("New title")]
+        public void Update_ShouldReturnPost_WhenPostExists(string newTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+
+            _postsRepositoryMock.Setup(x => x.Insert(newPost))
+                .Callback(() => {
+                    newPost.Id = postId;
+                });
+            _postsRepositoryMock.Setup(x => x.GetById(postId))
+                .Returns(() => newPost);
+
+            //Act
+            _postsService.Insert(newPost);
+            var post = _postsService.Find(postId);
+            post.Title = newTitle;
+            _postsService.Update(post);
+
+            //Assert
+            Assert.Equal(newTitle, post.Title);
+        }
     }
 }
