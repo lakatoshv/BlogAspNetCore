@@ -5,6 +5,8 @@ using Blog.Services;
 using Blog.Services.Interfaces;
 using Moq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -50,6 +52,77 @@ namespace Blog.ServicesTests.EntityServices
             _mapper = new Mock<IMapper>();
             _postsTagsRelationsService = new Mock<IPostsTagsRelationsService>();
             _postsService = new PostsService(_postsRepositoryMock.Object, _commentsServiceMock.Object, _mapper.Object, _postsTagsRelationsService.Object);
+        }
+
+        /// <summary>
+        /// Verify that function Get All has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionGetAll_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postslist = new List<Post>();
+
+            for(var i = 0; i < random.Next(100); i++)
+            {
+                var postId = i;
+                postslist.Add(new Post
+                {
+                    Id = postId,
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+
+            _postsRepositoryMock.Setup(x => x.GetAll())
+                .Returns(postslist.AsQueryable());
+
+            //Act
+            var posts = _postsService.GetAll();
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all posts.
+        /// Should return posts when posts exists.
+        /// </summary>
+        [Theory]
+        [InlineData(0)]
+        public void GetAll_ShouldReturnPosts_WhenPostsExists(int notEqualCount)
+        {
+            //Arrange
+            var random = new Random();
+            var postslist = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var postId = i;
+                postslist.Add(new Post
+                {
+                    Id = postId,
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+
+            _postsRepositoryMock.Setup(x => x.GetAll())
+                .Returns(postslist.AsQueryable());
+
+            //Act
+            var posts = _postsService.GetAll();
+
+            //Assert
+            Assert.NotNull(posts);
+            Assert.NotEqual(notEqualCount, posts.ToList().Count);
         }
 
         /// <summary>
