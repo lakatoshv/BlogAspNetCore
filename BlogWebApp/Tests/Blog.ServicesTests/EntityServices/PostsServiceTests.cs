@@ -489,5 +489,42 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             Assert.Equal(newTitle, post.Title);
         }
+
+        /// <summary>
+        /// Verify that function Update Async has been called.
+        /// Should return post when post updated.
+        /// </summary>
+        /// <param name="newTitle">The new title.</param>
+        [Theory]
+        [InlineData("New title")]
+        public async Task Verify_FunctionUpdateAsync_HasBeenCalled(string newTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+
+            _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
+                .Callback(() => {
+                    newPost.Id = postId;
+                });
+            _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
+                .ReturnsAsync(() => newPost);
+
+            //Act
+            await _postsService.InsertAsync(newPost);
+            var post = await _postsService.FindAsync(postId);
+            post.Title = newTitle;
+            await _postsService.UpdateAsync(post);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.UpdateAsync(post), Times.Once);
+        }
     }
 }
