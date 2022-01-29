@@ -597,5 +597,42 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             _postsRepositoryMock.Verify(x => x.Delete(post), Times.Once);
         }
+
+        /// <summary>
+        /// Delete post.
+        /// Should return nothing when post is deleted.
+        /// </summary>
+        [Fact]
+        public void Delete_ShouldReturnNothing_WhenPostIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+
+            _postsRepositoryMock.Setup(x => x.Insert(newPost))
+                .Callback(() => {
+                    newPost.Id = postId;
+                });
+            _postsRepositoryMock.Setup(x => x.GetById(postId))
+                .Returns(() => newPost);
+
+            //Act
+            _postsService.Insert(newPost);
+            var post = _postsService.Find(postId);
+            _postsService.Delete(newPost);
+            _postsRepositoryMock.Setup(x => x.GetById(postId))
+                .Returns(() => null);
+            var deletedPost = _postsService.Find(postId);
+
+            //Assert
+            Assert.Null(deletedPost);
+        }
     }
 }
