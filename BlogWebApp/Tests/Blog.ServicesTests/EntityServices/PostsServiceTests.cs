@@ -495,6 +495,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return post when post updated.
         /// </summary>
         /// <param name="newTitle">The new title.</param>
+        /// <returns>Task.</returns>
         [Theory]
         [InlineData("New title")]
         public async Task Verify_FunctionUpdateAsync_HasBeenCalled(string newTitle)
@@ -532,6 +533,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return post when post updated.
         /// </summary>
         /// <param name="newTitle">The new title.</param>
+        /// <returns>Task.</returns>
         [Theory]
         [InlineData("New title")]
         public async Task UpdateAsync_ShouldReturnPost_WhenPostExists(string newTitle)
@@ -562,6 +564,38 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Equal(newTitle, post.Title);
+        }
+
+        /// <summary>
+        /// Verify that function Delete has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDelete_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Id = postId,
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+            _postsRepositoryMock.Setup(x => x.GetById(postId))
+                .Returns(() => newPost);
+
+            //Act
+            _postsService.Insert(newPost);
+            var post = _postsService.Find(postId);
+            _postsService.Delete(newPost);
+            _postsRepositoryMock.Setup(x => x.GetById(postId))
+                .Returns(() => null);
+            var deletedPost = _postsService.Find(postId);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.Delete(post), Times.Once);
         }
     }
 }
