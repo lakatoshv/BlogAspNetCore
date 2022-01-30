@@ -634,5 +634,35 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             Assert.Null(deletedPost);
         }
+
+        /// <summary>
+        /// Verify that function Delete Async has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Id = postId,
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+            _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
+                .ReturnsAsync(() => newPost);
+
+            //Act
+            await _postsService.InsertAsync(newPost);
+            var post = await _postsService.FindAsync(postId);
+            await _postsService.DeleteAsync(newPost);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.DeleteAsync(post), Times.Once);
+        }
     }
 }
