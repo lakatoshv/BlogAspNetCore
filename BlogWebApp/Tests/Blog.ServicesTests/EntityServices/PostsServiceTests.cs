@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Blog.Data.Models;
 using Blog.Data.Repository;
+using Blog.Data.Specifications;
 using Blog.Services;
 using Blog.Services.Interfaces;
 using Moq;
@@ -143,6 +144,41 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Empty(posts);
+        }
+
+        /// <summary>
+        /// Verify that function Get All with specification has been called.
+        /// </summary>
+        [Theory]
+        [InlineData("Created from ServicesTests ")]
+        public void Verify_FunctionGetAll_WithSpecification_HasBeenCalled(string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postslist = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var postId = i;
+                postslist.Add(new Post
+                {
+                    Id = postId,
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
+            _postsRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(() => postslist.Where(x => x.Title.Contains(titleSearch)).AsQueryable());
+
+            //Act
+            var posts = _postsService.GetAll(specification);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.GetAll(specification), Times.Once);
         }
 
         /// <summary>
