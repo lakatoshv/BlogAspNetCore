@@ -265,6 +265,47 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
+        /// Get all posts.
+        /// Should return nothing with  when posts does not exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData(0, "Created from ServicesTests -1")]
+        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenPostsExists(int equalCount, string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postslist = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var postId = i;
+                postslist.Add(new Post
+                {
+                    Id = postId,
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+
+            var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
+            _postsRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(() => postslist.Where(x => x.Title.Contains(titleSearch)).AsQueryable());
+
+            //Act
+            var posts = _postsService.GetAll(specification);
+
+            //Assert
+            Assert.NotNull(posts);
+            Assert.Empty(posts);
+            Assert.Equal(equalCount, posts.ToList().Count);
+        }
+
+        /// <summary>
         /// Verify that function Find has been called.
         /// </summary>
         [Fact]
