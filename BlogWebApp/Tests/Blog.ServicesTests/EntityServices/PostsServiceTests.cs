@@ -306,6 +306,27 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
+        /// Get all posts.
+        /// Should return nothing with  when posts does not exists.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests 0")]
+        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenPostDoesNotExists(string titleSearch)
+        {
+            //Arrange
+            var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
+            _postsRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(() => new List<Post>().AsQueryable());
+
+            //Act
+            var posts = _postsService.GetAll();
+
+            //Assert
+            Assert.Empty(posts);
+        }
+
+        /// <summary>
         /// Verify that function Find has been called.
         /// </summary>
         [Fact]
