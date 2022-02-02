@@ -18,6 +18,8 @@ namespace Blog.ServicesTests.EntityServices
     /// </summary>
     public class PostsServiceTests
     {
+        #region Fields
+
         /// <summary>
         /// The posts service.
         /// </summary>
@@ -43,6 +45,10 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         private readonly Mock<IPostsTagsRelationsService> _postsTagsRelationsService;
 
+        #endregion
+
+        #region Ctor
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PostsServiceTests"/> class.
         /// </summary>
@@ -55,6 +61,10 @@ namespace Blog.ServicesTests.EntityServices
             _postsService = new PostsService(_postsRepositoryMock.Object, _commentsServiceMock.Object, _mapper.Object, _postsTagsRelationsService.Object);
         }
 
+        #endregion
+
+        #region Get All function
+
         /// <summary>
         /// Verify that function Get All has been called.
         /// </summary>
@@ -65,7 +75,7 @@ namespace Blog.ServicesTests.EntityServices
             var random = new Random();
             var postslist = new List<Post>();
 
-            for(var i = 0; i < random.Next(100); i++)
+            for (var i = 0; i < random.Next(100); i++)
             {
                 var postId = i;
                 postslist.Add(new Post
@@ -146,6 +156,10 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Empty(posts);
         }
 
+        #endregion
+
+        #region Get all function With Specification
+
         /// <summary>
         /// Verify that function Get All with specification has been called.
         /// </summary>
@@ -189,7 +203,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData(0, "Created from ServicesTests ")]
-        public void GetAllAsync_ShouldReturnPosts_WithContainsSpecification_WhenPostsExists(int notEqualCount, string titleSearch)
+        public void GetAll_ShouldReturnPosts_WithContainsSpecification_WhenPostsExists(int notEqualCount, string titleSearch)
         {
             //Test failed
             //Arrange
@@ -231,7 +245,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData(1, "Created from ServicesTests 0")]
-        public void GetAllAsync_ShouldReturnPost_WithEqualsSpecification_WhenPostsExists(int equalCount, string titleSearch)
+        public void GetAll_ShouldReturnPost_WithEqualsSpecification_WhenPostsExists(int equalCount, string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -326,6 +340,10 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Empty(posts);
         }
 
+        #endregion
+
+        #region Find function
+
         /// <summary>
         /// Verify that function Find has been called.
         /// </summary>
@@ -400,6 +418,10 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             Assert.Null(post);
         }
+
+        #endregion
+
+        #region Find Async function 
 
         /// <summary>
         /// Verify that function Find Async has been called.
@@ -479,6 +501,10 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Null(post);
         }
 
+        #endregion
+
+        #region Insert function
+
         /// <summary>
         /// Verify that function Insert has been called.
         /// </summary>
@@ -537,6 +563,10 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             Assert.NotEqual(0, newPost.Id);
         }
+
+        #endregion
+
+        #region Insert Async function
 
         /// <summary>
         /// Verify that function Insert Async has been called.
@@ -597,6 +627,10 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             Assert.NotEqual(0, newPost.Id);
         }
+
+        #endregion
+
+        #region Upadate function
 
         /// <summary>
         /// Verify that function Update has been called.
@@ -670,6 +704,10 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             Assert.Equal(newTitle, post.Title);
         }
+
+        #endregion
+
+        #region Update Async function
 
         /// <summary>
         /// Verify that function Update Async has been called.
@@ -747,6 +785,10 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(newTitle, post.Title);
         }
 
+        #endregion
+
+        #region Delete function
+
         /// <summary>
         /// Verify that function Delete has been called.
         /// </summary>
@@ -816,6 +858,10 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Null(deletedPost);
         }
 
+        #endregion
+
+        #region Delete Async function
+
         /// <summary>
         /// Verify that function Delete Async has been called.
         /// </summary>
@@ -883,5 +929,7 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             Assert.Null(deletedPost);
         }
+
+        #endregion
     }
 }
