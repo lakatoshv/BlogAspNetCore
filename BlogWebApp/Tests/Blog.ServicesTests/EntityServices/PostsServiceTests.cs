@@ -932,6 +932,45 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Any function With Specification
+
+        /// <summary>
+        /// Verify that function Any with specification has been called.
+        /// </summary>
+        [Theory]
+        [InlineData("Created from ServicesTests ")]
+        public void Verify_FunctionAny_WithSpecification_HasBeenCalled(string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postslist = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var postId = i;
+                postslist.Add(new Post
+                {
+                    Id = postId,
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
+            _postsRepositoryMock.Setup(x => x.Any(specification))
+                .Returns(() => postslist.Any(x => x.Title.Contains(titleSearch)));
+
+            //Act
+            var areAnyPosts = _postsService.Any(specification);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.Any(specification), Times.Once);
+        }
+
+        #endregion
+
         #region NotTestedYet
         /// <summary>
         /// Verify that function Get All Async has been called.
@@ -1029,7 +1068,7 @@ namespace Blog.ServicesTests.EntityServices
 
         //SearchAsync(SearchQuery<T> searchQuery)
         //GetAllAsync(ISpecification<T> specification)
-        //Any(ISpecification<T> specification)
+
         //AnyAsync(ISpecification<T> specification)
         //FirstOrDefault(ISpecification<T> specification)
         //LastOrDefault(ISpecification<T> specification)
