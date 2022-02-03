@@ -1266,6 +1266,27 @@ namespace Blog.ServicesTests.EntityServices
             Assert.False(areAnyPosts);
         }
 
+        /// <summary>
+        /// Async check if there are any posts with specification.
+        /// Should return false with when posts does not exists.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests 0")]
+        public async Task AnyAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostDoesNotExists(string titleSearch)
+        {
+            //Arrange
+            var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
+            _postsRepositoryMock.Setup(x => x.AnyAsync(specification))
+                .ReturnsAsync(() => false);
+
+            //Act
+            var areAnyPosts = await _postsService.AnyAsync(specification);
+
+            //Assert
+            Assert.False(areAnyPosts);
+        }
+
         #endregion
 
         #region NotTestedYet
