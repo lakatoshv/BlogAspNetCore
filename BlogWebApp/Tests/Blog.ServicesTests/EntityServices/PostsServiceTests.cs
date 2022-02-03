@@ -163,6 +163,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <summary>
         /// Verify that function Get All with specification has been called.
         /// </summary>
+        /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests ")]
         public void Verify_FunctionGetAll_WithSpecification_HasBeenCalled(string titleSearch)
@@ -937,6 +938,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <summary>
         /// Verify that function Any with specification has been called.
         /// </summary>
+        /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests ")]
         public void Verify_FunctionAny_WithSpecification_HasBeenCalled(string titleSearch)
@@ -1107,6 +1109,47 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Any Async function With Specification
+
+        /// <summary>
+        /// Verify that function Any Async with specification has been called.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("Created from ServicesTests ")]
+        public async Task Verify_FunctionAnyAsync_WithSpecification_HasBeenCalled(string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postslist = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var postId = i;
+                postslist.Add(new Post
+                {
+                    Id = postId,
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
+            _postsRepositoryMock.Setup(x => x.AnyAsync(specification))
+                .ReturnsAsync(() => postslist.Any(x => x.Title.Contains(titleSearch)));
+
+            //Act
+            var areAnyPosts = await _postsService.AnyAsync(specification);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.Any(specification), Times.Once);
+        }
+
+        #endregion
+
         #region NotTestedYet
         /// <summary>
         /// Verify that function Get All Async has been called.
@@ -1204,10 +1247,6 @@ namespace Blog.ServicesTests.EntityServices
 
         //SearchAsync(SearchQuery<T> searchQuery)
         //GetAllAsync(ISpecification<T> specification)
-
-        //AnyAsync(ISpecification<T> specification)
-        //FirstOrDefault(ISpecification<T> specification)
-        //LastOrDefault(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion
