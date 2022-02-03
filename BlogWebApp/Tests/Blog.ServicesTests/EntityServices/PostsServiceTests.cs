@@ -1046,6 +1046,44 @@ namespace Blog.ServicesTests.EntityServices
             Assert.True(areAnyPosts);
         }
 
+        /// <summary>
+        /// Check if there are any posts with specification.
+        /// Should return false with when posts does not exists.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests -1")]
+        public void Any_ShouldReturnFalse_WithEqualSpecification_WhenPostsExists(string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postslist = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var postId = i;
+                postslist.Add(new Post
+                {
+                    Id = postId,
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+
+            var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
+            _postsRepositoryMock.Setup(x => x.Any(specification))
+                .Returns(() => postslist.Any(x => x.Title.Contains(titleSearch)));
+
+            //Act
+            var areAnyPosts = _postsService.Any(specification);
+
+            //Assert
+            Assert.False(areAnyPosts);
+        }
+
         #endregion
 
         #region NotTestedYet
