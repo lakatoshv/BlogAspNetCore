@@ -1148,6 +1148,46 @@ namespace Blog.ServicesTests.EntityServices
             _postsRepositoryMock.Verify(x => x.Any(specification), Times.Once);
         }
 
+        /// <summary>
+        /// Async check if there are any posts with specification.
+        /// Should return true with contains specification when posts exists.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("Created from ServicesTests ")]
+        public async Task AnyAsync_ShouldReturnTrue_WithContainsSpecification_WhenPostsExists(string titleSearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var postslist = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var postId = i;
+                postslist.Add(new Post
+                {
+                    Id = postId,
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+
+            var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
+            _postsRepositoryMock.Setup(x => x.AnyAsync(specification))
+                .ReturnsAsync(() => postslist.Any(x => x.Title.Contains(titleSearch)));
+
+            //Act
+            var areAnyPosts = await _postsService.AnyAsync(specification);
+
+            //Assert
+            Assert.True(areAnyPosts);
+        }
+
         #endregion
 
         #region NotTestedYet
