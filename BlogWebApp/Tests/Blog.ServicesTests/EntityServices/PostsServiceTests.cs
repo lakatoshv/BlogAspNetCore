@@ -1271,6 +1271,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return false with when posts does not exists.
         /// </summary>
         /// <param name="titleSearch">The title search.</param>
+        /// <returns>Task.</returns>
         [Theory]
         [InlineData("Created from ServicesTests 0")]
         public async Task AnyAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostDoesNotExists(string titleSearch)
@@ -1285,6 +1286,46 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.False(areAnyPosts);
+        }
+
+        #endregion
+
+        #region First Or Default function With Specification
+
+        /// <summary>
+        /// Verify that function First Or Default with specification has been called.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests ")]
+        public void Verify_FunctionFirstOrDefault_WithSpecification_HasBeenCalled(string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postslist = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var postId = i;
+                postslist.Add(new Post
+                {
+                    Id = postId,
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
+            _postsRepositoryMock.Setup(x => x.FirstOrDefault(specification))
+                .Returns(() => postslist.FirstOrDefault(x => x.Title.Contains(titleSearch)));
+
+            //Act
+            var post = _postsService.FirstOrDefault(specification);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.FirstOrDefault(specification), Times.Once);
         }
 
         #endregion
