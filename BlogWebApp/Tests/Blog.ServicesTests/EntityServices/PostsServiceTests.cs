@@ -1368,6 +1368,46 @@ namespace Blog.ServicesTests.EntityServices
             Assert.IsType<Post>(post);
         }
 
+        /// <summary>
+        /// Get first or default post with specification.
+        /// Should return post with equal specification when posts exists.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("Created from ServicesTests 0")]
+        public void FirstOrDefault_ShouldReturnTrue_WithEqualsSpecification_WhenPostsExists(string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postslist = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var postId = i;
+                postslist.Add(new Post
+                {
+                    Id = postId,
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+
+            var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
+            _postsRepositoryMock.Setup(x => x.FirstOrDefault(specification))
+                .Returns(() => postslist.FirstOrDefault(x => x.Title.Contains(titleSearch)));
+
+            //Act
+            var post = _postsService.FirstOrDefault(specification);
+
+            //Assert
+            Assert.NotNull(post);
+            Assert.IsType<Post>(post);
+        }
+
         #endregion
 
         #region NotTestedYet
