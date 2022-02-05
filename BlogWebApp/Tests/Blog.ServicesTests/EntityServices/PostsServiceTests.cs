@@ -1145,7 +1145,7 @@ namespace Blog.ServicesTests.EntityServices
             var areAnyPosts = await _postsService.AnyAsync(specification);
 
             //Assert
-            _postsRepositoryMock.Verify(x => x.Any(specification), Times.Once);
+            _postsRepositoryMock.Verify(x => x.AnyAsync(specification), Times.Once);
         }
 
         /// <summary>
@@ -1445,7 +1445,6 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(post);
-            Assert.IsType<Post>(post);
         }
 
         /// <summary>
@@ -1484,7 +1483,46 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(post);
-            Assert.IsType<Post>(post);
+        }
+
+        #endregion
+
+        #region Last Or Default function With Specification
+
+        /// <summary>
+        /// Verify that function Last Or Default with specification has been called.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests ")]
+        public void Verify_FunctionLastOrDefault_WithSpecification_HasBeenCalled(string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postslist = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var postId = i;
+                postslist.Add(new Post
+                {
+                    Id = postId,
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
+            _postsRepositoryMock.Setup(x => x.LastOrDefault(specification))
+                .Returns(() => postslist.LastOrDefault(x => x.Title.Contains(titleSearch)));
+
+            //Act
+            var post = _postsService.LastOrDefault(specification);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.LastOrDefault(specification), Times.Once);
         }
 
         #endregion
