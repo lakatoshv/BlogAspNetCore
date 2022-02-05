@@ -1525,6 +1525,46 @@ namespace Blog.ServicesTests.EntityServices
             _postsRepositoryMock.Verify(x => x.LastOrDefault(specification), Times.Once);
         }
 
+        /// <summary>
+        /// Get last or default post with specification.
+        /// Should return post with contains specification when posts exists.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests ")]
+        public void LastOrDefault_ShouldReturnTrue_WithContainsSpecification_WhenPostsExists(string titleSearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var postslist = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var postId = i;
+                postslist.Add(new Post
+                {
+                    Id = postId,
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+
+            var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
+            _postsRepositoryMock.Setup(x => x.LastOrDefault(specification))
+                .Returns(() => postslist.LastOrDefault(x => x.Title.Contains(titleSearch)));
+
+            //Act
+            var post = _postsService.LastOrDefault(specification);
+
+            //Assert
+            Assert.NotNull(post);
+            Assert.IsType<Post>(post);
+        }
+
         #endregion
 
         #region NotTestedYet
