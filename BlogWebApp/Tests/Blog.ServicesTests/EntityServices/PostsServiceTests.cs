@@ -1373,7 +1373,6 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return post with equal specification when posts exists.
         /// </summary>
         /// <param name="titleSearch">The title search.</param>
-        /// <returns>Task.</returns>
         [Theory]
         [InlineData("Created from ServicesTests 0")]
         public void FirstOrDefault_ShouldReturnTrue_WithEqualsSpecification_WhenPostsExists(string titleSearch)
@@ -1413,7 +1412,6 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing with when post does not exists.
         /// </summary>
         /// <param name="titleSearch">The title search.</param>
-        /// <returns>Task.</returns>
         [Theory]
         [InlineData("Created from ServicesTests -1")]
         public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenPostsExists(string titleSearch)
@@ -1570,7 +1568,6 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return post with equal specification when posts exists.
         /// </summary>
         /// <param name="titleSearch">The title search.</param>
-        /// <returns>Task.</returns>
         [Theory]
         [InlineData("Created from ServicesTests 0")]
         public void LastOrDefault_ShouldReturnTrue_WithEqualsSpecification_WhenPostsExists(string titleSearch)
@@ -1610,7 +1607,6 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing with when post does not exists.
         /// </summary>
         /// <param name="titleSearch">The title search.</param>
-        /// <returns>Task.</returns>
         [Theory]
         [InlineData("Created from ServicesTests -1")]
         public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenPostsExists(string titleSearch)
