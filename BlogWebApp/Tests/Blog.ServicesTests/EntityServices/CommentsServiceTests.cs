@@ -114,6 +114,22 @@ namespace Blog.ServicesTests.EntityServices
             Assert.NotEqual(notEqualCount, comments.ToList().Count);
         }
 
-        #endregion
+        /// <summary>
+        /// Get all comments.
+        /// Should return nothing when comments does not exists.
+        /// </summary>
+        [Fact]
+        public void GetAll_ShouldReturnNothing_WhenCommentsDoesNotExists()
+        {
+            //Arrange
+            _commentsRepositoryMock.Setup(x => x.GetAll())
+                .Returns(() => new List<Comment>().AsQueryable());
+
+            //Act
+            var comments = _commentsService.GetAll();
+
+            //Assert
+            Assert.Empty(comments);
+        }
     }
 }
