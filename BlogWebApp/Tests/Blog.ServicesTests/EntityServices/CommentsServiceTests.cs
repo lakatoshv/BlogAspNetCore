@@ -78,6 +78,42 @@ namespace Blog.ServicesTests.EntityServices
             _commentsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
         }
 
+        /// <summary>
+        /// Get all comments.
+        /// Should return comments when comments exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public void GetAll_ShouldReturnComments_WhenCommentsExists(int notEqualCount)
+        {
+            //Arrange
+            var random = new Random();
+            var commentsList = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var commentId = i;
+                commentsList.Add(new Comment
+                {
+                    Id = commentId,
+                    CommentBody = $"Commen {commentId}",
+                });
+            }
+
+
+            _commentsRepositoryMock.Setup(x => x.GetAll())
+                .Returns(() => commentsList.AsQueryable());
+
+            //Act
+            var comments = _commentsService.GetAll();
+
+            //Assert
+            Assert.NotNull(comments);
+            Assert.NotEmpty(comments);
+            Assert.NotEqual(notEqualCount, comments.ToList().Count);
+        }
+
         #endregion
     }
 }
