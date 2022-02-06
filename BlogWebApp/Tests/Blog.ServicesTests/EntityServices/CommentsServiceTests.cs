@@ -1,8 +1,15 @@
-﻿using Blog.Data.Models;
+﻿using AutoMapper;
+using Blog.Data.Models;
 using Blog.Data.Repository;
+using Blog.Data.Specifications;
 using Blog.Services;
 using Blog.Services.Interfaces;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace Blog.ServicesTests.EntityServices
 {
@@ -34,6 +41,41 @@ namespace Blog.ServicesTests.EntityServices
         {
             _commentsRepositoryMock = new Mock<IRepository<Comment>>();
             _commentsService = new CommentsService(_commentsRepositoryMock.Object);
+        }
+
+        #endregion
+
+        #region Get All function
+
+        /// <summary>
+        /// Verify that function Get All has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionGetAll_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var commentslist = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var commentId = i;
+                commentslist.Add(new Comment
+                {
+                    Id = commentId,
+                    CommentBody = $"Comment {commentId}",
+                });
+            }
+
+
+            _commentsRepositoryMock.Setup(x => x.GetAll())
+                .Returns(commentslist.AsQueryable());
+
+            //Act
+            var comments = _commentsService.GetAll();
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
         }
 
         #endregion
