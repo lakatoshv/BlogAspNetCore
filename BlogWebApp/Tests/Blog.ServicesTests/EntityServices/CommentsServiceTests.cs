@@ -131,5 +131,44 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             Assert.Empty(comments);
         }
+
+        #endregion
+
+        #region Get all function With Specification
+
+        /// <summary>
+        /// Verify that function Get All with specification has been called.
+        /// </summary>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        [Theory]
+        [InlineData("Comment ")]
+        public void Verify_FunctionGetAll_WithSpecification_HasBeenCalled(string commentBodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var commentslist = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var commentId = i;
+                commentslist.Add(new Comment
+                {
+                    Id = commentId,
+                    CommentBody = $"Comment {commentId}",
+                });
+            }
+
+            var specification = new CommentSpecification(x => x.CommentBody.Contains(commentBodySearch));
+            _commentsRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(() => commentslist.Where(x => x.CommentBody.Contains(commentBodySearch)).AsQueryable());
+
+            //Act
+            var comments = _commentsService.GetAll(specification);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.GetAll(specification), Times.Once);
+        }
+
+        #endregion
     }
 }
