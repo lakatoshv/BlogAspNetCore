@@ -285,6 +285,27 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(equalCount, comments.ToList().Count);
         }
 
+        /// <summary>
+        /// Get all comments.
+        /// Should return nothing with  when comments does not exists.
+        /// </summary>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        [Theory]
+        [InlineData("Comment 0")]
+        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenCommentDoesNotExists(string commentBodySearch)
+        {
+            //Arrange
+            var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
+            _commentsRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(() => new List<Comment>().AsQueryable());
+
+            //Act
+            var comments = _commentsService.GetAll();
+
+            //Assert
+            Assert.Empty(comments);
+        }
+
         #endregion
     }
 }
