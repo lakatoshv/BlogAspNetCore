@@ -208,6 +208,44 @@ namespace Blog.ServicesTests.EntityServices
             Assert.NotEqual(notEqualCount, comments.ToList().Count);
         }
 
+
+        /// <summary>
+        /// Get all comments with specification.
+        /// Should return comment with equal specification when comments exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        [Theory]
+        [InlineData(1, "Comment 0")]
+        public void GetAll_ShouldReturnComment_WithEqualsSpecification_WhenCommentsExists(int equalCount, string commentBodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var commentslist = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var commentId = i;
+                commentslist.Add(new Comment
+                {
+                    Id = commentId,
+                    CommentBody = $"Comment {commentId}",
+                });
+            }
+
+
+            var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
+            _commentsRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(() => commentslist.Where(x => x.CommentBody.Contains(commentBodySearch)).AsQueryable());
+
+            //Act
+            var comments = _commentsService.GetAll(specification);
+
+            //Assert
+            Assert.NotNull(comments);
+            Assert.NotEmpty(comments);
+            Assert.Equal(equalCount, comments.ToList().Count);
+        }
         #endregion
     }
 }
