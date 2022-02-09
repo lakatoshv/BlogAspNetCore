@@ -334,6 +334,31 @@ namespace Blog.ServicesTests.EntityServices
             _commentsRepositoryMock.Verify(x => x.GetById(commentId), Times.Once);
         }
 
+        /// <summary>
+        /// Find comment.
+        /// Should return comment when comment exists.
+        /// </summary>
+        [Fact]
+        public void Find_ShouldReturnComment_WhencommentExists()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var newcomment = new Comment
+            {
+                Id = commentId,
+                CommentBody = $"Comment {commentId}",
+            };
+            _commentsRepositoryMock.Setup(x => x.GetById(commentId))
+                .Returns(() => newcomment);
+
+            //Act
+            var comment = _commentsService.Find(commentId);
+
+            //Assert
+            Assert.Equal(commentId, comment.Id);
+        }
+
         #endregion
     }
 }
