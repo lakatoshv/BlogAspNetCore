@@ -359,6 +359,26 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(commentId, comment.Id);
         }
 
+        /// <summary>
+        /// Find comment.
+        /// Should return nothing when comment does not exists.
+        /// </summary>
+        [Fact]
+        public void Find_ShouldReturnNothing_WhenCommentDoesNotExists()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            _commentsRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
+                .Returns(() => null);
+
+            //Act
+            var comment = _commentsService.Find(commentId);
+
+            //Assert
+            Assert.Null(comment);
+        }
+
         #endregion
     }
 }
