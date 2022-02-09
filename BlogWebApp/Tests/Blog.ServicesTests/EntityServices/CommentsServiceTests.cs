@@ -307,5 +307,33 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Find function
+
+        /// <summary>
+        /// Verify that function Find has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionFind_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var newcomment = new Comment
+            {
+                Id = commentId,
+                CommentBody = $"Comment {commentId}",
+            };
+            _commentsRepositoryMock.Setup(x => x.GetById(commentId))
+                .Returns(() => newcomment);
+
+            //Act
+            var comment = _commentsService.Find(commentId);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.GetById(commentId), Times.Once);
+        }
+
+        #endregion
     }
 }
