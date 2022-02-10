@@ -434,6 +434,27 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(commentId, comment.Id);
         }
 
+        /// <summary>
+        /// Async find comment.
+        /// Should return nothing when comment does not exists.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task FindAsync_ShouldReturnNothing_WhenCommentDoesNotExists()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            _commentsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(() => null);
+
+            //Act
+            var comment = await _commentsService.FindAsync(commentId);
+
+            //Assert
+            Assert.Null(comment);
+        }
+
         #endregion
     }
 }
