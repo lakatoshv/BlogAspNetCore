@@ -408,6 +408,32 @@ namespace Blog.ServicesTests.EntityServices
             _commentsRepositoryMock.Verify(x => x.GetByIdAsync(commentId), Times.Once);
         }
 
+        /// <summary>
+        /// Async find comment.
+        /// Should return comment when comment exists.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task FindAsync_ShouldReturnComment_WhenCommentExists()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var newcomment = new Comment
+            {
+                Id = commentId,
+                CommentBody = $"Comment {commentId}",
+            };
+            _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
+                .ReturnsAsync(() => newcomment);
+
+            //Act
+            var comment = await _commentsService.FindAsync(commentId);
+
+            //Assert
+            Assert.Equal(commentId, comment.Id);
+        }
+
         #endregion
     }
 }
