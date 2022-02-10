@@ -380,5 +380,34 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Find Async function 
+
+        /// <summary>
+        /// Verify that function Find Async has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionFindAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var newcomment = new Comment
+            {
+                Id = commentId,
+                CommentBody = $"Comment {commentId}",
+            };
+            _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
+                .ReturnsAsync(() => newcomment);
+
+            //Act
+            var comment = await _commentsService.FindAsync(commentId);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.GetByIdAsync(commentId), Times.Once);
+        }
+
+        #endregion
     }
 }
