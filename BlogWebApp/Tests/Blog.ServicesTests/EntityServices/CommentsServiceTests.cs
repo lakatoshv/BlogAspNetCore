@@ -485,6 +485,33 @@ namespace Blog.ServicesTests.EntityServices
             _commentsRepositoryMock.Verify(x => x.Insert(newcomment), Times.Once);
         }
 
+        /// <summary>
+        /// Insert comment.
+        /// Should return comment when comment created.
+        /// </summary>
+        [Fact]
+        public void Insert_ShouldReturnComment_WhenCommentExists()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var newcomment = new Comment
+            {
+                CommentBody = $"Comment {commentId}",
+            };
+
+            _commentsRepositoryMock.Setup(x => x.Insert(newcomment))
+                .Callback(() => {
+                    newcomment.Id = commentId;
+                });
+
+            //Act
+            _commentsService.Insert(newcomment);
+
+            //Assert
+            Assert.NotEqual(0, newcomment.Id);
+        }
+
         #endregion
     }
 }
