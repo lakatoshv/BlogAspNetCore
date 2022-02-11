@@ -456,5 +456,35 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Insert function
+
+        /// <summary>
+        /// Verify that function Insert has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionInsert_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var newcomment = new Comment
+            {
+                CommentBody = $"Comment {commentId}",
+            };
+
+            _commentsRepositoryMock.Setup(x => x.Insert(newcomment))
+                .Callback(() => {
+                    newcomment.Id = commentId;
+                });
+
+            //Act
+            _commentsService.Insert(newcomment);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.Insert(newcomment), Times.Once);
+        }
+
+        #endregion
     }
 }
