@@ -542,6 +542,34 @@ namespace Blog.ServicesTests.EntityServices
             _commentsRepositoryMock.Verify(x => x.InsertAsync(newcomment), Times.Once);
         }
 
+        /// <summary>
+        /// Async insert comment.
+        /// Should return comment when comment created.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task InsertAsync_ShouldReturnComment_WhenCommentExists()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var newcomment = new Comment
+            {
+                CommentBody = $"Comment {commentId}",
+            };
+
+            _commentsRepositoryMock.Setup(x => x.InsertAsync(newcomment))
+                .Callback(() => {
+                    newcomment.Id = commentId;
+                });
+
+            //Act
+            await _commentsService.InsertAsync(newcomment);
+
+            //Assert
+            Assert.NotEqual(0, newcomment.Id);
+        }
+
         #endregion
     }
 }
