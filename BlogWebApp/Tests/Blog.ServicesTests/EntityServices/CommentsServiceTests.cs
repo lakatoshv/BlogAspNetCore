@@ -513,5 +513,35 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Insert Async function
+
+        /// <summary>
+        /// Verify that function Insert Async has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionInsertAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var newcomment = new Comment
+            {
+                CommentBody = $"Comment {commentId}",
+            };
+
+            _commentsRepositoryMock.Setup(x => x.InsertAsync(newcomment))
+                .Callback(() => {
+                    newcomment.Id = commentId;
+                });
+
+            //Act
+            await _commentsService.InsertAsync(newcomment);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.InsertAsync(newcomment), Times.Once);
+        }
+
+        #endregion
     }
 }
