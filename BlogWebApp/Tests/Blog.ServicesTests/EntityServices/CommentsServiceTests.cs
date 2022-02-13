@@ -607,6 +607,40 @@ namespace Blog.ServicesTests.EntityServices
             _commentsRepositoryMock.Verify(x => x.Update(comment), Times.Once);
         }
 
+        /// <summary>
+        /// Update comment.
+        /// Should return comment when comment updated.
+        /// </summary>
+        /// <param name="newCommentBody">The new CommentBody.</param>
+        [Theory]
+        [InlineData("New CommentBody")]
+        public void Update_ShouldReturnComment_WhenCommentExists(string newCommentBody)
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var newcomment = new Comment
+            {
+                CommentBody = $"Comment {commentId}",
+            };
+
+            _commentsRepositoryMock.Setup(x => x.Insert(newcomment))
+                .Callback(() => {
+                    newcomment.Id = commentId;
+                });
+            _commentsRepositoryMock.Setup(x => x.GetById(commentId))
+                .Returns(() => newcomment);
+
+            //Act
+            _commentsService.Insert(newcomment);
+            var comment = _commentsService.Find(commentId);
+            comment.CommentBody = newCommentBody;
+            _commentsService.Update(comment);
+
+            //Assert
+            Assert.Equal(newCommentBody, comment.CommentBody);
+        }
+
         #endregion
     }
 }
