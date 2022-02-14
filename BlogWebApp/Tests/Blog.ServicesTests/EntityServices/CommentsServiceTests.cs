@@ -680,6 +680,41 @@ namespace Blog.ServicesTests.EntityServices
             _commentsRepositoryMock.Verify(x => x.UpdateAsync(comment), Times.Once);
         }
 
+        /// <summary>
+        /// Async update comment.
+        /// Should return comment when comment updated.
+        /// </summary>
+        /// <param name="newCommentBody">The new CommentBody.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("New CommentBody")]
+        public async Task UpdateAsync_ShouldReturnComment_WhenCommentExists(string newCommentBody)
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var newcomment = new Comment
+            {
+                CommentBody = $"Comment {commentId}",
+            };
+
+            _commentsRepositoryMock.Setup(x => x.InsertAsync(newcomment))
+                .Callback(() => {
+                    newcomment.Id = commentId;
+                });
+            _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
+                .ReturnsAsync(() => newcomment);
+
+            //Act
+            await _commentsService.InsertAsync(newcomment);
+            var comment = await _commentsService.FindAsync(commentId);
+            comment.CommentBody = newCommentBody;
+            await _commentsService.UpdateAsync(comment);
+
+            //Assert
+            Assert.Equal(newCommentBody, comment.CommentBody);
+        }
+
         #endregion
     }
 }
