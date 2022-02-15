@@ -748,6 +748,40 @@ namespace Blog.ServicesTests.EntityServices
             _commentsRepositoryMock.Verify(x => x.Delete(comment), Times.Once);
         }
 
+        /// <summary>
+        /// Delete comment.
+        /// Should return nothing when comment is deleted.
+        /// </summary>
+        [Fact]
+        public void Delete_ShouldReturnNothing_WhenCommentIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var newcomment = new Comment
+            {
+                CommentBody = $"Comment {commentId}",
+            };
+
+            _commentsRepositoryMock.Setup(x => x.Insert(newcomment))
+                .Callback(() => {
+                    newcomment.Id = commentId;
+                });
+            _commentsRepositoryMock.Setup(x => x.GetById(commentId))
+                .Returns(() => newcomment);
+
+            //Act
+            _commentsService.Insert(newcomment);
+            var comment = _commentsService.Find(commentId);
+            _commentsService.Delete(newcomment);
+            _commentsRepositoryMock.Setup(x => x.GetById(commentId))
+                .Returns(() => null);
+            var deletedcomment = _commentsService.Find(commentId);
+
+            //Assert
+            Assert.Null(deletedcomment);
+        }
+
         #endregion
     }
 }
