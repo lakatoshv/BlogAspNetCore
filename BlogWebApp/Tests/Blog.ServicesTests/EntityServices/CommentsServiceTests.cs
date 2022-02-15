@@ -716,5 +716,38 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Delete function
+
+        /// <summary>
+        /// Verify that function Delete has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDelete_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var newcomment = new Comment
+            {
+                Id = commentId,
+                CommentBody = $"Comment {commentId}",
+            };
+            _commentsRepositoryMock.Setup(x => x.GetById(commentId))
+                .Returns(() => newcomment);
+
+            //Act
+            _commentsService.Insert(newcomment);
+            var comment = _commentsService.Find(commentId);
+            _commentsService.Delete(newcomment);
+            _commentsRepositoryMock.Setup(x => x.GetById(commentId))
+                .Returns(() => null);
+            var deletedcomment = _commentsService.Find(commentId);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.Delete(comment), Times.Once);
+        }
+
+        #endregion
     }
 }
