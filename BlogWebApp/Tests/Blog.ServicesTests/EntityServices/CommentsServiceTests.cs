@@ -813,6 +813,41 @@ namespace Blog.ServicesTests.EntityServices
             _commentsRepositoryMock.Verify(x => x.DeleteAsync(comment), Times.Once);
         }
 
+        /// <summary>
+        /// Async delete comment.
+        /// Should return nothing when comment is deleted.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task DeleteAsync_ShouldReturnNothing_WhenCommentIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var newcomment = new Comment
+            {
+                CommentBody = $"Comment {commentId}",
+            };
+
+            _commentsRepositoryMock.Setup(x => x.InsertAsync(newcomment))
+                .Callback(() => {
+                    newcomment.Id = commentId;
+                });
+            _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
+                .ReturnsAsync(() => newcomment);
+
+            //Act
+            await _commentsService.InsertAsync(newcomment);
+            var comment = await _commentsService.FindAsync(commentId);
+            await _commentsService.DeleteAsync(newcomment);
+            _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
+                .Returns(() => null);
+            var deletedcomment = _commentsService.Find(commentId);
+
+            //Assert
+            Assert.Null(deletedcomment);
+        }
+
         #endregion
     }
 }
