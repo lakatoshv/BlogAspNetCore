@@ -783,5 +783,36 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Delete Async function
+
+        /// <summary>
+        /// Verify that function Delete Async has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var newcomment = new Comment
+            {
+                Id = commentId,
+                CommentBody = $"Comment {commentId}",
+            };
+            _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
+                .ReturnsAsync(() => newcomment);
+
+            //Act
+            await _commentsService.InsertAsync(newcomment);
+            var comment = await _commentsService.FindAsync(commentId);
+            await _commentsService.DeleteAsync(newcomment);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.DeleteAsync(comment), Times.Once);
+        }
+
+        #endregion
     }
 }
