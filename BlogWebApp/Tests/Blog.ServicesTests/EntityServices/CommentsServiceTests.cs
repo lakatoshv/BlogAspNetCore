@@ -849,5 +849,42 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Any function With Specification
+
+        /// <summary>
+        /// Verify that function Any with specification has been called.
+        /// </summary>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        [Theory]
+        [InlineData("Comment ")]
+        public void Verify_FunctionAny_WithSpecification_HasBeenCalled(string commentBodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var commentslist = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var commentId = i;
+                commentslist.Add(new Comment
+                {
+                    Id = commentId,
+                    CommentBody = $"Comment {commentId}",
+                });
+            }
+
+            var specification = new CommentSpecification(x => x.CommentBody.Contains(commentBodySearch));
+            _commentsRepositoryMock.Setup(x => x.Any(specification))
+                .Returns(() => commentslist.Any(x => x.CommentBody.Contains(commentBodySearch)));
+
+            //Act
+            var areAnycomments = _commentsService.Any(specification);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.Any(specification), Times.Once);
+        }
+
+        #endregion
     }
 }
