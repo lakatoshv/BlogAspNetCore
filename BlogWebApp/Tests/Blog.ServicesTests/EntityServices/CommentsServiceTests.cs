@@ -921,6 +921,41 @@ namespace Blog.ServicesTests.EntityServices
             Assert.True(areAnycomments);
         }
 
+        /// <summary>
+        /// Check if there are any comments with specification.
+        /// Should return comment with equal specification when comments exists.
+        /// </summary>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        [Theory]
+        [InlineData("Comment 0")]
+        public void Any_ShouldReturnTrue_WithEqualsSpecification_WhenCommentsExists(string commentBodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var commentslist = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var commentId = i;
+                commentslist.Add(new Comment
+                {
+                    Id = commentId,
+                    CommentBody = $"Comment {commentId}",
+                });
+            }
+
+
+            var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
+            _commentsRepositoryMock.Setup(x => x.Any(specification))
+                .Returns(() => commentslist.Any(x => x.CommentBody.Contains(commentBodySearch)));
+
+            //Act
+            var areAnycomments = _commentsService.Any(specification);
+
+            //Assert
+            Assert.True(areAnycomments);
+        }
+
         #endregion
     }
 }
