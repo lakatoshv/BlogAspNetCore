@@ -1087,6 +1087,43 @@ namespace Blog.ServicesTests.EntityServices
             Assert.True(areAnycomments);
         }
 
+        /// <summary>
+        /// Async check if there are any comments with specification.
+        /// Should return comment with equal specification when comments exists.
+        /// </summary>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("Comment 0")]
+        public async Task AnyAsync_ShouldReturnTrue_WithEqualsSpecification_WhenCommentsExists(string commentBodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var commentslist = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var commentId = i;
+                commentslist.Add(new Comment
+                {
+                    Id = commentId,
+                    CommentBody = $"Comment {commentId}",
+                });
+            }
+
+
+            var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
+            _commentsRepositoryMock.Setup(x => x.AnyAsync(specification))
+                .ReturnsAsync(() => commentslist.Any(x => x.CommentBody.Contains(commentBodySearch)));
+
+            //Act
+            var areAnycomments = await _commentsService.AnyAsync(specification);
+
+            //Assert
+            Assert.True(areAnycomments);
+        }
+
+        
         #endregion
     }
 }
