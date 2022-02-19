@@ -1182,5 +1182,42 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region First Or Default function With Specification
+
+        /// <summary>
+        /// Verify that function First Or Default with specification has been called.
+        /// </summary>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        [Theory]
+        [InlineData("Comment ")]
+        public void Verify_FunctionFirstOrDefault_WithSpecification_HasBeenCalled(string commentBodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var commentslist = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var commentId = i;
+                commentslist.Add(new Comment
+                {
+                    Id = commentId,
+                    CommentBody = $"Comment {commentId}",
+                });
+            }
+
+            var specification = new CommentSpecification(x => x.CommentBody.Contains(commentBodySearch));
+            _commentsRepositoryMock.Setup(x => x.FirstOrDefault(specification))
+                .Returns(() => commentslist.FirstOrDefault(x => x.CommentBody.Contains(commentBodySearch)));
+
+            //Act
+            var comment = _commentsService.FirstOrDefault(specification);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.FirstOrDefault(specification), Times.Once);
+        }
+
+        #endregion
     }
 }
