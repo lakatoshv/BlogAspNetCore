@@ -1218,6 +1218,44 @@ namespace Blog.ServicesTests.EntityServices
             _commentsRepositoryMock.Verify(x => x.FirstOrDefault(specification), Times.Once);
         }
 
+        /// <summary>
+        /// Get first or default comment with specification.
+        /// Should return comment with contains specification when comments exists.
+        /// </summary>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        [Theory]
+        [InlineData("Comment ")]
+        public void FirstOrDefault_ShouldReturnTrue_WithContainsSpecification_WhenCommentsExists(string commentBodySearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var commentslist = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var commentId = i;
+                commentslist.Add(new Comment
+                {
+                    Id = commentId,
+                    CommentBody = $"Comment {commentId}",
+                });
+            }
+
+
+            var specification = new CommentSpecification(x => x.CommentBody.Contains(commentBodySearch));
+            _commentsRepositoryMock.Setup(x => x.FirstOrDefault(specification))
+                .Returns(() => commentslist.FirstOrDefault(x => x.CommentBody.Contains(commentBodySearch)));
+
+            //Act
+            var comment = _commentsService.FirstOrDefault(specification);
+
+            //Assert
+            Assert.NotNull(comment);
+            Assert.IsType<Comment>(comment);
+        }
+
+        
         #endregion
     }
 }
