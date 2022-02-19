@@ -1326,6 +1326,41 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Null(comment);
         }
 
+        /// <summary>
+        /// Get first or default comment with specification.
+        /// Should return nothing with when comments does not exists.
+        /// </summary>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        [Theory]
+        [InlineData("Comment 0")]
+        public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenCommentDoesNotExists(string commentBodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var commentslist = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var commentId = i;
+                commentslist.Add(new Comment
+                {
+                    Id = commentId,
+                    CommentBody = $"Comment {commentId}",
+                });
+            }
+
+
+            var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
+            _commentsRepositoryMock.Setup(x => x.FirstOrDefault(specification))
+                .Returns(() => null);
+
+            //Act
+            var comment = _commentsService.FirstOrDefault(specification);
+
+            //Assert
+            Assert.Null(comment);
+        }
+
         #endregion
     }
 }
