@@ -1471,6 +1471,41 @@ namespace Blog.ServicesTests.EntityServices
             Assert.IsType<Comment>(comment);
         }
 
+        /// <summary>
+        /// Get last or default comment with specification.
+        /// Should return nothing with when comment does not exists.
+        /// </summary>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        [Theory]
+        [InlineData("Comment -1")]
+        public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenCommentsExists(string commentBodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var commentslist = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var commentId = i;
+                commentslist.Add(new Comment
+                {
+                    Id = commentId,
+                    CommentBody = $"Comment {commentId}",
+                });
+            }
+
+
+            var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
+            _commentsRepositoryMock.Setup(x => x.LastOrDefault(specification))
+                .Returns(() => commentslist.LastOrDefault(x => x.CommentBody.Contains(commentBodySearch)));
+
+            //Act
+            var comment = _commentsService.LastOrDefault(specification);
+
+            //Assert
+            Assert.Null(comment);
+        }
+
         #endregion
     }
 }
