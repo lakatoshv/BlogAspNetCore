@@ -1542,5 +1542,100 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region NotTestedYet
+        /// <summary>
+        /// Verify that function Get All Async has been called.
+        /// </summary>
+        //[Fact]
+        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var commentslist = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var commentId = i;
+                commentslist.Add(new Comment
+                {
+                    Id = commentId,
+                    CommentBody = $"Comment {commentId}",
+                });
+            }
+
+
+            /*_generalServiceMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => commentslist);*/
+
+            //Act
+            var comments = await _commentsService.GetAllAsync();
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
+        }
+
+        /// <summary>
+        /// Async get all comments.
+        /// Should return comments when comments exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        //[Theory]
+        //[InlineData(0)]
+        public async Task GetAllAsync_ShouldReturncomments_WhenCommentsExists(int notEqualCount)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var commentslist = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var commentId = i;
+                commentslist.Add(new Comment
+                {
+                    Id = commentId,
+                    CommentBody = $"Comment {commentId}",
+                });
+            }
+
+
+            _commentsRepositoryMock.Setup(x => x.GetAll())
+                .Returns(() => commentslist.AsQueryable());
+
+            //Act
+            var comments = await _commentsService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(comments);
+            Assert.NotEmpty(comments);
+            Assert.NotEqual(notEqualCount, comments.ToList().Count);
+        }
+
+        /// <summary>
+        /// Async get all comments.
+        /// Should return nothing when comments does not exists.
+        /// </summary>
+        //[Fact]
+        public async Task GetAllAsync_ShouldReturnNothing_WhenCommentDoesNotExists()
+        {
+            //Test failed
+            //Arrange
+            /*_generalServiceMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => new List<Comment>());*/
+
+            //Act
+            var comments = await _commentsService.GetAllAsync();
+
+            //Assert
+            Assert.Empty(comments);
+        }
+
+        //SearchAsync(SearchQuery<T> searchQuery)
+        //GetAllAsync(ISpecification<T> specification)
+        //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
+        //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
+        #endregion
     }
 }
