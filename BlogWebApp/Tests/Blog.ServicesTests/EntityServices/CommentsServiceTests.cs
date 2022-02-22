@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Blog.Data.Models;
+﻿using Blog.Data.Models;
 using Blog.Data.Repository;
 using Blog.Data.Specifications;
 using Blog.Services;
@@ -21,7 +20,7 @@ namespace Blog.ServicesTests.EntityServices
         #region Fields
 
         /// <summary>
-        /// The commnts service.
+        /// The comments service.
         /// </summary>
         private readonly ICommentsService _commentsService;
 
@@ -474,7 +473,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _commentsRepositoryMock.Setup(x => x.Insert(newcomment))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newcomment.Id = commentId;
                 });
 
@@ -501,7 +501,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _commentsRepositoryMock.Setup(x => x.Insert(newcomment))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newcomment.Id = commentId;
                 });
 
@@ -531,7 +532,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _commentsRepositoryMock.Setup(x => x.InsertAsync(newcomment))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newcomment.Id = commentId;
                 });
 
@@ -559,7 +561,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _commentsRepositoryMock.Setup(x => x.InsertAsync(newcomment))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newcomment.Id = commentId;
                 });
 
@@ -591,7 +594,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _commentsRepositoryMock.Setup(x => x.Insert(newcomment))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newcomment.Id = commentId;
                 });
             _commentsRepositoryMock.Setup(x => x.GetById(commentId))
@@ -625,7 +629,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _commentsRepositoryMock.Setup(x => x.Insert(newcomment))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newcomment.Id = commentId;
                 });
             _commentsRepositoryMock.Setup(x => x.GetById(commentId))
@@ -664,7 +669,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _commentsRepositoryMock.Setup(x => x.InsertAsync(newcomment))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newcomment.Id = commentId;
                 });
             _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
@@ -699,7 +705,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _commentsRepositoryMock.Setup(x => x.InsertAsync(newcomment))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newcomment.Id = commentId;
                 });
             _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
@@ -764,7 +771,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _commentsRepositoryMock.Setup(x => x.Insert(newcomment))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newcomment.Id = commentId;
                 });
             _commentsRepositoryMock.Setup(x => x.GetById(commentId))
@@ -830,7 +838,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _commentsRepositoryMock.Setup(x => x.InsertAsync(newcomment))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newcomment.Id = commentId;
                 });
             _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))

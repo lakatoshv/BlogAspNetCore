@@ -524,7 +524,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.Insert(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
 
@@ -554,7 +555,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.Insert(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
 
@@ -587,7 +589,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
 
@@ -618,7 +621,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
 
@@ -653,7 +657,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.Insert(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
             _postsRepositoryMock.Setup(x => x.GetById(postId))
@@ -690,7 +695,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.Insert(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
             _postsRepositoryMock.Setup(x => x.GetById(postId))
@@ -732,7 +738,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
             _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
@@ -770,7 +777,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
             _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
@@ -841,7 +849,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.Insert(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
             _postsRepositoryMock.Setup(x => x.GetById(postId))
@@ -913,7 +922,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
             _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
