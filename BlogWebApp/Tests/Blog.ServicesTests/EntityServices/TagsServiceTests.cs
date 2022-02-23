@@ -76,6 +76,41 @@ namespace Blog.ServicesTests.EntityServices
             _tagsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
         }
 
+        /// <summary>
+        /// Get all comments.
+        /// Should return tags when tags exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public void GetAll_ShouldReturnTags_WhenTagsExists(int notEqualCount)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            _tagsRepositoryMock.Setup(x => x.GetAll())
+                .Returns(() => tagsList.AsQueryable());
+
+            //Act
+            var tags = _tagsService.GetAll();
+
+            //Assert
+            Assert.NotNull(tags);
+            Assert.NotEmpty(tags);
+            Assert.NotEqual(notEqualCount, tags.ToList().Count);
+        }
+
         #endregion
     }
 }
