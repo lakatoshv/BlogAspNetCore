@@ -111,6 +111,24 @@ namespace Blog.ServicesTests.EntityServices
             Assert.NotEqual(notEqualCount, tags.ToList().Count);
         }
 
+        /// <summary>
+        /// Get all comments.
+        /// Should return nothing when tags does not exists.
+        /// </summary>
+        [Fact]
+        public void GetAll_ShouldReturnNothing_WhenTagsDoesNotExists()
+        {
+            //Arrange
+            _tagsRepositoryMock.Setup(x => x.GetAll())
+                .Returns(() => new List<Tag>().AsQueryable());
+
+            //Act
+            var tags = _tagsService.GetAll();
+
+            //Assert
+            Assert.Empty(tags);
+        }
+
         #endregion
     }
 }
