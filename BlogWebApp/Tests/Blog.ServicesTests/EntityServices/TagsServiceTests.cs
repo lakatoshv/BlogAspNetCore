@@ -43,5 +43,39 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Get All function
+
+        /// <summary>
+        /// Verify that function Get All has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionGetAll_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            _tagsRepositoryMock.Setup(x => x.GetAll())
+                .Returns(tagsList.AsQueryable());
+
+            //Act
+            var tags = _tagsService.GetAll();
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
+        }
+
+        #endregion
     }
 }
