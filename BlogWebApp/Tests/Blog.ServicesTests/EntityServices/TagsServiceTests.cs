@@ -165,6 +165,44 @@ namespace Blog.ServicesTests.EntityServices
             _tagsRepositoryMock.Verify(x => x.GetAll(specification), Times.Once);
         }
 
+        /// <summary>
+        /// Get all tags with specification.
+        /// Should return tags with contains specification when tags exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData(0, "Tag ")]
+        public void GetAll_ShouldReturnTags_WithContainsSpecification_WhenTagsExists(int notEqualCount, string tagSearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            var specification = new TagSpecification(x => x.Title.Contains(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(() => tagsList.Where(x => x.Title.Contains(tagSearch)).AsQueryable());
+
+            //Act
+            var tags = _tagsService.GetAll(specification);
+
+            //Assert
+            Assert.NotNull(tags);
+            Assert.NotEmpty(tags);
+            Assert.NotEqual(notEqualCount, tags.ToList().Count);
+        }
+
         #endregion
     }
 }
