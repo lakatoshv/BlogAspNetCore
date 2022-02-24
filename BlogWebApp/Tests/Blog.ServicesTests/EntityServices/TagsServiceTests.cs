@@ -278,6 +278,27 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(equalCount, tags.ToList().Count);
         }
 
+        /// <summary>
+        /// Get all comments.
+        /// Should return nothing with  when tags does not exists.
+        /// </summary>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData("Tag 0")]
+        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenTagsDoesNotExists(string tagSearch)
+        {
+            //Arrange
+            var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(() => new List<Tag>().AsQueryable());
+
+            //Act
+            var tags = _tagsService.GetAll();
+
+            //Assert
+            Assert.Empty(tags);
+        }
+
         #endregion
     }
 }
