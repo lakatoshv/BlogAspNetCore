@@ -203,6 +203,44 @@ namespace Blog.ServicesTests.EntityServices
             Assert.NotEqual(notEqualCount, tags.ToList().Count);
         }
 
+
+        /// <summary>
+        /// Get all comments with specification.
+        /// Should return tag with equal specification when tags exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData(1, "Tag 0")]
+        public void GetAll_ShouldReturnTag_WithEqualsSpecification_WhenTagsExists(int equalCount, string tagSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(() => tagsList.Where(x => x.Title.Contains(tagSearch)).AsQueryable());
+
+            //Act
+            var tags = _tagsService.GetAll(specification);
+
+            //Assert
+            Assert.NotNull(tags);
+            Assert.NotEmpty(tags);
+            Assert.Equal(equalCount, tags.ToList().Count);
+        }
+
         #endregion
     }
 }
