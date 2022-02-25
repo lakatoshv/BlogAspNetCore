@@ -327,6 +327,31 @@ namespace Blog.ServicesTests.EntityServices
             _tagsRepositoryMock.Verify(x => x.GetById(tagId), Times.Once);
         }
 
+        /// <summary>
+        /// Find tag.
+        /// Should return tag when tag exists.
+        /// </summary>
+        [Fact]
+        public void Find_ShouldReturnTag_WhenTagExists()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Id = tagId,
+                Title = $"Tag {tagId}",
+            };
+            _tagsRepositoryMock.Setup(x => x.GetById(tagId))
+                .Returns(() => newTag);
+
+            //Act
+            var comment = _tagsService.Find(tagId);
+
+            //Assert
+            Assert.Equal(tagId, comment.Id);
+        }
+
         #endregion
     }
 }
