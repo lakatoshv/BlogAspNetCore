@@ -300,5 +300,33 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Find function
+
+        /// <summary>
+        /// Verify that function Find has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionFind_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Id = tagId,
+                Title = $"Tag {tagId}",
+            };
+            _tagsRepositoryMock.Setup(x => x.GetById(tagId))
+                .Returns(() => newTag);
+
+            //Act
+            var tag = _tagsService.Find(tagId);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.GetById(tagId), Times.Once);
+        }
+
+        #endregion
     }
 }
