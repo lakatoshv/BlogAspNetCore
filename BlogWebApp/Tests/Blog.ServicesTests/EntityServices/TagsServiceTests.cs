@@ -352,6 +352,26 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(tagId, comment.Id);
         }
 
+        /// <summary>
+        /// Find tag.
+        /// Should return nothing when tag does not exists.
+        /// </summary>
+        [Fact]
+        public void Find_ShouldReturnNothing_WhenTagDoesNotExists()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            _tagsRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
+                .Returns(() => null);
+
+            //Act
+            var tag = _tagsService.Find(tagId);
+
+            //Assert
+            Assert.Null(tag);
+        }
+
         #endregion
     }
 }
