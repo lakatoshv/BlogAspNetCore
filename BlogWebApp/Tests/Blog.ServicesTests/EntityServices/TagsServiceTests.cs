@@ -401,6 +401,32 @@ namespace Blog.ServicesTests.EntityServices
             _tagsRepositoryMock.Verify(x => x.GetByIdAsync(tagId), Times.Once);
         }
 
+        /// <summary>
+        /// Async find tag.
+        /// Should return comment when comment exists.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task FindAsync_ShouldReturnTag_WhenTagExists()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Id = tagId,
+                Title = $"Tag {tagId}",
+            };
+            _tagsRepositoryMock.Setup(x => x.GetByIdAsync(tagId))
+                .ReturnsAsync(() => newTag);
+
+            //Act
+            var tag = await _tagsService.FindAsync(tagId);
+
+            //Assert
+            Assert.Equal(tagId, tag.Id);
+        }
+
         #endregion
     }
 }
