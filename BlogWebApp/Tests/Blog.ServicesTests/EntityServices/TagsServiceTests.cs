@@ -427,6 +427,27 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(tagId, tag.Id);
         }
 
+        /// <summary>
+        /// Async find tag.
+        /// Should return nothing when tag does not exists.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task FindAsync_ShouldReturnNothing_WhenTagDoesNotExists()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            _tagsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(() => null);
+
+            //Act
+            var comment = await _tagsService.FindAsync(commentId);
+
+            //Assert
+            Assert.Null(comment);
+        }
+
         #endregion
     }
 }
