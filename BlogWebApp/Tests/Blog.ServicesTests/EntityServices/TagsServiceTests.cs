@@ -346,10 +346,10 @@ namespace Blog.ServicesTests.EntityServices
                 .Returns(() => newTag);
 
             //Act
-            var comment = _tagsService.Find(tagId);
+            var tag = _tagsService.Find(tagId);
 
             //Assert
-            Assert.Equal(tagId, comment.Id);
+            Assert.Equal(tagId, tag.Id);
         }
 
         /// <summary>
@@ -370,6 +370,35 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(tag);
+        }
+
+        #endregion
+
+        #region Find Async function 
+
+        /// <summary>
+        /// Verify that function Find Async has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionFindAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Id = tagId,
+                Title = $"Tag {tagId}",
+            };
+            _tagsRepositoryMock.Setup(x => x.GetByIdAsync(tagId))
+                .ReturnsAsync(() => newTag);
+
+            //Act
+            var tag = await _tagsService.FindAsync(tagId);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.GetByIdAsync(tagId), Times.Once);
         }
 
         #endregion
