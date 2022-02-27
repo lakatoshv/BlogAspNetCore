@@ -449,5 +449,36 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Insert function
+
+        /// <summary>
+        /// Verify that function Insert has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionInsert_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Title = $"Tag {tagId}",
+            };
+
+            _tagsRepositoryMock.Setup(x => x.Insert(newTag))
+                .Callback(() =>
+                {
+                    newTag.Id = tagId;
+                });
+
+            //Act
+            _tagsService.Insert(newTag);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.Insert(newTag), Times.Once);
+        }
+
+        #endregion
     }
 }
