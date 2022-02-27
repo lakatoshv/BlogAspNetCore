@@ -479,6 +479,34 @@ namespace Blog.ServicesTests.EntityServices
             _tagsRepositoryMock.Verify(x => x.Insert(newTag), Times.Once);
         }
 
+        /// <summary>
+        /// Insert tag.
+        /// Should return tag when comment created.
+        /// </summary>
+        [Fact]
+        public void Insert_ShouldReturnTag_WhenTagExists()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Title = $"Tag {tagId}",
+            };
+
+            _tagsRepositoryMock.Setup(x => x.Insert(newTag))
+                .Callback(() =>
+                {
+                    newTag.Id = tagId;
+                });
+
+            //Act
+            _tagsService.Insert(newTag);
+
+            //Assert
+            Assert.NotEqual(0, newTag.Id);
+        }
+
         #endregion
     }
 }
