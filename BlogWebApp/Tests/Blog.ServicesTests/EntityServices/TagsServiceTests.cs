@@ -538,6 +538,35 @@ namespace Blog.ServicesTests.EntityServices
             _tagsRepositoryMock.Verify(x => x.InsertAsync(newTag), Times.Once);
         }
 
+        /// <summary>
+        /// Async insert tag.
+        /// Should return comment when comment created.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task InsertAsync_ShouldReturnTag_WhenTagExists()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Title = $"Tag {tagId}",
+            };
+
+            _tagsRepositoryMock.Setup(x => x.InsertAsync(newTag))
+                .Callback(() =>
+                {
+                    newTag.Id = tagId;
+                });
+
+            //Act
+            await _tagsService.InsertAsync(newTag);
+
+            //Assert
+            Assert.NotEqual(0, newTag.Id);
+        }
+
         #endregion
     }
 }
