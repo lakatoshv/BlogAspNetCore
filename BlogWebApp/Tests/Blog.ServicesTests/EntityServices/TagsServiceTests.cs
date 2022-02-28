@@ -70,14 +70,14 @@ namespace Blog.ServicesTests.EntityServices
                 .Returns(tagsList.AsQueryable());
 
             //Act
-            var tags = _tagsService.GetAll();
+            _tagsService.GetAll();
 
             //Assert
             _tagsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
         }
 
         /// <summary>
-        /// Get all comments.
+        /// Get all tags.
         /// Should return tags when tags exists.
         /// </summary>
         /// <param name="notEqualCount">The not equal count.</param>
@@ -112,7 +112,7 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Get all comments.
+        /// Get all tags.
         /// Should return nothing when tags does not exists.
         /// </summary>
         [Fact]
@@ -159,7 +159,7 @@ namespace Blog.ServicesTests.EntityServices
                 .Returns(() => tagsList.Where(x => x.Title.Contains(tagSearch)).AsQueryable());
 
             //Act
-            var tags = _tagsService.GetAll(specification);
+            _tagsService.GetAll(specification);
 
             //Assert
             _tagsRepositoryMock.Verify(x => x.GetAll(specification), Times.Once);
@@ -205,7 +205,7 @@ namespace Blog.ServicesTests.EntityServices
 
 
         /// <summary>
-        /// Get all comments with specification.
+        /// Get all tags with specification.
         /// Should return tag with equal specification when tags exists.
         /// </summary>
         /// <param name="equalCount">The equal count.</param>
@@ -242,7 +242,7 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Get all comments with specification.
+        /// Get all tags with specification.
         /// Should return nothing with  when tags does not exists.
         /// </summary>
         /// <param name="equalCount">The equal count.</param>
@@ -279,7 +279,7 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Get all comments.
+        /// Get all tags.
         /// Should return nothing with  when tags does not exists.
         /// </summary>
         /// <param name="tagSearch">The tag search.</param>
@@ -321,7 +321,7 @@ namespace Blog.ServicesTests.EntityServices
                 .Returns(() => newTag);
 
             //Act
-            var tag = _tagsService.Find(tagId);
+            _tagsService.Find(tagId);
 
             //Assert
             _tagsRepositoryMock.Verify(x => x.GetById(tagId), Times.Once);
@@ -395,7 +395,7 @@ namespace Blog.ServicesTests.EntityServices
                 .ReturnsAsync(() => newTag);
 
             //Act
-            var tag = await _tagsService.FindAsync(tagId);
+            await _tagsService.FindAsync(tagId);
 
             //Assert
             _tagsRepositoryMock.Verify(x => x.GetByIdAsync(tagId), Times.Once);
@@ -403,7 +403,7 @@ namespace Blog.ServicesTests.EntityServices
 
         /// <summary>
         /// Async find tag.
-        /// Should return comment when comment exists.
+        /// Should return tag when tag exists.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
@@ -437,15 +437,15 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var commentId = random.Next(52);
+            var tagId = random.Next(52);
             _tagsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(() => null);
 
             //Act
-            var comment = await _tagsService.FindAsync(commentId);
+            var tag = await _tagsService.FindAsync(tagId);
 
             //Assert
-            Assert.Null(comment);
+            Assert.Null(tag);
         }
 
         #endregion
@@ -481,7 +481,7 @@ namespace Blog.ServicesTests.EntityServices
 
         /// <summary>
         /// Insert tag.
-        /// Should return tag when comment created.
+        /// Should return tag when tag created.
         /// </summary>
         [Fact]
         public void Insert_ShouldReturnTag_WhenTagExists()
@@ -505,6 +505,37 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.NotEqual(0, newTag.Id);
+        }
+
+        #endregion
+
+        #region Insert Async function
+
+        /// <summary>
+        /// Verify that function Insert Async has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionInsertAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Title = $"Tag {tagId}",
+            };
+
+            _tagsRepositoryMock.Setup(x => x.InsertAsync(newTag))
+                .Callback(() =>
+                {
+                    newTag.Id = tagId;
+                });
+
+            //Act
+            await _tagsService.InsertAsync(newTag);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.InsertAsync(newTag), Times.Once);
         }
 
         #endregion
