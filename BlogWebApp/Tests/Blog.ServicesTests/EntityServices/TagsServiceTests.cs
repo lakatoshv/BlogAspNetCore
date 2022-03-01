@@ -641,5 +641,45 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Update Async function
+
+        /// <summary>
+        /// Verify that function Update Async has been called.
+        /// Should return tag when tag updated.
+        /// </summary>
+        /// <param name="newTagTitle">The new tag title.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("New Tag")]
+        public async Task Verify_FunctionUpdateAsync_HasBeenCalled(string newTagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Title = $"Tag {tagId}",
+            };
+
+            _tagsRepositoryMock.Setup(x => x.InsertAsync(newTag))
+                .Callback(() =>
+                {
+                    newTag.Id = tagId;
+                });
+            _tagsRepositoryMock.Setup(x => x.GetByIdAsync(tagId))
+                .ReturnsAsync(() => newTag);
+
+            //Act
+            await _tagsService.InsertAsync(newTag);
+            var tag = await _tagsService.FindAsync(tagId);
+            tag.Title = newTagTitle;
+            await _tagsService.UpdateAsync(tag);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.UpdateAsync(tag), Times.Once);
+        }
+
+        #endregion
     }
 }
