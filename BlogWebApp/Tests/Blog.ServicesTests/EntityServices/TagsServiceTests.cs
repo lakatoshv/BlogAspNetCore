@@ -568,5 +568,43 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Upadate function
+
+        /// <summary>
+        /// Verify that function Update has been called.
+        /// </summary>
+        /// <param name="newTagTitle">The new tag title.</param>
+        [Theory]
+        [InlineData("New Tag")]
+        public void Verify_FunctionUpdate_HasBeenCalled(string newTagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Title = $"Ефп {tagId}",
+            };
+
+            _tagsRepositoryMock.Setup(x => x.Insert(newTag))
+                .Callback(() =>
+                {
+                    newTag.Id = tagId;
+                });
+            _tagsRepositoryMock.Setup(x => x.GetById(tagId))
+                .Returns(() => newTag);
+
+            //Act
+            _tagsService.Insert(newTag);
+            var tag = _tagsService.Find(tagId);
+            tag.Title = newTagTitle;
+            _tagsService.Update(tag);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.Update(tag), Times.Once);
+        }
+
+        #endregion
     }
 }
