@@ -749,6 +749,41 @@ namespace Blog.ServicesTests.EntityServices
             _tagsRepositoryMock.Verify(x => x.Delete(tag), Times.Once);
         }
 
+        /// <summary>
+        /// Delete tag.
+        /// Should return nothing when tag is deleted.
+        /// </summary>
+        [Fact]
+        public void Delete_ShouldReturnNothing_WhenTagsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Title = $"Tag {tagId}",
+            };
+
+            _tagsRepositoryMock.Setup(x => x.Insert(newTag))
+                .Callback(() =>
+                {
+                    newTag.Id = tagId;
+                });
+            _tagsRepositoryMock.Setup(x => x.GetById(tagId))
+                .Returns(() => newTag);
+
+            //Act
+            _tagsService.Insert(newTag);
+            var tag = _tagsService.Find(tagId);
+            _tagsService.Delete(newTag);
+            _tagsRepositoryMock.Setup(x => x.GetById(tagId))
+                .Returns(() => null);
+            var deletedComment = _tagsService.Find(tagId);
+
+            //Assert
+            Assert.Null(deletedComment);
+        }
+
         #endregion
     }
 }
