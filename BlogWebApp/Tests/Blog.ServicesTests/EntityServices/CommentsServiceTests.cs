@@ -741,7 +741,7 @@ namespace Blog.ServicesTests.EntityServices
             //Act
             _commentsService.Insert(newComment);
             var comment = _commentsService.Find(commentId);
-            _commentsService.Delete(newComment);
+            _commentsService.Delete(comment);
             _commentsRepositoryMock.Setup(x => x.GetById(commentId))
                 .Returns(() => null);
             _commentsService.Find(commentId);
@@ -775,8 +775,8 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             _commentsService.Insert(newComment);
-            _commentsService.Find(commentId);
-            _commentsService.Delete(newComment);
+            var comment = _commentsService.Find(commentId);
+            _commentsService.Delete(comment);
             _commentsRepositoryMock.Setup(x => x.GetById(commentId))
                 .Returns(() => null);
             var deletedComment = _commentsService.Find(commentId);
@@ -810,7 +810,7 @@ namespace Blog.ServicesTests.EntityServices
             //Act
             await _commentsService.InsertAsync(newComment);
             var comment = await _commentsService.FindAsync(commentId);
-            await _commentsService.DeleteAsync(newComment);
+            await _commentsService.DeleteAsync(comment);
 
             //Assert
             _commentsRepositoryMock.Verify(x => x.DeleteAsync(comment), Times.Once);
@@ -842,11 +842,11 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             await _commentsService.InsertAsync(newComment);
-            await _commentsService.FindAsync(commentId);
-            await _commentsService.DeleteAsync(newComment);
+            var comment = await _commentsService.FindAsync(commentId);
+            await _commentsService.DeleteAsync(comment);
             _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
-                .Returns(() => null);
-            var deletedComment = _commentsService.Find(commentId);
+                .ReturnsAsync(() => null);
+            var deletedComment = await _commentsService.FindAsync(commentId);
 
             //Assert
             Assert.Null(deletedComment);

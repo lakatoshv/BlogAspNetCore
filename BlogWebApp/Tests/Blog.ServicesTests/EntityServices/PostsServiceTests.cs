@@ -800,7 +800,7 @@ namespace Blog.ServicesTests.EntityServices
             //Act
             _postsService.Insert(newPost);
             var post = _postsService.Find(postId);
-            _postsService.Delete(newPost);
+            _postsService.Delete(post);
             _postsRepositoryMock.Setup(x => x.GetById(postId))
                 .Returns(() => null);
             _postsService.Find(postId);
@@ -837,8 +837,8 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             _postsService.Insert(newPost);
-            _postsService.Find(postId);
-            _postsService.Delete(newPost);
+            var post = _postsService.Find(postId);
+            _postsService.Delete(post);
             _postsRepositoryMock.Setup(x => x.GetById(postId))
                 .Returns(() => null);
             var deletedPost = _postsService.Find(postId);
@@ -875,7 +875,7 @@ namespace Blog.ServicesTests.EntityServices
             //Act
             await _postsService.InsertAsync(newPost);
             var post = await _postsService.FindAsync(postId);
-            await _postsService.DeleteAsync(newPost);
+            await _postsService.DeleteAsync(post);
 
             //Assert
             _postsRepositoryMock.Verify(x => x.DeleteAsync(post), Times.Once);
@@ -910,11 +910,11 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             await _postsService.InsertAsync(newPost);
-            await _postsService.FindAsync(postId);
-            await _postsService.DeleteAsync(newPost);
+            var post = await _postsService.FindAsync(postId);
+            await _postsService.DeleteAsync(post);
             _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
-                .Returns(() => null);
-            var deletedPost = _postsService.Find(postId);
+                .ReturnsAsync(() => null);
+            var deletedPost = await _postsService.FindAsync(postId);
 
             //Assert
             Assert.Null(deletedPost);

@@ -729,18 +729,18 @@ namespace Blog.ServicesTests.EntityServices
             //Arrange
             var random = new Random();
             var tagId = random.Next(52);
-            var nrwTag = new Tag
+            var newTag = new Tag
             {
                 Id = tagId,
                 Title = $"Tag {tagId}",
             };
             _tagsRepositoryMock.Setup(x => x.GetById(tagId))
-                .Returns(() => nrwTag);
+                .Returns(() => newTag);
 
             //Act
-            _tagsService.Insert(nrwTag);
+            _tagsService.Insert(newTag);
             var tag = _tagsService.Find(tagId);
-            _tagsService.Delete(nrwTag);
+            _tagsService.Delete(tag);
             _tagsRepositoryMock.Setup(x => x.GetById(tagId))
                 .Returns(() => null);
             _tagsService.Find(tagId);
@@ -775,13 +775,44 @@ namespace Blog.ServicesTests.EntityServices
             //Act
             _tagsService.Insert(newTag);
             var tag = _tagsService.Find(tagId);
-            _tagsService.Delete(newTag);
+            _tagsService.Delete(tag);
             _tagsRepositoryMock.Setup(x => x.GetById(tagId))
                 .Returns(() => null);
-            var deletedComment = _tagsService.Find(tagId);
+            var deletedTag = _tagsService.Find(tagId);
 
             //Assert
-            Assert.Null(deletedComment);
+            Assert.Null(deletedTag);
+        }
+
+        #endregion
+
+        #region Delete Async function
+
+        /// <summary>
+        /// Verify that function Delete Async has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Id = tagId,
+                Title = $"Tag {tagId}",
+            };
+            _tagsRepositoryMock.Setup(x => x.GetByIdAsync(tagId))
+                .ReturnsAsync(() => newTag);
+
+            //Act
+            await _tagsService.InsertAsync(newTag);
+            var comment = await _tagsService.FindAsync(tagId);
+            await _tagsService.DeleteAsync(comment);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.DeleteAsync(comment), Times.Once);
         }
 
         #endregion
