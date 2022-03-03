@@ -815,6 +815,42 @@ namespace Blog.ServicesTests.EntityServices
             _tagsRepositoryMock.Verify(x => x.DeleteAsync(comment), Times.Once);
         }
 
+        /// <summary>
+        /// Async delete comment.
+        /// Should return nothing when tag is deleted.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task DeleteAsync_ShouldReturnNothing_WhenCommentIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Title = $"Tag {tagId}",
+            };
+
+            _tagsRepositoryMock.Setup(x => x.InsertAsync(newTag))
+                .Callback(() =>
+                {
+                    newTag.Id = tagId;
+                });
+            _tagsRepositoryMock.Setup(x => x.GetByIdAsync(tagId))
+                .ReturnsAsync(() => newTag);
+
+            //Act
+            await _tagsService.InsertAsync(newTag);
+            var tag = await _tagsService.FindAsync(tagId);
+            await _tagsService.DeleteAsync(tag);
+            _tagsRepositoryMock.Setup(x => x.GetByIdAsync(tagId))
+                .ReturnsAsync(() => null);
+            var deletedTag = await _tagsService.FindAsync(tagId);
+
+            //Assert
+            Assert.Null(deletedTag);
+        }
+
         #endregion
     }
 }
