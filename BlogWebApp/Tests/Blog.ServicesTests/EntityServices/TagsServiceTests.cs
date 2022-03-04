@@ -821,7 +821,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsync_ShouldReturnNothing_WhenCommentIsDeleted()
+        public async Task DeleteAsync_ShouldReturnNothing_WhenTagIsDeleted()
         {
             //Arrange
             var random = new Random();
@@ -849,6 +849,42 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(deletedTag);
+        }
+
+        #endregion
+
+        #region Any function With Specification
+
+        /// <summary>
+        /// Verify that function Any with specification has been called.
+        /// </summary>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData("Tag ")]
+        public void Verify_FunctionAny_WithSpecification_HasBeenCalled(string tagSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+            var specification = new TagSpecification(x => x.Title.Contains(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.Any(specification))
+                .Returns(() => tagsList.Any(x => x.Title.Contains(tagSearch)));
+
+            //Act
+            _tagsService.Any(specification);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.Any(specification), Times.Once);
         }
 
         #endregion
