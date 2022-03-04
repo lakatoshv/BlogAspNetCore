@@ -922,6 +922,40 @@ namespace Blog.ServicesTests.EntityServices
             Assert.True(areAnyTags);
         }
 
+        /// <summary>
+        /// Check if there are any tags with specification.
+        /// Should return true with equal specification when tags exists.
+        /// </summary>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData("Tag 0")]
+        public void Any_ShouldReturnTrue_WithEqualsSpecification_WhenCommentsExists(string tagSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.Any(specification))
+                .Returns(() => tagsList.Any(x => x.Title.Contains(tagSearch)));
+
+            //Act
+            var areAnyTags = _tagsService.Any(specification);
+
+            //Assert
+            Assert.True(areAnyTags);
+        }
+
         #endregion
     }
 }
