@@ -1012,5 +1012,42 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Any Async function With Specification
+
+        /// <summary>
+        /// Verify that function Any Async with specification has been called.
+        /// </summary>
+        /// <param name="tagSearch">The tag search.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("Tag ")]
+        public async Task Verify_FunctionAnyAsync_WithSpecification_HasBeenCalled(string tagSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+            var specification = new TagSpecification(x => x.Title.Contains(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.AnyAsync(specification))
+                .ReturnsAsync(() => tagsList.Any(x => x.Title.Contains(tagSearch)));
+
+            //Act
+            await _tagsService.AnyAsync(specification);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.AnyAsync(specification), Times.Once);
+        }
+
+        #endregion
     }
 }
