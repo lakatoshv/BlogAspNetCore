@@ -1084,6 +1084,41 @@ namespace Blog.ServicesTests.EntityServices
             Assert.True(areAnyTags);
         }
 
+        /// <summary>
+        /// Async check if there are any tags with specification.
+        /// Should return true with equal specification when tags exists.
+        /// </summary>
+        /// <param name="tagSearch">The tag search.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("Tag 0")]
+        public async Task AnyAsync_ShouldReturnTrue_WithEqualsSpecification_WhenTagsExists(string tagSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.AnyAsync(specification))
+                .ReturnsAsync(() => tagsList.Any(x => x.Title.Contains(tagSearch)));
+
+            //Act
+            var areAnyTags = await _tagsService.AnyAsync(specification);
+
+            //Assert
+            Assert.True(areAnyTags);
+        }
+
         #endregion
     }
 }
