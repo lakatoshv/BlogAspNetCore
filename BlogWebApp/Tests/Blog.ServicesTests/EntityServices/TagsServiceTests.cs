@@ -1212,6 +1212,42 @@ namespace Blog.ServicesTests.EntityServices
             _tagsRepositoryMock.Verify(x => x.FirstOrDefault(specification), Times.Once);
         }
 
+        /// <summary>
+        /// Get first or default tag with specification.
+        /// Should return tag with contains specification when tags exists.
+        /// </summary>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData("Tag ")]
+        public void FirstOrDefault_ShouldReturnTag_WithContainsSpecification_WhenTagsExists(string tagSearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            var specification = new TagSpecification(x => x.Title.Contains(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.FirstOrDefault(specification))
+                .Returns(() => tagsList.FirstOrDefault(x => x.Title.Contains(tagSearch)));
+
+            //Act
+            var tag = _tagsService.FirstOrDefault(specification);
+
+            //Assert
+            Assert.NotNull(tag);
+            Assert.IsType<Tag>(tag);
+        }
+
         #endregion
     }
 }
