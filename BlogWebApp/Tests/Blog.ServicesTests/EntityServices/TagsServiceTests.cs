@@ -1317,6 +1317,27 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Null(tag);
         }
 
+        /// <summary>
+        /// Get first or default tag with specification.
+        /// Should return nothing with when tags does not exists.
+        /// </summary>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData("Tag 0")]
+        public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenTagsDoesNotExists(string tagSearch)
+        {
+            //Arrange
+            var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.FirstOrDefault(specification))
+                .Returns(() => null);
+
+            //Act
+            var tag = _tagsService.FirstOrDefault(specification);
+
+            //Assert
+            Assert.Null(tag);
+        }
+
         #endregion
     }
 }
