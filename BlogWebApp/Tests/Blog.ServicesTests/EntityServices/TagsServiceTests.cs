@@ -1339,5 +1339,41 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Last Or Default function With Specification
+
+        /// <summary>
+        /// Verify that function Last Or Default with specification has been called.
+        /// </summary>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData("Tag ")]
+        public void Verify_FunctionLastOrDefault_WithSpecification_HasBeenCalled(string tagSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Comment {i}",
+                });
+            }
+
+            var specification = new TagSpecification(x => x.Title.Contains(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.LastOrDefault(specification))
+                .Returns(() => tagsList.LastOrDefault(x => x.Title.Contains(tagSearch)));
+
+            //Act
+            _tagsService.LastOrDefault(specification);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.LastOrDefault(specification), Times.Once);
+        }
+
+        #endregion
     }
 }
