@@ -1445,6 +1445,40 @@ namespace Blog.ServicesTests.EntityServices
             Assert.IsType<Tag>(tag);
         }
 
+        /// <summary>
+        /// Get last or default tag with specification.
+        /// Should return nothing with when tags does not exists.
+        /// </summary>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData("Tag -1")]
+        public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenTagsExists(string tagSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.LastOrDefault(specification))
+                .Returns(() => tagsList.LastOrDefault(x => x.Title.Contains(tagSearch)));
+
+            //Act
+            var tag = _tagsService.LastOrDefault(specification);
+
+            //Assert
+            Assert.Null(tag);
+        }
+
         #endregion
     }
 }
