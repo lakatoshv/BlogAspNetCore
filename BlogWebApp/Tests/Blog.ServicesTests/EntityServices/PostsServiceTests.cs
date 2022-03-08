@@ -30,21 +30,6 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         private readonly Mock<IRepository<Post>> _postsRepositoryMock;
 
-        /// <summary>
-        /// The comments service mock.
-        /// </summary>
-        private readonly Mock<ICommentsService> _commentsServiceMock;
-
-        /// <summary>
-        /// The mapper mock.
-        /// </summary>
-        private readonly Mock<IMapper> _mapper;
-
-        /// <summary>
-        /// The posts tags relations service mock.
-        /// </summary>
-        private readonly Mock<IPostsTagsRelationsService> _postsTagsRelationsService;
-
         #endregion
 
         #region Ctor
@@ -55,10 +40,10 @@ namespace Blog.ServicesTests.EntityServices
         public PostsServiceTests()
         {
             _postsRepositoryMock = new Mock<IRepository<Post>>();
-            _commentsServiceMock = new Mock<ICommentsService>();
-            _mapper = new Mock<IMapper>();
-            _postsTagsRelationsService = new Mock<IPostsTagsRelationsService>();
-            _postsService = new PostsService(_postsRepositoryMock.Object, _commentsServiceMock.Object, _mapper.Object, _postsTagsRelationsService.Object);
+            var commentsServiceMock = new Mock<ICommentsService>();
+            var mapper = new Mock<IMapper>();
+            var postsTagsRelationsService = new Mock<IPostsTagsRelationsService>();
+            _postsService = new PostsService(_postsRepositoryMock.Object, commentsServiceMock.Object, mapper.Object, postsTagsRelationsService.Object);
         }
 
         #endregion
@@ -73,27 +58,26 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             _postsRepositoryMock.Setup(x => x.GetAll())
-                .Returns(postslist.AsQueryable());
+                .Returns(postsList.AsQueryable());
 
             //Act
-            var posts = _postsService.GetAll();
+            _postsService.GetAll();
 
             //Assert
             _postsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
@@ -110,24 +94,23 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             _postsRepositoryMock.Setup(x => x.GetAll())
-                .Returns(() => postslist.AsQueryable());
+                .Returns(() => postsList.AsQueryable());
 
             //Act
             var posts = _postsService.GetAll();
@@ -170,27 +153,26 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
             var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
             _postsRepositoryMock.Setup(x => x.GetAll(specification))
-                .Returns(() => postslist.Where(x => x.Title.Contains(titleSearch)).AsQueryable());
+                .Returns(() => postsList.Where(x => x.Title.Contains(titleSearch)).AsQueryable());
 
             //Act
-            var posts = _postsService.GetAll(specification);
+            _postsService.GetAll(specification);
 
             //Assert
             _postsRepositoryMock.Verify(x => x.GetAll(specification), Times.Once);
@@ -209,25 +191,24 @@ namespace Blog.ServicesTests.EntityServices
             //Test failed
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
             _postsRepositoryMock.Setup(x => x.GetAll(specification))
-                .Returns(() => postslist.Where(x => x.Title.Contains(titleSearch)).AsQueryable());
+                .Returns(() => postsList.Where(x => x.Title.Contains(titleSearch)).AsQueryable());
 
             //Act
             var posts = _postsService.GetAll(specification);
@@ -250,25 +231,24 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
             _postsRepositoryMock.Setup(x => x.GetAll(specification))
-                .Returns(() => postslist.Where(x => x.Title.Contains(titleSearch)).AsQueryable());
+                .Returns(() => postsList.Where(x => x.Title.Contains(titleSearch)).AsQueryable());
 
             //Act
             var posts = _postsService.GetAll(specification);
@@ -291,25 +271,24 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
             _postsRepositoryMock.Setup(x => x.GetAll(specification))
-                .Returns(() => postslist.Where(x => x.Title.Contains(titleSearch)).AsQueryable());
+                .Returns(() => postsList.Where(x => x.Title.Contains(titleSearch)).AsQueryable());
 
             //Act
             var posts = _postsService.GetAll(specification);
@@ -366,7 +345,7 @@ namespace Blog.ServicesTests.EntityServices
                 .Returns(() => newPost);
 
             //Act
-            var post = _postsService.Find(postId);
+            _postsService.Find(postId);
 
             //Assert
             _postsRepositoryMock.Verify(x => x.GetById(postId), Times.Once);
@@ -446,7 +425,7 @@ namespace Blog.ServicesTests.EntityServices
                 .ReturnsAsync(() => newPost);
 
             //Act
-            var post = await _postsService.FindAsync(postId);
+            await _postsService.FindAsync(postId);
 
             //Assert
             _postsRepositoryMock.Verify(x => x.GetByIdAsync(postId), Times.Once);
@@ -524,7 +503,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.Insert(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
 
@@ -554,7 +534,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.Insert(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
 
@@ -587,7 +568,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
 
@@ -618,7 +600,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
 
@@ -653,7 +636,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.Insert(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
             _postsRepositoryMock.Setup(x => x.GetById(postId))
@@ -690,7 +674,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.Insert(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
             _postsRepositoryMock.Setup(x => x.GetById(postId))
@@ -732,7 +717,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
             _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
@@ -770,7 +756,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
             _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
@@ -813,10 +800,10 @@ namespace Blog.ServicesTests.EntityServices
             //Act
             _postsService.Insert(newPost);
             var post = _postsService.Find(postId);
-            _postsService.Delete(newPost);
+            _postsService.Delete(post);
             _postsRepositoryMock.Setup(x => x.GetById(postId))
                 .Returns(() => null);
-            var deletedPost = _postsService.Find(postId);
+            _postsService.Find(postId);
 
             //Assert
             _postsRepositoryMock.Verify(x => x.Delete(post), Times.Once);
@@ -841,7 +828,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.Insert(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
             _postsRepositoryMock.Setup(x => x.GetById(postId))
@@ -850,7 +838,7 @@ namespace Blog.ServicesTests.EntityServices
             //Act
             _postsService.Insert(newPost);
             var post = _postsService.Find(postId);
-            _postsService.Delete(newPost);
+            _postsService.Delete(post);
             _postsRepositoryMock.Setup(x => x.GetById(postId))
                 .Returns(() => null);
             var deletedPost = _postsService.Find(postId);
@@ -887,7 +875,7 @@ namespace Blog.ServicesTests.EntityServices
             //Act
             await _postsService.InsertAsync(newPost);
             var post = await _postsService.FindAsync(postId);
-            await _postsService.DeleteAsync(newPost);
+            await _postsService.DeleteAsync(post);
 
             //Assert
             _postsRepositoryMock.Verify(x => x.DeleteAsync(post), Times.Once);
@@ -913,7 +901,8 @@ namespace Blog.ServicesTests.EntityServices
             };
 
             _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
-                .Callback(() => {
+                .Callback(() =>
+                {
                     newPost.Id = postId;
                 });
             _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
@@ -922,10 +911,10 @@ namespace Blog.ServicesTests.EntityServices
             //Act
             await _postsService.InsertAsync(newPost);
             var post = await _postsService.FindAsync(postId);
-            await _postsService.DeleteAsync(newPost);
+            await _postsService.DeleteAsync(post);
             _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
-                .Returns(() => null);
-            var deletedPost = _postsService.Find(postId);
+                .ReturnsAsync(() => null);
+            var deletedPost = await _postsService.FindAsync(postId);
 
             //Assert
             Assert.Null(deletedPost);
@@ -945,27 +934,26 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
             var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
             _postsRepositoryMock.Setup(x => x.Any(specification))
-                .Returns(() => postslist.Any(x => x.Title.Contains(titleSearch)));
+                .Returns(() => postsList.Any(x => x.Title.Contains(titleSearch)));
 
             //Act
-            var areAnyPosts = _postsService.Any(specification);
+            _postsService.Any(specification);
 
             //Assert
             _postsRepositoryMock.Verify(x => x.Any(specification), Times.Once);
@@ -983,25 +971,24 @@ namespace Blog.ServicesTests.EntityServices
             //Test failed
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
             _postsRepositoryMock.Setup(x => x.Any(specification))
-                .Returns(() => postslist.Any(x => x.Title.Contains(titleSearch)));
+                .Returns(() => postsList.Any(x => x.Title.Contains(titleSearch)));
 
             //Act
             var areAnyPosts = _postsService.Any(specification);
@@ -1021,25 +1008,24 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
             _postsRepositoryMock.Setup(x => x.Any(specification))
-                .Returns(() => postslist.Any(x => x.Title.Contains(titleSearch)));
+                .Returns(() => postsList.Any(x => x.Title.Contains(titleSearch)));
 
             //Act
             var areAnyPosts = _postsService.Any(specification);
@@ -1059,25 +1045,24 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
             _postsRepositoryMock.Setup(x => x.Any(specification))
-                .Returns(() => postslist.Any(x => x.Title.Contains(titleSearch)));
+                .Returns(() => postsList.Any(x => x.Title.Contains(titleSearch)));
 
             //Act
             var areAnyPosts = _postsService.Any(specification);
@@ -1122,27 +1107,26 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
             var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
             _postsRepositoryMock.Setup(x => x.AnyAsync(specification))
-                .ReturnsAsync(() => postslist.Any(x => x.Title.Contains(titleSearch)));
+                .ReturnsAsync(() => postsList.Any(x => x.Title.Contains(titleSearch)));
 
             //Act
-            var areAnyPosts = await _postsService.AnyAsync(specification);
+            await _postsService.AnyAsync(specification);
 
             //Assert
             _postsRepositoryMock.Verify(x => x.AnyAsync(specification), Times.Once);
@@ -1161,25 +1145,24 @@ namespace Blog.ServicesTests.EntityServices
             //Test failed
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
             _postsRepositoryMock.Setup(x => x.AnyAsync(specification))
-                .ReturnsAsync(() => postslist.Any(x => x.Title.Contains(titleSearch)));
+                .ReturnsAsync(() => postsList.Any(x => x.Title.Contains(titleSearch)));
 
             //Act
             var areAnyPosts = await _postsService.AnyAsync(specification);
@@ -1200,25 +1183,24 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
             _postsRepositoryMock.Setup(x => x.AnyAsync(specification))
-                .ReturnsAsync(() => postslist.Any(x => x.Title.Contains(titleSearch)));
+                .ReturnsAsync(() => postsList.Any(x => x.Title.Contains(titleSearch)));
 
             //Act
             var areAnyPosts = await _postsService.AnyAsync(specification);
@@ -1239,25 +1221,24 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
             _postsRepositoryMock.Setup(x => x.AnyAsync(specification))
-                .ReturnsAsync(() => postslist.Any(x => x.Title.Contains(titleSearch)));
+                .ReturnsAsync(() => postsList.Any(x => x.Title.Contains(titleSearch)));
 
             //Act
             var areAnyPosts = await _postsService.AnyAsync(specification);
@@ -1302,27 +1283,26 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
             var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
             _postsRepositoryMock.Setup(x => x.FirstOrDefault(specification))
-                .Returns(() => postslist.FirstOrDefault(x => x.Title.Contains(titleSearch)));
+                .Returns(() => postsList.FirstOrDefault(x => x.Title.Contains(titleSearch)));
 
             //Act
-            var post = _postsService.FirstOrDefault(specification);
+            _postsService.FirstOrDefault(specification);
 
             //Assert
             _postsRepositoryMock.Verify(x => x.FirstOrDefault(specification), Times.Once);
@@ -1340,25 +1320,24 @@ namespace Blog.ServicesTests.EntityServices
             //Test failed
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
             _postsRepositoryMock.Setup(x => x.FirstOrDefault(specification))
-                .Returns(() => postslist.FirstOrDefault(x => x.Title.Contains(titleSearch)));
+                .Returns(() => postsList.FirstOrDefault(x => x.Title.Contains(titleSearch)));
 
             //Act
             var post = _postsService.FirstOrDefault(specification);
@@ -1379,25 +1358,24 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
             _postsRepositoryMock.Setup(x => x.FirstOrDefault(specification))
-                .Returns(() => postslist.FirstOrDefault(x => x.Title.Contains(titleSearch)));
+                .Returns(() => postsList.FirstOrDefault(x => x.Title.Contains(titleSearch)));
 
             //Act
             var post = _postsService.FirstOrDefault(specification);
@@ -1418,25 +1396,24 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
             _postsRepositoryMock.Setup(x => x.FirstOrDefault(specification))
-                .Returns(() => postslist.FirstOrDefault(x => x.Title.Contains(titleSearch)));
+                .Returns(() => postsList.FirstOrDefault(x => x.Title.Contains(titleSearch)));
 
             //Act
             var post = _postsService.FirstOrDefault(specification);
@@ -1455,23 +1432,6 @@ namespace Blog.ServicesTests.EntityServices
         public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenPostDoesNotExists(string titleSearch)
         {
             //Arrange
-            var random = new Random();
-            var postslist = new List<Post>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var postId = i;
-                postslist.Add(new Post
-                {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
-                });
-            }
-
-
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
             _postsRepositoryMock.Setup(x => x.FirstOrDefault(specification))
                 .Returns(() => null);
@@ -1497,27 +1457,26 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
             var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
             _postsRepositoryMock.Setup(x => x.LastOrDefault(specification))
-                .Returns(() => postslist.LastOrDefault(x => x.Title.Contains(titleSearch)));
+                .Returns(() => postsList.LastOrDefault(x => x.Title.Contains(titleSearch)));
 
             //Act
-            var post = _postsService.LastOrDefault(specification);
+            _postsService.LastOrDefault(specification);
 
             //Assert
             _postsRepositoryMock.Verify(x => x.LastOrDefault(specification), Times.Once);
@@ -1535,25 +1494,24 @@ namespace Blog.ServicesTests.EntityServices
             //Test failed
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
             _postsRepositoryMock.Setup(x => x.LastOrDefault(specification))
-                .Returns(() => postslist.LastOrDefault(x => x.Title.Contains(titleSearch)));
+                .Returns(() => postsList.LastOrDefault(x => x.Title.Contains(titleSearch)));
 
             //Act
             var post = _postsService.LastOrDefault(specification);
@@ -1574,25 +1532,24 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
             _postsRepositoryMock.Setup(x => x.LastOrDefault(specification))
-                .Returns(() => postslist.LastOrDefault(x => x.Title.Contains(titleSearch)));
+                .Returns(() => postsList.LastOrDefault(x => x.Title.Contains(titleSearch)));
 
             //Act
             var post = _postsService.LastOrDefault(specification);
@@ -1613,25 +1570,24 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
 
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
             _postsRepositoryMock.Setup(x => x.LastOrDefault(specification))
-                .Returns(() => postslist.LastOrDefault(x => x.Title.Contains(titleSearch)));
+                .Returns(() => postsList.LastOrDefault(x => x.Title.Contains(titleSearch)));
 
             //Act
             var post = _postsService.LastOrDefault(specification);
@@ -1650,23 +1606,6 @@ namespace Blog.ServicesTests.EntityServices
         public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenPostDoesNotExists(string titleSearch)
         {
             //Arrange
-            var random = new Random();
-            var postslist = new List<Post>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var postId = i;
-                postslist.Add(new Post
-                {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
-                });
-            }
-
-
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
             _postsRepositoryMock.Setup(x => x.LastOrDefault(specification))
                 .Returns(() => null);
@@ -1690,18 +1629,17 @@ namespace Blog.ServicesTests.EntityServices
             //Test failed
             //Arrange
             var random = new Random();
-            var postslist = new List<Post>();
+            var postsList = new List<Post>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                var postId = i;
-                postslist.Add(new Post
+                postsList.Add(new Post
                 {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
                 });
             }
 
