@@ -577,6 +577,27 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(equalCount, postsTagsRelations.ToList().Count);
         }
 
+        /// <summary>
+        /// Get all posts.
+        /// Should return nothing with  when post tag relations does not exists.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests 0")]
+        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenPostTagRelationsDoesNotExists(string titleSearch)
+        {
+            //Arrange
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(() => new List<PostsTagsRelations>().AsQueryable());
+
+            //Act
+            var postsTagsRelations = _postsTagsRelationsService.GetAll();
+
+            //Assert
+            Assert.Empty(postsTagsRelations);
+        }
+
         #endregion
     }
 }
