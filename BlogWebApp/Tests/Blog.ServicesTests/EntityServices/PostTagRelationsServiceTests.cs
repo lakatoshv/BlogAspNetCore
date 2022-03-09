@@ -48,12 +48,12 @@ namespace Blog.ServicesTests.EntityServices
         /// <summary>
         /// The posts service mock.
         /// </summary>
-        private readonly Mock<PostsService> _postsServiceMock;
+        private readonly Mock<IPostsService> _postsServiceMock;
 
         /// <summary>
         /// The tags service mock.
         /// </summary>
-        private readonly Mock<TagsService> _tagsServiceMock;
+        private readonly Mock<ITagsService> _tagsServiceMock;
 
         #endregion
 
@@ -64,8 +64,8 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         public PostTagRelationsServiceTests()
         {
-            _postsServiceMock = new Mock<PostsService>();
-            _tagsServiceMock = new Mock<TagsService>();
+            _postsServiceMock = new Mock<IPostsService>();
+            _tagsServiceMock = new Mock<ITagsService>();
             _postsTagsRelationsRepositoryMock = new Mock<IRepository<PostsTagsRelations>>();
             _postsRepositoryMock = new Mock<IRepository<Post>>();
             _tagsRepositoryMock = new Mock<IRepository<Tag>>();
@@ -106,6 +106,42 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             _postsTagsRelationsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all post tag relations.
+        /// Should return posts when post tag relations exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public void GetAll_ShouldReturnPostTagRelations_WhenPostTagRelationExists(int notEqualCount)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsTagsRelationsList.Add(new PostsTagsRelations()
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i
+                });
+            }
+
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll())
+                .Returns(() => postsTagsRelationsList.AsQueryable());
+
+            //Act
+            var postsTagsRelations = _postsTagsRelationsService.GetAll();
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
         }
 
         #endregion
