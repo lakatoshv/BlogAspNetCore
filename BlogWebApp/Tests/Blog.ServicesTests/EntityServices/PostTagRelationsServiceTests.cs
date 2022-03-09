@@ -533,6 +533,50 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(postsTagsRelationsCount, postsTagsRelations.Count);
         }
 
+        /// <summary>
+        /// Get all posts.
+        /// Should return nothing with  when post tag relations does not exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData(0, "Tag -1")]
+        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenPostTagRelationsExists(int equalCount, string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(() => postsTagsRelationsList.Where(x => x.Tag.Title.Contains(titleSearch)).AsQueryable());
+
+            //Act
+            var postsTagsRelations = _postsTagsRelationsService.GetAll(specification);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.Empty(postsTagsRelations);
+            Assert.Equal(equalCount, postsTagsRelations.ToList().Count);
+        }
+
         #endregion
     }
 }
