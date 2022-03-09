@@ -324,6 +324,51 @@ namespace Blog.ServicesTests.EntityServices
             _postsTagsRelationsRepositoryMock.Verify(x => x.GetAll(specification), Times.Once);
         }
 
+        /// <summary>
+        /// Get all post tag relations with specification.
+        /// Should return post tag relations with contains specification when post tag relations exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData(0, "Created from ServicesTests ")]
+        public void GetAll_ShouldReturnPostTagRelations_WithContainsSpecification_WhenPostTagRelationsExists(int notEqualCount, string titleSearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{titleSearch} {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(() => postsTagsRelationsList.Where(x => x.Tag.Title.Contains(titleSearch)).AsQueryable());
+
+            //Act
+            var postsTagsRelations = _postsTagsRelationsService.GetAll(specification);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
+        }
+
         #endregion
     }
 }
