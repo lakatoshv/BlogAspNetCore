@@ -144,6 +144,68 @@ namespace Blog.ServicesTests.EntityServices
             Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
         }
 
+        /// <summary>
+        /// Get all post tag relations.
+        /// Should return posts when post tag relations exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0, "Post", "Tag")]
+        public void GetAll_ShouldReturnPostTagRelationsWithExistingPostAndTags_WhenPostTagRelationExists(int notEqualCount, string postTitle, string tagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(100);
+            var postEntity = new Post
+            {
+                Id = postId,
+                Title = $"{postTitle} {postId}",
+                Description = $"{postTitle} {postId}",
+                Content = $"{postTitle} {postId}",
+                ImageUrl = $"{postTitle} {postId}",
+            };
+
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{tagTitle} {i}",
+                };
+
+                postsTagsRelationsList.Add(new PostsTagsRelations()
+                {
+                    Id = i,
+                    PostId = postId,
+                    Post = postEntity,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll())
+                .Returns(() => postsTagsRelationsList.AsQueryable());
+
+            //Act
+            var postsTagsRelations = _postsTagsRelationsService.GetAll().ToList();
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
+            postsTagsRelations.ForEach(postsTagsRelation =>
+            {
+                Assert.NotNull(postsTagsRelation.Post);
+                Assert.Contains(postTitle, postsTagsRelation.Post.Title);
+
+                Assert.NotNull(postsTagsRelation.Tag);
+                Assert.Contains(tagTitle, postsTagsRelation.Tag.Title);
+            });
+        }
+
         #endregion
     }
 }
