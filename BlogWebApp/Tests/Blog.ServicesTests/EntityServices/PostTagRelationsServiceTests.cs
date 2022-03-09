@@ -262,6 +262,24 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(postsTagsRelationsCount, postsTagsRelations.Count);
         }
 
+        /// <summary>
+        /// Get all post tag relations.
+        /// Should return nothing when post tag relations does not exists.
+        /// </summary>
+        [Fact]
+        public void GetAll_ShouldReturnNothing_WhenPostTagRelationsDoesNotExists()
+        {
+            //Arrange
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll())
+                .Returns(() => new List<PostsTagsRelations>().AsQueryable());
+
+            //Act
+            var postsTagsRelations = _postsTagsRelationsService.GetAll();
+
+            //Assert
+            Assert.Empty(postsTagsRelations);
+        }
+
         #endregion
     }
 }
