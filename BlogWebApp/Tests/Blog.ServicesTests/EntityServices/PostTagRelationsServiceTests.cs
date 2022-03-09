@@ -74,5 +74,40 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Get All function
+
+        /// <summary>
+        /// Verify that function Get All has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionGetAll_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                });
+            }
+
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll())
+                .Returns(postsTagsRelationsList.AsQueryable());
+
+            //Act
+            _postsTagsRelationsService.GetAll();
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
+        }
+
+        #endregion
     }
 }
