@@ -373,7 +373,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Get all post tag relations with specification.
         /// Should return post with equal specification when post tag relations exists.
         /// </summary>
-        /// <param name="equalCount">The equal cou nt.</param>
+        /// <param name="equalCount">The equal count.</param>
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData(1, "Tag 0")]
@@ -534,7 +534,7 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Get all posts.
+        /// Get all post tag relations.
         /// Should return nothing with  when post tag relations does not exists.
         /// </summary>
         /// <param name="equalCount">The equal count.</param>
@@ -578,7 +578,7 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Get all posts.
+        /// Get all post tag relations.
         /// Should return nothing with  when post tag relations does not exists.
         /// </summary>
         /// <param name="titleSearch">The title search.</param>
@@ -596,6 +596,41 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Empty(postsTagsRelations);
+        }
+
+        #endregion
+
+        #region Find function
+
+        /// <summary>
+        /// Verify that function Find has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionFind_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                Id = id,
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
+                .Returns(() => newPostsTagsRelation);
+
+            //Act
+            _postsTagsRelationsService.Find(id);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.GetById(id), Times.Once);
         }
 
         #endregion
