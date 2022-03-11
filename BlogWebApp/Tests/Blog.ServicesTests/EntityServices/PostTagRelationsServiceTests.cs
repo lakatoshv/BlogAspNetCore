@@ -633,6 +633,38 @@ namespace Blog.ServicesTests.EntityServices
             _postsTagsRelationsRepositoryMock.Verify(x => x.GetById(id), Times.Once);
         }
 
+        /// <summary>
+        /// Find post.
+        /// Should return post when post exists.
+        /// </summary>
+        [Fact]
+        public void Find_ShouldReturnPost_WhenPostExists()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                Id = id,
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
+                .Returns(() => newPostsTagsRelation);
+
+            //Act
+            var postsTagsRelations = _postsTagsRelationsService.Find(id);
+
+            //Assert
+            Assert.Equal(id, postsTagsRelations.Id);
+        }
+
         #endregion
     }
 }
