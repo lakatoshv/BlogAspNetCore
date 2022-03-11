@@ -716,6 +716,26 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Contains(tagTitle, postsTagsRelations.Tag.Title);
         }
 
+        /// <summary>
+        /// Find post tag relation.
+        /// Should return nothing when post does not exists.
+        /// </summary>
+        [Fact]
+        public void Find_ShouldReturnNothing_WhenPostDoesNotExists()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
+                .Returns(() => null);
+
+            //Act
+            var post = _postsTagsRelationsService.Find(id);
+
+            //Assert
+            Assert.Null(post);
+        }
+
         #endregion
     }
 }
