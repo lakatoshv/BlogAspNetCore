@@ -772,6 +772,39 @@ namespace Blog.ServicesTests.EntityServices
             _postsTagsRelationsRepositoryMock.Verify(x => x.GetByIdAsync(id), Times.Once);
         }
 
+        /// <summary>
+        /// Async find post.
+        /// Should return post when post exists.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task FindAsync_ShouldReturnPost_WhenPostExists()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                Id = id,
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
+                .ReturnsAsync(() => newPostsTagsRelation);
+
+            //Act
+            var post = await _postsTagsRelationsService.FindAsync(id);
+
+            //Assert
+            Assert.Equal(id, post.Id);
+        }
+
         #endregion
     }
 }
