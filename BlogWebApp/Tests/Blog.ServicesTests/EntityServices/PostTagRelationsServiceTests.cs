@@ -634,7 +634,7 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Find post.
+        /// Find post tag relation.
         /// Should return post when post exists.
         /// </summary>
         [Fact]
@@ -730,10 +730,46 @@ namespace Blog.ServicesTests.EntityServices
                 .Returns(() => null);
 
             //Act
-            var post = _postsTagsRelationsService.Find(id);
+            var postsTagsRelations = _postsTagsRelationsService.Find(id);
 
             //Assert
-            Assert.Null(post);
+            Assert.Null(postsTagsRelations);
+        }
+
+        #endregion
+
+        #region Find Async function 
+
+        /// <summary>
+        /// Verify that function Find Async has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionFindAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                Id = id,
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
+                .ReturnsAsync(() => newPostsTagsRelation);
+
+            //Act
+            await _postsTagsRelationsService.FindAsync(id);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.GetByIdAsync(id), Times.Once);
         }
 
         #endregion
