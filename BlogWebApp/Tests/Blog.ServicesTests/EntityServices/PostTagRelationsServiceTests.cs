@@ -805,6 +805,57 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(id, post.Id);
         }
 
+        /// <summary>
+        /// Find async post tag relations.
+        /// Should return post tag relations when post tag relations exists.
+        /// </summary>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">THe tag title.</param>
+        [Theory]
+        [InlineData("Post", "Tag")]
+        public async Task FindAsync_ShouldReturnPostTagRelationsWithExistingPostAndTags_WhenPostTagRelationExists(string postTitle, string tagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var postEntity = new Post
+            {
+                Id = id,
+                Title = $"{postTitle} {id}",
+                Description = $"{postTitle} {id}",
+                Content = $"{postTitle} {id}",
+                ImageUrl = $"{postTitle} {id}",
+            };
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                Id = id,
+                PostId = id,
+                Post = postEntity,
+                TagId = id,
+                Tag = tag
+            };
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
+                .ReturnsAsync(() => newPostsTagsRelation);
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.FindAsync(id);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.Equal(id, postsTagsRelations.Id);
+            Assert.NotNull(postsTagsRelations.Post);
+            Assert.Contains(postTitle, postsTagsRelations.Post.Title);
+
+            Assert.NotNull(postsTagsRelations.Tag);
+            Assert.Contains(tagTitle, postsTagsRelations.Tag.Title);
+        }
+
         #endregion
     }
 }
