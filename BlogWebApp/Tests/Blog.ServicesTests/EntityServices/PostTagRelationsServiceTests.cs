@@ -856,6 +856,27 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Contains(tagTitle, postsTagsRelations.Tag.Title);
         }
 
+        /// <summary>
+        /// Async find post.
+        /// Should return nothing when post does not exists.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task FindAsync_ShouldReturnNothing_WhenPostDoesNotExists()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(() => null);
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.FindAsync(id);
+
+            //Assert
+            Assert.Null(postsTagsRelations);
+        }
+
         #endregion
     }
 }
