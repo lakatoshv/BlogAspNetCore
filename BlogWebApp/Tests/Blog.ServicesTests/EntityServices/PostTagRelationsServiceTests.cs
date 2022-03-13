@@ -952,6 +952,59 @@ namespace Blog.ServicesTests.EntityServices
             Assert.NotEqual(0, newPostsTagsRelation.Id);
         }
 
+        /// <summary>
+        /// Insert post tag relations.
+        /// Should return post tag relations when post tag relations exists.
+        /// </summary>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">THe tag title.</param>
+        [Theory]
+        [InlineData("Post", "Tag")]
+        public void Insert_ShouldReturnPostTagRelationWithExistingPostAndTags_WhenPostTagRelationExists(string postTitle, string tagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var postEntity = new Post
+            {
+                Id = id,
+                Title = $"{postTitle} {id}",
+                Description = $"{postTitle} {id}",
+                Content = $"{postTitle} {id}",
+                ImageUrl = $"{postTitle} {id}",
+            };
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                Id = id,
+                PostId = id,
+                Post = postEntity,
+                TagId = id,
+                Tag = tag
+            };
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelation))
+                .Callback(() =>
+                {
+                    newPostsTagsRelation.Id = id;
+                });
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelation);
+
+            //Assert
+            Assert.NotEqual(0, newPostsTagsRelation.Id);
+            Assert.NotNull(newPostsTagsRelation.Post);
+            Assert.Contains(postTitle, newPostsTagsRelation.Post.Title);
+
+            Assert.NotNull(newPostsTagsRelation.Tag);
+            Assert.Contains(tagTitle, newPostsTagsRelation.Tag.Title);
+        }
+
         #endregion
     }
 }
