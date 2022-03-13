@@ -638,7 +638,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return post when post exists.
         /// </summary>
         [Fact]
-        public void Find_ShouldReturnPost_WhenPostExists()
+        public void Find_ShouldReturnPostTagRelation_WhenPostTagRelationExists()
         {
             //Arrange
             var random = new Random();
@@ -673,7 +673,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="tagTitle">THe tag title.</param>
         [Theory]
         [InlineData("Post", "Tag")]
-        public void Find_ShouldReturnPostTagRelationsWithExistingPostAndTags_WhenPostTagRelationExists(string postTitle, string tagTitle)
+        public void Find_ShouldReturnPostTagRelationWithExistingPostAndTags_WhenPostTagRelationExists(string postTitle, string tagTitle)
         {
             //Arrange
             var random = new Random();
@@ -721,7 +721,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when post does not exists.
         /// </summary>
         [Fact]
-        public void Find_ShouldReturnNothing_WhenPostDoesNotExists()
+        public void Find_ShouldReturnNothing_WhenPostTagRelationDoesNotExists()
         {
             //Arrange
             var random = new Random();
@@ -773,12 +773,12 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Async find post.
+        /// Async find post tag relation.
         /// Should return post when post exists.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task FindAsync_ShouldReturnPost_WhenPostExists()
+        public async Task FindAsync_ShouldReturnPostTagRelation_WhenPostTagRelationExists()
         {
             //Arrange
             var random = new Random();
@@ -813,7 +813,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="tagTitle">THe tag title.</param>
         [Theory]
         [InlineData("Post", "Tag")]
-        public async Task FindAsync_ShouldReturnPostTagRelationsWithExistingPostAndTags_WhenPostTagRelationExists(string postTitle, string tagTitle)
+        public async Task FindAsync_ShouldReturnPostTagRelationWithExistingPostAndTags_WhenPostTagRelationExists(string postTitle, string tagTitle)
         {
             //Arrange
             var random = new Random();
@@ -857,12 +857,12 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Async find post.
+        /// Async find post tag relation.
         /// Should return nothing when post does not exists.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task FindAsync_ShouldReturnNothing_WhenPostDoesNotExists()
+        public async Task FindAsync_ShouldReturnNothing_WhenPostTagRelationsDoesNotExists()
         {
             //Arrange
             var random = new Random();
@@ -875,6 +875,45 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(postsTagsRelations);
+        }
+
+        #endregion
+
+        #region Insert function
+
+        /// <summary>
+        /// Verify that function Insert has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionInsert_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                Id = id,
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelation))
+                .Callback(() =>
+                {
+                    newPostsTagsRelation.Id = id;
+                });
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelation);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.Insert(newPostsTagsRelation), Times.Once);
         }
 
         #endregion
