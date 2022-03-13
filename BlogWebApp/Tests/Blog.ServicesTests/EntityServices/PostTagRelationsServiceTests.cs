@@ -916,6 +916,42 @@ namespace Blog.ServicesTests.EntityServices
             _postsTagsRelationsRepositoryMock.Verify(x => x.Insert(newPostsTagsRelation), Times.Once);
         }
 
+        /// <summary>
+        /// Insert post tag relation.
+        /// Should return post when post created.
+        /// </summary>
+        [Fact]
+        public void Insert_ShouldReturnPostTagRelation_WhenPostExists()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                Id = id,
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelation))
+                .Callback(() =>
+                {
+                    newPostsTagsRelation.Id = id;
+                });
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelation);
+
+            //Assert
+            Assert.NotEqual(0, newPostsTagsRelation.Id);
+        }
+
         #endregion
     }
 }
