@@ -897,7 +897,6 @@ namespace Blog.ServicesTests.EntityServices
             };
             var newPostsTagsRelation = new PostsTagsRelations
             {
-                Id = id,
                 PostId = id,
                 TagId = id,
                 Tag = tag
@@ -933,7 +932,6 @@ namespace Blog.ServicesTests.EntityServices
             };
             var newPostsTagsRelation = new PostsTagsRelations
             {
-                Id = id,
                 PostId = id,
                 TagId = id,
                 Tag = tag
@@ -967,7 +965,6 @@ namespace Blog.ServicesTests.EntityServices
             var id = random.Next(52);
             var postEntity = new Post
             {
-                Id = id,
                 Title = $"{postTitle} {id}",
                 Description = $"{postTitle} {id}",
                 Content = $"{postTitle} {id}",
@@ -1003,6 +1000,44 @@ namespace Blog.ServicesTests.EntityServices
 
             Assert.NotNull(newPostsTagsRelation.Tag);
             Assert.Contains(tagTitle, newPostsTagsRelation.Tag.Title);
+        }
+
+        #endregion
+
+        #region Insert Async function
+
+        /// <summary>
+        /// Verify that function Insert Async has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionInsertAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelation))
+                .Callback(() =>
+                {
+                    newPostsTagsRelation.Id = id;
+                });
+
+            //Act
+            await _postsTagsRelationsService.InsertAsync(newPostsTagsRelation);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.InsertAsync(newPostsTagsRelation), Times.Once);
         }
 
         #endregion
