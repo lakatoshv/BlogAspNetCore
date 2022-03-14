@@ -1040,6 +1040,42 @@ namespace Blog.ServicesTests.EntityServices
             _postsTagsRelationsRepositoryMock.Verify(x => x.InsertAsync(newPostsTagsRelation), Times.Once);
         }
 
+        /// <summary>
+        /// Async insert post tag relations.
+        /// Should return post when post created.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task InsertAsync_ShouldReturnPost_WhenPostExists()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelation))
+                .Callback(() =>
+                {
+                    newPostsTagsRelation.Id = id;
+                });
+
+            //Act
+            await _postsTagsRelationsService.InsertAsync(newPostsTagsRelation);
+
+            //Assert
+            Assert.NotEqual(0, newPostsTagsRelation.Id);
+        }
+
         #endregion
     }
 }
