@@ -1179,6 +1179,54 @@ namespace Blog.ServicesTests.EntityServices
             _postsTagsRelationsRepositoryMock.Verify(x => x.Update(postsTagsRelations), Times.Once);
         }
 
+        /// <summary>
+        /// Update post.
+        /// Should return post when post updated.
+        /// </summary>
+        [Fact]
+        public void Update_ShouldReturnPost_WhenPostExists()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+
+            var newTag = new Tag
+            {
+                Id = id + 1,
+                Title = $"Tag {id + 1}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelation))
+                .Callback(() =>
+                {
+                    newPostsTagsRelation.Id = id;
+                });
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
+                .Returns(() => newPostsTagsRelation);
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelation);
+            var postsTagsRelations = _postsTagsRelationsService.Find(id);
+            postsTagsRelations.TagId = newTag.Id;
+            postsTagsRelations.Tag = newTag;
+            _postsTagsRelationsService.Update(newPostsTagsRelation);
+
+            //Assert
+            Assert.Equal(postsTagsRelations.TagId, newTag.Id);
+            Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
+        }
+
         #endregion
     }
 }
