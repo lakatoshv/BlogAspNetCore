@@ -1346,6 +1346,55 @@ namespace Blog.ServicesTests.EntityServices
             _postsTagsRelationsRepositoryMock.Verify(x => x.UpdateAsync(postsTagsRelations), Times.Once);
         }
 
+        /// <summary>
+        /// Async update post tag relation.
+        /// Should return post tag relation when post tag relation updated.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task UpdateAsync_ShouldReturnPostTagRelation_WhenPostTagRelationExists()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+
+            var newTag = new Tag
+            {
+                Id = id + 1,
+                Title = $"Tag {id + 1}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelation))
+                .Callback(() =>
+                {
+                    newPostsTagsRelation.Id = id;
+                });
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
+                .ReturnsAsync(() => newPostsTagsRelation);
+
+            //Act
+            await _postsTagsRelationsService.InsertAsync(newPostsTagsRelation);
+            var postsTagsRelations = await _postsTagsRelationsService.FindAsync(id);
+            postsTagsRelations.TagId = newTag.Id;
+            postsTagsRelations.Tag = newTag;
+            await _postsTagsRelationsService.UpdateAsync(newPostsTagsRelation);
+
+            //Assert
+            Assert.Equal(postsTagsRelations.TagId, newTag.Id);
+            Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
+        }
+
         #endregion
     }
 }
