@@ -1395,6 +1395,72 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
         }
 
+        /// <summary>
+        /// Update async post tag relations.
+        /// Should return post tag relations when post tag relations exists.
+        /// </summary>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">THe tag title.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("Post", "Tag")]
+        public async Task UpdateAsync_ShouldReturnPostTagRelationWithExistingPostAndTags_WhenPostTagRelationExists(string postTitle, string tagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var postEntity = new Post
+            {
+                Title = $"{postTitle} {id}",
+                Description = $"{postTitle} {id}",
+                Content = $"{postTitle} {id}",
+                ImageUrl = $"{postTitle} {id}",
+            };
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"{tagTitle} {id}"
+            };
+            var newTag = new Tag
+            {
+                Id = id + 1,
+                Title = $"{tagTitle} {id + 1}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                Id = id,
+                PostId = id,
+                Post = postEntity,
+                TagId = id,
+                Tag = tag
+            };
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelation))
+                .Callback(() =>
+                {
+                    newPostsTagsRelation.Id = id;
+                });
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
+                .ReturnsAsync(() => newPostsTagsRelation);
+
+            //Act
+            await _postsTagsRelationsService.InsertAsync(newPostsTagsRelation);
+            var postsTagsRelations = await _postsTagsRelationsService.FindAsync(id);
+            postsTagsRelations.TagId = newTag.Id;
+            postsTagsRelations.Tag = newTag;
+            await _postsTagsRelationsService.UpdateAsync(newPostsTagsRelation);
+
+            //Assert
+            Assert.NotEqual(0, postsTagsRelations.Id);
+            Assert.NotNull(newPostsTagsRelation.Post);
+            Assert.Contains(postTitle, newPostsTagsRelation.Post.Title);
+
+            Assert.NotNull(newPostsTagsRelation.Tag);
+            Assert.Contains(tagTitle, newPostsTagsRelation.Tag.Title);
+            Assert.Equal(postsTagsRelations.TagId, newTag.Id);
+            Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
+        }
+
         #endregion
     }
 }
