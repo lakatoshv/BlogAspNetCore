@@ -1462,5 +1462,49 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Delete function
+
+        /// <summary>
+        /// Verify that function Delete has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDelete_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelation))
+                .Callback(() =>
+                {
+                    newPostsTagsRelation.Id = id;
+                });
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
+                .Returns(() => newPostsTagsRelation);
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelation);
+            var postsTagsRelations = _postsTagsRelationsService.Find(id);
+            _postsTagsRelationsService.Delete(postsTagsRelations);
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
+                .Returns(() => null);
+            _postsTagsRelationsService.Find(id);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.Delete(postsTagsRelations), Times.Once);
+        }
+
+        #endregion
     }
 }
