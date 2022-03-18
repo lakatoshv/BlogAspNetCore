@@ -1591,6 +1591,48 @@ namespace Blog.ServicesTests.EntityServices
             _postsTagsRelationsRepositoryMock.Verify(x => x.DeleteAsync(postsTagsRelations), Times.Once);
         }
 
+        /// <summary>
+        /// Async delete post tag relation.
+        /// Should return nothing when post tag relation is deleted.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task DeleteAsync_ShouldReturnNothing_WhenPostTagRelationIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+            _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelation))
+                .Callback(() =>
+                {
+                    newPostsTagsRelation.Id = id;
+                });
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
+                .ReturnsAsync(() => newPostsTagsRelation);
+
+            //Act
+            await _postsTagsRelationsService.InsertAsync(newPostsTagsRelation);
+            var postsTagsRelations = await _postsTagsRelationsService.FindAsync(id);
+            await _postsTagsRelationsService.DeleteAsync(postsTagsRelations);
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
+                .ReturnsAsync(() => null);
+            var postsTagsRelation = await _postsTagsRelationsService.FindAsync(id);
+
+            //Assert
+            Assert.Null(postsTagsRelation);
+        }
+
         #endregion
     }
 }
