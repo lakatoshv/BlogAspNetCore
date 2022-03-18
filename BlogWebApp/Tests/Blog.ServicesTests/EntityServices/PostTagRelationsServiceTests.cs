@@ -1581,14 +1581,14 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             await _postsTagsRelationsService.InsertAsync(newPostsTagsRelation);
-            var postsTagsRelations = await _postsTagsRelationsService.FindAsync(id);
-            await _postsTagsRelationsService.DeleteAsync(postsTagsRelations);
+            var postsTagsRelation = await _postsTagsRelationsService.FindAsync(id);
+            await _postsTagsRelationsService.DeleteAsync(postsTagsRelation);
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
-                .Returns(() => null);
+                .ReturnsAsync(() => null);
             await _postsTagsRelationsService.FindAsync(id);
 
             //Assert
-            _postsTagsRelationsRepositoryMock.Verify(x => x.DeleteAsync(postsTagsRelations), Times.Once);
+            _postsTagsRelationsRepositoryMock.Verify(x => x.DeleteAsync(postsTagsRelation), Times.Once);
         }
 
         /// <summary>
@@ -1631,6 +1631,49 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(postsTagsRelation);
+        }
+
+        #endregion
+
+        #region Any function With Specification
+
+        /// <summary>
+        /// Verify that function Any with specification has been called.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests ")]
+        public void Verify_FunctionAny_WithSpecification_HasBeenCalled(string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{titleSearch} {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Any(specification))
+                .Returns(() => postsTagsRelationsList.Any(x => x.Tag.Title.Contains(titleSearch)));
+
+            //Act
+            var areAnyPosts = _postsTagsRelationsService.Any(specification);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.Any(specification), Times.Once);
         }
 
         #endregion
