@@ -1949,6 +1949,48 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             Assert.True(areAnyPosts);
         }
+
+        /// <summary>
+        /// Async check if there are any post tag relations with specification.
+        /// Should return false with when post tag relations does not exists.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("Created from ServicesTests -1")]
+        public async Task AnyAsync_ShouldReturnFalse_WithEqualSpecification_WhenPostTagRelationsExists(string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.AnyAsync(specification))
+                .ReturnsAsync(() => postsTagsRelationsList.Any(x => x.Tag.Title.Contains(titleSearch)));
+
+            //Act
+            var areAnyPosts = await _postsTagsRelationsService.AnyAsync(specification);
+
+            //Assert
+            Assert.False(areAnyPosts);
+        }
         #endregion
     }
 }
