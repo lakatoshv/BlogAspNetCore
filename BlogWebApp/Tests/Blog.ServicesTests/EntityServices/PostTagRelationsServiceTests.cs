@@ -1683,7 +1683,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests ")]
-        public void Any_ShouldReturnTrue_WithContainsSpecification_WhenPostsExists(string titleSearch)
+        public void Any_ShouldReturnTrue_WithContainsSpecification_WhenPostTagRelationsExists(string titleSearch)
         {
             //Test failed
             //Arrange
@@ -1725,7 +1725,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests 0")]
-        public void Any_ShouldReturnTrue_WithEqualsSpecification_WhenPostsExists(string titleSearch)
+        public void Any_ShouldReturnTrue_WithEqualsSpecification_WhenPostTagRelationsExists(string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -1766,7 +1766,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests -1")]
-        public void Any_ShouldReturnFalse_WithEqualSpecification_WhenPostsExists(string titleSearch)
+        public void Any_ShouldReturnFalse_WithEqualSpecification_WhenPostTagRelationsExists(string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -1807,7 +1807,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests 0")]
-        public void Any_ShouldReturnNothing_WithEqualSpecification_WhenPostDoesNotExists(string titleSearch)
+        public void Any_ShouldReturnNothing_WithEqualSpecification_WhenPostTagRelationDoesNotExists(string titleSearch)
         {
             //Arrange
             var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
@@ -1821,6 +1821,49 @@ namespace Blog.ServicesTests.EntityServices
             Assert.False(areAnyPosts);
         }
 
+        #endregion
+
+        #region Any Async function With Specification
+
+        /// <summary>
+        /// Verify that function Any Async with specification has been called.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("Created from ServicesTests ")]
+        public async Task Verify_FunctionAnyAsync_WithSpecification_HasBeenCalled(string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{titleSearch} {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.AnyAsync(specification))
+                .ReturnsAsync(() => postsTagsRelationsList.Any(x => x.Tag.Title.Contains(titleSearch)));
+
+            //Act
+            var areAnyPosts = await _postsTagsRelationsService.AnyAsync(specification);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.AnyAsync(specification), Times.Once);
+        }
         #endregion
     }
 }
