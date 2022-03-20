@@ -2141,6 +2141,47 @@ namespace Blog.ServicesTests.EntityServices
             Assert.NotNull(post);
             Assert.IsType<PostsTagsRelations>(post);
         }
+
+        /// <summary>
+        /// Get first or default post with specification.
+        /// Should return nothing with when post does not exists.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Tag -1")]
+        public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenPostTagRelationsExists(string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.FirstOrDefault(specification))
+                .Returns(() => postsTagsRelationsList.FirstOrDefault(x => x.Tag.Title.Contains(titleSearch)));
+
+            //Act
+            var post = _postsTagsRelationsService.FirstOrDefault(specification);
+
+            //Assert
+            Assert.Null(post);
+        }
         #endregion
     }
 }
