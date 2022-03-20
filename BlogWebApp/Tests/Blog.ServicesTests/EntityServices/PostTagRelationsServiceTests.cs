@@ -2051,7 +2051,7 @@ namespace Blog.ServicesTests.EntityServices
                 .Returns(() => postsTagsRelationsList.FirstOrDefault(x => x.Tag.Title.Contains(titleSearch)));
 
             //Act
-            var post = _postsTagsRelationsService.FirstOrDefault(specification);
+            _postsTagsRelationsService.FirstOrDefault(specification);
 
             //Assert
             _postsTagsRelationsRepositoryMock.Verify(x => x.FirstOrDefault(specification), Times.Once);
@@ -2093,11 +2093,11 @@ namespace Blog.ServicesTests.EntityServices
                 .Returns(() => postsTagsRelationsList.FirstOrDefault(x => x.Tag.Title.Contains(titleSearch)));
 
             //Act
-            var post = _postsTagsRelationsService.FirstOrDefault(specification);
+            var postsTagsRelations = _postsTagsRelationsService.FirstOrDefault(specification);
 
             //Assert
-            Assert.NotNull(post);
-            Assert.IsType<PostsTagsRelations>(post);
+            Assert.NotNull(postsTagsRelations);
+            Assert.IsType<PostsTagsRelations>(postsTagsRelations);
         }
 
         /// <summary>
@@ -2135,11 +2135,11 @@ namespace Blog.ServicesTests.EntityServices
                 .Returns(() => postsTagsRelationsList.FirstOrDefault(x => x.Tag.Title.Contains(titleSearch)));
 
             //Act
-            var post = _postsTagsRelationsService.FirstOrDefault(specification);
+            var postsTagsRelations = _postsTagsRelationsService.FirstOrDefault(specification);
 
             //Assert
-            Assert.NotNull(post);
-            Assert.IsType<PostsTagsRelations>(post);
+            Assert.NotNull(postsTagsRelations);
+            Assert.IsType<PostsTagsRelations>(postsTagsRelations);
         }
 
         /// <summary>
@@ -2218,12 +2218,54 @@ namespace Blog.ServicesTests.EntityServices
                 .Returns(() => null);
 
             //Act
-            var post = _postsTagsRelationsService.FirstOrDefault(specification);
+            var postsTagsRelations = _postsTagsRelationsService.FirstOrDefault(specification);
 
             //Assert
-            Assert.Null(post);
+            Assert.Null(postsTagsRelations);
         }
 
+        #endregion
+
+        #region Last Or Default function With Specification
+
+        /// <summary>
+        /// Verify that function Last Or Default with specification has been called.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests ")]
+        public void Verify_FunctionLastOrDefault_WithSpecification_HasBeenCalled(string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{titleSearch} {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.LastOrDefault(specification))
+                .Returns(() => postsTagsRelationsList.LastOrDefault(x => x.Tag.Title.Contains(titleSearch)));
+
+            //Act
+            _postsTagsRelationsService.LastOrDefault(specification);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.LastOrDefault(specification), Times.Once);
+        }
         #endregion
     }
 }
