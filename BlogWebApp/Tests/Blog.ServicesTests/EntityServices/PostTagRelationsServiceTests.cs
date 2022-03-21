@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using Blog.Data.Models;
+﻿using Blog.Data.Models;
 using Blog.Data.Repository;
-using Blog.Data.Specifications;
 using Blog.Services;
 using Blog.Services.Interfaces;
 using Moq;
@@ -31,31 +29,6 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         private readonly Mock<IRepository<PostsTagsRelations>> _postsTagsRelationsRepositoryMock;
 
-        /// <summary>
-        /// The post tag relations repository mock.
-        /// </summary>
-        private readonly Mock<IRepository<Post>> _postsRepositoryMock;
-
-        /// <summary>
-        /// The tags repository mock.
-        /// </summary>
-        private readonly Mock<IRepository<Tag>> _tagsRepositoryMock;
-
-        /// <summary>
-        /// The mapper mock.
-        /// </summary>
-        private readonly Mock<IMapper> _mapper;
-
-        /// <summary>
-        /// The post tag relations service mock.
-        /// </summary>
-        private readonly Mock<IPostsService> _postsServiceMock;
-
-        /// <summary>
-        /// The tags service mock.
-        /// </summary>
-        private readonly Mock<ITagsService> _tagsServiceMock;
-
         #endregion
 
         #region Ctor
@@ -65,13 +38,9 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         public PostTagRelationsServiceTests()
         {
-            _postsServiceMock = new Mock<IPostsService>();
-            _tagsServiceMock = new Mock<ITagsService>();
+            var tagsServiceMock = new Mock<ITagsService>();
             _postsTagsRelationsRepositoryMock = new Mock<IRepository<PostsTagsRelations>>();
-            _postsRepositoryMock = new Mock<IRepository<Post>>();
-            _tagsRepositoryMock = new Mock<IRepository<Tag>>();
-            _mapper = new Mock<IMapper>();
-            _postsTagsRelationsService = new PostsTagsRelationsService(_postsTagsRelationsRepositoryMock.Object, _tagsServiceMock.Object);
+            _postsTagsRelationsService = new PostsTagsRelationsService(_postsTagsRelationsRepositoryMock.Object, tagsServiceMock.Object);
         }
 
         #endregion
@@ -150,6 +119,8 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return post tag relations when post tag relations exists.
         /// </summary>
         /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">The tag title.</param>
         [Theory]
         [InlineData(0, "Post", "Tag")]
         public void GetAll_ShouldReturnPostTagRelationsWithExistingPostAndTags_WhenPostTagRelationExists(int notEqualCount, string postTitle, string tagTitle)
@@ -197,14 +168,17 @@ namespace Blog.ServicesTests.EntityServices
             Assert.NotNull(postsTagsRelations);
             Assert.NotEmpty(postsTagsRelations);
             Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
-            postsTagsRelations.ForEach(postsTagsRelation =>
+
+            void Action(PostsTagsRelations postsTagsRelation)
             {
                 Assert.NotNull(postsTagsRelation.Post);
                 Assert.Contains(postTitle, postsTagsRelation.Post.Title);
 
                 Assert.NotNull(postsTagsRelation.Tag);
                 Assert.Contains(tagTitle, postsTagsRelation.Tag.Title);
-            });
+            }
+
+            postsTagsRelations.ForEach(Action);
         }
 
         /// <summary>
@@ -212,6 +186,8 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return post tag relations when post tag relations exists.
         /// </summary>
         /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">The tag title.</param>
         [Theory]
         [InlineData(0, "Post", "Tag")]
         public void GetAll_ShouldReturnPostTagRelationsWithExistingPostAndTagsAndShouldContainsTheSameTagsCount_WhenPostTagRelationExists(int notEqualCount, string postTitle, string tagTitle)
@@ -467,14 +443,17 @@ namespace Blog.ServicesTests.EntityServices
             Assert.NotNull(postsTagsRelations);
             Assert.NotEmpty(postsTagsRelations);
             Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
-            postsTagsRelations.ForEach(postsTagsRelation =>
+
+            void Action(PostsTagsRelations postsTagsRelation)
             {
                 Assert.NotNull(postsTagsRelation.Post);
                 Assert.Contains(postTitle, postsTagsRelation.Post.Title);
 
                 Assert.NotNull(postsTagsRelation.Tag);
                 Assert.Contains(tagTitle, postsTagsRelation.Tag.Title);
-            });
+            }
+
+            postsTagsRelations.ForEach(Action);
         }
 
         /// <summary>
@@ -482,6 +461,8 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return post tag relations when post tag relations exists.
         /// </summary>
         /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">The tag title.</param>
         [Theory]
         [InlineData(0, "Post", "Tag")]
         public void GetAll_ShouldReturnPostTagRelationsWithExistingPostAndTagsAndShouldContainsTheSameTagsCount_WithContainsSpecification_WhenPostTagRelationsExists(int notEqualCount, string postTitle, string tagTitle)
@@ -1670,7 +1651,7 @@ namespace Blog.ServicesTests.EntityServices
                 .Returns(() => postsTagsRelationsList.Any(x => x.Tag.Title.Contains(titleSearch)));
 
             //Act
-            var areAnyPosts = _postsTagsRelationsService.Any(specification);
+            _postsTagsRelationsService.Any(specification);
 
             //Assert
             _postsTagsRelationsRepositoryMock.Verify(x => x.Any(specification), Times.Once);
@@ -1859,7 +1840,7 @@ namespace Blog.ServicesTests.EntityServices
                 .ReturnsAsync(() => postsTagsRelationsList.Any(x => x.Tag.Title.Contains(titleSearch)));
 
             //Act
-            var areAnyPosts = await _postsTagsRelationsService.AnyAsync(specification);
+            await _postsTagsRelationsService.AnyAsync(specification);
 
             //Assert
             _postsTagsRelationsRepositoryMock.Verify(x => x.AnyAsync(specification), Times.Once);
@@ -2193,26 +2174,6 @@ namespace Blog.ServicesTests.EntityServices
         public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenPostTagRelationDoesNotExists(string titleSearch)
         {
             //Arrange
-            var random = new Random();
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var tag = new Tag
-                {
-                    Id = i,
-                    Title = $"Tag {i}"
-                };
-                postsTagsRelationsList.Add(new PostsTagsRelations
-                {
-                    Id = i,
-                    PostId = i,
-                    TagId = i,
-                    Tag = tag
-                });
-            }
-
-
             var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
             _postsTagsRelationsRepositoryMock.Setup(x => x.FirstOrDefault(specification))
                 .Returns(() => null);
@@ -2403,26 +2364,6 @@ namespace Blog.ServicesTests.EntityServices
         public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenPostTagRelationDoesNotExists(string titleSearch)
         {
             //Arrange
-            var random = new Random();
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var tag = new Tag
-                {
-                    Id = i,
-                    Title = $"{titleSearch} {i}"
-                };
-                postsTagsRelationsList.Add(new PostsTagsRelations
-                {
-                    Id = i,
-                    PostId = i,
-                    TagId = i,
-                    Tag = tag
-                });
-            }
-
-
             var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
             _postsTagsRelationsRepositoryMock.Setup(x => x.LastOrDefault(specification))
                 .Returns(() => null);
