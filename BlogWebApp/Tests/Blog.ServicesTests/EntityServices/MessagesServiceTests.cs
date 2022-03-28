@@ -43,5 +43,60 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Get All function
+
+        /// <summary>
+        /// Verify that function Get All has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionGetAll_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.GetAll())
+                .Returns(messagesList.AsQueryable());
+
+            //Act
+            _messagesService.GetAll();
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.GetAll(), Times.Once);
+        }
+
+        #endregion
     }
 }
