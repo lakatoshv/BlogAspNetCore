@@ -97,6 +97,63 @@ namespace Blog.ServicesTests.EntityServices
             _messagesRepositoryMock.Verify(x => x.GetAll(), Times.Once);
         }
 
+        /// <summary>
+        /// Get all messages.
+        /// Should return messages when messages exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public void GetAll_ShouldReturnMessages_WhenMessagesExists(int notEqualCount)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+
+            _messagesRepositoryMock.Setup(x => x.GetAll())
+                .Returns(() => messagesList.AsQueryable());
+
+            //Act
+            var messages = _messagesService.GetAll();
+
+            //Assert
+            Assert.NotNull(messages);
+            Assert.NotEmpty(messages);
+            Assert.NotEqual(notEqualCount, messages.ToList().Count);
+        }
+
         #endregion
     }
 }
