@@ -406,6 +406,27 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(equalCount, messages.ToList().Count);
         }
 
+        /// <summary>
+        /// Get all messages.
+        /// Should return nothing with  when messages does not exists.
+        /// </summary>
+        /// <param name="bodySearch">The message search.</param>
+        [Theory]
+        [InlineData("Tag 0")]
+        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string bodySearch)
+        {
+            //Arrange
+            var specification = new MessageSpecification(x => x.Body.Equals(bodySearch));
+            _messagesRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(() => new List<Message>().AsQueryable());
+
+            //Act
+            var messages = _messagesService.GetAll();
+
+            //Assert
+            Assert.Empty(messages);
+        }
+
         #endregion
     }
 }
