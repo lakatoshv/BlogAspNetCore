@@ -230,6 +230,65 @@ namespace Blog.ServicesTests.EntityServices
             _messagesRepositoryMock.Verify(x => x.GetAll(specification), Times.Once);
         }
 
+        /// <summary>
+        /// Get all messages with specification.
+        /// Should return messages with contains specification when messages exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="bodySearch">The body search.</param>
+        [Theory]
+        [InlineData(0, "Test body")]
+        public void GetAll_ShouldReturnMessages_WithContainsSpecification_WhenMessagesExists(int notEqualCount, string bodySearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var specification = new MessageSpecification(x => x.Body.Contains(bodySearch));
+            _messagesRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(() => messagesList.Where(x => x.Body.Contains(bodySearch)).AsQueryable());
+
+            //Act
+            var messages = _messagesService.GetAll(specification);
+
+            //Assert
+            Assert.NotNull(messages);
+            Assert.NotEmpty(messages);
+            Assert.NotEqual(notEqualCount, messages.ToList().Count);
+        }
+
         #endregion
     }
 }
