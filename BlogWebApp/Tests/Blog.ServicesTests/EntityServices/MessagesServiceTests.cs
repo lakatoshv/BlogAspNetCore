@@ -173,5 +173,63 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Get all function With Specification
+
+        /// <summary>
+        /// Verify that function Get All with specification has been called.
+        /// </summary>
+        /// <param name="bodySearch">The body search.</param>
+        [Theory]
+        [InlineData("Test body")]
+        public void Verify_FunctionGetAll_WithSpecification_HasBeenCalled(string bodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var specification = new MessageSpecification(x => x.Body.Contains(bodySearch));
+            _messagesRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(() => messagesList.Where(x => x.Body.Contains(bodySearch)).AsQueryable());
+
+            //Act
+            _messagesService.GetAll(specification);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.GetAll(specification), Times.Once);
+        }
+
+        #endregion
     }
 }
