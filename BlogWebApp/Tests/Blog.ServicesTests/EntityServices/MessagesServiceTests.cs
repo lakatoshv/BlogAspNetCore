@@ -154,6 +154,24 @@ namespace Blog.ServicesTests.EntityServices
             Assert.NotEqual(notEqualCount, messages.ToList().Count);
         }
 
+        /// <summary>
+        /// Get all messages.
+        /// Should return nothing when messages does not exists.
+        /// </summary>
+        [Fact]
+        public void GetAll_ShouldReturnNothing_WhenMessagesDoesNotExists()
+        {
+            //Arrange
+            _messagesRepositoryMock.Setup(x => x.GetAll())
+                .Returns(() => new List<Message>().AsQueryable());
+
+            //Act
+            var messages = _messagesService.GetAll();
+
+            //Assert
+            Assert.Empty(messages);
+        }
+
         #endregion
     }
 }
