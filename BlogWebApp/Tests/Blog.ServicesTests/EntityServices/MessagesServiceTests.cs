@@ -526,6 +526,26 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(messageId, message.Id);
         }
 
+        /// <summary>
+        /// Find message.
+        /// Should return nothing when message does not exists.
+        /// </summary>
+        [Fact]
+        public void Find_ShouldReturnNothing_WhenMessageDoesNotExists()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            _messagesRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
+                .Returns(() => null);
+
+            //Act
+            var tag = _messagesService.Find(messageId);
+
+            //Assert
+            Assert.Null(tag);
+        }
+
         #endregion
     }
 }
