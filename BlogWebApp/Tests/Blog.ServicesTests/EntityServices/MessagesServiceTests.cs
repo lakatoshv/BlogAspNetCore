@@ -478,6 +478,54 @@ namespace Blog.ServicesTests.EntityServices
             _messagesRepositoryMock.Verify(x => x.GetById(messageId), Times.Once);
         }
 
+        /// <summary>
+        /// Find message.
+        /// Should return message when message exists.
+        /// </summary>
+        [Fact]
+        public void Find_ShouldReturnMessage_WhenMessageExists()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+            var newMessage = new Message
+            {
+                Id = messageId,
+                SenderId = sender.Id,
+                Sender = sender,
+                RecipientId = recipient.Id,
+                Recipient = recipient,
+                Subject = $"Test subject{messageId}",
+                Body = $"Test body{messageId}"
+            };
+            _messagesRepositoryMock.Setup(x => x.GetById(messageId))
+                .Returns(() => newMessage);
+
+            //Act
+            var message = _messagesService.Find(messageId);
+
+            //Assert
+            Assert.Equal(messageId, message.Id);
+        }
+
         #endregion
     }
 }
