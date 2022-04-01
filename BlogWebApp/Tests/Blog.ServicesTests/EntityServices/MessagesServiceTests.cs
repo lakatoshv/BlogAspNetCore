@@ -647,6 +647,27 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(messageId, tag.Id);
         }
 
+        /// <summary>
+        /// Async find message.
+        /// Should return nothing when message does not exists.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task FindAsync_ShouldReturnNothing_WhenMessageDoesNotExists()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            _messagesRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(() => null);
+
+            //Act
+            var message = await _messagesService.FindAsync(messageId);
+
+            //Assert
+            Assert.Null(message);
+        }
+
         #endregion
     }
 }
