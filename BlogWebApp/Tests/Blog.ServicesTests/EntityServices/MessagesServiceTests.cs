@@ -880,5 +880,66 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Upadate function
+
+        /// <summary>
+        /// Verify that function Update has been called.
+        /// </summary>
+        /// <param name="newMessageSubject">The new message subject.</param>
+        [Theory]
+        [InlineData("New subject")]
+        public void Verify_FunctionUpdate_HasBeenCalled(string newMessageSubject)
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+            var newMessage = new Message
+            {
+                SenderId = sender.Id,
+                Sender = sender,
+                RecipientId = recipient.Id,
+                Recipient = recipient,
+                Subject = $"Test subject{messageId}",
+                Body = $"Test body{messageId}"
+            };
+
+            _messagesRepositoryMock.Setup(x => x.Insert(newMessage))
+                .Callback(() =>
+                {
+                    newMessage.Id = messageId;
+                });
+            _messagesRepositoryMock.Setup(x => x.GetById(messageId))
+                .Returns(() => newMessage);
+
+            //Act
+            _messagesService.Insert(newMessage);
+            var message = _messagesService.Find(messageId);
+            message.Subject = newMessageSubject;
+            _messagesService.Update(message);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.Update(message), Times.Once);
+        }
+
+        #endregion
     }
 }
