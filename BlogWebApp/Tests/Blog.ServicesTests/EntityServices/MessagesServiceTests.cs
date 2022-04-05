@@ -1061,6 +1061,65 @@ namespace Blog.ServicesTests.EntityServices
             _messagesRepositoryMock.Verify(x => x.UpdateAsync(message), Times.Once);
         }
 
+        /// <summary>
+        /// Async update message.
+        /// Should return message when message updated.
+        /// </summary>
+        /// <param name="newMessageSubject">The new message subject.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("New Tag")]
+        public async Task UpdateAsync_ShouldReturnMessage_WhenMessageExists(string newMessageSubject)
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+            var newMessage = new Message
+            {
+                SenderId = sender.Id,
+                Sender = sender,
+                RecipientId = recipient.Id,
+                Recipient = recipient,
+                Subject = $"Test subject{messageId}",
+                Body = $"Test body{messageId}"
+            };
+
+            _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessage))
+                .Callback(() =>
+                {
+                    newMessage.Id = messageId;
+                });
+            _messagesRepositoryMock.Setup(x => x.GetByIdAsync(messageId))
+                .ReturnsAsync(() => newMessage);
+
+            //Act
+            await _messagesService.InsertAsync(newMessage);
+            var message = await _messagesService.FindAsync(messageId);
+            message.Subject = newMessageSubject;
+            await _messagesService.UpdateAsync(message);
+
+            //Assert
+            Assert.Equal(newMessageSubject, message.Subject);
+        }
+
         #endregion
     }
 }
