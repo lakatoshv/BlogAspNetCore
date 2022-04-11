@@ -1181,6 +1181,64 @@ namespace Blog.ServicesTests.EntityServices
             _messagesRepositoryMock.Verify(x => x.Delete(tag), Times.Once);
         }
 
+        /// <summary>
+        /// Delete tag.
+        /// Should return nothing when tag is deleted.
+        /// </summary>
+        [Fact]
+        public void Delete_ShouldReturnNothing_WhenTagsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+            var newMessage = new Message
+            {
+                Id = messageId,
+                SenderId = sender.Id,
+                Sender = sender,
+                RecipientId = recipient.Id,
+                Recipient = recipient,
+                Subject = $"Test subject{messageId}",
+                Body = $"Test body{messageId}"
+            };
+            _messagesRepositoryMock.Setup(x => x.Insert(newMessage))
+                .Callback(() =>
+                {
+                    newMessage.Id = messageId;
+                });
+            _messagesRepositoryMock.Setup(x => x.GetById(messageId))
+                .Returns(() => newMessage);
+
+            //Act
+            _messagesService.Insert(newMessage);
+            var tag = _messagesService.Find(messageId);
+            _messagesService.Delete(tag);
+            _messagesRepositoryMock.Setup(x => x.GetById(messageId))
+                .Returns(() => null);
+            var deletedMessage = _messagesService.Find(messageId);
+
+            //Assert
+            Assert.Null(deletedMessage);
+        }
+
         #endregion
     }
 }
