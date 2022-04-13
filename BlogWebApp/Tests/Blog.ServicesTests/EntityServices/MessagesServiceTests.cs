@@ -1583,6 +1583,27 @@ namespace Blog.ServicesTests.EntityServices
             Assert.False(areAnyMessages);
         }
 
+        /// <summary>
+        /// Check if there are any messages with specification.
+        /// Should return false with when messages does not exists.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        [Theory]
+        [InlineData("Test subject 0")]
+        public void Any_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string subjectSearch)
+        {
+            //Arrange
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.Any(specification))
+                .Returns(() => false);
+
+            //Act
+            var areAnyMessages = _messagesService.Any(specification);
+
+            //Assert
+            Assert.False(areAnyMessages);
+        }
+
         #endregion
     }
 }
