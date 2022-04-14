@@ -1605,5 +1605,64 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Any Async function With Specification
+
+        /// <summary>
+        /// Verify that function Any Async with specification has been called.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("Test subject ")]
+        public async Task Verify_FunctionAnyAsync_WithSpecification_HasBeenCalled(string subjectSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.AnyAsync(specification))
+                .ReturnsAsync(() => messagesList.Any(x => x.Subject.Contains(subjectSearch)));
+
+            //Act
+            await _messagesService.AnyAsync(specification);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.AnyAsync(specification), Times.Once);
+        }
+
+        #endregion
     }
 }
