@@ -1721,6 +1721,63 @@ namespace Blog.ServicesTests.EntityServices
             Assert.True(areAnyMessages);
         }
 
+        /// <summary>
+        /// Async check if there are any messages with specification.
+        /// Should return true with equal specification when messages exists.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("Test subject 0")]
+        public async Task AnyAsync_ShouldReturnTrue_WithEqualsSpecification_WhenMessagesExists(string subjectSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.AnyAsync(specification))
+                .ReturnsAsync(() => messagesList.Any(x => x.Subject.Contains(subjectSearch)));
+
+            //Act
+            var areAnyMessages = await _messagesService.AnyAsync(specification);
+
+            //Assert
+            Assert.True(areAnyMessages);
+        }
+
         #endregion
     }
 }
