@@ -1835,6 +1835,28 @@ namespace Blog.ServicesTests.EntityServices
             Assert.False(areAnyMessages);
         }
 
+        /// <summary>
+        /// Async check if there are any messages with specification.
+        /// Should return false with when messages does not exists.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("Test subject 0")]
+        public async Task AnyAsync_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string subjectSearch)
+        {
+            //Arrange
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.AnyAsync(specification))
+                .ReturnsAsync(() => false);
+
+            //Act
+            var areAnyMessages = await _messagesService.AnyAsync(specification);
+
+            //Assert
+            Assert.False(areAnyMessages);
+        }
+
         #endregion
     }
 }
