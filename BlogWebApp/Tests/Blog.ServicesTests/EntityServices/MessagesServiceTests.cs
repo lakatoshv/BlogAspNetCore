@@ -1858,5 +1858,63 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region First Or Default function With Specification
+
+        /// <summary>
+        /// Verify that function First Or Default with specification has been called.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        [Theory]
+        [InlineData("Test subject ")]
+        public void Verify_FunctionFirstOrDefault_WithSpecification_HasBeenCalled(string subjectSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.FirstOrDefault(specification))
+                .Returns(() => messagesList.FirstOrDefault(x => x.Subject.Contains(subjectSearch)));
+
+            //Act
+            _messagesService.FirstOrDefault(specification);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.FirstOrDefault(specification), Times.Once);
+        }
+
+        #endregion
     }
 }
