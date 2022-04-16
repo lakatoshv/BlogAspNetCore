@@ -2336,6 +2336,27 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Null(message);
         }
 
+        /// <summary>
+        /// Get last or default message with specification.
+        /// Should return nothing with when messages does not exists.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        [Theory]
+        [InlineData("Test subject 0")]
+        public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string subjectSearch)
+        {
+            //Arrange
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.LastOrDefault(specification))
+                .Returns(() => null);
+
+            //Act
+            var message = _messagesService.LastOrDefault(specification);
+
+            //Assert
+            Assert.Null(message);
+        }
+
         #endregion
 
         #region NotTestedYet
