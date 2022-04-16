@@ -2108,5 +2108,157 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Last Or Default function With Specification
+
+        /// <summary>
+        /// Verify that function Last Or Default with specification has been called.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        [Theory]
+        [InlineData("Test subject ")]
+        public void Verify_FunctionLastOrDefault_WithSpecification_HasBeenCalled(string subjectSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.LastOrDefault(specification))
+                .Returns(() => messagesList.LastOrDefault(x => x.Subject.Contains(subjectSearch)));
+
+            //Act
+            _messagesService.LastOrDefault(specification);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.LastOrDefault(specification), Times.Once);
+        }
+
+        #endregion
+
+        #region NotTestedYet
+
+        /// <summary>
+        /// Verify that function Get All Async has been called.
+        /// </summary>
+        //[Fact]
+        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Comment {i}",
+                });
+            }
+
+
+            /*_generalServiceMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => commentslist);*/
+
+            //Act
+            var comments = await _tagsService.GetAllAsync();
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
+        }
+
+        /// <summary>
+        /// Async get all tags.
+        /// Should return tags when comments exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        //[Theory]
+        //[InlineData(0)]
+        public async Task GetAllAsync_ShouldReturnTags_WhenTagsExists(int notEqualCount)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Comment {i}",
+                });
+            }
+
+
+            _tagsRepositoryMock.Setup(x => x.GetAll())
+                .Returns(() => tagsList.AsQueryable());
+
+            //Act
+            var comments = await _tagsService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(comments);
+            Assert.NotEmpty(comments);
+            Assert.NotEqual(notEqualCount, comments.ToList().Count);
+        }
+
+        /// <summary>
+        /// Async get all tags.
+        /// Should return nothing when tags does not exists.
+        /// </summary>
+        //[Fact]
+        public async Task GetAllAsync_ShouldReturnNothing_WhenTagDoesNotExists()
+        {
+            //Test failed
+            //Arrange
+            /*_generalServiceMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => new List<Comment>());*/
+
+            //Act
+            var comments = await _tagsService.GetAllAsync();
+
+            //Assert
+            Assert.Empty(comments);
+        }
+
+        //SearchAsync(SearchQuery<T> searchQuery)
+        //GetAllAsync(ISpecification<T> specification)
+        //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
+        //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
+        #endregion
     }
 }
