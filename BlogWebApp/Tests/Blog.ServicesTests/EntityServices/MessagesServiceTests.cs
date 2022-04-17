@@ -1365,7 +1365,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
-        [InlineData("Test subject ")]
+        [InlineData("Test subject")]
         public void Verify_FunctionAny_WithSpecification_HasBeenCalled(string subjectSearch)
         {
             //Arrange
@@ -1420,7 +1420,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
-        [InlineData("Test subject ")]
+        [InlineData("Test subject")]
         public void Any_ShouldReturnTrue_WithContainsSpecification_WhenMessagesExists(string subjectSearch)
         {
             //Test failed
@@ -1477,7 +1477,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
-        [InlineData("Test subject 0")]
+        [InlineData("Test subject0")]
         public void Any_ShouldReturnTrue_WithEqualsSpecification_WhenMessagesExists(string subjectSearch)
         {
             //Arrange
@@ -1533,7 +1533,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
-        [InlineData("Test subject -1")]
+        [InlineData("Test subject-1")]
         public void Any_ShouldReturnFalse_WithEqualSpecification_WhenMessagesExists(string subjectSearch)
         {
             //Arrange
@@ -1589,7 +1589,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
-        [InlineData("Test subject 0")]
+        [InlineData("Test subject0")]
         public void Any_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string subjectSearch)
         {
             //Arrange
@@ -1614,7 +1614,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         /// <returns>Task.</returns>
         [Theory]
-        [InlineData("Test subject ")]
+        [InlineData("Test subject")]
         public async Task Verify_FunctionAnyAsync_WithSpecification_HasBeenCalled(string subjectSearch)
         {
             //Arrange
@@ -1670,7 +1670,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         /// <returns>Task.</returns>
         [Theory]
-        [InlineData("Test subject ")]
+        [InlineData("Test subject")]
         public async Task AnyAsync_ShouldReturnTrue_WithContainsSpecification_WhenMessagesExists(string subjectSearch)
         {
             //Test failed
@@ -1728,7 +1728,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         /// <returns>Task.</returns>
         [Theory]
-        [InlineData("Test subject 0")]
+        [InlineData("Test subject0")]
         public async Task AnyAsync_ShouldReturnTrue_WithEqualsSpecification_WhenMessagesExists(string subjectSearch)
         {
             //Arrange
@@ -1785,7 +1785,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         /// <returns>Task.</returns>
         [Theory]
-        [InlineData("Test subject -1")]
+        [InlineData("Test subject-1")]
         public async Task AnyAsync_ShouldReturnFalse_WithEqualSpecification_WhenMessagesExists(string subjectSearch)
         {
             //Arrange
@@ -1842,7 +1842,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         /// <returns>Task.</returns>
         [Theory]
-        [InlineData("Test subject 0")]
+        [InlineData("Test subject0")]
         public async Task AnyAsync_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string subjectSearch)
         {
             //Arrange
@@ -1866,7 +1866,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
-        [InlineData("Test subject ")]
+        [InlineData("Test subject")]
         public void Verify_FunctionFirstOrDefault_WithSpecification_HasBeenCalled(string subjectSearch)
         {
             //Arrange
@@ -1921,7 +1921,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
-        [InlineData("Test subject ")]
+        [InlineData("Test subject")]
         public void FirstOrDefault_ShouldReturnMessage_WithContainsSpecification_WhenMessagesExists(string subjectSearch)
         {
             //Test failed
@@ -1979,7 +1979,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
-        [InlineData("Test subject 0")]
+        [InlineData("Test subject0")]
         public void FirstOrDefault_ShouldReturnMessage_WithEqualsSpecification_WhenMessagesExists(string subjectSearch)
         {
             //Arrange
@@ -2036,7 +2036,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
-        [InlineData("Test subject -1")]
+        [InlineData("Test subject-1")]
         public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenMessagesExists(string subjectSearch)
         {
             //Arrange
@@ -2092,7 +2092,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
-        [InlineData("Test subject 0")]
+        [InlineData("Test subject0")]
         public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string subjectSearch)
         {
             //Arrange
@@ -2116,7 +2116,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
-        [InlineData("Test subject ")]
+        [InlineData("Test subject")]
         public void Verify_FunctionLastOrDefault_WithSpecification_HasBeenCalled(string subjectSearch)
         {
             //Arrange
@@ -2171,7 +2171,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
-        [InlineData("Test subject ")]
+        [InlineData("Test subject")]
         public void LastOrDefault_ShouldReturnMessage_WithContainsSpecification_WhenMessagesExists(string subjectSearch)
         {
             //Test failed
@@ -2229,7 +2229,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
-        [InlineData("Test subject 0")]
+        [InlineData("Test subject0")]
         public void LastOrDefault_ShouldReturnMessage_WithEqualsSpecification_WhenMessagesExists(string subjectSearch)
         {
             //Arrange
@@ -2286,7 +2286,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
-        [InlineData("Test subject -1")]
+        [InlineData("Test subject-1")]
         public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenMessagesExists(string subjectSearch)
         {
             //Arrange
@@ -2342,7 +2342,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
-        [InlineData("Test subject 0")]
+        [InlineData("Test subject0")]
         public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string subjectSearch)
         {
             //Arrange
