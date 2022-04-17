@@ -2370,14 +2370,36 @@ namespace Blog.ServicesTests.EntityServices
             //Test failed
             //Arrange
             var random = new Random();
-            var tagsList = new List<Tag>();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                tagsList.Add(new Tag
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
                 {
                     Id = i,
-                    Title = $"Comment {i}",
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
                 });
             }
 
@@ -2386,10 +2408,10 @@ namespace Blog.ServicesTests.EntityServices
                 .ReturnsAsync(() => commentslist);*/
 
             //Act
-            var comments = await _tagsService.GetAllAsync();
+            var messages = await _messagesService.GetAllAsync();
 
             //Assert
-            _tagsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
+            _messagesRepositoryMock.Verify(x => x.GetAll(), Times.Once);
         }
 
         /// <summary>
@@ -2404,28 +2426,50 @@ namespace Blog.ServicesTests.EntityServices
             //Test failed
             //Arrange
             var random = new Random();
-            var tagsList = new List<Tag>();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
 
             for (var i = 0; i < random.Next(100); i++)
             {
-                tagsList.Add(new Tag
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
                 {
                     Id = i,
-                    Title = $"Comment {i}",
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
                 });
             }
 
 
-            _tagsRepositoryMock.Setup(x => x.GetAll())
-                .Returns(() => tagsList.AsQueryable());
+            _messagesRepositoryMock.Setup(x => x.GetAll())
+                .Returns(() => messagesList.AsQueryable());
 
             //Act
-            var comments = await _tagsService.GetAllAsync();
+            var messages = await _messagesService.GetAllAsync();
 
             //Assert
-            Assert.NotNull(comments);
-            Assert.NotEmpty(comments);
-            Assert.NotEqual(notEqualCount, comments.ToList().Count);
+            Assert.NotNull(messages);
+            Assert.NotEmpty(messages);
+            Assert.NotEqual(notEqualCount, messages.ToList().Count);
         }
 
         /// <summary>
@@ -2441,10 +2485,10 @@ namespace Blog.ServicesTests.EntityServices
                 .ReturnsAsync(() => new List<Comment>());*/
 
             //Act
-            var comments = await _tagsService.GetAllAsync();
+            var messages = await _messagesService.GetAllAsync();
 
             //Assert
-            Assert.Empty(comments);
+            Assert.Empty(messages);
         }
 
         //SearchAsync(SearchQuery<T> searchQuery)
