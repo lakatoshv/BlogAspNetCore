@@ -84,6 +84,49 @@ namespace Blog.ServicesTests.EntityServices
             _profileRepositoryMock.Verify(x => x.GetAll(), Times.Once);
         }
 
+        /// <summary>
+        /// Get all profiles.
+        /// Should return profiles when profiles exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public void GetAll_ShouldReturnProfiles_WhenProfilesExists(int notEqualCount)
+        {
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var user = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.GetAll())
+                .Returns(profilesList.AsQueryable());
+
+            //Act
+            var profiles = _profileService.GetAll();
+
+            //Assert
+            Assert.NotNull(profiles);
+            Assert.NotEmpty(profiles);
+            Assert.NotEqual(notEqualCount, profiles.ToList().Count);
+        }
+
         #endregion
     }
 }
