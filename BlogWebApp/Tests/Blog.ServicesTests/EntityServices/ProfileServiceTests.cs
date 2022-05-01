@@ -127,6 +127,24 @@ namespace Blog.ServicesTests.EntityServices
             Assert.NotEqual(notEqualCount, profiles.ToList().Count);
         }
 
+        /// <summary>
+        /// Get all profiles.
+        /// Should return nothing when profiles does not exists.
+        /// </summary>
+        [Fact]
+        public void GetAll_ShouldReturnNothing_WhenProfilesDoesNotExists()
+        {
+            //Arrange
+            _profileRepositoryMock.Setup(x => x.GetAll())
+                .Returns(() => new List<Data.Models.Profile>().AsQueryable());
+
+            //Act
+            var profiles = _profileService.GetAll();
+
+            //Assert
+            Assert.Empty(profiles);
+        }
+
         #endregion
     }
 }
