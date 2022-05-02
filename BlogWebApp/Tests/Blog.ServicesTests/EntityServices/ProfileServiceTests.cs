@@ -288,6 +288,26 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(equalCount, profiles.ToList().Count);
         }
 
+        /// <summary>
+        /// Get all messages.
+        /// Should return nothing with  when messages does not exists.
+        /// </summary>
+        [Fact]
+        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists()
+        {
+            //Arrange
+            var searchUserId = new Guid().ToString();
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(() => new List<Data.Models.Profile>().AsQueryable());
+
+            //Act
+            var messages = _profileService.GetAll();
+
+            //Assert
+            Assert.Empty(messages);
+        }
+
         #endregion
     }
 }
