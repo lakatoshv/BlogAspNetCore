@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Blog.Data.Models;
 using Blog.Data.Repository;
+using Blog.Data.Specifications;
 using Blog.Services;
 using Blog.Services.Interfaces;
 using Moq;
@@ -58,9 +59,10 @@ namespace Blog.ServicesTests.EntityServices
 
             for (var i = 0; i < random.Next(100); i++)
             {
+                var userId = new Guid().ToString();
                 var user = new ApplicationUser
                 {
-                    Id = new Guid().ToString(),
+                    Id = userId,
                     FirstName = "Test fn",
                     LastName = "Test ln",
                     Email = "test@test.test",
@@ -69,6 +71,7 @@ namespace Blog.ServicesTests.EntityServices
                 profilesList.Add(new Data.Models.Profile
                 {
                     Id = i,
+                    UserId = userId,
                     User = user,
                     ProfileImg = $"img{i}.jpg"
                 });
@@ -99,9 +102,10 @@ namespace Blog.ServicesTests.EntityServices
 
             for (var i = 0; i < random.Next(100); i++)
             {
+                var userId = new Guid().ToString();
                 var user = new ApplicationUser
                 {
-                    Id = new Guid().ToString(),
+                    Id = userId,
                     FirstName = "Test fn",
                     LastName = "Test ln",
                     Email = "test@test.test",
@@ -110,6 +114,7 @@ namespace Blog.ServicesTests.EntityServices
                 profilesList.Add(new Data.Models.Profile
                 {
                     Id = i,
+                    UserId = userId,
                     User = user,
                     ProfileImg = $"img{i}.jpg"
                 });
@@ -143,6 +148,51 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Empty(profiles);
+        }
+
+        #endregion
+
+        #region Get all function With Specification
+
+        /// <summary>
+        /// Verify that function Get All with specification has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionGetAll_WithSpecification_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+            var searchUserId = new Guid().ToString();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = i == 0 ? searchUserId : new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(profilesList.Where(x => x.UserId.Contains(searchUserId)).AsQueryable());
+
+            //Act
+            _profileService.GetAll(specification);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.GetAll(specification), Times.Once);
         }
 
         #endregion
