@@ -242,6 +242,52 @@ namespace Blog.ServicesTests.EntityServices
             Assert.NotEqual(notEqualCount, profiles.ToList().Count);
         }
 
+        /// <summary>
+        /// Get all messages with specification.
+        /// Should return nothing with  when messages does not exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenProfilesExists(int equalCount)
+        {
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+            var searchUserId = $"{new Guid()}1";
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(profilesList.Where(x => x.UserId.Contains(searchUserId)).AsQueryable());
+
+            //Act
+            var profiles = _profileService.GetAll(specification);
+
+            //Assert
+            Assert.NotNull(profiles);
+            Assert.Empty(profiles);
+            Assert.Equal(equalCount, profiles.ToList().Count);
+        }
+
         #endregion
     }
 }
