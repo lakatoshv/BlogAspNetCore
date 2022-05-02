@@ -195,6 +195,53 @@ namespace Blog.ServicesTests.EntityServices
             _profileRepositoryMock.Verify(x => x.GetAll(specification), Times.Once);
         }
 
+        /// <summary>
+        /// Get all profiles with specification.
+        /// Should return profiles with equals specification when messages exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public void GetAll_ShouldReturnProfiles_WithEqualsSpecification_WhenProfilesExists(int notEqualCount)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+            var searchUserId = new Guid().ToString();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = i == 0 ? searchUserId : new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.GetAll(specification))
+                .Returns(profilesList.Where(x => x.UserId.Contains(searchUserId)).AsQueryable());
+
+            //Act
+            var profiles = _profileService.GetAll(specification);
+
+            //Assert
+            Assert.NotNull(profiles);
+            Assert.NotEmpty(profiles);
+            Assert.NotEqual(notEqualCount, profiles.ToList().Count);
+        }
+
         #endregion
     }
 }
