@@ -387,6 +387,26 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(profileId, profile.Id);
         }
 
+        /// <summary>
+        /// Find message.
+        /// Should return nothing when message does not exists.
+        /// </summary>
+        [Fact]
+        public void Find_ShouldReturnNothing_WhenMessageDoesNotExists()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            _profileRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
+                .Returns(() => null);
+
+            //Act
+            var profile = _profileService.Find(profileId);
+
+            //Assert
+            Assert.Null(profile);
+        }
+
         #endregion
     }
 }
