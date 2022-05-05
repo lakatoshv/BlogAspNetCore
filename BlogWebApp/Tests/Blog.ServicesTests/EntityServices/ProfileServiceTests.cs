@@ -488,6 +488,27 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Equal(profileId, profile.Id);
         }
 
+        /// <summary>
+        /// Async find profile.
+        /// Should return nothing when profiles does not exists.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task FindAsync_ShouldReturnNothing_WhenProfilesDoesNotExists()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            _profileRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(() => null);
+
+            //Act
+            var profile = await _profileService.FindAsync(profileId);
+
+            //Assert
+            Assert.Null(profile);
+        }
+
         #endregion
     }
 }
