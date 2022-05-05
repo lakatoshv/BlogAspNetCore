@@ -350,11 +350,11 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Find message.
-        /// Should return message when message exists.
+        /// Find profile.
+        /// Should return profile when profiles exists.
         /// </summary>
         [Fact]
-        public void Find_ShouldReturnMessage_WhenMessageExists()
+        public void Find_ShouldReturnProfile_WhenProfilesExists()
         {
             //Arrange
             var random = new Random();
@@ -388,11 +388,11 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Find message.
-        /// Should return nothing when message does not exists.
+        /// Find profile.
+        /// Should return nothing when profiles does not exists.
         /// </summary>
         [Fact]
-        public void Find_ShouldReturnNothing_WhenMessageDoesNotExists()
+        public void Find_ShouldReturnNothing_WhenProfilesDoesNotExists()
         {
             //Arrange
             var random = new Random();
@@ -405,6 +405,48 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(profile);
+        }
+
+        #endregion
+
+        #region Find Async function 
+
+        /// <summary>
+        /// Verify that function Find Async has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionFindAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                Id = profileId,
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.GetByIdAsync(profileId))
+                .ReturnsAsync(() => newProfile);
+
+            //Act
+            await _profileService.FindAsync(profileId);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.GetByIdAsync(profileId), Times.Once);
         }
 
         #endregion
