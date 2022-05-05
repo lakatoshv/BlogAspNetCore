@@ -552,6 +552,46 @@ namespace Blog.ServicesTests.EntityServices
             _profileRepositoryMock.Verify(x => x.Insert(newProfile), Times.Once);
         }
 
+        /// <summary>
+        /// Insert profile.
+        /// Should return profile when profile created.
+        /// </summary>
+        [Fact]
+        public void Insert_ShouldReturnProfile_WhenProfileExists()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfile))
+                .Callback(() =>
+                {
+                    newProfile.Id = profileId;
+                });
+
+            //Act
+            _profileService.Insert(newProfile);
+
+            //Assert
+            Assert.NotEqual(0, newProfile.Id);
+        }
+
         #endregion
     }
 }
