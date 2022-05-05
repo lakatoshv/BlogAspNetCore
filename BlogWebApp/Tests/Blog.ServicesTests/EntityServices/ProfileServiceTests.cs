@@ -449,6 +449,45 @@ namespace Blog.ServicesTests.EntityServices
             _profileRepositoryMock.Verify(x => x.GetByIdAsync(profileId), Times.Once);
         }
 
+        /// <summary>
+        /// Async find profile.
+        /// Should return profile when profiles exists.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task FindAsync_ShouldReturnProfiles_WhenProfilesExists()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                Id = profileId,
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.GetByIdAsync(profileId))
+                .ReturnsAsync(() => newProfile);
+
+            //Act
+            var profile = await _profileRepositoryMock.FindAsync(profileId);
+
+            //Assert
+            Assert.Equal(profileId, profile.Id);
+        }
+
         #endregion
     }
 }
