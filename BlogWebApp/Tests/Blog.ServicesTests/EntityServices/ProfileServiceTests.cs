@@ -593,5 +593,48 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Insert Async function
+
+        /// <summary>
+        /// Verify that function Insert Async has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionInsertAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.InsertAsync(newProfile))
+                .Callback(() =>
+                {
+                    newProfile.Id = profileId;
+                });
+
+            //Act
+            await _profileService.InsertAsync(newProfile);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.InsertAsync(newProfile), Times.Once);
+        }
+
+        #endregion
     }
 }
