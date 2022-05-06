@@ -635,6 +635,47 @@ namespace Blog.ServicesTests.EntityServices
             _profileRepositoryMock.Verify(x => x.InsertAsync(newProfile), Times.Once);
         }
 
+        /// <summary>
+        /// Async insert message.
+        /// Should return message when message created.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task InsertAsync_ShouldReturnMessage_WhenMessageExists()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.InsertAsync(newProfile))
+                .Callback(() =>
+                {
+                    newProfile.Id = profileId;
+                });
+
+            //Act
+            await _profileService.InsertAsync(newProfile);
+
+            //Assert
+            Assert.NotEqual(0, newProfile.Id);
+        }
+
         #endregion
     }
 }
