@@ -636,12 +636,12 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Async insert message.
-        /// Should return message when message created.
+        /// Async insert profile.
+        /// Should return profile when profile created.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task InsertAsync_ShouldReturnMessage_WhenMessageExists()
+        public async Task InsertAsync_ShouldReturnProfile_WhenProfileExists()
         {
             //Arrange
             var random = new Random();
@@ -674,6 +674,54 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.NotEqual(0, newProfile.Id);
+        }
+
+        #endregion
+
+        #region Upadate function
+
+        /// <summary>
+        /// Verify that function Update has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionUpdate_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfile))
+                .Callback(() =>
+                {
+                    newProfile.Id = profileId;
+                });
+            _profileRepositoryMock.Setup(x => x.GetById(profileId))
+                .Returns(() => newProfile);
+
+            //Act
+            _profileService.Insert(newProfile);
+            var profile = _profileService.Find(profileId);
+            profile.UserId = new Guid().ToString();
+            _profileService.Update(profile);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.Update(profile), Times.Once);
         }
 
         #endregion
