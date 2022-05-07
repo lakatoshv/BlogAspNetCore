@@ -724,6 +724,52 @@ namespace Blog.ServicesTests.EntityServices
             _profileRepositoryMock.Verify(x => x.Update(profile), Times.Once);
         }
 
+        /// <summary>
+        /// Update profile.
+        /// Should return profile when profile updated.
+        /// </summary>
+        [Fact]
+        public void Update_ShouldReturnProfile_WhenProfileExists()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfile))
+                .Callback(() =>
+                {
+                    newProfile.Id = profileId;
+                });
+            _profileRepositoryMock.Setup(x => x.GetById(profileId))
+                .Returns(() => newProfile);
+
+            //Act
+            _profileService.Insert(newProfile);
+            var profile = _profileService.Find(profileId);
+            var newUserId = new Guid().ToString();
+            profile.UserId = newUserId;
+            _profileService.Update(profile);
+
+            //Assert
+            Assert.Equal(newUserId, profile.UserId);
+        }
+
         #endregion
     }
 }
