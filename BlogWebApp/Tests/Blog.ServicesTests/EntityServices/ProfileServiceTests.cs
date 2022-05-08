@@ -820,6 +820,53 @@ namespace Blog.ServicesTests.EntityServices
             _profileRepositoryMock.Verify(x => x.UpdateAsync(profile), Times.Once);
         }
 
+        /// <summary>
+        /// Async update profile.
+        /// Should return profile when profile updated.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task UpdateAsync_ShouldReturnMessage_WhenMessageExists()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.InsertAsync(newProfile))
+                .Callback(() =>
+                {
+                    newProfile.Id = profileId;
+                });
+            _profileRepositoryMock.Setup(x => x.GetByIdAsync(profileId))
+                .ReturnsAsync(() => newProfile);
+
+            //Act
+            await _profileService.InsertAsync(newProfile);
+            var profile = await _profileService.FindAsync(profileId);
+            var newUserId = new Guid().ToString();
+            profile.UserId = newUserId;
+            await _profileService.UpdateAsync(profile);
+
+            //Assert
+            Assert.Equal(newUserId, profile.UserId);
+        }
+
         #endregion
     }
 }
