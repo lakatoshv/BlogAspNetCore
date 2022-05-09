@@ -8,6 +8,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices
@@ -482,7 +483,7 @@ namespace Blog.ServicesTests.EntityServices
                 .ReturnsAsync(() => newProfile);
 
             //Act
-            var profile = await _profileRepositoryMock.FindAsync(profileId);
+            var profile = await _profileService.FindAsync(profileId);
 
             //Assert
             Assert.Equal(profileId, profile.Id);
@@ -865,6 +866,56 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Equal(newUserId, profile.UserId);
+        }
+
+        #endregion
+
+        #region Delete function
+
+        /// <summary>
+        /// Verify that function Delete has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDelete_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfile))
+                .Callback(() =>
+                {
+                    newProfile.Id = profileId;
+                });
+            _profileRepositoryMock.Setup(x => x.GetById(profileId))
+                .Returns(() => newProfile);
+
+            //Act
+            _profileService.Insert(newProfile);
+            var profile = _profileService.Find(profileId);
+            _profileService.Delete(profile);
+            _profileRepositoryMock.Setup(x => x.GetById(profileId))
+                .Returns(() => null);
+            _profileService.Find(profileId);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.Delete(profile), Times.Once);
         }
 
         #endregion
