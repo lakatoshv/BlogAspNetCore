@@ -918,6 +918,53 @@ namespace Blog.ServicesTests.EntityServices
             _profileRepositoryMock.Verify(x => x.Delete(profile), Times.Once);
         }
 
+        /// <summary>
+        /// Delete profile.
+        /// Should return nothing when profile is deleted.
+        /// </summary>
+        [Fact]
+        public void Delete_ShouldReturnNothing_WhenProfileDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfile))
+                .Callback(() =>
+                {
+                    newProfile.Id = profileId;
+                });
+            _profileRepositoryMock.Setup(x => x.GetById(profileId))
+                .Returns(() => newProfile);
+
+            //Act
+            _profileService.Insert(newProfile);
+            var profile = _profileService.Find(profileId);
+            _profileService.Delete(profile);
+            _profileRepositoryMock.Setup(x => x.GetById(profileId))
+                .Returns(() => null);
+            var deletedProfile = _profileService.Find(profileId);
+
+            //Assert
+            Assert.Null(deletedProfile);
+        }
+
         #endregion
     }
 }
