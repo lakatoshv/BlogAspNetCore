@@ -1013,6 +1013,54 @@ namespace Blog.ServicesTests.EntityServices
             _profileRepositoryMock.Verify(x => x.DeleteAsync(profile), Times.Once);
         }
 
+        /// <summary>
+        /// Async delete message.
+        /// Should return nothing when profile is deleted.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task DeleteAsync_ShouldReturnNothing_WhenProfileIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.InsertAsync(newProfile))
+                .Callback(() =>
+                {
+                    newProfile.Id = profileId;
+                });
+            _profileRepositoryMock.Setup(x => x.GetByIdAsync(profileId))
+                .ReturnsAsync(() => newProfile);
+
+            //Act
+            await _profileService.InsertAsync(newProfile);
+            var profile = await _profileService.FindAsync(profileId);
+            await _profileService.DeleteAsync(profile);
+            _profileRepositoryMock.Setup(x => x.GetByIdAsync(profileId))
+                .ReturnsAsync(() => null);
+            var deletedProfile = await _profileService.FindAsync(profileId);
+
+            //Assert
+            Assert.Null(deletedProfile);
+        }
+
         #endregion
     }
 }
