@@ -1198,6 +1198,26 @@ namespace Blog.ServicesTests.EntityServices
             Assert.False(areAnyProfiles);
         }
 
+        /// <summary>
+        /// Check if there are any profiles with specification.
+        /// Should return false with when profiles does not exists.
+        /// </summary>
+        [Fact]
+        public void Any_ShouldReturnNothing_WithEqualSpecification_WhenProfilesDoesNotExists()
+        {
+            //Arrange
+            var searchUserId = new Guid().ToString();
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.Any(specification))
+                .Returns(() => false);
+
+            //Act
+            var areAnyProfiles = _profileService.Any(specification);
+
+            //Assert
+            Assert.False(areAnyProfiles);
+        }
+
         #endregion
     }
 }
