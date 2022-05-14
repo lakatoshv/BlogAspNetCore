@@ -1219,5 +1219,693 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region Any Async function With Specification
+
+        /// <summary>
+        /// Verify that function Any Async with specification has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionAnyAsync_WithSpecification_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+            var searchUserId = new Guid().ToString();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = i == 0
+                    ? searchUserId
+                    : new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.AnyAsync(specification))
+                .ReturnsAsync(() => profilesList.Any(x => x.UserId.Equals(searchUserId)));
+
+            //Act
+            await _profileService.AnyAsync(specification);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.AnyAsync(specification), Times.Once);
+        }
+
+        #endregion
+        /*
+        #region First Or Default function With Specification
+
+        /// <summary>
+        /// Verify that function First Or Default with specification has been called.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        [Theory]
+        [InlineData("Test subject")]
+        public void Verify_FunctionFirstOrDefault_WithSpecification_HasBeenCalled(string subjectSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.FirstOrDefault(specification))
+                .Returns(() => messagesList.FirstOrDefault(x => x.Subject.Contains(subjectSearch)));
+
+            //Act
+            _messagesService.FirstOrDefault(specification);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.FirstOrDefault(specification), Times.Once);
+        }
+
+        /// <summary>
+        /// Get first or default message with specification.
+        /// Should return message with contains specification when messages exists.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        [Theory]
+        [InlineData("Test subject")]
+        public void FirstOrDefault_ShouldReturnMessage_WithContainsSpecification_WhenMessagesExists(string subjectSearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.FirstOrDefault(specification))
+                .Returns(() => messagesList.FirstOrDefault(x => x.Subject.Contains(subjectSearch)));
+
+            //Act
+            var message = _messagesService.FirstOrDefault(specification);
+
+            //Assert
+            Assert.NotNull(message);
+            Assert.IsType<Message>(message);
+        }
+
+        /// <summary>
+        /// Get first or default message with specification.
+        /// Should return message with equal specification when messages exists.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        [Theory]
+        [InlineData("Test subject0")]
+        public void FirstOrDefault_ShouldReturnMessage_WithEqualsSpecification_WhenMessagesExists(string subjectSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.FirstOrDefault(specification))
+                .Returns(() => messagesList.FirstOrDefault(x => x.Subject.Contains(subjectSearch)));
+
+            //Act
+            var message = _messagesService.FirstOrDefault(specification);
+
+            //Assert
+            Assert.NotNull(message);
+            Assert.IsType<Message>(message);
+        }
+
+        /// <summary>
+        /// Get first or default message with specification.
+        /// Should return nothing with when messages does not exists.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        [Theory]
+        [InlineData("Test subject-1")]
+        public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenMessagesExists(string subjectSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.FirstOrDefault(specification))
+                .Returns(() => messagesList.FirstOrDefault(x => x.Subject.Contains(subjectSearch)));
+
+            //Act
+            var message = _messagesService.FirstOrDefault(specification);
+
+            //Assert
+            Assert.Null(message);
+        }
+
+        /// <summary>
+        /// Get first or default message with specification.
+        /// Should return nothing with when messages does not exists.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        [Theory]
+        [InlineData("Test subject0")]
+        public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string subjectSearch)
+        {
+            //Arrange
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.FirstOrDefault(specification))
+                .Returns(() => null);
+
+            //Act
+            var message = _messagesService.FirstOrDefault(specification);
+
+            //Assert
+            Assert.Null(message);
+        }
+
+        #endregion
+
+        #region Last Or Default function With Specification
+
+        /// <summary>
+        /// Verify that function Last Or Default with specification has been called.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        [Theory]
+        [InlineData("Test subject")]
+        public void Verify_FunctionLastOrDefault_WithSpecification_HasBeenCalled(string subjectSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.LastOrDefault(specification))
+                .Returns(() => messagesList.LastOrDefault(x => x.Subject.Contains(subjectSearch)));
+
+            //Act
+            _messagesService.LastOrDefault(specification);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.LastOrDefault(specification), Times.Once);
+        }
+
+        /// <summary>
+        /// Get last or default message with specification.
+        /// Should return message with contains specification when messages exists.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        [Theory]
+        [InlineData("Test subject")]
+        public void LastOrDefault_ShouldReturnMessage_WithContainsSpecification_WhenMessagesExists(string subjectSearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.LastOrDefault(specification))
+                .Returns(() => messagesList.LastOrDefault(x => x.Subject.Contains(subjectSearch)));
+
+            //Act
+            var message = _messagesService.LastOrDefault(specification);
+
+            //Assert
+            Assert.NotNull(message);
+            Assert.IsType<Message>(message);
+        }
+
+        /// <summary>
+        /// Get last or default message with specification.
+        /// Should return message with equal specification when messages exists.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        [Theory]
+        [InlineData("Test subject0")]
+        public void LastOrDefault_ShouldReturnMessage_WithEqualsSpecification_WhenMessagesExists(string subjectSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.LastOrDefault(specification))
+                .Returns(() => messagesList.LastOrDefault(x => x.Subject.Contains(subjectSearch)));
+
+            //Act
+            var message = _messagesService.LastOrDefault(specification);
+
+            //Assert
+            Assert.NotNull(message);
+            Assert.IsType<Message>(message);
+        }
+
+        /// <summary>
+        /// Get last or default message with specification.
+        /// Should return nothing with when messages does not exists.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        [Theory]
+        [InlineData("Test subject-1")]
+        public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenMessagesExists(string subjectSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.LastOrDefault(specification))
+                .Returns(() => messagesList.LastOrDefault(x => x.Subject.Contains(subjectSearch)));
+
+            //Act
+            var message = _messagesService.LastOrDefault(specification);
+
+            //Assert
+            Assert.Null(message);
+        }
+
+        /// <summary>
+        /// Get last or default message with specification.
+        /// Should return nothing with when messages does not exists.
+        /// </summary>
+        /// <param name="subjectSearch">The subject search.</param>
+        [Theory]
+        [InlineData("Test subject0")]
+        public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string subjectSearch)
+        {
+            //Arrange
+            var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
+            _messagesRepositoryMock.Setup(x => x.LastOrDefault(specification))
+                .Returns(() => null);
+
+            //Act
+            var message = _messagesService.LastOrDefault(specification);
+
+            //Assert
+            Assert.Null(message);
+        }
+
+        #endregion
+
+        #region NotTestedYet
+
+        /// <summary>
+        /// Verify that function Get All Async has been called.
+        /// </summary>
+        //[Fact]
+        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+
+            /*_generalServiceMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => commentslist);* /
+
+            //Act
+            var messages = await _messagesService.GetAllAsync();
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.GetAll(), Times.Once);
+        }
+
+        /// <summary>
+        /// Async get all tags.
+        /// Should return tags when comments exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        //[Theory]
+        //[InlineData(0)]
+        public async Task GetAllAsync_ShouldReturnTags_WhenTagsExists(int notEqualCount)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+
+            _messagesRepositoryMock.Setup(x => x.GetAll())
+                .Returns(() => messagesList.AsQueryable());
+
+            //Act
+            var messages = await _messagesService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(messages);
+            Assert.NotEmpty(messages);
+            Assert.NotEqual(notEqualCount, messages.ToList().Count);
+        }
+
+        /// <summary>
+        /// Async get all tags.
+        /// Should return nothing when tags does not exists.
+        /// </summary>
+        //[Fact]
+        public async Task GetAllAsync_ShouldReturnNothing_WhenTagDoesNotExists()
+        {
+            //Test failed
+            //Arrange
+            /*_generalServiceMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => new List<Comment>());* /
+
+        //Act
+        var messages = await _messagesService.GetAllAsync();
+
+        //Assert
+        Assert.Empty(messages);
+        }
+
+        //SearchAsync(SearchQuery<T> searchQuery)
+        //GetAllAsync(ISpecification<T> specification)
+        //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
+        //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
+        #endregion
+        */
     }
 }
