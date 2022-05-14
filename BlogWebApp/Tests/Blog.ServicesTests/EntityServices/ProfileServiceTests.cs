@@ -1314,6 +1314,50 @@ namespace Blog.ServicesTests.EntityServices
             Assert.True(areAnyProfiles);
         }
 
+        /// <summary>
+        /// Async check if there are any profiles with specification.
+        /// Should return false with when profiles does not exists.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task AnyAsync_ShouldReturnFalse_WithEqualSpecification_WhenProfilesExists()
+        {
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+            var searchUserId = $"{new Guid().ToString()}1";
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.AnyAsync(specification))
+                .ReturnsAsync(() => profilesList.Any(x => x.UserId.Equals(searchUserId)));
+
+            //Act
+            var areAnyProfiles = await _profileService.AnyAsync(specification);
+
+            //Assert
+            Assert.False(areAnyProfiles);
+        }
+
         #endregion
         /*
         #region First Or Default function With Specification
