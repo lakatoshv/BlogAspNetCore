@@ -1380,5 +1380,53 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #region First Or Default function With Specification
+
+        /// <summary>
+        /// Verify that function First Or Default with specification has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionFirstOrDefault_WithSpecification_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+            var searchUserId = new Guid().ToString();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = i == 0
+                    ? searchUserId
+                    : new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.FirstOrDefault(specification))
+                .Returns(() => profilesList.FirstOrDefault(x => x.UserId.Equals(searchUserId)));
+
+            //Act
+            _profileService.FirstOrDefault(specification);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.FirstOrDefault(specification), Times.Once);
+        }
+
+        #endregion
     }
 }
