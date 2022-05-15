@@ -1474,6 +1474,49 @@ namespace Blog.ServicesTests.EntityServices
             Assert.IsType<Data.Models.Profile>(profile);
         }
 
+        /// <summary>
+        /// Get first or default profile with specification.
+        /// Should return nothing with when profiles exists.
+        /// </summary>
+        [Fact]
+        public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenProfilesExists()
+        {
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+            var searchUserId = $"{new Guid().ToString()}1";
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.FirstOrDefault(specification))
+                .Returns(() => profilesList.FirstOrDefault(x => x.UserId.Equals(searchUserId)));
+
+            //Act
+            var profile = _profileService.FirstOrDefault(specification);
+
+            //Assert
+            Assert.Null(profile);
+        }
+
         #endregion
     }
 }
