@@ -1675,6 +1675,26 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Null(profile);
         }
 
+        /// <summary>
+        /// Get last or default profile with specification.
+        /// Should return nothing with specification when profiles does not exists.
+        /// </summary>
+        [Fact]
+        public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenProfilesDoesNotExists()
+        {
+            //Arrange
+            var searchUserId = new Guid().ToString();
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.LastOrDefault(specification))
+                .Returns(() => null);
+
+            //Act
+            var profile = _profileService.LastOrDefault(specification);
+
+            //Assert
+            Assert.Null(profile);
+        }
+
         #endregion
     }
 }
