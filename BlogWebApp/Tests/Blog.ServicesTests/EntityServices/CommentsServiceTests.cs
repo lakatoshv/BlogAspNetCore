@@ -548,6 +548,46 @@ namespace Blog.ServicesTests.EntityServices
             _commentsRepositoryMock.Verify(x => x.Insert(newComments), Times.Once);
         }
 
+        /// <summary>
+        /// Insert Enumerable comments.
+        /// Should return comments when comments created.
+        /// </summary>
+        [Fact]
+        public void InsertEnumerable_ShouldReturnComments_WhenCommentsExists()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newComments = new List<Comment>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newComments.Add(new Comment
+                {
+                    CommentBody = $"Comment {itemsCount}",
+                });
+            }
+
+            _commentsRepositoryMock.Setup(x => x.Insert(newComments))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newComments[i].Id = commentId + i;
+                    }
+                });
+
+            //Act
+            _commentsService.Insert(newComments);
+
+            //Assert
+            newComments.ForEach(x =>
+            {
+                Assert.NotEqual(0, x.Id);
+            });
+        }
+
         #endregion
 
         #region Insert Async function
