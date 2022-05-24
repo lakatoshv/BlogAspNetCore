@@ -547,6 +547,46 @@ namespace Blog.ServicesTests.EntityServices
             _tagsRepositoryMock.Verify(x => x.Insert(newTags), Times.Once);
         }
 
+        /// <summary>
+        /// Insert Enumerable tags.
+        /// Should return tags when tags created.
+        /// </summary>
+        [Fact]
+        public void InsertEnumerable_ShouldReturnTags_WhenTagsExists()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.Insert(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+
+            //Act
+            _tagsService.Insert(newTags);
+
+            //Assert
+            newTags.ForEach(x =>
+            {
+                Assert.NotEqual(0, x.Id);
+            });
+        }
+
         #endregion
 
         #region Insert Async function
