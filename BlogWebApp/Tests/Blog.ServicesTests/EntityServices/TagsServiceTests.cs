@@ -509,6 +509,46 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Insert Enumerable function
+
+        /// <summary>
+        /// Verify that function Insert Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionInsertEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.Insert(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+
+            //Act
+            _tagsService.Insert(newTags);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.Insert(newTags), Times.Once);
+        }
+
+        #endregion
+
         #region Insert Async function
 
         /// <summary>
