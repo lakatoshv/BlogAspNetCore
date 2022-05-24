@@ -775,6 +775,132 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Insert Enumerable function
+
+        /// <summary>
+        /// Verify that function Insert Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionInsertEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.Insert(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+
+            //Act
+            _messagesService.Insert(newMessages);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.Insert(newMessages), Times.Once);
+        }
+
+        /// <summary>
+        /// Insert Enumerable comment.
+        /// Should return comments when comments created.
+        /// </summary>
+        [Fact]
+        public void InsertEnumerable_ShouldReturnComments_WhenCommentsExists()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.Insert(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+
+            //Act
+            _messagesService.Insert(newMessages);
+
+            //Assert
+            newMessages.ForEach(x =>
+            {
+                Assert.NotEqual(0, x.Id);
+            });
+        }
+
+        #endregion
+
         #region Insert Async function
 
         /// <summary>

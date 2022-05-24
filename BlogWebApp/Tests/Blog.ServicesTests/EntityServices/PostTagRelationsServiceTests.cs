@@ -986,6 +986,102 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Insert Enumerable function
+
+        /// <summary>
+        /// Verify that function Insert Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionInsertEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelations);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.Insert(newPostsTagsRelations), Times.Once);
+        }
+
+        /// <summary>
+        /// Insert Enumerable post tag relations.
+        /// Should return post tag relations when post tag relations created.
+        /// </summary>
+        [Fact]
+        public void InsertEnumerable_ShouldReturnPostTagRelations_WhenPostTagRelationsExists()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelations);
+
+            //Assert
+            newPostsTagsRelations.ForEach(x =>
+            {
+                Assert.NotEqual(0, x.Id);
+            });
+        }
+
+        #endregion
+
         #region Insert Async function
 
         /// <summary>
