@@ -1,37 +1,36 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">BlogBlazor</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
+﻿
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-    </ul>
-</div>
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container-fluid">
+        <img src="blog.ico" width="50px" height="50px">
+        <a class="navbar-brand">BlazorBlog</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" @onclick="ToggleNavMenu">
+            Menu
+            <i class="fa fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end @NavMenuCssClass" id="navbarResponsive" @onclick="ToggleNavMenu">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link">Про нас</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link">Контакти</a>
+                </li>
+                <li class="nav-item"><a class="nav-link"><i class="fa fa-sign-in"></i> Ввійти</a></li>
+                <li class="nav-item"><a class="nav-link"><i class="fa fa-user"></i> Зареєструватись</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
 @code {
-    private bool collapseNavMenu = true;
+    private bool collapseNavMenu = false;
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
     }
 }
+
