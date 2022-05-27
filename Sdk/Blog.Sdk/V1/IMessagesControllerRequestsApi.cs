@@ -19,8 +19,8 @@
         /// <returns>Task.</returns>
         /// <response code="200">Get all messages.</response>
         /// <response code="404">Unable to get all messages.</response>
-        [Get(ApiRoutes.MessagesController.Messages)]
-        Task<ApiResponse<List<MessageResponse>>> Index();
+        [Get("/api/v1/messages")]
+        Task<List<MessageResponse>> Index();
 
         /// <summary>
         /// Gets the recipient messages.
@@ -29,8 +29,8 @@
         /// <returns>Task.</returns>
         /// <response code="200">Gets the recipient messages.</response>
         /// <response code="404">Unable to gets the recipient messages.</response>
-        [Get(ApiRoutes.MessagesController.Messages  + "/" + ApiRoutes.MessagesController.GetRecipientMessages)]
-        Task<ApiResponse<List<MessageResponse>>> GetRecipientMessages([FromRoute] string recipientId);
+        [Get("/api/v1/messages/get-recipient-messages/{recipientId}")]
+        Task<List<MessageResponse>> GetRecipientMessages(string recipientId);
 
         /// <summary>
         /// Gets the sender messages.
@@ -39,8 +39,8 @@
         /// <returns>Task.</returns>
         /// <response code="200">Gets the sender messages.</response>
         /// <response code="404">Unable to gets the sender messages.</response>
-        [Get(ApiRoutes.MessagesController.Messages + "/" + ApiRoutes.MessagesController.GetSenderMessages)]
-        Task<ApiResponse<List<MessageResponse>>> GetSenderMessages([FromRoute] string senderEmail);
+        [Get("/api/v1/messages/get-sender-messages/{senderEmail}")]
+        Task<List<MessageResponse>> GetSenderMessages(string senderEmail);
 
         /// <summary>
         /// Shows the specified identifier.
@@ -49,8 +49,8 @@
         /// <returns>Task</returns>
         /// <response code="200">Gets the messages by id.</response>
         /// <response code="404">Unable to gets the messages by id.</response>
-        [Get(ApiRoutes.MessagesController.Messages + "/show")]
-        Task<ApiResponse<MessageResponse>> Show([FromRoute] int id);
+        [Get("/api/v1/messages/show/{id}")]
+        Task<ApiResponse<MessageResponse>> Show(int id);
 
         /// <summary>
         /// Creates the asynchronous.
@@ -59,8 +59,8 @@
         /// <returns>Task</returns>
         /// <response code="201">Creates the message.</response>
         /// <response code="400">Unable to create the message.</response>
-        [Post(ApiRoutes.MessagesController.Messages)]
-        Task<ApiResponse<MessageResponse>> CreateAsync([FromBody] CreateMessageRequest request);
+        [Post("/api/v1/messages")]
+        Task<MessageResponse> CreateAsync(CreateMessageRequest request);
 
         /// <summary>
         /// Edits the asynchronous.
@@ -71,8 +71,8 @@
         /// <response code="204">Edit the message.</response>
         /// <response code="400">Unable to edit the message, model is invalid.</response>
         /// <response code="404">Unable to edit the message, message not found.</response>
-        [Put(ApiRoutes.MessagesController.Messages)]
-        Task<ApiResponse<MessageResponse>> EditAsync([FromRoute] int id, [FromBody] UpdateMessageRequest request);
+        [Put("/api/v1/message/{id}")]
+        Task<MessageResponse> EditAsync(int id, UpdateMessageRequest request);
 
         /// <summary>
         /// Deletes the asynchronous.
@@ -82,7 +82,7 @@
         /// <returns>Task.</returns>
         /// <response code="200">Delete the message.</response>
         /// <response code="404">Unable to delete the message, message not found.</response>
-        [Delete(ApiRoutes.MessagesController.Messages)]
-        Task<ApiResponse<CreatedResponse<int>>> DeleteAsync([FromRoute] int id, [FromBody] string authorId);
+        [Delete("/api/v1/message/{id}")]
+        Task<CreatedResponse<int>> DeleteAsync(int id, string authorId);
     }
 }

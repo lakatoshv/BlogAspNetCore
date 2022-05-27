@@ -19,8 +19,8 @@ namespace Blog.Sdk.V1
         /// <returns>Task.</returns>
         /// <response code="200">Gets the user profile.</response>
         /// <response code="404">Unable to gets the user profile.</response>
-        [Get(ApiRoutes.ProfileController.Profile)]
-        Task<ApiResponse<ApplicationUserResponse>> Show([FromRoute] int id);
+        [Get("/api/v1/profile/{id}")]
+        Task<ApplicationUserResponse> Show(int id);
 
         /// <summary>
         /// Edits the asynchronous.
@@ -31,7 +31,7 @@ namespace Blog.Sdk.V1
         /// <response code="204">Edits the user profile.</response>
         /// <response code="400">Unable to edits the user profile, model is invalid.</response>
         /// <response code="404">Unable to edits the user profile, profile not found.</response>
-        [Put(ApiRoutes.ProfileController.Profile)]
-        Task<ApiResponse<ApplicationUserResponse>> EditAsync([FromRoute] int profileId, [FromBody] UpdateProfileRequest model);
+        [Put("/api/v1/profile/{profileId}")]
+        Task<ApplicationUserResponse> EditAsync(int profileId, UpdateProfileRequest model);
     }
 }
