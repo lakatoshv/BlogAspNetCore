@@ -2,6 +2,8 @@
 @using Blazor.Contracts.V1.Responses.TagsResponses
 @using Blazor.Contracts.V1.Requests.PostsRequests
 
+@inject BlogBlazor.Services.Interfaces.IPostsService _postsService
+
 @page "/"
 
 <PageTitle>Index</PageTitle>
@@ -17,110 +19,11 @@ Welcome to your new app.
 
 @code {
     public bool IsLoaded { get; set; }
-    public PagedPostsResponse response = new PagedPostsResponse()
-        {
-            Posts = new List<PostViewResponse>()
-            {
-                new PostViewResponse
-                {
-                    Id = 0,
-                    Title = "Post 0",
-                    Description = "Post 0",
-                    Content = "Post 0",
-                    CreatedAt = DateTime.Now,
-                    CommentsCount = 10,
-                    Tags = new List<TagResponse>()
-                },
-                new PostViewResponse
-                {
-                    Id = 1,
-                    Title = "Post 1",
-                    Description = "Post 1",
-                    Content = "Post 1",
-                    CreatedAt = DateTime.Now,
-                    CommentsCount = 10,
-                    Tags = new List<TagResponse>()
-                },
-                new PostViewResponse
-                {
-                    Id = 2,
-                    Title = "Post 2",
-                    Description = "Post 2",
-                    Content = "Post 2",
-                    CreatedAt = DateTime.Now,
-                    CommentsCount = 10,
-                    Tags = new List<TagResponse>()
-                },
-                new PostViewResponse
-                {
-                    Id = 0,
-                    Title = "Post 0",
-                    Description = "Post 0",
-                    Content = "Post 0",
-                    CreatedAt = DateTime.Now,
-                    CommentsCount = 10,
-                    Tags = new List<TagResponse>()
-                },
-                new PostViewResponse
-                {
-                    Id = 0,
-                    Title = "Post 0",
-                    Description = "Post 0",
-                    Content = "Post 0",
-                    CreatedAt = DateTime.Now,
-                    CommentsCount = 10,
-                    Tags = new List<TagResponse>()
-                },
-                new PostViewResponse
-                {
-                    Id = 0,
-                    Title = "Post 0",
-                    Description = "Post 0",
-                    Content = "Post 0",
-                    CreatedAt = DateTime.Now,
-                    CommentsCount = 10,
-                    Tags = new List<TagResponse>()
-                },
-                new PostViewResponse
-                {
-                    Id = 0,
-                    Title = "Post 0",
-                    Description = "Post 0",
-                    Content = "Post 0",
-                    CreatedAt = DateTime.Now,
-                    CommentsCount = 10,
-                    Tags = new List<TagResponse>()
-                },
-                new PostViewResponse
-                {
-                    Id = 0,
-                    Title = "Post 0",
-                    Description = "Post 0",
-                    Content = "Post 0",
-                    CreatedAt = DateTime.Now,
-                    CommentsCount = 10,
-                    Tags = new List<TagResponse>()
-                },
-                new PostViewResponse
-                {
-                    Id = 0,
-                    Title = "Post 0",
-                    Description = "Post 0",
-                    Content = "Post 0",
-                    CreatedAt = DateTime.Now,
-                    CommentsCount = 10,
-                    Tags = new List<TagResponse>()
-                },
-                new PostViewResponse
-                {
-                    Id = 0,
-                    Title = "Post 0",
-                    Description = "Post 0",
-                    Content = "Post 0",
-                    CreatedAt = DateTime.Now,
-                    CommentsCount = 10,
-                    Tags = new List<TagResponse>()
-                },
-            }
-        };
+    public PagedPostsResponse response = new PagedPostsResponse();
+
+    protected override async Task OnInitializedAsync()
+    {
+        response = await _postsService.GetPosts(new PostsSearchParametersRequest());
+        IsLoaded = true;
+    }
 }
