@@ -21,8 +21,8 @@
         /// <returns>Task.</returns>
         /// <response code="200">Gets the tags.</response>
         /// <response code="404">Unable to gets the tags.</response>
-        [Get(ApiRoutes.TagsController.Tags + "/" + ApiRoutes.TagsController.GetTags)]
-        Task<ApiResponse<List<TagResponse>>> GetTags();
+        [Get("/api/v1/tags/get-tags")]
+        Task<List<TagResponse>> GetTags();
 
         /// <summary>
         /// Gets the tags by filter.
@@ -31,8 +31,8 @@
         /// <returns>Task.</returns>
         /// <response code="200">Gets the tags by filter.</response>
         /// <response code="404">Unable to gets the tags by filter.</response>
-        [Post(ApiRoutes.TagsController.Tags + "/" + ApiRoutes.TagsController.GetTagsByFilter)]
-        Task<ApiResponse<PagedTagsResponse>> GetTagsByFilter([FromBody] SearchParametersRequest searchParameters = null);
+        [Post("/api/v1/tags/get-tags-by-filter")]
+        Task<ApiResponse<PagedTagsResponse>> GetTagsByFilter(SearchParametersRequest searchParameters = null);
 
         /// <summary>
         /// Gets the available tags.
@@ -41,8 +41,8 @@
         /// <returns>Task.</returns>
         /// <response code="200">Gets the available tags.</response>
         /// <response code="404">Unable to gets the available tags.</response>
-        [Get(ApiRoutes.TagsController.Tags + "/" + ApiRoutes.TagsController.GetAvailableTags)]
-        Task<ApiResponse<List<TagResponse>>> GetAvailableTags([FromRoute] int postId);
+        [Get("/api/v1/tags/get-available-tags/{postId}")]
+        Task<ApiResponse<List<TagResponse>>> GetAvailableTags(int postId);
 
         /// <summary>
         /// Gets the tag.
@@ -51,8 +51,8 @@
         /// <returns>Task.</returns>
         /// <response code="200">Gets the tag by id.</response>
         /// <response code="404">Unable to gets the tag by id.</response>
-        [Get(ApiRoutes.TagsController.Tags + "/" + ApiRoutes.TagsController.GetTag)]
-        Task<ApiResponse<TagResponse>> GetTag([FromRoute] int id);
+        [Get("/api/v1/tags/get-tag/{id}")]
+        Task<ApiResponse<TagResponse>> GetTag(int id);
 
         /// <summary>
         /// Creates the asynchronous.
@@ -61,8 +61,8 @@
         /// <returns>Task.</returns>
         /// <response code="201">Create the tag.</response>
         /// <response code="400">Unable to create the tag.</response>
-        [Post(ApiRoutes.TagsController.Tags + "/" + ApiRoutes.TagsController.CreateTag)]
-        Task<ApiResponse<TagResponse>> CreateAsync([FromBody] CreateTagRequest model);
+        [Post("/api/v1/tags/create")]
+        Task<ApiResponse<TagResponse>> CreateAsync(CreateTagRequest model);
 
         /// <summary>
         /// Edits the asynchronous.
@@ -73,8 +73,8 @@
         /// <response code="204">Edits the tag.</response>
         /// <response code="400">Unable to edits the tag, model is invalid.</response>
         /// <response code="404">Unable to edits the tag, tag not found.</response>
-        [Put(ApiRoutes.TagsController.Tags)]
-        Task<ApiResponse<TagResponse>> EditAsync([FromRoute] int id, [FromBody] UpdateTagRequest model);
+        [Put("/api/v1/tags/{id}")]
+        Task<ApiResponse<TagResponse>> EditAsync(int id, UpdateTagRequest model);
 
         /// <summary>
         /// Deletes the asynchronous.
@@ -83,7 +83,7 @@
         /// <returns>Task.</returns>
         /// <response code="200">Deletes the tag.</response>
         /// <response code="404">Unable to deletes the tag, tag not found.</response>
-        [Delete(ApiRoutes.TagsController.Tags)]
-        Task<ApiResponse<CreatedResponse<int>>> DeleteAsync([FromRoute] int id);
+        [Delete("/api/v1/tags/{id}")]
+        Task<ApiResponse<CreatedResponse<int>>> DeleteAsync(int id);
     }
 }

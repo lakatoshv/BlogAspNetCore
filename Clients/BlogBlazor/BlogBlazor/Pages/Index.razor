@@ -1,0 +1,29 @@
+﻿@using Blazor.Contracts.V1.Responses.PostsResponses
+@using Blazor.Contracts.V1.Responses.TagsResponses
+@using Blazor.Contracts.V1.Requests.PostsRequests
+
+@inject BlogBlazor.Services.Interfaces.IPostsService _postsService
+
+@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+@if (IsLoaded)
+{
+    <BlogBlazor.Pages.Posts.PostsList Posts="@response.Posts" />
+}
+
+@code {
+    public bool IsLoaded { get; set; }
+    public PagedPostsResponse response = new PagedPostsResponse();
+
+    protected override async Task OnInitializedAsync()
+    {
+        response = await _postsService.GetPosts(new PostsSearchParametersRequest());
+        IsLoaded = true;
+    }
+}

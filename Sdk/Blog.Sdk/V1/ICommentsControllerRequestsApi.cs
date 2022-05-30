@@ -20,8 +20,8 @@
         /// </summary>
         /// <returns>Task.</returns>
         /// <response code="200">Get all comments.</response>
-        [Get(ApiRoutes.CommentsController.Comments)]
-        Task<ApiResponse<List<CommentResponse>>> GetAllComments();
+        [Get("/api/v1/comments")]
+        Task<List<CommentResponse>> GetAllComments();
 
         /// <summary>
         /// Gets the comments.
@@ -30,8 +30,8 @@
         /// <returns>Task.</returns>
         /// <response code="200">Gets the comments.</response>
         /// <response code="404">Unable to gets the comments.</response>
-        [Get(ApiRoutes.CommentsController.Comments + "/" + ApiRoutes.CommentsController.GetCommentsByFilter)]
-        Task<ApiResponse<PagedCommentsResponse>> GetComments([FromBody] SortParametersRequest sortParameters = null);
+        [Get("/api/v1/comments/get-comments-by-filter")]
+        Task<PagedCommentsResponse> GetComments(SortParametersRequest sortParameters = null);
 
         /// <summary>
         /// Gets the comments by post asynchronous.
@@ -41,8 +41,8 @@
         /// <returns>Task.</returns>
         /// <response code="200">Gets the comments by post asynchronous.</response>
         /// <response code="404">Unable to gets the comments by post.</response>
-        [Get(ApiRoutes.CommentsController.Comments + "/" + ApiRoutes.CommentsController.GetCommentsByPost)]
-        Task<ApiResponse<List<CommentResponse>>> GetCommentsByPostAsync([FromRoute] int id, [FromBody] SortParametersRequest sortParameters = null);
+        [Get("/api/v1/comments/get-comments-by-post/{id}")]
+        Task<List<CommentResponse>> GetCommentsByPostAsync(int id, SortParametersRequest sortParameters = null);
 
         /// <summary>
         /// Gets the comment.
@@ -51,8 +51,8 @@
         /// <returns>Task.</returns>
         /// <response code="200">Gets the comment.</response>
         /// <response code="404">Unable to gets the comment.</response>
-        [Get(ApiRoutes.CommentsController.Comments + "/" + ApiRoutes.CommentsController.GetComment)]
-        Task<ApiResponse<CommentResponse>> GetComment([FromRoute] int id);
+        [Get("/api/v1/comments/get-comment/{id}")]
+        Task<CommentResponse> GetComment(int id);
 
         /// <summary>
         /// Creates the asynchronous.
@@ -62,8 +62,8 @@
         /// <response code="201">Create the comment.</response>
         /// <response code="400">Unable to create the comment.</response>
         [Headers("Authorization: Bearer")]
-        [Post(ApiRoutes.CommentsController.Comments + "/" + ApiRoutes.CommentsController.CreateComment)]
-        Task<ApiResponse<CommentResponse>> CreateAsync([FromBody] CreateCommentRequest request);
+        [Post("/api/v1/comments/create")]
+        Task<CommentResponse> CreateAsync(CreateCommentRequest request);
 
         /// <summary>
         /// Edits the asynchronous.
@@ -75,8 +75,8 @@
         /// <response code="400">Unable to update the comment, because model is invalid.</response>
         /// <response code="404">Unable to update the comment, because comment not found.</response>
         [Headers("Authorization: Bearer")]
-        [Put(ApiRoutes.CommentsController.Comments + "/" + ApiRoutes.CommentsController.EditComment)]
-        Task<ApiResponse<CommentResponse>> EditAsync([FromRoute] int id, [FromBody] UpdateCommentRequest request);
+        [Put("/api/v1/comments")]
+        Task<CommentResponse> EditAsync(int id, UpdateCommentRequest request);
 
         /// <summary>
         /// Deletes the asynchronous.
@@ -86,7 +86,7 @@
         /// <response code="200">Delete the comment.</response>
         /// <response code="404">Unable to delete the comment, because comment not found.</response>
         [Headers("Authorization: Bearer")]
-        [Delete(ApiRoutes.CommentsController.Comments + "/" + ApiRoutes.CommentsController.EditComment)]
-        Task<ApiResponse<CreatedResponse<int>>> DeleteAsync([FromRoute] int id);
+        [Delete("/api/v1/comments/{id}")]
+        Task<CreatedResponse<int>> DeleteAsync(int id);
     }
 }

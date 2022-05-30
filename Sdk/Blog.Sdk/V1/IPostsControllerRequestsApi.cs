@@ -20,8 +20,8 @@
         /// <returns>Task.</returns>
         /// <response code="200">Get all posts.</response>
         /// <response code="404">Unable to get all posts.</response>
-        [Get(ApiRoutes.PostsController.Posts)]
-        Task<ApiResponse<List<PostResponse>>> Index();
+        [Get("/api/v1/posts")]
+        Task<List<PostResponse>> Index();
 
         /// <summary>
         /// Gets the posts.
@@ -30,8 +30,8 @@
         /// <returns>Task.</returns>
         /// <response code="200">Get filtered and sorted posts.</response>
         /// <response code="404">Unable to get filtered and sorted posts.</response>
-        [Post(ApiRoutes.PostsController.Posts + "/" + ApiRoutes.PostsController.GetPosts)]
-        Task<ApiResponse<PagedPostsResponse>> GetPosts([FromBody] PostsSearchParametersRequest searchParameters);
+        [Post("/api/v1/posts/get-posts")]
+        Task<PagedPostsResponse> GetPosts(PostsSearchParametersRequest searchParameters);
 
         /// <summary>
         /// Gets the user posts.
@@ -41,9 +41,9 @@
         /// <returns>Task.</returns>
         /// <response code="200">Get filtered and sorted user posts.</response>
         /// <response code="404">Unable to get filtered and sorted user posts.</response>
-        [Post(ApiRoutes.PostsController.Posts + "/" + ApiRoutes.PostsController.UserPosts)]
-        Task<ApiResponse<PagedPostsResponse>> GetUserPosts([FromRoute] string id,
-            [FromBody] PostsSearchParametersRequest searchParameters);
+        [Post("/api/v1/posts/user-posts/{id}")]
+        Task<PagedPostsResponse> GetUserPosts(string id,
+           PostsSearchParametersRequest searchParameters);
 
         /// <summary>
         /// Shows the specified identifier.
@@ -52,8 +52,8 @@
         /// <returns>Task</returns>
         /// <response code="200">Get post by id.</response>
         /// <response code="404">Unable to get post by id.</response>
-        [Get(ApiRoutes.PostsController.Posts + "/show")]
-        Task<ApiResponse<PostWithPagedCommentsResponse>> Show([FromRoute] int id);
+        [Get("/api/v1/posts/show/{id}")]
+        Task<PostWithPagedCommentsResponse> Show(int id);
 
         /// <summary>
         /// Creates the asynchronous.
@@ -62,8 +62,8 @@
         /// <returns>IActionResult.</returns>
         /// <response code="201">Create new post.</response>
         /// <response code="400">Unable to create new post.</response>
-        [Post(ApiRoutes.PostsController.Posts)]
-        Task<ApiResponse<PostResponse>> CreateAsync([FromBody] CreatePostRequest model);
+        [Post("/api/v1/posts")]
+        Task<PostResponse> CreateAsync(CreatePostRequest model);
 
         /// <summary>
         /// Likes the post asynchronous.
@@ -73,8 +73,8 @@
         /// <response code="204">Likes the post.</response>
         /// <response code="400">Unable to likes the post, model is invalid.</response>
         /// <response code="404">Unable to likes the post, post not found.</response>
-        [Put(ApiRoutes.PostsController.Posts + "/like")]
-        Task<ApiResponse<PostViewResponse>> LikePostAsync([FromRoute] int id);
+        [Put("/api/v1/posts/like/{id}")]
+        Task<PostViewResponse> LikePostAsync(int id);
 
         /// <summary>
         /// Dislikes the post asynchronous.
@@ -84,8 +84,8 @@
         /// <response code="204">Dislikes the post.</response>
         /// <response code="400">Unable to dislikes the post, model is invalid.</response>
         /// <response code="404">Unable to dislikes the post, post not found.</response>
-        [Put(ApiRoutes.PostsController.Posts + "/dislike")]
-        Task<ApiResponse<PostViewResponse>> DislikePostAsync([FromRoute] int id);
+        [Put("/api/v1/posts/dislike/{id}")]
+        Task<PostViewResponse> DislikePostAsync(int id);
 
         /// <summary>
         /// Edits the asynchronous.
@@ -96,8 +96,8 @@
         /// <response code="204">Edit post by id.</response>
         /// <response code="400">Unable to edit post by id, model is invalid.</response>
         /// <response code="404">Unable to edit post by id, post not found.</response>
-        [Put(ApiRoutes.PostsController.Posts)]
-        Task<ApiResponse<PostViewResponse>> EditAsync([FromRoute] int id, [FromBody] UpdatePostRequest model);
+        [Put("/api/v1/posts/{id}")]
+        Task<PostViewResponse> EditAsync(int id, UpdatePostRequest model);
 
         /// <summary>
         /// Deletes the asynchronous.
@@ -107,7 +107,7 @@
         /// <returns>Task.</returns>
         /// <response code="200">Delete post by id.</response>
         /// <response code="404">Unable to delete post by id, post not found.</response>
-        [Delete(ApiRoutes.PostsController.Posts)]
-        Task<ApiResponse<CreatedResponse<int>>> DeleteAsync(int id, string authorId);
+        [Delete("/api/v1/posts/{id}")]
+        Task<CreatedResponse<int>> DeleteAsync(int id, string authorId);
     }
 }

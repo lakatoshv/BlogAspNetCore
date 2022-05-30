@@ -22,22 +22,22 @@ namespace Blog.Sdk.V1
         /// <returns>Task.</returns>
         /// <response code="200">Get user data by user id.</response>
         /// <response code="400">Unable to get user data by user id.</response>
-        [Get(ApiRoutes.AccountsController.Accounts + "/initialize")]
-        Task<ApiResponse<List<RoleResponse>>> Initialize([FromRoute] string userId);
+        [Get("/api/v1/accounts/initialize/{userId}")]
+        Task<List<RoleResponse>> Initialize(string userId);
 
         /// <summary>
         /// Gets all users.
         /// </summary>
         /// <returns>Task.</returns>
         /// <response code="204">No content.</response>
-        [Get(ApiRoutes.AccountsController.Accounts + "/" + ApiRoutes.AccountsController.GetAllUsers)]
-        Task<ApiResponse<List<RoleResponse>>> GetAllUsers();
+        [Get("/api/v1/accounts/get-all-users")]
+        Task<List<RoleResponse>> GetAllUsers();
 
         /// <summary>
         /// Sends the verification email asynchronous.
         /// </summary>
         /// <returns>Task.</returns>
-        [Get(ApiRoutes.AccountsController.Accounts + "/" + ApiRoutes.AccountsController.SendConfirmationEmail)]
+        [Get("/api/v1/accounts/send-confirmation-email")]
         Task SendVerificationEmailAsync();
 
         /// <summary>
@@ -47,8 +47,8 @@ namespace Blog.Sdk.V1
         /// <returns>Task.</returns>
         /// <response code="200">User login.</response>
         /// <response code="400">Unable to user login.</response>
-        [Post(ApiRoutes.AccountsController.Accounts + "/" + ApiRoutes.AccountsController.Login)]
-        Task<ApiResponse<string>> PostAsync([FromBody] LoginRequest credentials);
+        [Post("/api/v1/accounts/login")]
+        Task<string> PostAsync(LoginRequest credentials);
 
 
         /// <summary>
@@ -58,8 +58,8 @@ namespace Blog.Sdk.V1
         /// <returns>Task.</returns>
         /// <response code="201">Register user.</response>
         /// <response code="400">Unable to register user.</response>
-        [Post(ApiRoutes.AccountsController.Accounts + "/" + ApiRoutes.AccountsController.Register)]
-        Task<ApiResponse<IdentityResult>> CreateAsync([FromBody] RegistrationRequest model);
+        [Post("/api/v1/accounts/register")]
+        Task<IdentityResult> CreateAsync(RegistrationRequest model);
 
         /// <summary>
         /// Updates the asynchronous.
@@ -68,7 +68,7 @@ namespace Blog.Sdk.V1
         /// <returns>Task.</returns>
         /// <response code="204">Change password.</response>
         /// <response code="400">Unable to change password.</response>
-        [Put(ApiRoutes.AccountsController.Accounts + "/" + ApiRoutes.AccountsController.ChangePassword)]
-        Task UpdateAsync([FromBody] ChangePasswordRequest model);
+        [Put("/api/v1/accounts/change-password")]
+        Task UpdateAsync(ChangePasswordRequest model);
     }
 }
