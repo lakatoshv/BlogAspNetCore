@@ -108,6 +108,12 @@
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
+                options.AddPolicy("AllowAllBlazor", bilder =>
+                {
+                    bilder.WithOrigins("https://localhost:44390").AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
             });
         }
     }

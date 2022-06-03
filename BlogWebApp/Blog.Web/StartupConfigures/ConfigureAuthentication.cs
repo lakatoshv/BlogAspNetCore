@@ -15,6 +15,7 @@
         {
             app.UseAuthentication();
             app.UseCors("EnableCORS");
+            app.UseCors("AllowAllBlazor");
         }
     }
 }

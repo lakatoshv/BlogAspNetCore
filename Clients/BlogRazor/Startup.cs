@@ -1,3 +1,5 @@
+using BlogRazor.Services;
+using BlogRazor.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +37,7 @@ namespace BlogRazor
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+            services.AddTransient<IPostsService, PostsService>();
         }
 
         /// <summary>

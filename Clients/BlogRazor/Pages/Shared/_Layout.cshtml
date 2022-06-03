@@ -30,79 +30,106 @@
     <link rel="stylesheet" href="~/css/main.css" />
 </head>
 <body>
-    <header class="default-header">
-        <nav class="navbar navbar-expand-lg  navbar-light">
-            <div class="container">
-                <a class="navbar-brand text-white" href="index.html">
-                    BlogRazor
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="lnr lnr-menu"></span>
-                </button>
-
-                <div class="collapse navbar-collapse justify-content-end align-items-center" id="navbarSupportedContent">
-                    <ul class="navbar-nav">
-                        <li><a href="index.html">Головна</a></li>
-                        <li><a href="about.html">Про нас</a></li>
-                        <li><a href="about.html">Контакти</a></li>
-                        <li><a href="contacts.html">Ввійти</a></li>
-                        <li><a href="contacts.html">Зареєструватись</a></li>
-                        <li>
-                            <button class="search">
-                                <span class="lnr lnr-magnifier" id="search"></span>
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <div class="search-input" id="search-input-box">
-            <div class="container">
-                <form class="d-flex justify-content-between">
-                    <input type="text" class="form-control" id="search-input" placeholder="Пошук" />
-                    <button type="submit" class="btn"></button>
-                    <span class="lnr lnr-cross" id="close-search" title="Закрити"></span>
-                </form>
-            </div>
-        </div>
-    </header>
-
-    <section class="banner-area">
+    <header class="masthead" style="background-image: url('img/home-bg-v2.jpg')">
+        <div class="overlay"></div>
         <div class="container">
-            <div class="row justify-content-center align-items-center">
-                <div class="col-lg-12 banner-right">
-                    <h1 class="text-white">
-                        BlogRazor
-                    </h1>
-                    <p class="mx-auto text-white  mt-20 mb-40">
-                        Цікавий блог про цікаве.
-                    </p>
-                    <div class="link-nav">
-                        <span class="box">
-                            <a href="index.html">Головна </a>
-                            <i class="lnr lnr-arrow-right"></i>
-                            <a href="blog-home.html">Блог</a>
-                        </span>
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <div class="site-heading">
+                        <h1>BlazorBlog</h1>
+                        <hr class="hr">
+                        <span class="subheading">Цікавий блог про цікаве</span>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </header>
+
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+        <div class="container-fluid">
+            <img src="blog.ico" width="50px" height="50px">
+            <a class="navbar-brand">BlazorBlog</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fa fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link">Про нас</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link">Контакти</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link"><i class="fa fa-sign-in"></i> Ввійти</a></li>
+                    <li class="nav-item"><a class="nav-link"><i class="fa fa-user"></i> Зареєструватись</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
     @RenderBody()
 
-    <footer class="footer-area section-gap">
+    <hr>
+
+    <!-- Footer -->
+    <footer>
         <div class="container">
-            <div class="footer-bottom row align-items-center">
-                <p class="footer-text m-0 col-lg-8 col-md-12">
-                    © 2018 Lakatosh Vitaliy. · <a href="#">Privacy</a> · <a href="#">Terms</a>
-                </p>
-                <div class="col-lg-4 col-md-12 footer-social">
-                    <a href="#"><i class="fa fa-facebook"></i></a>
-                    <a href="#"><i class="fa fa-twitter"></i></a>
-                    <a href="#"><i class="fa fa-dribbble"></i></a>
-                    <a href="#"><i class="fa fa-behance"></i></a>
+            <div class="row">
+                <div class="col-lg-10 col-md-12 mx-auto">
+                    <ul class="socialIcons">
+                        <li class="facebook">
+                            <a>
+                                <i class="fa fa-fw fa-facebook"></i>Facebook
+                            </a>
+                        </li>
+                        <li class="twitter">
+                            <a>
+                                <i class="fa fa-fw fa-twitter"></i>Twitter
+                            </a>
+                        </li>
+                        <li class="instagram">
+                            <a>
+                                <i class="fa fa-fw fa-instagram"></i>Instagram
+                            </a>
+                        </li>
+                        <li class="pinterest">
+                            <a>
+                                <i class="fa fa-fw fa-pinterest-p"></i>Pinterest
+                            </a>
+                        </li>
+                        <li class="vk">
+                            <a class="text-white">
+                                <i class="fa fa-fw fa-vk"></i>VKontakte
+                            </a>
+                        </li>
+                        <li class="tumblr">
+                            <a class="text-white">
+                                <i class="fa fa-fw fa-tumblr"></i>Tumblr
+                            </a>
+                        </li>
+                        <li class="linkedin">
+                            <a>
+                                <i class="fa fa-fw fa-linkedin"></i>Linkedid
+                            </a>
+                        </li>
+                        <li class="google-plus">
+                            <a>
+                                <i class="fa fa-fw fa-google-plus"></i>Google+
+                            </a>
+                        </li>
+                        <li class="yahoo">
+                            <a class="text-white">
+                                <i class="fa fa-fw fa-yahoo"></i>Yahoo
+                            </a>
+                        </li>
+                        <li class="skype">
+                            <a>
+                                <i class="fa fa-fw fa-skype"></i>Skype
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="copyright text-muted">Copyright &copy; Your Website 2018</p>
                 </div>
             </div>
         </div>

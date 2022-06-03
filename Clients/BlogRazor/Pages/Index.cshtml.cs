@@ -1,4 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Blog.Contracts.V1.Requests.PostsRequests;
+using Blog.Contracts.V1.Responses.PostsResponses;
+using Blog.Contracts.V1.Responses.TagsResponses;
+using BlogRazor.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
 namespace BlogRazor.Pages
@@ -15,20 +23,56 @@ namespace BlogRazor.Pages
         private readonly ILogger<IndexModel> _logger;
 
         /// <summary>
+        /// Gets or sets the posts.
+        /// </summary>
+        /// <value>
+        /// The posts.
+        /// </value>
+        [BindProperty]
+        public PagedPostsResponse PagedPosts { get; set; } = new PagedPostsResponse();
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is loaded.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is loaded; otherwise, <c>false</c>.
+        /// </value>
+        [BindProperty]
+        public bool IsLoaded { get; set; } = false;
+
+        private readonly IPostsService _postsService;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="IndexModel"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public IndexModel(ILogger<IndexModel> logger)
+        /// <param name="postsService">The posts service.</param>
+        public IndexModel(
+            ILogger<IndexModel> logger,
+            IPostsService postsService)
         {
             _logger = logger;
+            _postsService = postsService;
         }
 
         /// <summary>
         /// Called when [get].
         /// </summary>
-        public void OnGet()
+        public async Task OnGet()
         {
+            try
+            {
+                var pagedProductsResponse = await _postsService.GetPosts(new PostsSearchParametersRequest());
 
+                if (pagedProductsResponse != null && pagedProductsResponse.Posts.Count > 0)
+                {
+                    PagedPosts = pagedProductsResponse;
+                    IsLoaded = true;
+                }
+            }
+            catch (Exception e)
+            {
+            }
         }
     }
 }
