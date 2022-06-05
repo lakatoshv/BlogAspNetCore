@@ -650,6 +650,86 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Insert Async Enumerable function
+
+        /// <summary>
+        /// Verify that function Insert Async Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionInsertAsyncEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newComments = new List<Comment>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newComments.Add(new Comment
+                {
+                    CommentBody = $"Comment {itemsCount}",
+                });
+            }
+
+            _commentsRepositoryMock.Setup(x => x.InsertAsync(newComments))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newComments[i].Id = commentId + i;
+                    }
+                });
+
+            //Act
+            await _commentsService.InsertAsync(newComments);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.InsertAsync(newComments), Times.Once);
+        }
+
+        /// <summary>
+        /// Insert Async Enumerable comments.
+        /// Should return comments when comments created.
+        /// </summary>
+        [Fact]
+        public async Task InsertAsyncEnumerable_ShouldReturnComments_WhenCommentsExists()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newComments = new List<Comment>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newComments.Add(new Comment
+                {
+                    CommentBody = $"Comment {itemsCount}",
+                });
+            }
+
+            _commentsRepositoryMock.Setup(x => x.InsertAsync(newComments))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newComments[i].Id = commentId + i;
+                    }
+                });
+
+            //Act
+            await _commentsService.InsertAsync(newComments);
+
+            //Assert
+            newComments.ForEach(x =>
+            {
+                Assert.NotEqual(0, x.Id);
+            });
+        }
+
+        #endregion
+
         #region Upadate function
 
         /// <summary>
