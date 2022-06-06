@@ -700,6 +700,92 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Insert Async Enumerable function
+
+        /// <summary>
+        /// Verify that function Insert Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionInsertAsyncEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.InsertAsync(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+
+            //Act
+            await _postsService.InsertAsync(newPosts);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.InsertAsync(newPosts), Times.Once);
+        }
+
+        /// <summary>
+        /// Insert Async Enumerable posts.
+        /// Should return posts when posts created.
+        /// </summary>
+        [Fact]
+        public async Task InsertAsyncEnumerable_ShouldReturnPosts_WhenPostsExists()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.InsertAsync(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+
+            //Act
+            await _postsService.InsertAsync(newPosts);
+
+            //Assert
+            newPosts.ForEach(x =>
+            {
+                Assert.NotEqual(0, x.Id);
+            });
+        }
+
+        #endregion
+
         #region Upadate function
 
         /// <summary>
