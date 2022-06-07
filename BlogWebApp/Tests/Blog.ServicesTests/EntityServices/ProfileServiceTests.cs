@@ -781,6 +781,108 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Insert Async Enumerable function
+
+        /// <summary>
+        /// Verify that function Insert Async Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionInsertAsyncEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newProfiles = new List<Data.Models.Profile>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.InsertAsync(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+
+            //Act
+            await _profileService.InsertAsync(newProfiles);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.InsertAsync(newProfiles), Times.Once);
+        }
+
+        /// <summary>
+        /// Insert Async Enumerable profiles.
+        /// Should return profiles when profiles created.
+        /// </summary>
+        [Fact]
+        public async Task InsertAsyncEnumerable_ShouldReturnProfiles_WhenProfilesExists()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newProfiles = new List<Data.Models.Profile>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.InsertAsync(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+
+            //Act
+            await _profileService.InsertAsync(newProfiles);
+
+            //Assert
+            newProfiles.ForEach(x =>
+            {
+                Assert.NotEqual(0, x.Id);
+            });
+        }
+
+        #endregion
+
         #region Upadate function
 
         /// <summary>
