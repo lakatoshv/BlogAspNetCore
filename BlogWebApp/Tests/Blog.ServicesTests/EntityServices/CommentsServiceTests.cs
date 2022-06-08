@@ -803,6 +803,101 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Upadate Enumerable function
+
+        /// <summary>
+        /// Verify that function Update Enumerable has been called.
+        /// </summary>
+        /// <param name="newCommentBody">The new CommentBody.</param>
+        [Theory]
+        [InlineData("New CommentBody")]
+        public void Verify_FunctionUpdateEnumerable_HasBeenCalled(string newCommentBody)
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newComments = new List<Comment>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newComments.Add(new Comment
+                {
+                    CommentBody = $"Comment {itemsCount}",
+                });
+            }
+
+            _commentsRepositoryMock.Setup(x => x.Insert(newComments))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newComments[i].Id = commentId + i;
+                    }
+                });
+
+            //Act
+            _commentsService.Insert(newComments);
+            newComments.ForEach(comment =>
+            {
+                comment.CommentBody = $"{newCommentBody} {itemsCount}";
+            });
+            _commentsService.Update(newComments);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.Update(newComments), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Enumerable comment.
+        /// Should return comment when comment updated.
+        /// </summary>
+        /// <param name="newCommentBody">The new CommentBody.</param>
+        [Theory]
+        [InlineData("New CommentBody")]
+        public void UpdateEnumerable_ShouldReturnComment_WhenCommentExists(string newCommentBody)
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newComments = new List<Comment>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newComments.Add(new Comment
+                {
+                    CommentBody = $"Comment {itemsCount}",
+                });
+            }
+
+            _commentsRepositoryMock.Setup(x => x.Insert(newComments))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newComments[i].Id = commentId + i;
+                    }
+                });
+
+            //Act
+            _commentsService.Insert(newComments);
+            newComments.ForEach(comment =>
+            {
+                comment.CommentBody = $"{newCommentBody} {itemsCount}";
+            });
+            _commentsService.Update(newComments);
+
+            //Assert
+
+            newComments.ForEach((comment) =>
+            {
+                Assert.Equal($"{newCommentBody} {itemsCount}", comment.CommentBody);
+            });
+        }
+
+        #endregion
+
         #region Update Async function
 
         /// <summary>
