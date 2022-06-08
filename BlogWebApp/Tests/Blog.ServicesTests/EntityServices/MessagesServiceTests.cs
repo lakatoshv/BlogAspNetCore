@@ -1252,6 +1252,146 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Upadate Enumerable function
+
+        /// <summary>
+        /// Verify that function Update has been called.
+        /// </summary>
+        /// <param name="newMessageSubject">The new message subject.</param>
+        [Theory]
+        [InlineData("New subject")]
+        public void Verify_FunctionUpdateEnumerable_HasBeenCalled(string newMessageSubject)
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.Insert(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+
+            //Act
+            _messagesService.Insert(newMessages);
+            newMessages.ForEach(message =>
+            {
+                message.Subject = newMessageSubject;
+            });
+            _messagesService.Update(newMessages);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.Update(newMessages), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Enumerable message.
+        /// Should return message when message updated.
+        /// </summary>
+        /// <param name="newMessageSubject">The new message subject.</param>
+        [Theory]
+        [InlineData("New subject")]
+        public void UpdateEnumerable_ShouldReturnMessage_WhenMessageExists(string newMessageSubject)
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.Insert(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+
+            //Act
+            _messagesService.Insert(newMessages);
+            newMessages.ForEach(message =>
+            {
+                message.Subject = newMessageSubject;
+            });
+            _messagesService.Update(newMessages);
+
+            //Assert
+            newMessages.ForEach(message =>
+            {
+                Assert.Equal(newMessageSubject, message.Subject);
+            });
+        }
+
+        #endregion
+
         #region Update Async function
 
         /// <summary>
