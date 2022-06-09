@@ -977,6 +977,126 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Upadate Enumerable function
+
+        /// <summary>
+        /// Verify that function Update Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionUpdateEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newProfiles = new List<Data.Models.Profile>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+
+            //Act
+            _profileService.Insert(newProfiles);
+            newProfiles.ForEach(profile =>
+            {
+                profile.UserId = new Guid().ToString();
+            });
+            _profileService.Update(newProfiles);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.Update(newProfiles), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Enumerable profile.
+        /// Should return profile when profile updated.
+        /// </summary>
+        [Fact]
+        public void UpdateEnumerable_ShouldReturnProfile_WhenProfileExists()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newProfiles = new List<Data.Models.Profile>();
+            var profileIds = new List<Guid>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+                profileIds.Add(new Guid().ToString());
+            }
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+
+            //Act
+            _profileService.Insert(newProfiles);
+            newProfiles.ForEach(profile =>
+            {
+                profile.UserId = new Guid().ToString();
+            });
+
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newProfiles[i].UserId = profileId[i];
+            }
+            _profileService.Update(newProfiles);
+
+            //Assert
+
+            for (var i = 0; i < itemsCount; i++)
+            {
+                Assert.Equal(profileId[i], newProfiles[i].UserId);
+            }
+        }
+
+        #endregion
+
         #region Update Async function
 
         /// <summary>
