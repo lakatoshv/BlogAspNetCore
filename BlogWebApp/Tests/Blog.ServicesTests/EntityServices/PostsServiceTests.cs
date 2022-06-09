@@ -865,6 +865,106 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Upadate Enumerable function
+
+        /// <summary>
+        /// Verify that function Update Enumerable has been called.
+        /// </summary>
+        /// <param name="newTitle">The new title.</param>
+        [Theory]
+        [InlineData("New title")]
+        public void Verify_FunctionUpdateEnumerable_HasBeenCalled(string newTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.Insert(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+
+            //Act
+            _postsService.Insert(newPosts);
+            newPosts.ForEach(post =>
+            {
+                post.Title = newTitle;
+            });
+            _postsService.Update(newPosts);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.Update(newPosts), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Enumerable post.
+        /// Should return post when post updated.
+        /// </summary>
+        /// <param name="newTitle">The new title.</param>
+        [Theory]
+        [InlineData("New title")]
+        public void UpdateEnumerable_ShouldReturnPost_WhenPostExists(string newTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.Insert(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+
+            //Act
+            _postsService.Insert(newPosts);
+            newPosts.ForEach(post =>
+            {
+                post.Title = newTitle;
+            });
+            _postsService.Update(newPosts);
+
+            //Assert
+            newPosts.ForEach(post =>
+            {
+                Assert.Equal(newTitle, post.Title);
+            })
+        }
+
+        #endregion
+
         #region Update Async function
 
         /// <summary>
