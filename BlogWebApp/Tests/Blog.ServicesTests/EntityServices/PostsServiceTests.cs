@@ -960,7 +960,7 @@ namespace Blog.ServicesTests.EntityServices
             newPosts.ForEach(post =>
             {
                 Assert.Equal(newTitle, post.Title);
-            })
+            });
         }
 
         #endregion

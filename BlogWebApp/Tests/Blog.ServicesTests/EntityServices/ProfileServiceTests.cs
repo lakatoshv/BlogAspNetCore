@@ -1043,7 +1043,7 @@ namespace Blog.ServicesTests.EntityServices
             var profileId = random.Next(52);
             var itemsCount = random.Next(10);
             var newProfiles = new List<Data.Models.Profile>();
-            var profileIds = new List<Guid>();
+            var profileIds = new List<string>();
 
             for (int i = 0; i < itemsCount; i++)
             {
@@ -1083,7 +1083,7 @@ namespace Blog.ServicesTests.EntityServices
 
             for (var i = 0; i < itemsCount; i++)
             {
-                newProfiles[i].UserId = profileId[i];
+                newProfiles[i].UserId = profileIds[i];
             }
             _profileService.Update(newProfiles);
 
@@ -1091,7 +1091,7 @@ namespace Blog.ServicesTests.EntityServices
 
             for (var i = 0; i < itemsCount; i++)
             {
-                Assert.Equal(profileId[i], newProfiles[i].UserId);
+                Assert.Equal(profileIds[i], newProfiles[i].UserId);
             }
         }
 
