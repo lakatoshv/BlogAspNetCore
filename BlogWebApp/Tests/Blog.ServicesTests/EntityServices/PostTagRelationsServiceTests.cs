@@ -1467,6 +1467,189 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Upadate Enumerable function
+
+        /// <summary>
+        /// Verify that function Update Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionUpdateEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+            var newTag = new Tag
+            {
+                Id = id + 1,
+                Title = $"Tag {id + 1}"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelations);
+            newPostsTagsRelations.ForEach(postsTagsRelations =>
+            {
+                postsTagsRelations.TagId = newTag.Id;
+                postsTagsRelations.Tag = newTag;
+            });
+            _postsTagsRelationsService.Update(newPostsTagsRelations);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.Update(newPostsTagsRelations), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Enumerable post tag relation.
+        /// Should return post tag relation when post tag relation updated.
+        /// </summary>
+        [Fact]
+        public void UpdateEnumerable_ShouldReturnPostTagRelation_WhenPostTagRelationsExists()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+            var newTag = new Tag
+            {
+                Id = id + 1,
+                Title = $"Tag {id + 1}"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelations);
+            newPostsTagsRelations.ForEach(postsTagsRelations =>
+            {
+                postsTagsRelations.TagId = newTag.Id;
+                postsTagsRelations.Tag = newTag;
+            });
+            _postsTagsRelationsService.Update(newPostsTagsRelations);
+
+            //Assert
+            newPostsTagsRelations.ForEach(postsTagsRelations =>
+            {
+                Assert.Equal(postsTagsRelations.TagId, newTag.Id);
+                Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
+            });
+        }
+
+        /// <summary>
+        /// Update Enumerable post tag relations.
+        /// Should return post tag relations when post tag relations exists.
+        /// </summary>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">THe tag title.</param>
+        [Theory]
+        [InlineData("Post", "Tag")]
+        public void UpdateEnumerable_ShouldReturnPostTagRelationWithExistingPostAndTags_WhenPostTagRelationExists(string postTitle, string tagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+            var newTag = new Tag
+            {
+                Id = id + 1,
+                Title = $"Tag {id + 1}"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelations);
+            newPostsTagsRelations.ForEach(postsTagsRelations =>
+            {
+                postsTagsRelations.TagId = newTag.Id;
+                postsTagsRelations.Tag = newTag;
+            });
+            _postsTagsRelationsService.Update(newPostsTagsRelations);
+
+            //Assert
+            newPostsTagsRelations.ForEach(postsTagsRelations =>
+            {
+                Assert.NotEqual(0, postsTagsRelations.Id);
+
+                Assert.NotNull(postsTagsRelations.Tag);
+                Assert.Contains(tagTitle, postsTagsRelations.Tag.Title);
+                Assert.Equal(postsTagsRelations.TagId, newTag.Id);
+                Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
+            });
+        }
+
+        #endregion
+
         #region Update Async function
 
         /// <summary>
