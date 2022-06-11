@@ -722,6 +722,100 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Upadate Enumerable function
+
+        /// <summary>
+        /// Verify that function Update Enumerable has been called.
+        /// </summary>
+        /// <param name="newTagTitle">The new tag title.</param>
+        [Theory]
+        [InlineData("New Tag")]
+        public void Verify_FunctionUpdateEnumerable_HasBeenCalled(string newTagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.Insert(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+
+            //Act
+            _tagsService.Insert(newTags);
+            newTags.ForEach(tag =>
+            {
+                tag.Title = newTagTitle;
+            });
+            _tagsService.Update(newTags);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.Update(newTags), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Enumerable tag.
+        /// Should return tag when tag updated.
+        /// </summary>
+        /// <param name="newTagTitle">The new tag title.</param>
+        [Theory]
+        [InlineData("New tag title")]
+        public void UpdateEnumerable_ShouldReturnComment_WhenCommentExists(string newTagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.Insert(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+
+            //Act
+            _tagsService.Insert(newTags);
+            newTags.ForEach(tag =>
+            {
+                tag.Title = newTagTitle;
+            });
+            _tagsService.Update(newTags);
+
+            //Assert
+            newTags.ForEach(tag =>
+            {
+                Assert.Equal(newTagTitle, tag.Title);
+            });
+        }
+
+        #endregion
+
         #region Update Async function
 
         /// <summary>
