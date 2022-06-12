@@ -907,6 +907,10 @@ namespace Blog.ServicesTests.EntityServices
             {
                 post.Title = newTitle;
             });
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newPosts[i].Title = $"{newTitle} {i}";
+            }
             _postsService.Update(newPosts);
 
             //Assert
@@ -950,17 +954,17 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             _postsService.Insert(newPosts);
-            newPosts.ForEach(post =>
+            for (var i = 0; i < itemsCount; i++)
             {
-                post.Title = newTitle;
-            });
+                newPosts[i].Title = $"{newTitle} {i}";
+            }
             _postsService.Update(newPosts);
 
             //Assert
-            newPosts.ForEach(post =>
+            for (var i = 0; i < itemsCount; i++)
             {
-                Assert.Equal(newTitle, post.Title);
-            });
+                Assert.Equal($"{newTitle} {i}", newPosts[i].Title);
+            }
         }
 
         #endregion

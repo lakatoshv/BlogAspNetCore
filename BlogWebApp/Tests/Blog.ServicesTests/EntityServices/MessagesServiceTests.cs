@@ -1310,10 +1310,10 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             _messagesService.Insert(newMessages);
-            newMessages.ForEach(message =>
+            for (var i = 0; i < itemsCount; i++)
             {
-                message.Subject = newMessageSubject;
-            });
+                newMessages[i].Subject = $"{newMessageSubject} {i}";
+            }
             _messagesService.Update(newMessages);
 
             //Assert
@@ -1377,17 +1377,17 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             _messagesService.Insert(newMessages);
-            newMessages.ForEach(message =>
+            for (var i = 0; i < itemsCount; i++)
             {
-                message.Subject = newMessageSubject;
-            });
+                newMessages[i].Subject = $"{newMessageSubject} {i}";
+            }
             _messagesService.Update(newMessages);
 
             //Assert
-            newMessages.ForEach(message =>
+            for (var i = 0; i < itemsCount; i++)
             {
-                Assert.Equal(newMessageSubject, message.Subject);
-            });
+                Assert.Equal($"{newMessageSubject} {i}", newMessages[i].Subject);
+            }
         }
 
         #endregion

@@ -1021,10 +1021,10 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             _profileService.Insert(newProfiles);
-            newProfiles.ForEach(profile =>
+            for (var i = 0; i < itemsCount; i++)
             {
-                profile.UserId = new Guid().ToString();
-            });
+                newProfiles[i].UserId = profileIds[i];
+            }
             _profileService.Update(newProfiles);
 
             //Assert
@@ -1076,10 +1076,6 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             _profileService.Insert(newProfiles);
-            newProfiles.ForEach(profile =>
-            {
-                profile.UserId = new Guid().ToString();
-            });
 
             for (var i = 0; i < itemsCount; i++)
             {

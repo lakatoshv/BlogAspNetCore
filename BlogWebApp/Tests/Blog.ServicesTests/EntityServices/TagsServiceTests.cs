@@ -761,6 +761,10 @@ namespace Blog.ServicesTests.EntityServices
             {
                 tag.Title = newTagTitle;
             });
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newTags[i].Title = $"{newTagTitle} {i}";
+            }
             _tagsService.Update(newTags);
 
             //Assert
@@ -801,17 +805,17 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             _tagsService.Insert(newTags);
-            newTags.ForEach(tag =>
+            for (var i = 0; i < itemsCount; i++)
             {
-                tag.Title = newTagTitle;
-            });
+                newTags[i].Title = $"{newTagTitle} {i}";
+            }
             _tagsService.Update(newTags);
 
             //Assert
-            newTags.ForEach(tag =>
+            for (var i = 0; i < itemsCount; i++)
             {
-                Assert.Equal(newTagTitle, tag.Title);
-            });
+                Assert.Equal($"{newTagTitle} {i}", newTags[i].Title);
+            }
         }
 
         #endregion

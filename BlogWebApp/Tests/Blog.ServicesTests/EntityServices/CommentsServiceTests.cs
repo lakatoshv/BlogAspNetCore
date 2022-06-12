@@ -838,10 +838,10 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             _commentsService.Insert(newComments);
-            newComments.ForEach(comment =>
+            for (var i = 0; i < itemsCount; i++)
             {
-                comment.CommentBody = $"{newCommentBody} {itemsCount}";
-            });
+                newComments[i].CommentBody = $"{newCommentBody} {i}";
+            }
             _commentsService.Update(newComments);
 
             //Assert
@@ -882,18 +882,18 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             _commentsService.Insert(newComments);
-            newComments.ForEach(comment =>
+            for (var i = 0; i < itemsCount; i++)
             {
-                comment.CommentBody = $"{newCommentBody} {itemsCount}";
-            });
+                newComments[i].CommentBody = $"{newCommentBody} {i}";
+            }
             _commentsService.Update(newComments);
 
             //Assert
 
-            newComments.ForEach((comment) =>
+            for (var i = 0; i < itemsCount; i++)
             {
-                Assert.Equal($"{newCommentBody} {itemsCount}", comment.CommentBody);
-            });
+                Assert.Equal($"{newCommentBody} {i}", newComments[i].CommentBody);
+            }
         }
 
         #endregion
