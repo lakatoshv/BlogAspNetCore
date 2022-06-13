@@ -906,6 +906,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <summary>
         /// Verify that function Insert Async has been called.
         /// </summary>
+        /// <returns>Task.</returns>
         [Fact]
         public async Task Verify_FunctionInsertAsync_HasBeenCalled()
         {
@@ -1012,6 +1013,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <summary>
         /// Verify that function Insert Async Enumerable has been called.
         /// </summary>
+        /// <returns>Task.</returns>
         [Fact]
         public async Task Verify_FunctionInsertAsyncEnumerable_HasBeenCalled()
         {
@@ -1072,6 +1074,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Insert Async Enumerable comment.
         /// Should return comments when comments created.
         /// </summary>
+        /// <returns>Task.</returns>
         [Fact]
         public async Task InsertAsyncEnumerable_ShouldReturnComments_WhenCommentsExists()
         {
@@ -1510,6 +1513,148 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Equal(newMessageSubject, message.Subject);
+        }
+
+        #endregion
+
+        #region Upadate Async Enumerable function
+
+        /// <summary>
+        /// Verify that function Update Async has been called.
+        /// </summary>
+        /// <param name="newMessageSubject">The new message subject.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("New subject")]
+        public async Task Verify_FunctionUpdateAsyncEnumerable_HasBeenCalled(string newMessageSubject)
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+
+            //Act
+            await _messagesService.InsertAsync(newMessages);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newMessages[i].Subject = $"{newMessageSubject} {i}";
+            }
+            await _messagesService.UpdateAsync(newMessages);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.UpdateAsync(newMessages), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Async Enumerable message.
+        /// Should return message when message updated.
+        /// </summary>
+        /// <param name="newMessageSubject">The new message subject.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("New subject")]
+        public async void UpdateAsyncEnumerable_ShouldReturnMessage_WhenMessageExists(string newMessageSubject)
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+
+            //Act
+            await _messagesService.InsertAsync(newMessages);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newMessages[i].Subject = $"{newMessageSubject} {i}";
+            }
+            await _messagesService.UpdateAsync(newMessages);
+
+            //Assert
+            for (var i = 0; i < itemsCount; i++)
+            {
+                Assert.Equal($"{newMessageSubject} {i}", newMessages[i].Subject);
+            }
         }
 
         #endregion
