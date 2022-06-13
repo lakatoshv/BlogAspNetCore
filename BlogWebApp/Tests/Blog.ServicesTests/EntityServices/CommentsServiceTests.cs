@@ -655,6 +655,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <summary>
         /// Verify that function Insert Async Enumerable has been called.
         /// </summary>
+        /// <returns>Task.</returns>
         [Fact]
         public async Task Verify_FunctionInsertAsyncEnumerable_HasBeenCalled()
         {
@@ -692,6 +693,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Insert Async Enumerable comments.
         /// Should return comments when comments created.
         /// </summary>
+        /// <returns>Task.</returns>
         [Fact]
         public async Task InsertAsyncEnumerable_ShouldReturnComments_WhenCommentsExists()
         {
@@ -970,6 +972,103 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Equal(newCommentBody, comment.CommentBody);
+        }
+
+        #endregion
+
+        #region Upadate Async Enumerable function
+
+        /// <summary>
+        /// Verify that function Update Async Enumerable has been called.
+        /// </summary>
+        /// <param name="newCommentBody">The new CommentBody.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("New CommentBody")]
+        public async Task Verify_FunctionUpdateAsyncEnumerable_HasBeenCalled(string newCommentBody)
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newComments = new List<Comment>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newComments.Add(new Comment
+                {
+                    CommentBody = $"Comment {itemsCount}",
+                });
+            }
+
+            _commentsRepositoryMock.Setup(x => x.InsertAsync(newComments))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newComments[i].Id = commentId + i;
+                    }
+                });
+
+            //Act
+            await _commentsService.InsertAsync(newComments);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newComments[i].CommentBody = $"{newCommentBody} {i}";
+            }
+            await _commentsService.UpdateAsync(newComments);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.UpdateAsync(newComments), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Async Enumerable comment.
+        /// Should return comment when comment updated.
+        /// </summary>
+        /// <param name="newCommentBody">The new CommentBody.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("New CommentBody")]
+        public async Task UpdateAsyncEnumerable_ShouldReturnComment_WhenCommentExists(string newCommentBody)
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newComments = new List<Comment>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newComments.Add(new Comment
+                {
+                    CommentBody = $"Comment {itemsCount}",
+                });
+            }
+
+            _commentsRepositoryMock.Setup(x => x.InsertAsync(newComments))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newComments[i].Id = commentId + i;
+                    }
+                });
+
+            //Act
+            await _commentsService.InsertAsync(newComments);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newComments[i].CommentBody = $"{newCommentBody} {i}";
+            }
+            await _commentsService.UpdateAsync(newComments);
+
+            //Assert
+
+            for (var i = 0; i < itemsCount; i++)
+            {
+                Assert.Equal($"{newCommentBody} {i}", newComments[i].CommentBody);
+            }
         }
 
         #endregion
