@@ -705,6 +705,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <summary>
         /// Verify that function Insert Enumerable has been called.
         /// </summary>
+        /// <returns>Task.</returns>
         [Fact]
         public async Task Verify_FunctionInsertAsyncEnumerable_HasBeenCalled()
         {
@@ -745,6 +746,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Insert Async Enumerable posts.
         /// Should return posts when posts created.
         /// </summary>
+        /// <returns>Task.</returns>
         [Fact]
         public async Task InsertAsyncEnumerable_ShouldReturnPosts_WhenPostsExists()
         {
@@ -1047,6 +1049,112 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Equal(newTitle, post.Title);
+        }
+
+        #endregion
+
+        #region Upadate Async Enumerable function
+
+        /// <summary>
+        /// Verify that function Update Enumerable has been called.
+        /// </summary>
+        /// <param name="newTitle">The new title.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("New title")]
+        public async Task Verify_FunctionUpdateAsyncEnumerable_HasBeenCalled(string newTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.InsertAsync(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+
+            //Act
+            await _postsService.InsertAsync(newPosts);
+            newPosts.ForEach(post =>
+            {
+                post.Title = newTitle;
+            });
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newPosts[i].Title = $"{newTitle} {i}";
+            }
+            await _postsService.UpdateAsync(newPosts);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.UpdateAsync(newPosts), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Enumerable post.
+        /// Should return post when post updated.
+        /// </summary>
+        /// <param name="newTitle">The new title.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("New title")]
+        public async Task UpdateAsyncEnumerable_ShouldReturnPost_WhenPostExists(string newTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.InsertAsync(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+
+            //Act
+            await _postsService.InsertAsync(newPosts);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newPosts[i].Title = $"{newTitle} {i}";
+            }
+            await _postsService.UpdateAsync(newPosts);
+
+            //Assert
+            for (var i = 0; i < itemsCount; i++)
+            {
+                Assert.Equal($"{newTitle} {i}", newPosts[i].Title);
+            }
         }
 
         #endregion
