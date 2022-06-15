@@ -786,6 +786,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <summary>
         /// Verify that function Insert Async Enumerable has been called.
         /// </summary>
+        /// <returns>Task.</returns>
         [Fact]
         public async Task Verify_FunctionInsertAsyncEnumerable_HasBeenCalled()
         {
@@ -834,6 +835,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Insert Async Enumerable profiles.
         /// Should return profiles when profiles created.
         /// </summary>
+        /// <returns>Task.</returns>
         [Fact]
         public async Task InsertAsyncEnumerable_ShouldReturnProfiles_WhenProfilesExists()
         {
@@ -1186,6 +1188,124 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Equal(newUserId, profile.UserId);
+        }
+
+        #endregion
+
+        #region Upadate Async Enumerable function
+
+        /// <summary>
+        /// Verify that function Update Async Enumerable has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionUpdateAsyncEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newProfiles = new List<Data.Models.Profile>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.InsertAsync(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+
+            //Act
+            await _profileService.InsertAsync(newProfiles);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newProfiles[i].UserId = profileIds[i];
+            }
+            await _profileService.UpdateAsync(newProfiles);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.UpdateAsync(newProfiles), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Async Enumerable profile.
+        /// Should return profile when profile updated.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task UpdateAsyncEnumerable_ShouldReturnProfile_WhenProfileExists()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newProfiles = new List<Data.Models.Profile>();
+            var profileIds = new List<string>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+                profileIds.Add(new Guid().ToString());
+            }
+
+            _profileRepositoryMock.Setup(x => x.InsertAsync(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+
+            //Act
+            await _profileService.InsertAsync(newProfiles);
+
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newProfiles[i].UserId = profileIds[i];
+            }
+            await _profileService.UpdateAsync(newProfiles);
+
+            //Assert
+
+            for (var i = 0; i < itemsCount; i++)
+            {
+                Assert.Equal(profileIds[i], newProfiles[i].UserId);
+            }
         }
 
         #endregion
