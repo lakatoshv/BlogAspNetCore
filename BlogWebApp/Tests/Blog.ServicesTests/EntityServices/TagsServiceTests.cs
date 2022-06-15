@@ -594,6 +594,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <summary>
         /// Verify that function Insert Async Enumerable has been called.
         /// </summary>
+        /// <returns>Task.</returns>
         [Fact]
         public async Task Verify_FunctionInsertAsyncEnumerable_HasBeenCalled()
         {
@@ -631,6 +632,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Insert Async Enumerable tags.
         /// Should return tags when tags created.
         /// </summary>
+        /// <returns>Task.</returns>
         [Fact]
         public async Task InsertAsyncEnumerable_ShouldReturnTags_WhenTagsExists()
         {
@@ -674,6 +676,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <summary>
         /// Verify that function Insert Async has been called.
         /// </summary>
+        /// <returns>Task.</returns>
         [Fact]
         public async Task Verify_FunctionInsertAsync_HasBeenCalled()
         {
@@ -808,6 +811,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Verify that function Update Enumerable has been called.
         /// </summary>
         /// <param name="newTagTitle">The new tag title.</param>
+        /// <returns>Task.</returns>
         [Theory]
         [InlineData("New Tag")]
         public void Verify_FunctionUpdateEnumerable_HasBeenCalled(string newTagTitle)
@@ -856,6 +860,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return tag when tag updated.
         /// </summary>
         /// <param name="newTagTitle">The new tag title.</param>
+        /// <returns>Task.</returns>
         [Theory]
         [InlineData("New tag title")]
         public void UpdateEnumerable_ShouldReturnComment_WhenCommentExists(string newTagTitle)
@@ -972,6 +977,104 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Equal(newTagTitle, tag.Title);
+        }
+
+        #endregion
+
+        #region Upadate Async Enumerable function
+
+        /// <summary>
+        /// Verify that function Update Async Enumerable has been called.
+        /// </summary>
+        /// <param name="newTagTitle">The new tag title.</param>
+        [Theory]
+        [InlineData("New Tag")]
+        public async Task Verify_FunctionUpdateAsyncEnumerable_HasBeenCalled(string newTagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.InsertAsync(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+
+            //Act
+            await _tagsService.InsertAsync(newTags);
+            newTags.ForEach(tag =>
+            {
+                tag.Title = newTagTitle;
+            });
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newTags[i].Title = $"{newTagTitle} {i}";
+            }
+            await _tagsService.UpdateAsync(newTags);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.UpdateAsync(newTags), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Async Enumerable tag.
+        /// Should return tag when tag updated.
+        /// </summary>
+        /// <param name="newTagTitle">The new tag title.</param>
+        [Theory]
+        [InlineData("New tag title")]
+        public async Task UpdateAsyncEnumerable_ShouldReturnComment_WhenCommentExists(string newTagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.InsertAsync(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+
+            //Act
+            await _tagsService.InsertAsync(newTags);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newTags[i].Title = $"{newTagTitle} {i}";
+            }
+            await _tagsService.UpdateAsync(newTags);
+
+            //Assert
+            for (var i = 0; i < itemsCount; i++)
+            {
+                Assert.Equal($"{newTagTitle} {i}", newTags[i].Title);
+            }
         }
 
         #endregion
