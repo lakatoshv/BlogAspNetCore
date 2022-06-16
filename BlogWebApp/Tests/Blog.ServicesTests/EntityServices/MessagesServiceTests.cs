@@ -1659,13 +1659,13 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete function
+        #region Delete By Id function
 
         /// <summary>
-        /// Verify that function Delete has been called.
+        /// Verify that function Delete By Id has been called.
         /// </summary>
         [Fact]
-        public void Verify_FunctionDelete_HasBeenCalled()
+        public void Verify_FunctionDeleteById_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -1707,22 +1707,22 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             _messagesService.Insert(newMessage);
-            var tag = _messagesService.Find(messageId);
-            _messagesService.Delete(tag);
+            var message = _messagesService.Find(messageId);
+            _messagesService.Delete(messageId);
             _messagesRepositoryMock.Setup(x => x.GetById(messageId))
                 .Returns(() => null);
             _messagesService.Find(messageId);
 
             //Assert
-            _messagesRepositoryMock.Verify(x => x.Delete(tag), Times.Once);
+            _messagesRepositoryMock.Verify(x => x.Delete(messageId), Times.Once);
         }
 
         /// <summary>
-        /// Delete message.
+        /// Delete By Id message.
         /// Should return nothing when message is deleted.
         /// </summary>
         [Fact]
-        public void Delete_ShouldReturnNothing_WhenMessageDeleted()
+        public void DeleteById_ShouldReturnNothing_WhenMessageDeleted()
         {
             //Arrange
             var random = new Random();
@@ -1765,8 +1765,8 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             _messagesService.Insert(newMessage);
-            var tag = _messagesService.Find(messageId);
-            _messagesService.Delete(tag);
+            var message = _messagesService.Find(messageId);
+            _messagesService.Delete(messageId);
             _messagesRepositoryMock.Setup(x => x.GetById(messageId))
                 .Returns(() => null);
             var deletedMessage = _messagesService.Find(messageId);
@@ -1777,14 +1777,132 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete Async function
+        #region Delete By Object function
 
         /// <summary>
-        /// Verify that function Delete Async has been called.
+        /// Verify that function Delete By Object has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByObject_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+            var newMessage = new Message
+            {
+                SenderId = sender.Id,
+                Sender = sender,
+                RecipientId = recipient.Id,
+                Recipient = recipient,
+                Subject = $"Test subject{messageId}",
+                Body = $"Test body{messageId}"
+            };
+            _messagesRepositoryMock.Setup(x => x.Insert(newMessage))
+                .Callback(() =>
+                {
+                    newMessage.Id = messageId;
+                });
+            _messagesRepositoryMock.Setup(x => x.GetById(messageId))
+                .Returns(() => newMessage);
+
+            //Act
+            _messagesService.Insert(newMessage);
+            var message = _messagesService.Find(messageId);
+            _messagesService.Delete(message);
+            _messagesRepositoryMock.Setup(x => x.GetById(messageId))
+                .Returns(() => null);
+            _messagesService.Find(messageId);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.Delete(message), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Object message.
+        /// Should return nothing when message is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteByObject_ShouldReturnNothing_WhenMessageDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+            var newMessage = new Message
+            {
+                Id = messageId,
+                SenderId = sender.Id,
+                Sender = sender,
+                RecipientId = recipient.Id,
+                Recipient = recipient,
+                Subject = $"Test subject{messageId}",
+                Body = $"Test body{messageId}"
+            };
+            _messagesRepositoryMock.Setup(x => x.Insert(newMessage))
+                .Callback(() =>
+                {
+                    newMessage.Id = messageId;
+                });
+            _messagesRepositoryMock.Setup(x => x.GetById(messageId))
+                .Returns(() => newMessage);
+
+            //Act
+            _messagesService.Insert(newMessage);
+            var message = _messagesService.Find(messageId);
+            _messagesService.Delete(message);
+            _messagesRepositoryMock.Setup(x => x.GetById(messageId))
+                .Returns(() => null);
+            var deletedMessage = _messagesService.Find(messageId);
+
+            //Assert
+            Assert.Null(deletedMessage);
+        }
+
+        #endregion
+
+        #region Delete Async By Object function
+
+        /// <summary>
+        /// Verify that function Delete Async By Object has been called.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task Verify_FunctionDeleteAsync_HasBeenCalled()
+        public async Task Verify_FunctionDeleteAsyncByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -1835,12 +1953,12 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Async delete message.
+        /// Async delete by object message.
         /// Should return nothing when message is deleted.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsync_ShouldReturnNothing_WhenMessageIsDeleted()
+        public async Task DeleteAsyncByObject_ShouldReturnNothing_WhenMessageIsDeleted()
         {
             //Arrange
             var random = new Random();
