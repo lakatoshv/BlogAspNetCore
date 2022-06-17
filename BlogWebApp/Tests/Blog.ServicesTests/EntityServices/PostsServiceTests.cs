@@ -1159,13 +1159,87 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete function
+        #region Delete By Id function
 
         /// <summary>
-        /// Verify that function Delete has been called.
+        /// Verify that function Delete By Id has been called.
         /// </summary>
         [Fact]
-        public void Verify_FunctionDelete_HasBeenCalled()
+        public void Verify_FunctionDeleteById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Id = postId,
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+            _postsRepositoryMock.Setup(x => x.GetById(postId))
+                .Returns(() => newPost);
+
+            //Act
+            _postsService.Insert(newPost);
+            var post = _postsService.Find(postId);
+            _postsService.Delete(postId);
+            _postsRepositoryMock.Setup(x => x.GetById(postId))
+                .Returns(() => null);
+            _postsService.Find(postId);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.Delete(postId), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Id post.
+        /// Should return nothing when post is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteById_ShouldReturnNothing_WhenPostIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+
+            _postsRepositoryMock.Setup(x => x.Insert(newPost))
+                .Callback(() =>
+                {
+                    newPost.Id = postId;
+                });
+            _postsRepositoryMock.Setup(x => x.GetById(postId))
+                .Returns(() => newPost);
+
+            //Act
+            _postsService.Insert(newPost);
+            var post = _postsService.Find(postId);
+            _postsService.Delete(postId);
+            _postsRepositoryMock.Setup(x => x.GetById(postId))
+                .Returns(() => null);
+            var deletedPost = _postsService.Find(postId);
+
+            //Assert
+            Assert.Null(deletedPost);
+        }
+
+        #endregion
+
+        #region Delete By Object function
+
+        /// <summary>
+        /// Verify that function Delete By Object has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -1194,11 +1268,11 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Delete post.
+        /// Delete By Object post.
         /// Should return nothing when post is deleted.
         /// </summary>
         [Fact]
-        public void Delete_ShouldReturnNothing_WhenPostIsDeleted()
+        public void DeleteByObject_ShouldReturnNothing_WhenPostIsDeleted()
         {
             //Arrange
             var random = new Random();
@@ -1233,14 +1307,14 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete Async function
+        #region Delete Async By Object function
 
         /// <summary>
-        /// Verify that function Delete Async has been called.
+        /// Verify that function Delete Async By Object has been called.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task Verify_FunctionDeleteAsync_HasBeenCalled()
+        public async Task Verify_FunctionDeleteAsyncByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -1266,12 +1340,12 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Async delete post.
+        /// Async delete by object post.
         /// Should return nothing when post is deleted.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsync_ShouldReturnNothing_WhenPostIsDeleted()
+        public async Task DeleteAsyncByObject_ShouldReturnNothing_WhenPostIsDeleted()
         {
             //Arrange
             var random = new Random();
