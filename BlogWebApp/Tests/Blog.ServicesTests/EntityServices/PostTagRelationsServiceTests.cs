@@ -2006,13 +2006,98 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete function
+        #region Delete By Id function
 
         /// <summary>
-        /// Verify that function Delete has been called.
+        /// Verify that function Delete By Id has been called.
         /// </summary>
         [Fact]
-        public void Verify_FunctionDelete_HasBeenCalled()
+        public void Verify_FunctionDeleteById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelation))
+                .Callback(() =>
+                {
+                    newPostsTagsRelation.Id = id;
+                });
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
+                .Returns(() => newPostsTagsRelation);
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelation);
+            var postsTagsRelations = _postsTagsRelationsService.Find(id);
+            _postsTagsRelationsService.Delete(id);
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
+                .Returns(() => null);
+            _postsTagsRelationsService.Find(id);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.Delete(id), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Id post tag relation.
+        /// Should return nothing when post tag relation is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteById_ShouldReturnNothing_WhenPostTagRelationIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelation))
+                .Callback(() =>
+                {
+                    newPostsTagsRelation.Id = id;
+                });
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
+                .Returns(() => newPostsTagsRelation);
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelation);
+            var postsTagsRelations = _postsTagsRelationsService.Find(id);
+            _postsTagsRelationsService.Delete(id);
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
+                .Returns(() => null);
+            var postsTagsRelation = _postsTagsRelationsService.Find(id);
+
+            //Assert
+            Assert.Null(postsTagsRelation);
+        }
+
+        #endregion
+
+        #region Delete By Object function
+
+        /// <summary>
+        /// Verify that function Delete By Object has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -2049,11 +2134,11 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Delete post tag relation.
+        /// Delete By Object post tag relation.
         /// Should return nothing when post tag relation is deleted.
         /// </summary>
         [Fact]
-        public void Delete_ShouldReturnNothing_WhenPostTagRelationIsDeleted()
+        public void DeleteByObject_ShouldReturnNothing_WhenPostTagRelationIsDeleted()
         {
             //Arrange
             var random = new Random();
@@ -2091,14 +2176,14 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete Async function
+        #region Delete Async By Object function
 
         /// <summary>
-        /// Verify that function Delete Async has been called.
+        /// Verify that function Delete Async By Object has been called.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task Verify_FunctionDeleteAsync_HasBeenCalled()
+        public async Task Verify_FunctionDeleteAsyncByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -2135,12 +2220,12 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Async delete post tag relation.
+        /// Async delete by object post tag relation.
         /// Should return nothing when post tag relation is deleted.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsync_ShouldReturnNothing_WhenPostTagRelationIsDeleted()
+        public async Task DeleteAsyncByObject_ShouldReturnNothing_WhenPostTagRelationIsDeleted()
         {
             //Arrange
             var random = new Random();
