@@ -1310,13 +1310,110 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete function
+        #region Delete By Id function
 
         /// <summary>
-        /// Verify that function Delete has been called.
+        /// Verify that function Delete By Id has been called.
         /// </summary>
         [Fact]
-        public void Verify_FunctionDelete_HasBeenCalled()
+        public void Verify_FunctionDeleteById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfile))
+                .Callback(() =>
+                {
+                    newProfile.Id = profileId;
+                });
+            _profileRepositoryMock.Setup(x => x.GetById(profileId))
+                .Returns(() => newProfile);
+
+            //Act
+            _profileService.Insert(newProfile);
+            var profile = _profileService.Find(profileId);
+            _profileService.Delete(profileId);
+            _profileRepositoryMock.Setup(x => x.GetById(profileId))
+                .Returns(() => null);
+            _profileService.Find(profileId);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.Delete(profile), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Id profile.
+        /// Should return nothing when profile is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteById_ShouldReturnNothing_WhenProfileDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfile))
+                .Callback(() =>
+                {
+                    newProfile.Id = profileId;
+                });
+            _profileRepositoryMock.Setup(x => x.GetById(profileId))
+                .Returns(() => newProfile);
+
+            //Act
+            _profileService.Insert(newProfile);
+            var profile = _profileService.Find(profileId);
+            _profileService.Delete(profileId);
+            _profileRepositoryMock.Setup(x => x.GetById(profileId))
+                .Returns(() => null);
+            var deletedProfile = _profileService.Find(profileId);
+
+            //Assert
+            Assert.Null(deletedProfile);
+        }
+
+        #endregion
+
+        #region Delete By Object function
+
+        /// <summary>
+        /// Verify that function Delete By Object has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -1359,11 +1456,11 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Delete profile.
+        /// Delete By Object profile.
         /// Should return nothing when profile is deleted.
         /// </summary>
         [Fact]
-        public void Delete_ShouldReturnNothing_WhenProfileDeleted()
+        public void DeleteByObject_ShouldReturnNothing_WhenProfileDeleted()
         {
             //Arrange
             var random = new Random();
@@ -1407,14 +1504,14 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete Async function
+        #region Delete Async By Object function
 
         /// <summary>
-        /// Verify that function Delete Async has been called.
+        /// Verify that function Delete Async By Object has been called.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task Verify_FunctionDeleteAsync_HasBeenCalled()
+        public async Task Verify_FunctionDeleteAsyncByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -1454,12 +1551,12 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Async delete message.
+        /// Async delete by object message.
         /// Should return nothing when profile is deleted.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsync_ShouldReturnNothing_WhenProfileIsDeleted()
+        public async Task DeleteAsyncByObject_ShouldReturnNothing_WhenProfileIsDeleted()
         {
             //Arrange
             var random = new Random();
