@@ -1355,7 +1355,7 @@ namespace Blog.ServicesTests.EntityServices
             _profileService.Find(profileId);
 
             //Assert
-            _profileRepositoryMock.Verify(x => x.Delete(profile), Times.Once);
+            _profileRepositoryMock.Verify(x => x.Delete(profileId), Times.Once);
         }
 
         /// <summary>

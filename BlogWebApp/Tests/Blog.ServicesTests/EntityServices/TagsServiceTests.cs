@@ -1079,13 +1079,81 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete function
+        #region Delete By Id function
 
         /// <summary>
-        /// Verify that function Delete has been called.
+        /// Verify that function Delete By Id has been called.
         /// </summary>
         [Fact]
-        public void Verify_FunctionDelete_HasBeenCalled()
+        public void Verify_FunctionDeleteById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Id = tagId,
+                Title = $"Tag {tagId}",
+            };
+            _tagsRepositoryMock.Setup(x => x.GetById(tagId))
+                .Returns(() => newTag);
+
+            //Act
+            _tagsService.Insert(newTag);
+            var tag = _tagsService.Find(tagId);
+            _tagsService.Delete(tagId);
+            _tagsRepositoryMock.Setup(x => x.GetById(tagId))
+                .Returns(() => null);
+            _tagsService.Find(tagId);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.Delete(tagId), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Id tag.
+        /// Should return nothing when tag is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteById_ShouldReturnNothing_WhenTagsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Title = $"Tag {tagId}",
+            };
+
+            _tagsRepositoryMock.Setup(x => x.Insert(newTag))
+                .Callback(() =>
+                {
+                    newTag.Id = tagId;
+                });
+            _tagsRepositoryMock.Setup(x => x.GetById(tagId))
+                .Returns(() => newTag);
+
+            //Act
+            _tagsService.Insert(newTag);
+            var tag = _tagsService.Find(tagId);
+            _tagsService.Delete(tagId);
+            _tagsRepositoryMock.Setup(x => x.GetById(tagId))
+                .Returns(() => null);
+            var deletedTag = _tagsService.Find(tagId);
+
+            //Assert
+            Assert.Null(deletedTag);
+        }
+
+        #endregion
+
+        #region Delete By Object function
+
+        /// <summary>
+        /// Verify that function Delete By Object has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -1111,11 +1179,11 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Delete tag.
+        /// Delete By Object tag.
         /// Should return nothing when tag is deleted.
         /// </summary>
         [Fact]
-        public void Delete_ShouldReturnNothing_WhenTagsDeleted()
+        public void DeleteByObject_ShouldReturnNothing_WhenTagsDeleted()
         {
             //Arrange
             var random = new Random();
@@ -1147,14 +1215,14 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete Async function
+        #region Delete By Object Async function
 
         /// <summary>
-        /// Verify that function Delete Async has been called.
+        /// Verify that function Delete Async By Object has been called.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task Verify_FunctionDeleteAsync_HasBeenCalled()
+        public async Task Verify_FunctionDeleteAsyncByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -1177,12 +1245,12 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Async delete comment.
+        /// Async delete by object comment.
         /// Should return nothing when tag is deleted.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsync_ShouldReturnNothing_WhenTagIsDeleted()
+        public async Task DeleteAsyncByObject_ShouldReturnNothing_WhenTagIsDeleted()
         {
             //Arrange
             var random = new Random();
