@@ -1209,6 +1209,73 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Delete Async By Id function
+
+        /// <summary>
+        /// Verify that function Delete Async By Id has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var newComment = new Comment
+            {
+                Id = commentId,
+                CommentBody = $"Comment {commentId}",
+            };
+            _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
+                .ReturnsAsync(() => newComment);
+
+            //Act
+            await _commentsService.InsertAsync(newComment);
+            var comment = await _commentsService.FindAsync(commentId);
+            await _commentsService.DeleteAsync(commentId);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.DeleteAsync(commentId), Times.Once);
+        }
+
+        /// <summary>
+        /// Async delete by id comment.
+        /// Should return nothing when comment is deleted.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task DeleteAsyncById_ShouldReturnNothing_WhenCommentIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var newComment = new Comment
+            {
+                CommentBody = $"Comment {commentId}",
+            };
+
+            _commentsRepositoryMock.Setup(x => x.InsertAsync(newComment))
+                .Callback(() =>
+                {
+                    newComment.Id = commentId;
+                });
+            _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
+                .ReturnsAsync(() => newComment);
+
+            //Act
+            await _commentsService.InsertAsync(newComment);
+            var comment = await _commentsService.FindAsync(commentId);
+            await _commentsService.DeleteAsync(commentId);
+            _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
+                .ReturnsAsync(() => null);
+            var deletedComment = await _commentsService.FindAsync(commentId);
+
+            //Assert
+            Assert.Null(deletedComment);
+        }
+
+        #endregion
+
         #region Delete Async By Object function
 
         /// <summary>
@@ -1216,7 +1283,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task Verify_FunctionDeleteByObjectAsync_HasBeenCalled()
+        public async Task Verify_FunctionDeleteAsyncByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -1244,7 +1311,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteByObjectAsync_ShouldReturnNothing_WhenCommentIsDeleted()
+        public async Task DeleteAsyncByObject_ShouldReturnNothing_WhenCommentIsDeleted()
         {
             //Arrange
             var random = new Random();
