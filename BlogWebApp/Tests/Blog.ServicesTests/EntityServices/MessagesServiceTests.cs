@@ -1895,6 +1895,124 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Delete Async By Id function
+
+        /// <summary>
+        /// Verify that function Delete Async By Id has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+            var newMessage = new Message
+            {
+                SenderId = sender.Id,
+                Sender = sender,
+                RecipientId = recipient.Id,
+                Recipient = recipient,
+                Subject = $"Test subject{messageId}",
+                Body = $"Test body{messageId}"
+            };
+
+            _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessage))
+                .Callback(() =>
+                {
+                    newMessage.Id = messageId;
+                });
+            _messagesRepositoryMock.Setup(x => x.GetByIdAsync(messageId))
+                .ReturnsAsync(() => newMessage);
+
+            //Act
+            await _messagesService.InsertAsync(newMessage);
+            var message = await _messagesService.FindAsync(messageId);
+            await _messagesService.DeleteAsync(messageId);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.DeleteAsync(messageId), Times.Once);
+        }
+
+        /// <summary>
+        /// Async delete by id message.
+        /// Should return nothing when message is deleted.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task DeleteAsyncById_ShouldReturnNothing_WhenMessageIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+            var newMessage = new Message
+            {
+                SenderId = sender.Id,
+                Sender = sender,
+                RecipientId = recipient.Id,
+                Recipient = recipient,
+                Subject = $"Test subject{messageId}",
+                Body = $"Test body{messageId}"
+            };
+
+            _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessage))
+                .Callback(() =>
+                {
+                    newMessage.Id = messageId;
+                });
+            _messagesRepositoryMock.Setup(x => x.GetByIdAsync(messageId))
+                .ReturnsAsync(() => newMessage);
+
+            //Act
+            await _messagesService.InsertAsync(newMessage);
+            var message = await _messagesService.FindAsync(messageId);
+            await _messagesService.DeleteAsync(messageId);
+            _messagesRepositoryMock.Setup(x => x.GetByIdAsync(messageId))
+                .ReturnsAsync(() => null);
+            var deletedMessage = await _messagesService.FindAsync(messageId);
+
+            //Assert
+            Assert.Null(deletedMessage);
+        }
+
+        #endregion
+
         #region Delete Async By Object function
 
         /// <summary>
