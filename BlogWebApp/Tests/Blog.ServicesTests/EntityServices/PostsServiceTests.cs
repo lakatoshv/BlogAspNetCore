@@ -1307,6 +1307,79 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Delete Async By Id function
+
+        /// <summary>
+        /// Verify that function Delete Async By Id has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Id = postId,
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+            _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
+                .ReturnsAsync(() => newPost);
+
+            //Act
+            await _postsService.InsertAsync(newPost);
+            var post = await _postsService.FindAsync(postId);
+            await _postsService.DeleteAsync(postId);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.DeleteAsync(post), Times.Once);
+        }
+
+        /// <summary>
+        /// Async delete by id post.
+        /// Should return nothing when post is deleted.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task DeleteAsyncById_ShouldReturnNothing_WhenPostIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+
+            _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
+                .Callback(() =>
+                {
+                    newPost.Id = postId;
+                });
+            _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
+                .ReturnsAsync(() => newPost);
+
+            //Act
+            await _postsService.InsertAsync(newPost);
+            var post = await _postsService.FindAsync(postId);
+            await _postsService.DeleteAsync(postId);
+            _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
+                .ReturnsAsync(() => null);
+            var deletedPost = await _postsService.FindAsync(postId);
+
+            //Assert
+            Assert.Null(deletedPost);
+        }
+
+        #endregion
+
         #region Delete Async By Object function
 
         /// <summary>
