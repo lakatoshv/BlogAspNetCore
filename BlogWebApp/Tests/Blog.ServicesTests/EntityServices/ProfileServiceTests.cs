@@ -1547,7 +1547,7 @@ namespace Blog.ServicesTests.EntityServices
             await _profileService.DeleteAsync(profileId);
 
             //Assert
-            _profileRepositoryMock.Verify(x => x.DeleteAsync(profile), Times.Once);
+            _profileRepositoryMock.Verify(x => x.DeleteAsync(profileId), Times.Once);
         }
 
         /// <summary>

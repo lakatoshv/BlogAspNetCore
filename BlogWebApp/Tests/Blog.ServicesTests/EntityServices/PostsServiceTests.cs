@@ -1336,7 +1336,7 @@ namespace Blog.ServicesTests.EntityServices
             await _postsService.DeleteAsync(postId);
 
             //Assert
-            _postsRepositoryMock.Verify(x => x.DeleteAsync(post), Times.Once);
+            _postsRepositoryMock.Verify(x => x.DeleteAsync(postId), Times.Once);
         }
 
         /// <summary>

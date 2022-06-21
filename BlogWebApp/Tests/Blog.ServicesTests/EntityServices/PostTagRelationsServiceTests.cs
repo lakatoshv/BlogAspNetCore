@@ -2216,7 +2216,7 @@ namespace Blog.ServicesTests.EntityServices
             await _postsTagsRelationsService.FindAsync(id);
 
             //Assert
-            _postsTagsRelationsRepositoryMock.Verify(x => x.DeleteAsync(postsTagsRelation), Times.Once);
+            _postsTagsRelationsRepositoryMock.Verify(x => x.DeleteAsync(id), Times.Once);
         }
 
         /// <summary>
