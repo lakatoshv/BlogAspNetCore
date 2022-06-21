@@ -1215,6 +1215,73 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Delete By Id Async function
+
+        /// <summary>
+        /// Verify that function Delete Async By Id has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Id = tagId,
+                Title = $"Tag {tagId}",
+            };
+            _tagsRepositoryMock.Setup(x => x.GetByIdAsync(tagId))
+                .ReturnsAsync(() => newTag);
+
+            //Act
+            await _tagsService.InsertAsync(newTag);
+            var comment = await _tagsService.FindAsync(tagId);
+            await _tagsService.DeleteAsync(tagId);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.DeleteAsync(tagId), Times.Once);
+        }
+
+        /// <summary>
+        /// Async delete by id comment.
+        /// Should return nothing when tag is deleted.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task DeleteAsyncById_ShouldReturnNothing_WhenTagIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Title = $"Tag {tagId}",
+            };
+
+            _tagsRepositoryMock.Setup(x => x.InsertAsync(newTag))
+                .Callback(() =>
+                {
+                    newTag.Id = tagId;
+                });
+            _tagsRepositoryMock.Setup(x => x.GetByIdAsync(tagId))
+                .ReturnsAsync(() => newTag);
+
+            //Act
+            await _tagsService.InsertAsync(newTag);
+            var tag = await _tagsService.FindAsync(tagId);
+            await _tagsService.DeleteAsync(tagId);
+            _tagsRepositoryMock.Setup(x => x.GetByIdAsync(tagId))
+                .ReturnsAsync(() => null);
+            var deletedTag = await _tagsService.FindAsync(tagId);
+
+            //Assert
+            Assert.Null(deletedTag);
+        }
+
+        #endregion
+
         #region Delete By Object Async function
 
         /// <summary>
