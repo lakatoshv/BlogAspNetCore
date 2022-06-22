@@ -1147,7 +1147,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Verify that function Delete By Object has been called.
         /// </summary>
         [Fact]
-        public void Verify_FunctionDelete_HasBeenCalled()
+        public void Verify_FunctionDeleteByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -1205,6 +1205,95 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(deletedComment);
+        }
+
+        #endregion
+
+        #region Delete By Enumerable function
+
+        /// <summary>
+        /// Verify that function Delete By Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newComments = new List<Comment>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newComments.Add(new Comment
+                {
+                    CommentBody = $"Comment {itemsCount}",
+                });
+            }
+
+            _commentsRepositoryMock.Setup(x => x.Insert(newComments))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newComments[i].Id = commentId + i;
+                    }
+                });
+            _commentsRepositoryMock.Setup(x => x.Delete(newComments))
+                .Callback(() =>
+                {
+                    newComments = null;
+                });
+
+            //Act
+            _commentsService.Insert(newComments);
+            _commentsService.Delete(newComments);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.Delete(newComments), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Enumerable comment.
+        /// Should return nothing when comment is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteByEnumerable_ShouldReturnNothing_WhenCommentIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newComments = new List<Comment>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newComments.Add(new Comment
+                {
+                    CommentBody = $"Comment {itemsCount}",
+                });
+            }
+
+            _commentsRepositoryMock.Setup(x => x.Insert(newComments))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newComments[i].Id = commentId + i;
+                    }
+                });
+            _commentsRepositoryMock.Setup(x => x.Delete(newComments))
+                .Callback(() =>
+                {
+                    newComments = null;
+                });
+
+            //Act
+            _commentsService.Insert(newComments);
+            _commentsService.Delete(newComments);
+
+            //Assert
+            Assert.Null(newComments);
         }
 
         #endregion
