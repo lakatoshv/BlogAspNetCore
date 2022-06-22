@@ -1215,6 +1215,95 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Delete By Enumerable function
+
+        /// <summary>
+        /// Verify that function Delete By Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.Insert(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+            _tagsRepositoryMock.Setup(x => x.Delete(newTags))
+                .Callback(() =>
+                {
+                    newTags = null;
+                });
+
+            //Act
+            _tagsService.Insert(newTags);
+            _tagsService.Delete(newTags);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.Delete(newTags), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Enumerable tag.
+        /// Should return nothing when tag is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteByEnumerable_ShouldReturnNothing_WhenTagsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.Insert(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+            _tagsRepositoryMock.Setup(x => x.Delete(newTags))
+                .Callback(() =>
+                {
+                    newTags = null;
+                });
+
+            //Act
+            _tagsService.Insert(newTags);
+            _tagsService.Delete(newTags);
+
+            //Assert
+            Assert.Null(newTags);
+        }
+
+        #endregion
+
         #region Delete By Id Async function
 
         /// <summary>
