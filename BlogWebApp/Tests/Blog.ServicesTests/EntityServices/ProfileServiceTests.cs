@@ -1504,6 +1504,117 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Delete By Enumerable function
+
+        /// <summary>
+        /// Verify that function Delete By Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newProfiles = new List<Data.Models.Profile>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+            _profileRepositoryMock.Setup(x => x.Delete(newProfiles))
+                .Callback(() =>
+                {
+                    newProfiles = null;
+                });
+
+            //Act
+            _profileService.Insert(newProfiles);
+            _profileService.Delete(newProfiles);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.Delete(newProfiles), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Enumerable profile.
+        /// Should return nothing when profile is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteByEnumerable_ShouldReturnNothing_WhenProfileDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newProfiles = new List<Data.Models.Profile>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+            _profileRepositoryMock.Setup(x => x.Delete(newProfiles))
+                .Callback(() =>
+                {
+                    newProfiles = null;
+                });
+
+            //Act
+            _profileService.Insert(newProfiles);
+            _profileService.Delete(newProfiles);
+
+            //Assert
+            Assert.Null(newProfiles);
+        }
+
+        #endregion
+
         #region Delete Async By Id function
 
         /// <summary>
