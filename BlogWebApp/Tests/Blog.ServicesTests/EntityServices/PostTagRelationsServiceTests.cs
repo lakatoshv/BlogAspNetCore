@@ -2176,6 +2176,101 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Delete By Enumerable function
+
+        /// <summary>
+        /// Verify that function Delete By Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelations);
+            _postsTagsRelationsService.Delete(newPostsTagsRelations);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.Delete(newPostsTagsRelations), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Enumerable post tag relation.
+        /// Should return nothing when post tag relation is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteByEnumerable_ShouldReturnNothing_WhenPostTagRelationIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelations);
+            _postsTagsRelationsService.Delete(newPostsTagsRelations);
+
+            //Assert
+            Assert.Null(newPostsTagsRelations);
+        }
+
+        #endregion
+
         #region Delete Async By Id function
 
         /// <summary>
