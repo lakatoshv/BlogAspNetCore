@@ -1101,7 +1101,7 @@ namespace Blog.ServicesTests.EntityServices
             _commentsService.Find(commentId);
 
             //Assert
-            _commentsRepositoryMock.Verify(x => x.Delete(commentId), Times.Once);
+            _commentsRepositoryMock.Verify(x => x.Delete(newComment), Times.Once);
         }
 
         /// <summary>
@@ -1239,11 +1239,6 @@ namespace Blog.ServicesTests.EntityServices
                         newComments[i].Id = commentId + i;
                     }
                 });
-            _commentsRepositoryMock.Setup(x => x.Delete(newComments))
-                .Callback(() =>
-                {
-                    newComments = null;
-                });
 
             //Act
             _commentsService.Insert(newComments);
@@ -1324,7 +1319,7 @@ namespace Blog.ServicesTests.EntityServices
             await _commentsService.DeleteAsync(commentId);
 
             //Assert
-            _commentsRepositoryMock.Verify(x => x.DeleteAsync(commentId), Times.Once);
+            _commentsRepositoryMock.Verify(x => x.DeleteAsync(newComment), Times.Once);
         }
 
         /// <summary>
@@ -1428,6 +1423,92 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(deletedComment);
+        }
+
+        #endregion
+
+        #region Delete Async By Enumerable function
+
+        /// <summary>
+        /// Verify that function Delete Async By Enumerable has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newComments = new List<Comment>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newComments.Add(new Comment
+                {
+                    CommentBody = $"Comment {itemsCount}",
+                });
+            }
+
+            _commentsRepositoryMock.Setup(x => x.InsertAsync(newComments))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newComments[i].Id = commentId + i;
+                    }
+                });
+
+            //Act
+            await _commentsService.InsertAsync(newComments);
+            await _commentsService.DeleteAsync(newComments);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.DeleteAsync(newComments), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete Async By Enumerable comment.
+        /// Should return nothing when comment is deleted.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task DeleteAsyncByEnumerable_ShouldReturnNothing_WhenCommentIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var commentId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newComments = new List<Comment>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newComments.Add(new Comment
+                {
+                    CommentBody = $"Comment {itemsCount}",
+                });
+            }
+
+            _commentsRepositoryMock.Setup(x => x.InsertAsync(newComments))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newComments[i].Id = commentId + i;
+                    }
+                });
+            _commentsRepositoryMock.Setup(x => x.DeleteAsync(newComments))
+                .Callback(() =>
+                {
+                    newComments = null;
+                });
+
+            //Act
+            await _commentsService.InsertAsync(newComments);
+            await _commentsService.DeleteAsync(newComments);
+
+            //Assert
+            Assert.Null(newComments);
         }
 
         #endregion
