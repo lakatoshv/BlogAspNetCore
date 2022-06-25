@@ -1714,7 +1714,7 @@ namespace Blog.ServicesTests.EntityServices
             _messagesService.Find(messageId);
 
             //Assert
-            _messagesRepositoryMock.Verify(x => x.Delete(messageId), Times.Once);
+            _messagesRepositoryMock.Verify(x => x.Delete(newMessage), Times.Once);
         }
 
         /// <summary>
@@ -1948,11 +1948,6 @@ namespace Blog.ServicesTests.EntityServices
                         newMessages[i].Id = messageId + i;
                     }
                 });
-            _messagesRepositoryMock.Setup(x => x.Delete(newMessages))
-                .Callback(() =>
-                {
-                    newMessages = null;
-                });
 
             //Act
             _messagesService.Insert(newMessages);
@@ -2084,7 +2079,7 @@ namespace Blog.ServicesTests.EntityServices
             await _messagesService.DeleteAsync(messageId);
 
             //Assert
-            _messagesRepositoryMock.Verify(x => x.DeleteAsync(messageId), Times.Once);
+            _messagesRepositoryMock.Verify(x => x.DeleteAsync(newMessage), Times.Once);
         }
 
         /// <summary>
@@ -2262,6 +2257,138 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(deletedMessage);
+        }
+
+        #endregion
+
+        #region Delete Async By Enumerable function
+
+        /// <summary>
+        /// Verify that function Delete Async By Enumerable has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+
+            //Act
+            await _messagesService.InsertAsync(newMessages);
+            await _messagesService.DeleteAsync(newMessages);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.DeleteAsync(newMessages), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete Async By Enumerable message.
+        /// Should return nothing when message is deleted.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task DeleteAsyncByEnumerable_ShouldReturnNothing_WhenMessageDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+            _messagesRepositoryMock.Setup(x => x.DeleteAsync(newMessages))
+                .Callback(() =>
+                {
+                    newMessages = null;
+                });
+
+            //Act
+            await _messagesService.InsertAsync(newMessages);
+            await _messagesService.DeleteAsync(newMessages);
+
+            //Assert
+            Assert.Null(newMessages);
         }
 
         #endregion
