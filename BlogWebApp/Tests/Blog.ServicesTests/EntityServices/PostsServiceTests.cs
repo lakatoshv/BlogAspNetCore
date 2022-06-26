@@ -1190,7 +1190,7 @@ namespace Blog.ServicesTests.EntityServices
             _postsService.Find(postId);
 
             //Assert
-            _postsRepositoryMock.Verify(x => x.Delete(postId), Times.Once);
+            _postsRepositoryMock.Verify(x => x.Delete(newPost), Times.Once);
         }
 
         /// <summary>
@@ -1340,11 +1340,6 @@ namespace Blog.ServicesTests.EntityServices
                         newPosts[i].Id = postId + i;
                     }
                 });
-            _postsRepositoryMock.Setup(x => x.Delete(newPosts))
-                .Callback(() =>
-                {
-                    newPosts = null;
-                });
 
             //Act
             _postsService.Insert(newPosts);
@@ -1431,7 +1426,7 @@ namespace Blog.ServicesTests.EntityServices
             await _postsService.DeleteAsync(postId);
 
             //Assert
-            _postsRepositoryMock.Verify(x => x.DeleteAsync(postId), Times.Once);
+            _postsRepositoryMock.Verify(x => x.DeleteAsync(newPost), Times.Once);
         }
 
         /// <summary>
@@ -1544,6 +1539,96 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(deletedPost);
+        }
+
+        #endregion
+
+        #region Delete Async By Enumerable function
+
+        /// <summary>
+        /// Verify that function Delete Async By Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.InsertAsync(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+
+            //Act
+            await _postsService.InsertAsync(newPosts);
+            await _postsService.DeleteAsync(newPosts);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.DeleteAsync(newPosts), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete Async By Enumerable post.
+        /// Should return nothing when post is deleted.
+        /// </summary>
+        [Fact]
+        public async Task DeleteAsyncByEnumerable_ShouldReturnNothing_WhenPostIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.InsertAsync(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+            _postsRepositoryMock.Setup(x => x.DeleteAsync(newPosts))
+                .Callback(() =>
+                {
+                    newPosts = null;
+                });
+
+            //Act
+            await _postsService.InsertAsync(newPosts);
+            await _postsService.DeleteAsync(newPosts);
+
+            //Assert
+            Assert.Null(newPosts);
         }
 
         #endregion
