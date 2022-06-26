@@ -2045,7 +2045,7 @@ namespace Blog.ServicesTests.EntityServices
             _postsTagsRelationsService.Find(id);
 
             //Assert
-            _postsTagsRelationsRepositoryMock.Verify(x => x.Delete(id), Times.Once);
+            _postsTagsRelationsRepositoryMock.Verify(x => x.Delete(newPostsTagsRelation), Times.Once);
         }
 
         /// <summary>
@@ -2260,6 +2260,14 @@ namespace Blog.ServicesTests.EntityServices
                         newPostsTagsRelations[i].Id = id + i;
                     }
                 });
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Delete(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations = null;
+                    }
+                });
 
             //Act
             _postsTagsRelationsService.Insert(newPostsTagsRelations);
@@ -2311,7 +2319,7 @@ namespace Blog.ServicesTests.EntityServices
             await _postsTagsRelationsService.FindAsync(id);
 
             //Assert
-            _postsTagsRelationsRepositoryMock.Verify(x => x.DeleteAsync(id), Times.Once);
+            _postsTagsRelationsRepositoryMock.Verify(x => x.DeleteAsync(newPostsTagsRelation), Times.Once);
         }
 
         /// <summary>
@@ -2441,6 +2449,106 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(postsTagsRelation);
+        }
+
+        #endregion
+
+        #region Delete Async By Enumerable function
+
+        /// <summary>
+        /// Verify that function Delete Async By Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            await _postsTagsRelationsService.InsertAsync(newPostsTagsRelations);
+            await _postsTagsRelationsService.DeleteAsync(newPostsTagsRelations);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.DeleteAsync(newPostsTagsRelations), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete Async By Enumerable post tag relation.
+        /// Should return nothing when post tag relation is deleted.
+        /// </summary>
+        [Fact]
+        public async Task DeleteAsyncByEnumerable_ShouldReturnNothing_WhenPostTagRelationIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+            _postsTagsRelationsRepositoryMock.Setup(x => x.DeleteAsync(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    newPostsTagsRelations = null;
+                });
+
+            //Act
+            await _postsTagsRelationsService.InsertAsync(newPostsTagsRelations);
+            await _postsTagsRelationsService.DeleteAsync(newPostsTagsRelations);
+
+            //Assert
+            Assert.Null(newPostsTagsRelations);
         }
 
         #endregion
