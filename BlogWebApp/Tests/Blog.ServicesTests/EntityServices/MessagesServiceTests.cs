@@ -174,6 +174,136 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get All Async function
+
+        /// <summary>
+        /// Verify that function Get All Async has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(messagesList);
+
+            //Act
+            await _messagesService.GetAllAsync();
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.GetAllAsync(), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async messages.
+        /// Should return messages when messages exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public async Task GetAllAsync_ShouldReturnMessages_WhenMessagesExists(int notEqualCount)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+
+            _messagesRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => messagesList);
+
+            //Act
+            var messages = await _messagesService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(messages);
+            Assert.NotEmpty(messages);
+            Assert.NotEqual(notEqualCount, messages.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async messages.
+        /// Should return nothing when messages does not exists.
+        /// </summary>
+        [Fact]
+        public void GetAllAsync_ShouldReturnNothing_WhenMessagesDoesNotExists()
+        {
+            //Arrange
+            _messagesRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => new List<Message>());
+
+            //Act
+            var messages = _messagesService.GetAll();
+
+            //Assert
+            Assert.Empty(messages);
+        }
+
+        #endregion
+
         #region Get all function With Specification
 
         /// <summary>
@@ -3395,137 +3525,6 @@ namespace Blog.ServicesTests.EntityServices
         #endregion
 
         #region NotTestedYet
-
-        /// <summary>
-        /// Verify that function Get All Async has been called.
-        /// </summary>
-        //[Fact]
-        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var messagesList = new List<Message>();
-
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var recipient = new ApplicationUser
-                {
-                    Id = new Guid().ToString(),
-                    FirstName = $"Test fn{i}",
-                    LastName = $"Test ln{i}",
-                    Email = $"test{i}@test.test",
-                    UserName = $"test{i}@test.test"
-                };
-                messagesList.Add(new Message
-                {
-                    Id = i,
-                    SenderId = sender.Id,
-                    Sender = sender,
-                    RecipientId = recipient.Id,
-                    Recipient = recipient,
-                    Subject = $"Test subject{i}",
-                    Body = $"Test body{i}"
-                });
-            }
-
-
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => commentslist);*/
-
-            //Act
-            var messages = await _messagesService.GetAllAsync();
-
-            //Assert
-            _messagesRepositoryMock.Verify(x => x.GetAll(), Times.Once);
-        }
-
-        /// <summary>
-        /// Async get all tags.
-        /// Should return tags when comments exists.
-        /// </summary>
-        /// <param name="notEqualCount">The not equal count.</param>
-        //[Theory]
-        //[InlineData(0)]
-        public async Task GetAllAsync_ShouldReturnTags_WhenTagsExists(int notEqualCount)
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var messagesList = new List<Message>();
-
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var recipient = new ApplicationUser
-                {
-                    Id = new Guid().ToString(),
-                    FirstName = $"Test fn{i}",
-                    LastName = $"Test ln{i}",
-                    Email = $"test{i}@test.test",
-                    UserName = $"test{i}@test.test"
-                };
-                messagesList.Add(new Message
-                {
-                    Id = i,
-                    SenderId = sender.Id,
-                    Sender = sender,
-                    RecipientId = recipient.Id,
-                    Recipient = recipient,
-                    Subject = $"Test subject{i}",
-                    Body = $"Test body{i}"
-                });
-            }
-
-
-            _messagesRepositoryMock.Setup(x => x.GetAll())
-                .Returns(() => messagesList.AsQueryable());
-
-            //Act
-            var messages = await _messagesService.GetAllAsync();
-
-            //Assert
-            Assert.NotNull(messages);
-            Assert.NotEmpty(messages);
-            Assert.NotEqual(notEqualCount, messages.ToList().Count);
-        }
-
-        /// <summary>
-        /// Async get all tags.
-        /// Should return nothing when tags does not exists.
-        /// </summary>
-        //[Fact]
-        public async Task GetAllAsync_ShouldReturnNothing_WhenTagDoesNotExists()
-        {
-            //Test failed
-            //Arrange
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => new List<Comment>());*/
-
-            //Act
-            var messages = await _messagesService.GetAllAsync();
-
-            //Assert
-            Assert.Empty(messages);
-        }
-
         //SearchAsync(SearchQuery<T> searchQuery)
         //GetAllAsync(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
