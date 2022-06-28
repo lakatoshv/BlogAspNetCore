@@ -78,9 +78,21 @@ namespace Blog.Data
         }
 
         /// <inheritdoc cref="IRepository{TEntity}"/>
+        public async Task<ICollection<TEntity>> GetAllAsync()
+        {
+            return await this.Entities.AsQueryable().ToListAsync();
+        }
+
+        /// <inheritdoc cref="IRepository{TEntity}"/>
         public IQueryable<TEntity> GetAll(ISpecification<TEntity> specification)
         {
             return this.ApplySpecification(specification);
+        }
+
+        /// <inheritdoc cref="IRepository{TEntity}"/>
+        public async Task<ICollection<TEntity>> GetAllAsync(ISpecification<TEntity> specification)
+        {
+            return await this.ApplySpecification(specification).ToListAsync();
         }
 
         /// <inheritdoc cref="IRepository{TEntity}"/>
