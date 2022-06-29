@@ -259,6 +259,220 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get All Async function
+
+        /// <summary>
+        /// Verify that function Get All Async has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                });
+            }
+
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(postsTagsRelationsList);
+
+            //Act
+            await _postsTagsRelationsService.GetAllAsync();
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.GetAllAsync(), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations.
+        /// Should return post tag relations when post tag relations exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public async Task GetAllAsync_ShouldReturnPostTagRelations_WhenPostTagRelationExists(int notEqualCount)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsTagsRelationsList.Add(new PostsTagsRelations()
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i
+                });
+            }
+
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => postsTagsRelationsList);
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations.
+        /// Should return post tag relations when post tag relations exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">The tag title.</param>
+        [Theory]
+        [InlineData(0, "Post", "Tag")]
+        public async void GetAllAsync_ShouldReturnPostTagRelationsWithExistingPostAndTags_WhenPostTagRelationExists(int notEqualCount, string postTitle, string tagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(100);
+            var postEntity = new Post
+            {
+                Id = postId,
+                Title = $"{postTitle} {postId}",
+                Description = $"{postTitle} {postId}",
+                Content = $"{postTitle} {postId}",
+                ImageUrl = $"{postTitle} {postId}",
+            };
+
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{tagTitle} {i}",
+                };
+
+                postsTagsRelationsList.Add(new PostsTagsRelations()
+                {
+                    Id = i,
+                    PostId = postId,
+                    Post = postEntity,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => postsTagsRelationsList);
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
+
+            void Action(PostsTagsRelations postsTagsRelation)
+            {
+                Assert.NotNull(postsTagsRelation.Post);
+                Assert.Contains(postTitle, postsTagsRelation.Post.Title);
+
+                Assert.NotNull(postsTagsRelation.Tag);
+                Assert.Contains(tagTitle, postsTagsRelation.Tag.Title);
+            }
+
+            postsTagsRelations.ToList().ForEach(Action);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations.
+        /// Should return post tag relations when post tag relations exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">The tag title.</param>
+        [Theory]
+        [InlineData(0, "Post", "Tag")]
+        public async Task GetAllAsync_ShouldReturnPostTagRelationsWithExistingPostAndTagsAndShouldContainsTheSameTagsCount_WhenPostTagRelationExists(int notEqualCount, string postTitle, string tagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(100);
+            var postEntity = new Post
+            {
+                Id = postId,
+                Title = $"{postTitle} {postId}",
+                Description = $"{postTitle} {postId}",
+                Content = $"{postTitle} {postId}",
+                ImageUrl = $"{postTitle} {postId}",
+            };
+
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+            var postsTagsRelationsCount = random.Next(100);
+
+            for (var i = 0; i < postsTagsRelationsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{tagTitle} {i}",
+                };
+
+                postsTagsRelationsList.Add(new PostsTagsRelations()
+                {
+                    Id = i,
+                    PostId = postId,
+                    Post = postEntity,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => postsTagsRelationsList);
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
+            Assert.Equal(postsTagsRelationsCount, postsTagsRelations.Count);
+        }
+
+        /// <summary>
+        /// Get all post tag relations.
+        /// Should return nothing when post tag relations does not exists.
+        /// </summary>
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnNothing_WhenPostTagRelationsDoesNotExists()
+        {
+            //Arrange
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => new List<PostsTagsRelations>());
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync();
+
+            //Assert
+            Assert.Empty(postsTagsRelations);
+        }
+
+        #endregion
+
         #region Get all function With Specification
 
         /// <summary>
@@ -3315,86 +3529,6 @@ namespace Blog.ServicesTests.EntityServices
         #endregion
 
         #region NotTestedYet
-        /// <summary>
-        /// Verify that function Get All Async has been called.
-        /// </summary>
-        //[Fact]
-        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
-        {
-            //Test failed
-            //Arrange
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => postslist);*/
-
-            //Act
-            await _postsTagsRelationsService.GetAllAsync();
-
-            //Assert
-            _postsTagsRelationsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
-        }
-
-        /// <summary>
-        /// Async get all posts.
-        /// Should return post tag relations when post tag relations exists.
-        /// </summary>
-        /// <param name="notEqualCount">The not equal count.</param>
-        //[Theory]
-        //[InlineData(0)]
-        public async Task GetAllAsync_ShouldReturnPosts_WhenPostsExists(int notEqualCount)
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var tag = new Tag
-                {
-                    Id = i,
-                    Title = $"Tag {i}"
-                };
-                postsTagsRelationsList.Add(new PostsTagsRelations
-                {
-                    Id = i,
-                    PostId = i,
-                    TagId = i,
-                    Tag = tag
-                });
-            }
-
-
-            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll())
-                .Returns(() => postsTagsRelationsList.AsQueryable());
-
-            //Act
-            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync();
-
-            //Assert
-            Assert.NotNull(postsTagsRelations);
-            Assert.NotEmpty(postsTagsRelations);
-            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
-        }
-
-        /// <summary>
-        /// Async get all posts.
-        /// Should return nothing when post tag relations does not exists.
-        /// </summary>
-        //[Fact]
-        public async Task GetAllAsync_ShouldReturnNothing_WhenPostDoesNotExists()
-        {
-            //Test failed
-            //Arrange
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => new List<Post>());*/
-
-            //Act
-            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync();
-
-            //Assert
-            Assert.Empty(postsTagsRelations);
-        }
-
         //SearchAsync(SearchQuery<T> searchQuery)
         //GetAllAsync(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
