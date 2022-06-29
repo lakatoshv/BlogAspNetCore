@@ -141,6 +141,99 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get All Async function
+
+        /// <summary>
+        /// Verify that function Get All Async has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postsList = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsList.Add(new Post
+                {
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
+                });
+            }
+
+
+            _postsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(postsList);
+
+            //Act
+            await _postsService.GetAllAsync();
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.GetAllAsync(), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async posts.
+        /// Should return posts when posts exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public async Task GetAllAsync_ShouldReturnPosts_WhenPostsExists(int notEqualCount)
+        {
+            //Arrange
+            var random = new Random();
+            var postsList = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsList.Add(new Post
+                {
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
+                });
+            }
+
+
+            _postsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => postsList);
+
+            //Act
+            var posts = await _postsService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(posts);
+            Assert.NotEmpty(posts);
+            Assert.NotEqual(notEqualCount, posts.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async posts.
+        /// Should return nothing when posts does not exists.
+        /// </summary>
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnNothing_WhenPostDoesNotExists()
+        {
+            //Arrange
+            _postsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => new List<Post>());
+
+            //Act
+            var posts = await _postsService.GetAllAsync();
+
+            //Assert
+            Assert.Empty(posts);
+        }
+
+        #endregion
+
         #region Get all function With Specification
 
         /// <summary>
@@ -2331,99 +2424,6 @@ namespace Blog.ServicesTests.EntityServices
         #endregion
 
         #region NotTestedYet
-        /// <summary>
-        /// Verify that function Get All Async has been called.
-        /// </summary>
-        //[Fact]
-        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var postsList = new List<Post>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                postsList.Add(new Post
-                {
-                    Id = i,
-                    Title = $"Created from ServicesTests {i}",
-                    Description = $"Created from ServicesTests {i}",
-                    Content = $"Created from ServicesTests {i}",
-                    ImageUrl = $"Created from ServicesTests {i}",
-                });
-            }
-
-
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => postslist);*/
-
-            //Act
-            var posts = await _postsService.GetAllAsync();
-
-            //Assert
-            _postsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
-        }
-
-        /// <summary>
-        /// Async get all posts.
-        /// Should return posts when posts exists.
-        /// </summary>
-        /// <param name="notEqualCount">The not equal count.</param>
-        //[Theory]
-        //[InlineData(0)]
-        public async Task GetAllAsync_ShouldReturnPosts_WhenPostsExists(int notEqualCount)
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var postslist = new List<Post>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var postId = i;
-                postslist.Add(new Post
-                {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
-                });
-            }
-
-
-            _postsRepositoryMock.Setup(x => x.GetAll())
-                .Returns(() => postslist.AsQueryable());
-
-            //Act
-            var posts = await _postsService.GetAllAsync();
-
-            //Assert
-            Assert.NotNull(posts);
-            Assert.NotEmpty(posts);
-            Assert.NotEqual(notEqualCount, posts.ToList().Count);
-        }
-
-        /// <summary>
-        /// Async get all posts.
-        /// Should return nothing when posts does not exists.
-        /// </summary>
-        //[Fact]
-        public async Task GetAllAsync_ShouldReturnNothing_WhenPostDoesNotExists()
-        {
-            //Test failed
-            //Arrange
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => new List<Post>());*/
-
-            //Act
-            var posts = await _postsService.GetAllAsync();
-
-            //Assert
-            Assert.Empty(posts);
-        }
-
         //SearchAsync(SearchQuery<T> searchQuery)
         //GetAllAsync(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
