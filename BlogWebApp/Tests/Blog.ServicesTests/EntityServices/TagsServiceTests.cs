@@ -131,6 +131,93 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get All Async function
+
+        /// <summary>
+        /// Verify that function Get All Async has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            _tagsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(tagsList);
+
+            //Act
+            await _tagsService.GetAllAsync();
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.GetAllAsync(), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async tags.
+        /// Should return tags when tags exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public async Task GetAllAsync_ShouldReturnTags_WhenTagsExists(int notEqualCount)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            _tagsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => tagsList);
+
+            //Act
+            var tags = await _tagsService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(tags);
+            Assert.NotEmpty(tags);
+            Assert.NotEqual(notEqualCount, tags.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async tags.
+        /// Should return nothing when tags does not exists.
+        /// </summary>
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnNothing_WhenTagsDoesNotExists()
+        {
+            //Arrange
+            _tagsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => new List<Tag>());
+
+            //Act
+            var tags = await _tagsService.GetAllAsync();
+
+            //Assert
+            Assert.Empty(tags);
+        }
+
+        #endregion
+
         #region Get all function With Specification
 
         /// <summary>
@@ -2167,93 +2254,6 @@ namespace Blog.ServicesTests.EntityServices
         #endregion
 
         #region NotTestedYet
-
-        /// <summary>
-        /// Verify that function Get All Async has been called.
-        /// </summary>
-        //[Fact]
-        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var tagsList = new List<Tag>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                tagsList.Add(new Tag
-                {
-                    Id = i,
-                    Title = $"Comment {i}",
-                });
-            }
-
-
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => commentslist);*/
-
-            //Act
-            var comments = await _tagsService.GetAllAsync();
-
-            //Assert
-            _tagsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
-        }
-
-        /// <summary>
-        /// Async get all tags.
-        /// Should return tags when comments exists.
-        /// </summary>
-        /// <param name="notEqualCount">The not equal count.</param>
-        //[Theory]
-        //[InlineData(0)]
-        public async Task GetAllAsync_ShouldReturnTags_WhenTagsExists(int notEqualCount)
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var tagsList = new List<Tag>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                tagsList.Add(new Tag
-                {
-                    Id = i,
-                    Title = $"Comment {i}",
-                });
-            }
-
-
-            _tagsRepositoryMock.Setup(x => x.GetAll())
-                .Returns(() => tagsList.AsQueryable());
-
-            //Act
-            var comments = await _tagsService.GetAllAsync();
-
-            //Assert
-            Assert.NotNull(comments);
-            Assert.NotEmpty(comments);
-            Assert.NotEqual(notEqualCount, comments.ToList().Count);
-        }
-
-        /// <summary>
-        /// Async get all tags.
-        /// Should return nothing when tags does not exists.
-        /// </summary>
-        //[Fact]
-        public async Task GetAllAsync_ShouldReturnNothing_WhenTagDoesNotExists()
-        {
-            //Test failed
-            //Arrange
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => new List<Comment>());*/
-
-            //Act
-            var comments = await _tagsService.GetAllAsync();
-
-            //Assert
-            Assert.Empty(comments);
-        }
-
         //SearchAsync(SearchQuery<T> searchQuery)
         //GetAllAsync(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
