@@ -153,6 +153,113 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get All Async function
+
+        /// <summary>
+        /// Verify that function Get All Async has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
+        {
+            //Arrange  
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(profilesList);
+
+            //Act
+            await _profileService.GetAllAsync();
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.GetAllAsync(), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async profiles.
+        /// Should return profiles when profiles exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public async Task GetAllAsync_ShouldReturnProfiles_WhenProfilesExists(int notEqualCount)
+        {
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(profilesList);
+
+            //Act
+            var profiles = await _profileService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(profiles);
+            Assert.NotEmpty(profiles);
+            Assert.NotEqual(notEqualCount, profiles.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async profiles.
+        /// Should return nothing when profiles does not exists.
+        /// </summary>
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnNothing_WhenProfilesDoesNotExists()
+        {
+            //Arrange
+            _profileRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => new List<Data.Models.Profile>());
+
+            //Act
+            var profiles = await _profileService.GetAllAsync();
+
+            //Assert
+            Assert.Empty(profiles);
+        }
+
+        #endregion
+
         #region Get all function With Specification
 
         /// <summary>
@@ -2547,119 +2654,6 @@ namespace Blog.ServicesTests.EntityServices
         #endregion
 
         #region NotTestedYet
-
-        /// <summary>
-        /// Verify that function Get All Async has been called.
-        /// </summary>
-        //[Fact]
-        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
-            var searchUserId = new Guid().ToString();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var userId = i == 0
-                    ? searchUserId
-                    : new Guid().ToString();
-                var user = new ApplicationUser
-                {
-                    Id = userId,
-                    FirstName = "Test fn",
-                    LastName = "Test ln",
-                    Email = "test@test.test",
-                    UserName = "test@test.test"
-                };
-                profilesList.Add(new Data.Models.Profile
-                {
-                    Id = i,
-                    UserId = userId,
-                    User = user,
-                    ProfileImg = $"img{i}.jpg"
-                });
-            }
-
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => commentslist);*/
-
-            //Act
-            var messages = await _profileService.GetAllAsync();
-
-            //Assert
-            _profileRepositoryMock.Verify(x => x.GetAll(), Times.Once);
-        }
-
-        /// <summary>
-        /// Async get all tags.
-        /// Should return tags when comments exists.
-        /// </summary>
-        /// <param name="notEqualCount">The not equal count.</param>
-        //[Theory]
-        //[InlineData(0)]
-        public async Task GetAllAsync_ShouldReturnTags_WhenTagsExists(int notEqualCount)
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
-            var searchUserId = new Guid().ToString();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var userId = i == 0
-                    ? searchUserId
-                    : new Guid().ToString();
-                var user = new ApplicationUser
-                {
-                    Id = userId,
-                    FirstName = "Test fn",
-                    LastName = "Test ln",
-                    Email = "test@test.test",
-                    UserName = "test@test.test"
-                };
-                profilesList.Add(new Data.Models.Profile
-                {
-                    Id = i,
-                    UserId = userId,
-                    User = user,
-                    ProfileImg = $"img{i}.jpg"
-                });
-            }
-
-            _profileRepositoryMock.Setup(x => x.GetAll())
-                .Returns(() => profilesList.AsQueryable());
-
-            //Act
-            var messages = await _profileService.GetAllAsync();
-
-            //Assert
-            Assert.NotNull(messages);
-            Assert.NotEmpty(messages);
-            Assert.NotEqual(notEqualCount, messages.ToList().Count);
-        }
-
-        /// <summary>
-        /// Async get all tags.
-        /// Should return nothing when tags does not exists.
-        /// </summary>
-        //[Fact]
-        public async Task GetAllAsync_ShouldReturnNothing_WhenTagDoesNotExists()
-        {
-            //Test failed
-            //Arrange
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => new List<Comment>());*/
-
-            //Act
-            var messages = await _profileService.GetAllAsync();
-
-            //Assert
-            Assert.Empty(messages);
-        }
-
         //SearchAsync(SearchQuery<T> searchQuery)
         //GetAllAsync(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
