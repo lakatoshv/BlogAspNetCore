@@ -388,6 +388,175 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get all async function With Specification
+
+        /// <summary>
+        /// Verify that function Get All Async with specification has been called.
+        /// </summary>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData("Tag ")]
+        public async Task Verify_FunctionGetAllAsync_WithSpecification_HasBeenCalled(string tagSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+            var specification = new TagSpecification(x => x.Title.Contains(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => tagsList.Where(x => x.Title.Contains(tagSearch)).ToList());
+
+            //Act
+            await _tagsService.GetAllAsync(specification);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.GetAllAsync(specification), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async tags with specification.
+        /// Should return tags with contains specification when tags exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData(0, "Tag ")]
+        public async Task GetAllAsync_ShouldReturnTags_WithContainsSpecification_WhenTagsExists(int notEqualCount, string tagSearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            var specification = new TagSpecification(x => x.Title.Contains(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => tagsList.Where(x => x.Title.Contains(tagSearch)).ToList());
+
+            //Act
+            var tags = await _tagsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(tags);
+            Assert.NotEmpty(tags);
+            Assert.NotEqual(notEqualCount, tags.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async tags with specification.
+        /// Should return tag with equal specification when tags exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData(1, "Tag 0")]
+        public async void GetAllAsync_ShouldReturnTag_WithEqualsSpecification_WhenTagsExists(int equalCount, string tagSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => tagsList.Where(x => x.Title.Contains(tagSearch)).ToList());
+
+            //Act
+            var tags = await _tagsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(tags);
+            Assert.NotEmpty(tags);
+            Assert.Equal(equalCount, tags.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async tags with specification.
+        /// Should return nothing with  when tags does not exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData(0, "Tag -1")]
+        public async void GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenTagsExists(int equalCount, string tagSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => tagsList.Where(x => x.Title.Contains(tagSearch)).ToList());
+
+            //Act
+            var tags = await _tagsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(tags);
+            Assert.Empty(tags);
+            Assert.Equal(equalCount, tags.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async tags.
+        /// Should return nothing with  when tags does not exists.
+        /// </summary>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData("Tag 0")]
+        public async void GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenTagsDoesNotExists(string tagSearch)
+        {
+            //Arrange
+            var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => new List<Tag>());
+
+            //Act
+            var tags = await _tagsService.GetAllAsync();
+
+            //Assert
+            Assert.Null(tags);
+        }
+
+        #endregion
+
         #region Find function
 
         /// <summary>
@@ -2255,7 +2424,6 @@ namespace Blog.ServicesTests.EntityServices
 
         #region NotTestedYet
         //SearchAsync(SearchQuery<T> searchQuery)
-        //GetAllAsync(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion
