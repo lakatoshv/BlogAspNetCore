@@ -388,6 +388,174 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get all async function With Specification
+
+        /// <summary>
+        /// Verify that function Get All Async with specification has been called.
+        /// </summary>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        [Theory]
+        [InlineData("Comment ")]
+        public async void Verify_FunctionGetAllAsync_WithSpecification_HasBeenCalled(string commentBodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var commentsList = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                commentsList.Add(new Comment
+                {
+                    Id = i,
+                    CommentBody = $"Comment {i}",
+                });
+            }
+
+            var specification = new CommentSpecification(x => x.CommentBody.Contains(commentBodySearch));
+            _commentsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => commentsList.Where(x => x.CommentBody.Contains(commentBodySearch)).ToList());
+
+            //Act
+            await _commentsService.GetAllAsync(specification);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.GetAllAsync(specification), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async comments with specification.
+        /// Should return comments with contains specification when comments exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        [Theory]
+        [InlineData(0, "Comment ")]
+        public async Task GetAllAsync_ShouldReturnComments_WithContainsSpecification_WhenCommentsExists(int notEqualCount, string commentBodySearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var commentsList = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                commentsList.Add(new Comment
+                {
+                    Id = i,
+                    CommentBody = $"Comment {i}",
+                });
+            }
+
+
+            var specification = new CommentSpecification(x => x.CommentBody.Contains(commentBodySearch));
+            _commentsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => commentsList.Where(x => x.CommentBody.Contains(commentBodySearch)).ToList());
+
+            //Act
+            var comments = await _commentsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(comments);
+            Assert.NotEmpty(comments);
+            Assert.NotEqual(notEqualCount, comments.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async comments with specification.
+        /// Should return comment with equal specification when comments exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        [Theory]
+        [InlineData(1, "Comment 0")]
+        public async Task GetAllAsync_ShouldReturnComment_WithEqualsSpecification_WhenCommentsExists(int equalCount, string commentBodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var commentsList = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                commentsList.Add(new Comment
+                {
+                    Id = i,
+                    CommentBody = $"Comment {i}",
+                });
+            }
+
+            var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
+            _commentsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => commentsList.Where(x => x.CommentBody.Contains(commentBodySearch)).ToList());
+
+            //Act
+            var comments = await _commentsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(comments);
+            Assert.NotEmpty(comments);
+            Assert.Equal(equalCount, comments.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async comments with specification.
+        /// Should return nothing with  when comments does not exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        [Theory]
+        [InlineData(0, "Comment -1")]
+        public async void GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenCommentsExists(int equalCount, string commentBodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var commentsList = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                commentsList.Add(new Comment
+                {
+                    Id = i,
+                    CommentBody = $"Comment {i}",
+                });
+            }
+
+
+            var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
+            _commentsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => commentsList.Where(x => x.CommentBody.Contains(commentBodySearch)).ToList());
+
+            //Act
+            var comments = await _commentsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(comments);
+            Assert.Empty(comments);
+            Assert.Equal(equalCount, comments.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async comments.
+        /// Should return nothing with  when comments does not exists.
+        /// </summary>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        [Theory]
+        [InlineData("Comment 0")]
+        public async Task GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenCommentDoesNotExists(string commentBodySearch)
+        {
+            //Arrange
+            var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
+            _commentsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => new List<Comment>());
+
+            //Act
+            var comments = await _commentsService.GetAllAsync();
+
+            //Assert
+            Assert.Null(comments);
+        }
+
+        #endregion
+
         #region Find function
 
         /// <summary>
@@ -2275,9 +2443,7 @@ namespace Blog.ServicesTests.EntityServices
         #endregion
 
         #region NotTestedYet
-
         //SearchAsync(SearchQuery<T> searchQuery)
-        //GetAllAsync(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion
