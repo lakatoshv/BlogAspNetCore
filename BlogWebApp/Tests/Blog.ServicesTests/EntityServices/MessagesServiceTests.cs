@@ -559,6 +559,260 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get all async function With Specification
+
+        /// <summary>
+        /// Verify that function Get All Async with specification has been called.
+        /// </summary>
+        /// <param name="bodySearch">The body search.</param>
+        [Theory]
+        [InlineData("Test body")]
+        public async Task Verify_FunctionGetAllAsync_WithSpecification_HasBeenCalled(string bodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var specification = new MessageSpecification(x => x.Body.Contains(bodySearch));
+            _messagesRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => messagesList.Where(x => x.Body.Contains(bodySearch)).ToList());
+
+            //Act
+            await _messagesService.GetAllAsync(specification);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.GetAllAsync(specification), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async messages with specification.
+        /// Should return messages with contains specification when messages exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="bodySearch">The body search.</param>
+        [Theory]
+        [InlineData(0, "Test body")]
+        public async Task GetAllAsync_ShouldReturnMessages_WithContainsSpecification_WhenMessagesExists(int notEqualCount, string bodySearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var specification = new MessageSpecification(x => x.Body.Contains(bodySearch));
+            _messagesRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => messagesList.Where(x => x.Body.Contains(bodySearch)).ToList());
+
+            //Act
+            var messages = await _messagesService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(messages);
+            Assert.NotEmpty(messages);
+            Assert.NotEqual(notEqualCount, messages.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async messages with specification.
+        /// Should return message with equal specification when messages exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="bodySearch">The body search.</param>
+        [Theory]
+        [InlineData(1, "Test body0")]
+        public async Task GetAllAsync_ShouldReturnMessage_WithEqualsSpecification_WhenMessagesExists(int equalCount, string bodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var specification = new MessageSpecification(x => x.Body.Contains(bodySearch));
+            _messagesRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => messagesList.Where(x => x.Body.Contains(bodySearch)).ToList());
+
+            //Act
+            var messages = await _messagesService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(messages);
+            Assert.NotEmpty(messages);
+            Assert.Equal(equalCount, messages.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async messages with specification.
+        /// Should return nothing with  when messages does not exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="bodySearch">The body search.</param>
+        [Theory]
+        [InlineData(0, "Test body-1")]
+        public async Task GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenMessagesExists(int equalCount, string bodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var specification = new MessageSpecification(x => x.Body.Contains(bodySearch));
+            _messagesRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => messagesList.Where(x => x.Body.Contains(bodySearch)).ToList());
+
+            //Act
+            var messages = await _messagesService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(messages);
+            Assert.Empty(messages);
+            Assert.Equal(equalCount, messages.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async messages.
+        /// Should return nothing with  when messages does not exists.
+        /// </summary>
+        /// <param name="bodySearch">The message search.</param>
+        [Theory]
+        [InlineData("Tag 0")]
+        public async Task GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string bodySearch)
+        {
+            //Arrange
+            var specification = new MessageSpecification(x => x.Body.Equals(bodySearch));
+            _messagesRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => new List<Message>());
+
+            //Act
+            var messages = await _messagesService.GetAllAsync();
+
+            //Assert
+            Assert.Null(messages);
+        }
+
+        #endregion
+
         #region Find function
 
         /// <summary>
@@ -3526,7 +3780,6 @@ namespace Blog.ServicesTests.EntityServices
 
         #region NotTestedYet
         //SearchAsync(SearchQuery<T> searchQuery)
-        //GetAllAsync(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion
