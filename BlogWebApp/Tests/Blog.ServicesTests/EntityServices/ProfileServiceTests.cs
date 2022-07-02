@@ -418,6 +418,164 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get all async function With Specification
+
+        /// <summary>
+        /// Verify that function Get All Async with specification has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionGetAllAsync_WithSpecification_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+            var searchUserId = new Guid().ToString();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = i == 0 ? searchUserId : new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(profilesList.Where(x => x.UserId.Contains(searchUserId)).ToList());
+
+            //Act
+            await _profileService.GetAllAsync(specification);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.GetAllAsync(specification), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async profiles with specification.
+        /// Should return profiles with equals specification when messages exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public async Task GetAllAsync_ShouldReturnProfiles_WithEqualsSpecification_WhenProfilesExists(int notEqualCount)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+            var searchUserId = new Guid().ToString();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = i == 0 ? searchUserId : new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(profilesList.Where(x => x.UserId.Contains(searchUserId)).ToList());
+
+            //Act
+            var profiles = await _profileService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(profiles);
+            Assert.NotEmpty(profiles);
+            Assert.NotEqual(notEqualCount, profiles.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async messages with specification.
+        /// Should return nothing with  when messages does not exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public async void GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenProfilesExists(int equalCount)
+        {
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+            var searchUserId = $"{new Guid()}1";
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(profilesList.Where(x => x.UserId.Contains(searchUserId)).ToList());
+
+            //Act
+            var profiles = await _profileService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(profiles);
+            Assert.Empty(profiles);
+            Assert.Equal(equalCount, profiles.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async messages.
+        /// Should return nothing with  when messages does not exists.
+        /// </summary>
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists()
+        {
+            //Arrange
+            var searchUserId = new Guid().ToString();
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => new List<Data.Models.Profile>());
+
+            //Act
+            var messages = await _profileService.GetAllAsync();
+
+            //Assert
+            Assert.Null(messages);
+        }
+
+        #endregion
+
         #region Find function
 
         /// <summary>
@@ -2655,10 +2813,8 @@ namespace Blog.ServicesTests.EntityServices
 
         #region NotTestedYet
         //SearchAsync(SearchQuery<T> searchQuery)
-        //GetAllAsync(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
-
         #endregion
     }
 }
