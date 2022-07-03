@@ -795,6 +795,328 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get all async function With Specification
+
+        /// <summary>
+        /// Verify that function Get All Async with specification has been called.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Tag ")]
+        public async Task Verify_FunctionGetAllAsync_WithSpecification_HasBeenCalled(string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{titleSearch} {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsTagsRelationsList.Where(x => x.Tag.Title.Contains(titleSearch)).ToList());
+
+            //Act
+            await _postsTagsRelationsService.GetAllAsync(specification);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.GetAllAsync(specification), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations with specification.
+        /// Should return post tag relations with contains specification when post tag relations exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData(0, "Created from ServicesTests ")]
+        public async void GetAllAsync_ShouldReturnPostTagRelations_WithContainsSpecification_WhenPostTagRelationsExists(int notEqualCount, string titleSearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{titleSearch} {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsTagsRelationsList.Where(x => x.Tag.Title.Contains(titleSearch)).ToList());
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations with specification.
+        /// Should return post with equal specification when post tag relations exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData(1, "Tag 0")]
+        public async void GetAllAsync_ShouldReturnPost_WithEqualsSpecification_WhenPostsExists(int equalCount, string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsTagsRelationsList.Where(x => x.Tag.Title.Contains(titleSearch)).ToList());
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.Equal(equalCount, postsTagsRelations.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations.
+        /// Should return post tag relations when post tag relations exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">The tag title.</param>
+        [Theory]
+        [InlineData(0, "Post", "Tag")]
+        public async void GetAllAsync_ShouldReturnPostTagRelationsWithExistingPostAndTags_WithContainsSpecification_WhenPostTagRelationExists(int notEqualCount, string postTitle, string tagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(100);
+            var postEntity = new Post
+            {
+                Id = postId,
+                Title = $"{postTitle} {postId}",
+                Description = $"{postTitle} {postId}",
+                Content = $"{postTitle} {postId}",
+                ImageUrl = $"{postTitle} {postId}",
+            };
+
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{tagTitle} {i}",
+                };
+
+                postsTagsRelationsList.Add(new PostsTagsRelations()
+                {
+                    Id = i,
+                    PostId = postId,
+                    Post = postEntity,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(tagTitle));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsTagsRelationsList.Where(x => x.Tag.Title.Contains(tagTitle)).ToList());
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
+
+            void Action(PostsTagsRelations postsTagsRelation)
+            {
+                Assert.NotNull(postsTagsRelation.Post);
+                Assert.Contains(postTitle, postsTagsRelation.Post.Title);
+
+                Assert.NotNull(postsTagsRelation.Tag);
+                Assert.Contains(tagTitle, postsTagsRelation.Tag.Title);
+            }
+
+            postsTagsRelations.ToList().ForEach(Action);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations.
+        /// Should return post tag relations when post tag relations exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">The tag title.</param>
+        [Theory]
+        [InlineData(0, "Post", "Tag")]
+        public async Task GetAllAsync_ShouldReturnPostTagRelationsWithExistingPostAndTagsAndShouldContainsTheSameTagsCount_WithContainsSpecification_WhenPostTagRelationsExists(int notEqualCount, string postTitle, string tagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(100);
+            var postEntity = new Post
+            {
+                Id = postId,
+                Title = $"{postTitle} {postId}",
+                Description = $"{postTitle} {postId}",
+                Content = $"{postTitle} {postId}",
+                ImageUrl = $"{postTitle} {postId}",
+            };
+
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+            var postsTagsRelationsCount = random.Next(100);
+
+            for (var i = 0; i < postsTagsRelationsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{tagTitle} {i}",
+                };
+
+                postsTagsRelationsList.Add(new PostsTagsRelations()
+                {
+                    Id = i,
+                    PostId = postId,
+                    Post = postEntity,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(tagTitle));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsTagsRelationsList.Where(x => x.Tag.Title.Contains(tagTitle)).ToList());
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
+            Assert.Equal(postsTagsRelationsCount, postsTagsRelations.Count);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations.
+        /// Should return nothing with  when post tag relations does not exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData(0, "Tag -1")]
+        public async void GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostTagRelationsExists(int equalCount, string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsTagsRelationsList.Where(x => x.Tag.Title.Contains(titleSearch)).ToList());
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.Empty(postsTagsRelations);
+            Assert.Equal(equalCount, postsTagsRelations.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations.
+        /// Should return nothing with  when post tag relations does not exists.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests 0")]
+        public async Task GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostTagRelationsDoesNotExists(string titleSearch)
+        {
+            //Arrange
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => new List<PostsTagsRelations>().ToList());
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync();
+
+            //Assert
+            Assert.Null(postsTagsRelations);
+        }
+
+        #endregion
+
         #region Find function
 
         /// <summary>
@@ -3530,7 +3852,6 @@ namespace Blog.ServicesTests.EntityServices
 
         #region NotTestedYet
         //SearchAsync(SearchQuery<T> searchQuery)
-        //GetAllAsync(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion
