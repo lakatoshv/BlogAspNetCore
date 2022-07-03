@@ -415,6 +415,187 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get all async function With Specification
+
+        /// <summary>
+        /// Verify that function Get All Async with specification has been called.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests ")]
+        public async Task Verify_FunctionGetAllAsync_WithSpecification_HasBeenCalled(string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsList = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsList.Add(new Post
+                {
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
+                });
+            }
+
+            var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
+            _postsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsList.Where(x => x.Title.Contains(titleSearch)).ToList());
+
+            //Act
+            await _postsService.GetAllAsync(specification);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.GetAllAsync(specification), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async posts with specification.
+        /// Should return posts with contains specification when posts exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData(0, "Created from ServicesTests ")]
+        public async Task GetAllAsync_ShouldReturnPosts_WithContainsSpecification_WhenPostsExists(int notEqualCount, string titleSearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var postsList = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsList.Add(new Post
+                {
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
+                });
+            }
+
+
+            var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
+            _postsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsList.Where(x => x.Title.Contains(titleSearch)).ToList());
+
+            //Act
+            var posts = await _postsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(posts);
+            Assert.NotEmpty(posts);
+            Assert.NotEqual(notEqualCount, posts.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async posts with specification.
+        /// Should return post with equal specification when posts exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData(1, "Created from ServicesTests 0")]
+        public async void GetAllAsync_ShouldReturnPost_WithEqualsSpecification_WhenPostsExists(int equalCount, string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsList = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsList.Add(new Post
+                {
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
+                });
+            }
+
+
+            var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
+            _postsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsList.Where(x => x.Title.Contains(titleSearch)).ToList());
+
+            //Act
+            var posts = await _postsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(posts);
+            Assert.NotEmpty(posts);
+            Assert.Equal(equalCount, posts.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async posts.
+        /// Should return nothing with  when posts does not exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData(0, "Created from ServicesTests -1")]
+        public async void GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostsExists(int equalCount, string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsList = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsList.Add(new Post
+                {
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
+                });
+            }
+
+
+            var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
+            _postsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsList.Where(x => x.Title.Contains(titleSearch)).ToList());
+
+            //Act
+            var posts = await _postsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(posts);
+            Assert.Empty(posts);
+            Assert.Equal(equalCount, posts.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async posts.
+        /// Should return nothing with  when posts does not exists.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests 0")]
+        public async Task GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostDoesNotExists(string titleSearch)
+        {
+            //Arrange
+            var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
+            _postsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => new List<Post>());
+
+            //Act
+            var posts = await _postsService.GetAllAsync();
+
+            //Assert
+            Assert.Null(posts);
+        }
+
+        #endregion
+
         #region Find function
 
         /// <summary>
@@ -2425,7 +2606,6 @@ namespace Blog.ServicesTests.EntityServices
 
         #region NotTestedYet
         //SearchAsync(SearchQuery<T> searchQuery)
-        //GetAllAsync(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion
