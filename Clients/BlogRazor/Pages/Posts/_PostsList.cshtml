@@ -1,0 +1,108 @@
+﻿@model Blog.Contracts.V1.Responses.PostsResponses.PagedPostsResponse
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-md-8 mx-auto">
+            <a class="btn btn-light">Написати пост</a>
+            @if (Model.Posts.Count == 0)
+            {
+                <div class="text-center">
+                    <b>Дана категорія ще не створена або не має записів</b>
+                </div>
+            }
+            else
+            {
+                <div>
+                    <form>
+                        <div class="input-group md-form form-sm form-2 pl-0 col-5">
+                            <input class="form-control search" type="text" placeholder="Search" aria-label="Search" id="search">
+
+                            <button class="input-group-append" type="submit" id="search-btn">
+                                <span class="input-group-text"><i class="fa fa-search text-grey" aria-hidden="true"></i></span>
+                            </button>
+                        </div>
+                    </form>
+                    <ul class="list-inline left">
+                        <li>Сортувати</li>
+                        <li>за:</li>
+                        <li>
+                            <select id="sort-by">
+                                <option value="createdAt">Датою</option>
+                                <option value="title">Назвою</option>
+                                <option value="author">Автором</option>
+                                <option value="likes">Лайками</option>
+                                <option value="dislikes">Дизлайками</option>
+                            </select>
+                        </li>
+                        <li>тип сортування:</li>
+                        <li>
+                            <select id="order-by">
+                                <option value="asc">За зростанням</option>
+                                <option value="desc">За спаданням</option>
+                            </select>
+                        </li>
+                        <li>
+                            <a id="sorting" class="btn btn-default button-background">Сортувати</a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+
+                    @foreach (var post in Model.Posts)
+                    {
+                        <div class="post-preview">
+                            <a href="posts/@post.Id">
+                                <h2 class="post-title">@post.Title</h2>
+                            </a>
+                            <div class="pull-right">
+                                <a class="btn btn-sm text-white btn-primary">
+                                    <i class="fa fa-edit"></i> Редагувати
+                                </a>
+                                <button type="button" class="btn btn-sm text-white btn-danger">
+                                    <i class="fa fa-trash"></i>
+                                    Видалити
+                                </button>
+                            </div>
+                            <a href="posts/@post.Id">
+                                <img style="width: 100%; height: 300px;" src="@post.ImageUrl" />
+                                <h3 class="post-subtitle">@Html.Raw(post.Description)</h3>
+                            </a>
+                            <p class="post-meta">
+                                <span><i class="fa fa-fw fa-eye"></i>  @post.Seen</span>
+                                <span><i class="fa fa-fw fa-thumbs-up"></i> @post.Likes</span>
+                                <span><i class="fa fa-fw fa-thumbs-down"></i> @post.Dislikes</span>
+                                <span><i class="fa fa-fw fa-comment"></i> @post.CommentsCount</span>
+                            </p>
+                            <p class="post-meta">
+                                Категорія:
+                                <a>@post.Title</a>
+                            </p>
+                            <p class="post-meta">
+                                Теги:
+                                @foreach (var tag in post.Tags)
+                                {
+                                    <a> @tag.Title</a>
+                                }
+                            </p>
+                            <p class="post-meta">
+                                Написав: <b><a>@post.Author?.FirstName @post.Author?.LastName</a><i> @post.CreatedAt</i></b>
+                            </p>
+                            <button class="btn btn-xs btn-info"><span class="fa fa-thumbs-up"></span> Подобається</button>
+                            <button class="btn btn-sm btn-danger"><span class="fa fa-thumbs-down"></span> Неподобається</button>
+                        </div>
+                    }
+
+                    <hr>
+
+                    <!-- Pager -->
+                <div class="clearfix">
+                        <pagination-controls (pageChange)="paginate($event)"></pagination-controls>
+                        <a class="btn btn-primary float-right" routerLink="/blog#">Older Posts &rarr;</a>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-lg-4 col-md-4 mx-auto sidebar pt-5">
+        </div>
+    </div>
+</div>

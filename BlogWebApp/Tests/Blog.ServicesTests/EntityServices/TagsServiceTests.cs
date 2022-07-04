@@ -131,6 +131,93 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get All Async function
+
+        /// <summary>
+        /// Verify that function Get All Async has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            _tagsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(tagsList);
+
+            //Act
+            await _tagsService.GetAllAsync();
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.GetAllAsync(), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async tags.
+        /// Should return tags when tags exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public async Task GetAllAsync_ShouldReturnTags_WhenTagsExists(int notEqualCount)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            _tagsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => tagsList);
+
+            //Act
+            var tags = await _tagsService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(tags);
+            Assert.NotEmpty(tags);
+            Assert.NotEqual(notEqualCount, tags.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async tags.
+        /// Should return nothing when tags does not exists.
+        /// </summary>
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnNothing_WhenTagsDoesNotExists()
+        {
+            //Arrange
+            _tagsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => new List<Tag>());
+
+            //Act
+            var tags = await _tagsService.GetAllAsync();
+
+            //Assert
+            Assert.Empty(tags);
+        }
+
+        #endregion
+
         #region Get all function With Specification
 
         /// <summary>
@@ -297,6 +384,175 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Empty(tags);
+        }
+
+        #endregion
+
+        #region Get all async function With Specification
+
+        /// <summary>
+        /// Verify that function Get All Async with specification has been called.
+        /// </summary>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData("Tag ")]
+        public async Task Verify_FunctionGetAllAsync_WithSpecification_HasBeenCalled(string tagSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+            var specification = new TagSpecification(x => x.Title.Contains(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => tagsList.Where(x => x.Title.Contains(tagSearch)).ToList());
+
+            //Act
+            await _tagsService.GetAllAsync(specification);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.GetAllAsync(specification), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async tags with specification.
+        /// Should return tags with contains specification when tags exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData(0, "Tag ")]
+        public async Task GetAllAsync_ShouldReturnTags_WithContainsSpecification_WhenTagsExists(int notEqualCount, string tagSearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            var specification = new TagSpecification(x => x.Title.Contains(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => tagsList.Where(x => x.Title.Contains(tagSearch)).ToList());
+
+            //Act
+            var tags = await _tagsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(tags);
+            Assert.NotEmpty(tags);
+            Assert.NotEqual(notEqualCount, tags.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async tags with specification.
+        /// Should return tag with equal specification when tags exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData(1, "Tag 0")]
+        public async void GetAllAsync_ShouldReturnTag_WithEqualsSpecification_WhenTagsExists(int equalCount, string tagSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => tagsList.Where(x => x.Title.Contains(tagSearch)).ToList());
+
+            //Act
+            var tags = await _tagsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(tags);
+            Assert.NotEmpty(tags);
+            Assert.Equal(equalCount, tags.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async tags with specification.
+        /// Should return nothing with  when tags does not exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData(0, "Tag -1")]
+        public async void GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenTagsExists(int equalCount, string tagSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+
+            var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => tagsList.Where(x => x.Title.Contains(tagSearch)).ToList());
+
+            //Act
+            var tags = await _tagsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(tags);
+            Assert.Empty(tags);
+            Assert.Equal(equalCount, tags.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async tags.
+        /// Should return nothing with  when tags does not exists.
+        /// </summary>
+        /// <param name="tagSearch">The tag search.</param>
+        [Theory]
+        [InlineData("Tag 0")]
+        public async void GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenTagsDoesNotExists(string tagSearch)
+        {
+            //Arrange
+            var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
+            _tagsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => new List<Tag>());
+
+            //Act
+            var tags = await _tagsService.GetAllAsync();
+
+            //Assert
+            Assert.Null(tags);
         }
 
         #endregion
@@ -589,11 +845,94 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Insert Async Enumerable function
+
+        /// <summary>
+        /// Verify that function Insert Async Enumerable has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionInsertAsyncEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.InsertAsync(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+
+            //Act
+            await _tagsService.InsertAsync(newTags);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.InsertAsync(newTags), Times.Once);
+        }
+
+        /// <summary>
+        /// Insert Async Enumerable tags.
+        /// Should return tags when tags created.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task InsertAsyncEnumerable_ShouldReturnTags_WhenTagsExists()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.InsertAsync(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+
+            //Act
+            await _tagsService.InsertAsync(newTags);
+
+            //Assert
+            newTags.ForEach(x =>
+            {
+                Assert.NotEqual(0, x.Id);
+            });
+        }
+
+        #endregion
+
         #region Insert Async function
 
         /// <summary>
         /// Verify that function Insert Async has been called.
         /// </summary>
+        /// <returns>Task.</returns>
         [Fact]
         public async Task Verify_FunctionInsertAsync_HasBeenCalled()
         {
@@ -722,6 +1061,106 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Upadate Enumerable function
+
+        /// <summary>
+        /// Verify that function Update Enumerable has been called.
+        /// </summary>
+        /// <param name="newTagTitle">The new tag title.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("New Tag")]
+        public void Verify_FunctionUpdateEnumerable_HasBeenCalled(string newTagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.Insert(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+
+            //Act
+            _tagsService.Insert(newTags);
+            newTags.ForEach(tag =>
+            {
+                tag.Title = newTagTitle;
+            });
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newTags[i].Title = $"{newTagTitle} {i}";
+            }
+            _tagsService.Update(newTags);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.Update(newTags), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Enumerable tag.
+        /// Should return tag when tag updated.
+        /// </summary>
+        /// <param name="newTagTitle">The new tag title.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("New tag title")]
+        public void UpdateEnumerable_ShouldReturnComment_WhenCommentExists(string newTagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.Insert(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+
+            //Act
+            _tagsService.Insert(newTags);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newTags[i].Title = $"{newTagTitle} {i}";
+            }
+            _tagsService.Update(newTags);
+
+            //Assert
+            for (var i = 0; i < itemsCount; i++)
+            {
+                Assert.Equal($"{newTagTitle} {i}", newTags[i].Title);
+            }
+        }
+
+        #endregion
+
         #region Update Async function
 
         /// <summary>
@@ -798,13 +1237,179 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete function
+        #region Upadate Async Enumerable function
 
         /// <summary>
-        /// Verify that function Delete has been called.
+        /// Verify that function Update Async Enumerable has been called.
+        /// </summary>
+        /// <param name="newTagTitle">The new tag title.</param>
+        [Theory]
+        [InlineData("New Tag")]
+        public async Task Verify_FunctionUpdateAsyncEnumerable_HasBeenCalled(string newTagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.InsertAsync(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+
+            //Act
+            await _tagsService.InsertAsync(newTags);
+            newTags.ForEach(tag =>
+            {
+                tag.Title = newTagTitle;
+            });
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newTags[i].Title = $"{newTagTitle} {i}";
+            }
+            await _tagsService.UpdateAsync(newTags);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.UpdateAsync(newTags), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Async Enumerable tag.
+        /// Should return tag when tag updated.
+        /// </summary>
+        /// <param name="newTagTitle">The new tag title.</param>
+        [Theory]
+        [InlineData("New tag title")]
+        public async Task UpdateAsyncEnumerable_ShouldReturnComment_WhenCommentExists(string newTagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.InsertAsync(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+
+            //Act
+            await _tagsService.InsertAsync(newTags);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newTags[i].Title = $"{newTagTitle} {i}";
+            }
+            await _tagsService.UpdateAsync(newTags);
+
+            //Assert
+            for (var i = 0; i < itemsCount; i++)
+            {
+                Assert.Equal($"{newTagTitle} {i}", newTags[i].Title);
+            }
+        }
+
+        #endregion
+
+        #region Delete By Id function
+
+        /// <summary>
+        /// Verify that function Delete By Id has been called.
         /// </summary>
         [Fact]
-        public void Verify_FunctionDelete_HasBeenCalled()
+        public void Verify_FunctionDeleteById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Id = tagId,
+                Title = $"Tag {tagId}",
+            };
+            _tagsRepositoryMock.Setup(x => x.GetById(tagId))
+                .Returns(() => newTag);
+
+            //Act
+            _tagsService.Insert(newTag);
+            var tag = _tagsService.Find(tagId);
+            _tagsService.Delete(tagId);
+            _tagsRepositoryMock.Setup(x => x.GetById(tagId))
+                .Returns(() => null);
+            _tagsService.Find(tagId);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.Delete(newTag), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Id tag.
+        /// Should return nothing when tag is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteById_ShouldReturnNothing_WhenTagsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Title = $"Tag {tagId}",
+            };
+
+            _tagsRepositoryMock.Setup(x => x.Insert(newTag))
+                .Callback(() =>
+                {
+                    newTag.Id = tagId;
+                });
+            _tagsRepositoryMock.Setup(x => x.GetById(tagId))
+                .Returns(() => newTag);
+
+            //Act
+            _tagsService.Insert(newTag);
+            var tag = _tagsService.Find(tagId);
+            _tagsService.Delete(tagId);
+            _tagsRepositoryMock.Setup(x => x.GetById(tagId))
+                .Returns(() => null);
+            var deletedTag = _tagsService.Find(tagId);
+
+            //Assert
+            Assert.Null(deletedTag);
+        }
+
+        #endregion
+
+        #region Delete By Object function
+
+        /// <summary>
+        /// Verify that function Delete By Object has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -830,11 +1435,11 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Delete tag.
+        /// Delete By Object tag.
         /// Should return nothing when tag is deleted.
         /// </summary>
         [Fact]
-        public void Delete_ShouldReturnNothing_WhenTagsDeleted()
+        public void DeleteByObject_ShouldReturnNothing_WhenTagsDeleted()
         {
             //Arrange
             var random = new Random();
@@ -866,14 +1471,165 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete Async function
+        #region Delete By Enumerable function
 
         /// <summary>
-        /// Verify that function Delete Async has been called.
+        /// Verify that function Delete By Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.Insert(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+
+            //Act
+            _tagsService.Insert(newTags);
+            _tagsService.Delete(newTags);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.Delete(newTags), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Enumerable tag.
+        /// Should return nothing when tag is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteByEnumerable_ShouldReturnNothing_WhenTagsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.Insert(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+            _tagsRepositoryMock.Setup(x => x.Delete(newTags))
+                .Callback(() =>
+                {
+                    newTags = null;
+                });
+
+            //Act
+            _tagsService.Insert(newTags);
+            _tagsService.Delete(newTags);
+
+            //Assert
+            Assert.Null(newTags);
+        }
+
+        #endregion
+
+        #region Delete By Id Async function
+
+        /// <summary>
+        /// Verify that function Delete Async By Id has been called.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task Verify_FunctionDeleteAsync_HasBeenCalled()
+        public async Task Verify_FunctionDeleteAsyncById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Id = tagId,
+                Title = $"Tag {tagId}",
+            };
+            _tagsRepositoryMock.Setup(x => x.GetByIdAsync(tagId))
+                .ReturnsAsync(() => newTag);
+
+            //Act
+            await _tagsService.InsertAsync(newTag);
+            var comment = await _tagsService.FindAsync(tagId);
+            await _tagsService.DeleteAsync(tagId);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.DeleteAsync(newTag), Times.Once);
+        }
+
+        /// <summary>
+        /// Async delete by id comment.
+        /// Should return nothing when tag is deleted.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task DeleteAsyncById_ShouldReturnNothing_WhenTagIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var newTag = new Tag
+            {
+                Title = $"Tag {tagId}",
+            };
+
+            _tagsRepositoryMock.Setup(x => x.InsertAsync(newTag))
+                .Callback(() =>
+                {
+                    newTag.Id = tagId;
+                });
+            _tagsRepositoryMock.Setup(x => x.GetByIdAsync(tagId))
+                .ReturnsAsync(() => newTag);
+
+            //Act
+            await _tagsService.InsertAsync(newTag);
+            var tag = await _tagsService.FindAsync(tagId);
+            await _tagsService.DeleteAsync(tagId);
+            _tagsRepositoryMock.Setup(x => x.GetByIdAsync(tagId))
+                .ReturnsAsync(() => null);
+            var deletedTag = await _tagsService.FindAsync(tagId);
+
+            //Assert
+            Assert.Null(deletedTag);
+        }
+
+        #endregion
+
+        #region Delete By Object Async function
+
+        /// <summary>
+        /// Verify that function Delete Async By Object has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -896,12 +1652,12 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Async delete comment.
+        /// Async delete by object comment.
         /// Should return nothing when tag is deleted.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsync_ShouldReturnNothing_WhenTagIsDeleted()
+        public async Task DeleteAsyncByObject_ShouldReturnNothing_WhenTagIsDeleted()
         {
             //Arrange
             var random = new Random();
@@ -929,6 +1685,90 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(deletedTag);
+        }
+
+        #endregion
+
+        #region Delete Async By Enumerable function
+
+        /// <summary>
+        /// Verify that function Delete Async By Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.InsertAsync(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+
+            //Act
+            await _tagsService.InsertAsync(newTags);
+            await _tagsService.DeleteAsync(newTags);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.DeleteAsync(newTags), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete Async By Enumerable tag.
+        /// Should return nothing when tag is deleted.
+        /// </summary>
+        [Fact]
+        public async Task DeleteAsyncByEnumerable_ShouldReturnNothing_WhenTagsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var tagId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newTags = new List<Tag>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newTags.Add(new Tag
+                {
+                    Title = $"Tag {i}",
+                });
+            }
+
+            _tagsRepositoryMock.Setup(x => x.InsertAsync(newTags))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newTags[i].Id = tagId + i;
+                    }
+                });
+            _tagsRepositoryMock.Setup(x => x.DeleteAsync(newTags))
+                .Callback(() =>
+                {
+                    newTags = null;
+                });
+
+            //Act
+            await _tagsService.InsertAsync(newTags);
+            await _tagsService.DeleteAsync(newTags);
+
+            //Assert
+            Assert.Null(newTags);
         }
 
         #endregion
@@ -1583,95 +2423,7 @@ namespace Blog.ServicesTests.EntityServices
         #endregion
 
         #region NotTestedYet
-
-        /// <summary>
-        /// Verify that function Get All Async has been called.
-        /// </summary>
-        //[Fact]
-        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var tagsList = new List<Tag>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                tagsList.Add(new Tag
-                {
-                    Id = i,
-                    Title = $"Comment {i}",
-                });
-            }
-
-
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => commentslist);*/
-
-            //Act
-            var comments = await _tagsService.GetAllAsync();
-
-            //Assert
-            _tagsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
-        }
-
-        /// <summary>
-        /// Async get all tags.
-        /// Should return tags when comments exists.
-        /// </summary>
-        /// <param name="notEqualCount">The not equal count.</param>
-        //[Theory]
-        //[InlineData(0)]
-        public async Task GetAllAsync_ShouldReturnTags_WhenTagsExists(int notEqualCount)
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var tagsList = new List<Tag>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                tagsList.Add(new Tag
-                {
-                    Id = i,
-                    Title = $"Comment {i}",
-                });
-            }
-
-
-            _tagsRepositoryMock.Setup(x => x.GetAll())
-                .Returns(() => tagsList.AsQueryable());
-
-            //Act
-            var comments = await _tagsService.GetAllAsync();
-
-            //Assert
-            Assert.NotNull(comments);
-            Assert.NotEmpty(comments);
-            Assert.NotEqual(notEqualCount, comments.ToList().Count);
-        }
-
-        /// <summary>
-        /// Async get all tags.
-        /// Should return nothing when tags does not exists.
-        /// </summary>
-        //[Fact]
-        public async Task GetAllAsync_ShouldReturnNothing_WhenTagDoesNotExists()
-        {
-            //Test failed
-            //Arrange
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => new List<Comment>());*/
-
-            //Act
-            var comments = await _tagsService.GetAllAsync();
-
-            //Assert
-            Assert.Empty(comments);
-        }
-
         //SearchAsync(SearchQuery<T> searchQuery)
-        //GetAllAsync(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion

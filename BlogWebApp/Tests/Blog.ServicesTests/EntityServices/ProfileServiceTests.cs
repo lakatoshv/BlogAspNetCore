@@ -153,6 +153,113 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get All Async function
+
+        /// <summary>
+        /// Verify that function Get All Async has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
+        {
+            //Arrange  
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(profilesList);
+
+            //Act
+            await _profileService.GetAllAsync();
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.GetAllAsync(), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async profiles.
+        /// Should return profiles when profiles exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public async Task GetAllAsync_ShouldReturnProfiles_WhenProfilesExists(int notEqualCount)
+        {
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(profilesList);
+
+            //Act
+            var profiles = await _profileService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(profiles);
+            Assert.NotEmpty(profiles);
+            Assert.NotEqual(notEqualCount, profiles.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async profiles.
+        /// Should return nothing when profiles does not exists.
+        /// </summary>
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnNothing_WhenProfilesDoesNotExists()
+        {
+            //Arrange
+            _profileRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => new List<Data.Models.Profile>());
+
+            //Act
+            var profiles = await _profileService.GetAllAsync();
+
+            //Assert
+            Assert.Empty(profiles);
+        }
+
+        #endregion
+
         #region Get all function With Specification
 
         /// <summary>
@@ -307,6 +414,164 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Empty(messages);
+        }
+
+        #endregion
+
+        #region Get all async function With Specification
+
+        /// <summary>
+        /// Verify that function Get All Async with specification has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionGetAllAsync_WithSpecification_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+            var searchUserId = new Guid().ToString();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = i == 0 ? searchUserId : new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(profilesList.Where(x => x.UserId.Contains(searchUserId)).ToList());
+
+            //Act
+            await _profileService.GetAllAsync(specification);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.GetAllAsync(specification), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async profiles with specification.
+        /// Should return profiles with equals specification when messages exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public async Task GetAllAsync_ShouldReturnProfiles_WithEqualsSpecification_WhenProfilesExists(int notEqualCount)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+            var searchUserId = new Guid().ToString();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = i == 0 ? searchUserId : new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(profilesList.Where(x => x.UserId.Contains(searchUserId)).ToList());
+
+            //Act
+            var profiles = await _profileService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(profiles);
+            Assert.NotEmpty(profiles);
+            Assert.NotEqual(notEqualCount, profiles.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async messages with specification.
+        /// Should return nothing with  when messages does not exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public async void GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenProfilesExists(int equalCount)
+        {
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<Data.Models.Profile>();
+            var searchUserId = $"{new Guid()}1";
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new Data.Models.Profile
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(profilesList.Where(x => x.UserId.Contains(searchUserId)).ToList());
+
+            //Act
+            var profiles = await _profileService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(profiles);
+            Assert.Empty(profiles);
+            Assert.Equal(equalCount, profiles.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async messages.
+        /// Should return nothing with  when messages does not exists.
+        /// </summary>
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists()
+        {
+            //Arrange
+            var searchUserId = new Guid().ToString();
+            var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+            _profileRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => new List<Data.Models.Profile>());
+
+            //Act
+            var messages = await _profileService.GetAllAsync();
+
+            //Assert
+            Assert.Null(messages);
         }
 
         #endregion
@@ -781,6 +1046,110 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Insert Async Enumerable function
+
+        /// <summary>
+        /// Verify that function Insert Async Enumerable has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionInsertAsyncEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newProfiles = new List<Data.Models.Profile>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.InsertAsync(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+
+            //Act
+            await _profileService.InsertAsync(newProfiles);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.InsertAsync(newProfiles), Times.Once);
+        }
+
+        /// <summary>
+        /// Insert Async Enumerable profiles.
+        /// Should return profiles when profiles created.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task InsertAsyncEnumerable_ShouldReturnProfiles_WhenProfilesExists()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newProfiles = new List<Data.Models.Profile>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.InsertAsync(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+
+            //Act
+            await _profileService.InsertAsync(newProfiles);
+
+            //Assert
+            newProfiles.ForEach(x =>
+            {
+                Assert.NotEqual(0, x.Id);
+            });
+        }
+
+        #endregion
+
         #region Upadate function
 
         /// <summary>
@@ -871,6 +1240,124 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Equal(newUserId, profile.UserId);
+        }
+
+        #endregion
+
+        #region Upadate Enumerable function
+
+        /// <summary>
+        /// Verify that function Update Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionUpdateEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var profileIds = new List<string>();
+            var newProfiles = new List<Data.Models.Profile>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+                profileIds.Add(new Guid().ToString());
+            }
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+
+            //Act
+            _profileService.Insert(newProfiles);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newProfiles[i].UserId = profileIds[i];
+            }
+            _profileService.Update(newProfiles);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.Update(newProfiles), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Enumerable profile.
+        /// Should return profile when profile updated.
+        /// </summary>
+        [Fact]
+        public void UpdateEnumerable_ShouldReturnProfile_WhenProfileExists()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newProfiles = new List<Data.Models.Profile>();
+            var profileIds = new List<string>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+                profileIds.Add(new Guid().ToString());
+            }
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+
+            //Act
+            _profileService.Insert(newProfiles);
+
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newProfiles[i].UserId = profileIds[i];
+            }
+            _profileService.Update(newProfiles);
+
+            //Assert
+
+            for (var i = 0; i < itemsCount; i++)
+            {
+                Assert.Equal(profileIds[i], newProfiles[i].UserId);
+            }
         }
 
         #endregion
@@ -972,13 +1459,230 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete function
+        #region Upadate Async Enumerable function
 
         /// <summary>
-        /// Verify that function Delete has been called.
+        /// Verify that function Update Async Enumerable has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionUpdateAsyncEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var profileIds = new List<string>();
+            var newProfiles = new List<Data.Models.Profile>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+                profileIds.Add(new Guid().ToString());
+            }
+
+            _profileRepositoryMock.Setup(x => x.InsertAsync(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+
+            //Act
+            await _profileService.InsertAsync(newProfiles);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newProfiles[i].UserId = profileIds[i];
+            }
+            await _profileService.UpdateAsync(newProfiles);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.UpdateAsync(newProfiles), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Async Enumerable profile.
+        /// Should return profile when profile updated.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task UpdateAsyncEnumerable_ShouldReturnProfile_WhenProfileExists()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newProfiles = new List<Data.Models.Profile>();
+            var profileIds = new List<string>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+                profileIds.Add(new Guid().ToString());
+            }
+
+            _profileRepositoryMock.Setup(x => x.InsertAsync(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+
+            //Act
+            await _profileService.InsertAsync(newProfiles);
+
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newProfiles[i].UserId = profileIds[i];
+            }
+            await _profileService.UpdateAsync(newProfiles);
+
+            //Assert
+
+            for (var i = 0; i < itemsCount; i++)
+            {
+                Assert.Equal(profileIds[i], newProfiles[i].UserId);
+            }
+        }
+
+        #endregion
+
+        #region Delete By Id function
+
+        /// <summary>
+        /// Verify that function Delete By Id has been called.
         /// </summary>
         [Fact]
-        public void Verify_FunctionDelete_HasBeenCalled()
+        public void Verify_FunctionDeleteById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfile))
+                .Callback(() =>
+                {
+                    newProfile.Id = profileId;
+                });
+            _profileRepositoryMock.Setup(x => x.GetById(profileId))
+                .Returns(() => newProfile);
+
+            //Act
+            _profileService.Insert(newProfile);
+            var profile = _profileService.Find(profileId);
+            _profileService.Delete(profileId);
+            _profileRepositoryMock.Setup(x => x.GetById(profileId))
+                .Returns(() => null);
+            _profileService.Find(profileId);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.Delete(newProfile), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Id profile.
+        /// Should return nothing when profile is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteById_ShouldReturnNothing_WhenProfileDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfile))
+                .Callback(() =>
+                {
+                    newProfile.Id = profileId;
+                });
+            _profileRepositoryMock.Setup(x => x.GetById(profileId))
+                .Returns(() => newProfile);
+
+            //Act
+            _profileService.Insert(newProfile);
+            var profile = _profileService.Find(profileId);
+            _profileService.Delete(profileId);
+            _profileRepositoryMock.Setup(x => x.GetById(profileId))
+                .Returns(() => null);
+            var deletedProfile = _profileService.Find(profileId);
+
+            //Assert
+            Assert.Null(deletedProfile);
+        }
+
+        #endregion
+
+        #region Delete By Object function
+
+        /// <summary>
+        /// Verify that function Delete By Object has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -1021,11 +1725,11 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Delete profile.
+        /// Delete By Object profile.
         /// Should return nothing when profile is deleted.
         /// </summary>
         [Fact]
-        public void Delete_ShouldReturnNothing_WhenProfileDeleted()
+        public void DeleteByObject_ShouldReturnNothing_WhenProfileDeleted()
         {
             //Arrange
             var random = new Random();
@@ -1069,14 +1773,216 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete Async function
+        #region Delete By Enumerable function
 
         /// <summary>
-        /// Verify that function Delete Async has been called.
+        /// Verify that function Delete By Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newProfiles = new List<Data.Models.Profile>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+
+            //Act
+            _profileService.Insert(newProfiles);
+            _profileService.Delete(newProfiles);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.Delete(newProfiles), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Enumerable profile.
+        /// Should return nothing when profile is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteByEnumerable_ShouldReturnNothing_WhenProfileDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newProfiles = new List<Data.Models.Profile>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.Insert(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+            _profileRepositoryMock.Setup(x => x.Delete(newProfiles))
+                .Callback(() =>
+                {
+                    newProfiles = null;
+                });
+
+            //Act
+            _profileService.Insert(newProfiles);
+            _profileService.Delete(newProfiles);
+
+            //Assert
+            Assert.Null(newProfiles);
+        }
+
+        #endregion
+
+        #region Delete Async By Id function
+
+        /// <summary>
+        /// Verify that function Delete Async By Id has been called.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task Verify_FunctionDeleteAsync_HasBeenCalled()
+        public async Task Verify_FunctionDeleteAsyncById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.InsertAsync(newProfile))
+                .Callback(() =>
+                {
+                    newProfile.Id = profileId;
+                });
+            _profileRepositoryMock.Setup(x => x.GetByIdAsync(profileId))
+                .ReturnsAsync(() => newProfile);
+
+            //Act
+            await _profileService.InsertAsync(newProfile);
+            var profile = await _profileService.FindAsync(profileId);
+            await _profileService.DeleteAsync(profileId);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.DeleteAsync(newProfile), Times.Once);
+        }
+
+        /// <summary>
+        /// Async delete by id message.
+        /// Should return nothing when profile is deleted.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task DeleteAsyncById_ShouldReturnNothing_WhenProfileIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+
+            var userId = new Guid().ToString();
+            var user = new ApplicationUser
+            {
+                Id = userId,
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+            var newProfile = new Data.Models.Profile
+            {
+                UserId = userId,
+                User = user,
+                ProfileImg = $"img{profileId}.jpg"
+            };
+
+            _profileRepositoryMock.Setup(x => x.InsertAsync(newProfile))
+                .Callback(() =>
+                {
+                    newProfile.Id = profileId;
+                });
+            _profileRepositoryMock.Setup(x => x.GetByIdAsync(profileId))
+                .ReturnsAsync(() => newProfile);
+
+            //Act
+            await _profileService.InsertAsync(newProfile);
+            var profile = await _profileService.FindAsync(profileId);
+            await _profileService.DeleteAsync(profileId);
+            _profileRepositoryMock.Setup(x => x.GetByIdAsync(profileId))
+                .ReturnsAsync(() => null);
+            var deletedProfile = await _profileService.FindAsync(profileId);
+
+            //Assert
+            Assert.Null(deletedProfile);
+        }
+
+        #endregion
+
+        #region Delete Async By Object function
+
+        /// <summary>
+        /// Verify that function Delete Async By Object has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -1116,12 +2022,12 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Async delete message.
+        /// Async delete by object message.
         /// Should return nothing when profile is deleted.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsync_ShouldReturnNothing_WhenProfileIsDeleted()
+        public async Task DeleteAsyncByObject_ShouldReturnNothing_WhenProfileIsDeleted()
         {
             //Arrange
             var random = new Random();
@@ -1161,6 +2067,112 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(deletedProfile);
+        }
+
+        #endregion
+
+        #region Delete Async By Enumerable function
+
+        /// <summary>
+        /// Verify that function Delete Async By Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newProfiles = new List<Data.Models.Profile>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.InsertAsync(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+
+            //Act
+            await _profileService.InsertAsync(newProfiles);
+            await _profileService.DeleteAsync(newProfiles);
+
+            //Assert
+            _profileRepositoryMock.Verify(x => x.DeleteAsync(newProfiles), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete Async By Enumerable profile.
+        /// Should return nothing when profile is deleted.
+        /// </summary>
+        [Fact]
+        public async Task DeleteAsyncByEnumerable_ShouldReturnNothing_WhenProfileDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var profileId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newProfiles = new List<Data.Models.Profile>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var userId = new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                newProfiles.Add(new Data.Models.Profile
+                {
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            _profileRepositoryMock.Setup(x => x.InsertAsync(newProfiles))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newProfiles[i].Id = profileId + i;
+                    }
+                });
+            _profileRepositoryMock.Setup(x => x.DeleteAsync(newProfiles))
+                .Callback(() =>
+                {
+                    newProfiles = null;
+                });
+
+            //Act
+            await _profileService.InsertAsync(newProfiles);
+            await _profileService.DeleteAsync(newProfiles);
+
+            //Assert
+            Assert.Null(newProfiles);
         }
 
         #endregion
@@ -1800,124 +2812,9 @@ namespace Blog.ServicesTests.EntityServices
         #endregion
 
         #region NotTestedYet
-
-        /// <summary>
-        /// Verify that function Get All Async has been called.
-        /// </summary>
-        //[Fact]
-        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
-            var searchUserId = new Guid().ToString();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var userId = i == 0
-                    ? searchUserId
-                    : new Guid().ToString();
-                var user = new ApplicationUser
-                {
-                    Id = userId,
-                    FirstName = "Test fn",
-                    LastName = "Test ln",
-                    Email = "test@test.test",
-                    UserName = "test@test.test"
-                };
-                profilesList.Add(new Data.Models.Profile
-                {
-                    Id = i,
-                    UserId = userId,
-                    User = user,
-                    ProfileImg = $"img{i}.jpg"
-                });
-            }
-
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => commentslist);*/
-
-            //Act
-            var messages = await _profileService.GetAllAsync();
-
-            //Assert
-            _profileRepositoryMock.Verify(x => x.GetAll(), Times.Once);
-        }
-
-        /// <summary>
-        /// Async get all tags.
-        /// Should return tags when comments exists.
-        /// </summary>
-        /// <param name="notEqualCount">The not equal count.</param>
-        //[Theory]
-        //[InlineData(0)]
-        public async Task GetAllAsync_ShouldReturnTags_WhenTagsExists(int notEqualCount)
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
-            var searchUserId = new Guid().ToString();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var userId = i == 0
-                    ? searchUserId
-                    : new Guid().ToString();
-                var user = new ApplicationUser
-                {
-                    Id = userId,
-                    FirstName = "Test fn",
-                    LastName = "Test ln",
-                    Email = "test@test.test",
-                    UserName = "test@test.test"
-                };
-                profilesList.Add(new Data.Models.Profile
-                {
-                    Id = i,
-                    UserId = userId,
-                    User = user,
-                    ProfileImg = $"img{i}.jpg"
-                });
-            }
-
-            _profileRepositoryMock.Setup(x => x.GetAll())
-                .Returns(() => profilesList.AsQueryable());
-
-            //Act
-            var messages = await _profileService.GetAllAsync();
-
-            //Assert
-            Assert.NotNull(messages);
-            Assert.NotEmpty(messages);
-            Assert.NotEqual(notEqualCount, messages.ToList().Count);
-        }
-
-        /// <summary>
-        /// Async get all tags.
-        /// Should return nothing when tags does not exists.
-        /// </summary>
-        //[Fact]
-        public async Task GetAllAsync_ShouldReturnNothing_WhenTagDoesNotExists()
-        {
-            //Test failed
-            //Arrange
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => new List<Comment>());*/
-
-            //Act
-            var messages = await _profileService.GetAllAsync();
-
-            //Assert
-            Assert.Empty(messages);
-        }
-
         //SearchAsync(SearchQuery<T> searchQuery)
-        //GetAllAsync(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
-
         #endregion
     }
 }

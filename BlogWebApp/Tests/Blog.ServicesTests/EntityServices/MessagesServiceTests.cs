@@ -174,6 +174,136 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get All Async function
+
+        /// <summary>
+        /// Verify that function Get All Async has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(messagesList);
+
+            //Act
+            await _messagesService.GetAllAsync();
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.GetAllAsync(), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async messages.
+        /// Should return messages when messages exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public async Task GetAllAsync_ShouldReturnMessages_WhenMessagesExists(int notEqualCount)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+
+            _messagesRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => messagesList);
+
+            //Act
+            var messages = await _messagesService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(messages);
+            Assert.NotEmpty(messages);
+            Assert.NotEqual(notEqualCount, messages.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async messages.
+        /// Should return nothing when messages does not exists.
+        /// </summary>
+        [Fact]
+        public void GetAllAsync_ShouldReturnNothing_WhenMessagesDoesNotExists()
+        {
+            //Arrange
+            _messagesRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => new List<Message>());
+
+            //Act
+            var messages = _messagesService.GetAll();
+
+            //Assert
+            Assert.Empty(messages);
+        }
+
+        #endregion
+
         #region Get all function With Specification
 
         /// <summary>
@@ -425,6 +555,260 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Empty(messages);
+        }
+
+        #endregion
+
+        #region Get all async function With Specification
+
+        /// <summary>
+        /// Verify that function Get All Async with specification has been called.
+        /// </summary>
+        /// <param name="bodySearch">The body search.</param>
+        [Theory]
+        [InlineData("Test body")]
+        public async Task Verify_FunctionGetAllAsync_WithSpecification_HasBeenCalled(string bodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var specification = new MessageSpecification(x => x.Body.Contains(bodySearch));
+            _messagesRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => messagesList.Where(x => x.Body.Contains(bodySearch)).ToList());
+
+            //Act
+            await _messagesService.GetAllAsync(specification);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.GetAllAsync(specification), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async messages with specification.
+        /// Should return messages with contains specification when messages exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="bodySearch">The body search.</param>
+        [Theory]
+        [InlineData(0, "Test body")]
+        public async Task GetAllAsync_ShouldReturnMessages_WithContainsSpecification_WhenMessagesExists(int notEqualCount, string bodySearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var specification = new MessageSpecification(x => x.Body.Contains(bodySearch));
+            _messagesRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => messagesList.Where(x => x.Body.Contains(bodySearch)).ToList());
+
+            //Act
+            var messages = await _messagesService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(messages);
+            Assert.NotEmpty(messages);
+            Assert.NotEqual(notEqualCount, messages.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async messages with specification.
+        /// Should return message with equal specification when messages exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="bodySearch">The body search.</param>
+        [Theory]
+        [InlineData(1, "Test body0")]
+        public async Task GetAllAsync_ShouldReturnMessage_WithEqualsSpecification_WhenMessagesExists(int equalCount, string bodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var specification = new MessageSpecification(x => x.Body.Contains(bodySearch));
+            _messagesRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => messagesList.Where(x => x.Body.Contains(bodySearch)).ToList());
+
+            //Act
+            var messages = await _messagesService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(messages);
+            Assert.NotEmpty(messages);
+            Assert.Equal(equalCount, messages.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async messages with specification.
+        /// Should return nothing with  when messages does not exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="bodySearch">The body search.</param>
+        [Theory]
+        [InlineData(0, "Test body-1")]
+        public async Task GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenMessagesExists(int equalCount, string bodySearch)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var specification = new MessageSpecification(x => x.Body.Contains(bodySearch));
+            _messagesRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => messagesList.Where(x => x.Body.Contains(bodySearch)).ToList());
+
+            //Act
+            var messages = await _messagesService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(messages);
+            Assert.Empty(messages);
+            Assert.Equal(equalCount, messages.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async messages.
+        /// Should return nothing with  when messages does not exists.
+        /// </summary>
+        /// <param name="bodySearch">The message search.</param>
+        [Theory]
+        [InlineData("Tag 0")]
+        public async Task GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string bodySearch)
+        {
+            //Arrange
+            var specification = new MessageSpecification(x => x.Body.Equals(bodySearch));
+            _messagesRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => new List<Message>());
+
+            //Act
+            var messages = await _messagesService.GetAllAsync();
+
+            //Assert
+            Assert.Null(messages);
         }
 
         #endregion
@@ -906,6 +1290,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <summary>
         /// Verify that function Insert Async has been called.
         /// </summary>
+        /// <returns>Task.</returns>
         [Fact]
         public async Task Verify_FunctionInsertAsync_HasBeenCalled()
         {
@@ -1003,6 +1388,134 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.NotEqual(0, newMessage.Id);
+        }
+
+        #endregion
+
+        #region Insert Async Enumerable function
+
+        /// <summary>
+        /// Verify that function Insert Async Enumerable has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionInsertAsyncEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+
+            //Act
+            await _messagesService.InsertAsync(newMessages);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.InsertAsync(newMessages), Times.Once);
+        }
+
+        /// <summary>
+        /// Insert Async Enumerable comment.
+        /// Should return comments when comments created.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task InsertAsyncEnumerable_ShouldReturnComments_WhenCommentsExists()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+
+            //Act
+            await _messagesService.InsertAsync(newMessages);
+
+            //Assert
+            newMessages.ForEach(x =>
+            {
+                Assert.NotEqual(0, x.Id);
+            });
         }
 
         #endregion
@@ -1122,6 +1635,146 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Equal(newMessageSubject, message.Subject);
+        }
+
+        #endregion
+
+        #region Upadate Enumerable function
+
+        /// <summary>
+        /// Verify that function Update has been called.
+        /// </summary>
+        /// <param name="newMessageSubject">The new message subject.</param>
+        [Theory]
+        [InlineData("New subject")]
+        public void Verify_FunctionUpdateEnumerable_HasBeenCalled(string newMessageSubject)
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.Insert(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+
+            //Act
+            _messagesService.Insert(newMessages);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newMessages[i].Subject = $"{newMessageSubject} {i}";
+            }
+            _messagesService.Update(newMessages);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.Update(newMessages), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Enumerable message.
+        /// Should return message when message updated.
+        /// </summary>
+        /// <param name="newMessageSubject">The new message subject.</param>
+        [Theory]
+        [InlineData("New subject")]
+        public void UpdateEnumerable_ShouldReturnMessage_WhenMessageExists(string newMessageSubject)
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.Insert(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+
+            //Act
+            _messagesService.Insert(newMessages);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newMessages[i].Subject = $"{newMessageSubject} {i}";
+            }
+            _messagesService.Update(newMessages);
+
+            //Assert
+            for (var i = 0; i < itemsCount; i++)
+            {
+                Assert.Equal($"{newMessageSubject} {i}", newMessages[i].Subject);
+            }
         }
 
         #endregion
@@ -1248,13 +1901,155 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete function
+        #region Upadate Async Enumerable function
 
         /// <summary>
-        /// Verify that function Delete has been called.
+        /// Verify that function Update Async has been called.
+        /// </summary>
+        /// <param name="newMessageSubject">The new message subject.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("New subject")]
+        public async Task Verify_FunctionUpdateAsyncEnumerable_HasBeenCalled(string newMessageSubject)
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+
+            //Act
+            await _messagesService.InsertAsync(newMessages);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newMessages[i].Subject = $"{newMessageSubject} {i}";
+            }
+            await _messagesService.UpdateAsync(newMessages);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.UpdateAsync(newMessages), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Async Enumerable message.
+        /// Should return message when message updated.
+        /// </summary>
+        /// <param name="newMessageSubject">The new message subject.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("New subject")]
+        public async void UpdateAsyncEnumerable_ShouldReturnMessage_WhenMessageExists(string newMessageSubject)
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+
+            //Act
+            await _messagesService.InsertAsync(newMessages);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newMessages[i].Subject = $"{newMessageSubject} {i}";
+            }
+            await _messagesService.UpdateAsync(newMessages);
+
+            //Assert
+            for (var i = 0; i < itemsCount; i++)
+            {
+                Assert.Equal($"{newMessageSubject} {i}", newMessages[i].Subject);
+            }
+        }
+
+        #endregion
+
+        #region Delete By Id function
+
+        /// <summary>
+        /// Verify that function Delete By Id has been called.
         /// </summary>
         [Fact]
-        public void Verify_FunctionDelete_HasBeenCalled()
+        public void Verify_FunctionDeleteById_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -1296,22 +2091,22 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             _messagesService.Insert(newMessage);
-            var tag = _messagesService.Find(messageId);
-            _messagesService.Delete(tag);
+            var message = _messagesService.Find(messageId);
+            _messagesService.Delete(messageId);
             _messagesRepositoryMock.Setup(x => x.GetById(messageId))
                 .Returns(() => null);
             _messagesService.Find(messageId);
 
             //Assert
-            _messagesRepositoryMock.Verify(x => x.Delete(tag), Times.Once);
+            _messagesRepositoryMock.Verify(x => x.Delete(newMessage), Times.Once);
         }
 
         /// <summary>
-        /// Delete message.
+        /// Delete By Id message.
         /// Should return nothing when message is deleted.
         /// </summary>
         [Fact]
-        public void Delete_ShouldReturnNothing_WhenMessageDeleted()
+        public void DeleteById_ShouldReturnNothing_WhenMessageDeleted()
         {
             //Arrange
             var random = new Random();
@@ -1354,8 +2149,8 @@ namespace Blog.ServicesTests.EntityServices
 
             //Act
             _messagesService.Insert(newMessage);
-            var tag = _messagesService.Find(messageId);
-            _messagesService.Delete(tag);
+            var message = _messagesService.Find(messageId);
+            _messagesService.Delete(messageId);
             _messagesRepositoryMock.Setup(x => x.GetById(messageId))
                 .Returns(() => null);
             var deletedMessage = _messagesService.Find(messageId);
@@ -1366,14 +2161,380 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete Async function
+        #region Delete By Object function
 
         /// <summary>
-        /// Verify that function Delete Async has been called.
+        /// Verify that function Delete By Object has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByObject_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+            var newMessage = new Message
+            {
+                SenderId = sender.Id,
+                Sender = sender,
+                RecipientId = recipient.Id,
+                Recipient = recipient,
+                Subject = $"Test subject{messageId}",
+                Body = $"Test body{messageId}"
+            };
+            _messagesRepositoryMock.Setup(x => x.Insert(newMessage))
+                .Callback(() =>
+                {
+                    newMessage.Id = messageId;
+                });
+            _messagesRepositoryMock.Setup(x => x.GetById(messageId))
+                .Returns(() => newMessage);
+
+            //Act
+            _messagesService.Insert(newMessage);
+            var message = _messagesService.Find(messageId);
+            _messagesService.Delete(message);
+            _messagesRepositoryMock.Setup(x => x.GetById(messageId))
+                .Returns(() => null);
+            _messagesService.Find(messageId);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.Delete(message), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Object message.
+        /// Should return nothing when message is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteByObject_ShouldReturnNothing_WhenMessageDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+            var newMessage = new Message
+            {
+                Id = messageId,
+                SenderId = sender.Id,
+                Sender = sender,
+                RecipientId = recipient.Id,
+                Recipient = recipient,
+                Subject = $"Test subject{messageId}",
+                Body = $"Test body{messageId}"
+            };
+            _messagesRepositoryMock.Setup(x => x.Insert(newMessage))
+                .Callback(() =>
+                {
+                    newMessage.Id = messageId;
+                });
+            _messagesRepositoryMock.Setup(x => x.GetById(messageId))
+                .Returns(() => newMessage);
+
+            //Act
+            _messagesService.Insert(newMessage);
+            var message = _messagesService.Find(messageId);
+            _messagesService.Delete(message);
+            _messagesRepositoryMock.Setup(x => x.GetById(messageId))
+                .Returns(() => null);
+            var deletedMessage = _messagesService.Find(messageId);
+
+            //Assert
+            Assert.Null(deletedMessage);
+        }
+
+        #endregion
+
+        #region Delete By Enumerable function
+
+        /// <summary>
+        /// Verify that function Delete By Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.Insert(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+
+            //Act
+            _messagesService.Insert(newMessages);
+            _messagesService.Delete(newMessages);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.Delete(newMessages), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Enumerable message.
+        /// Should return nothing when message is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteByEnumerable_ShouldReturnNothing_WhenMessageDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.Insert(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+            _messagesRepositoryMock.Setup(x => x.Delete(newMessages))
+                .Callback(() =>
+                {
+                    newMessages = null;
+                });
+
+            //Act
+            _messagesService.Insert(newMessages);
+            _messagesService.Delete(newMessages);
+
+            //Assert
+            Assert.Null(newMessages);
+        }
+
+        #endregion
+
+        #region Delete Async By Id function
+
+        /// <summary>
+        /// Verify that function Delete Async By Id has been called.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task Verify_FunctionDeleteAsync_HasBeenCalled()
+        public async Task Verify_FunctionDeleteAsyncById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+            var newMessage = new Message
+            {
+                SenderId = sender.Id,
+                Sender = sender,
+                RecipientId = recipient.Id,
+                Recipient = recipient,
+                Subject = $"Test subject{messageId}",
+                Body = $"Test body{messageId}"
+            };
+
+            _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessage))
+                .Callback(() =>
+                {
+                    newMessage.Id = messageId;
+                });
+            _messagesRepositoryMock.Setup(x => x.GetByIdAsync(messageId))
+                .ReturnsAsync(() => newMessage);
+
+            //Act
+            await _messagesService.InsertAsync(newMessage);
+            var message = await _messagesService.FindAsync(messageId);
+            await _messagesService.DeleteAsync(messageId);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.DeleteAsync(newMessage), Times.Once);
+        }
+
+        /// <summary>
+        /// Async delete by id message.
+        /// Should return nothing when message is deleted.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task DeleteAsyncById_ShouldReturnNothing_WhenMessageIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+            var newMessage = new Message
+            {
+                SenderId = sender.Id,
+                Sender = sender,
+                RecipientId = recipient.Id,
+                Recipient = recipient,
+                Subject = $"Test subject{messageId}",
+                Body = $"Test body{messageId}"
+            };
+
+            _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessage))
+                .Callback(() =>
+                {
+                    newMessage.Id = messageId;
+                });
+            _messagesRepositoryMock.Setup(x => x.GetByIdAsync(messageId))
+                .ReturnsAsync(() => newMessage);
+
+            //Act
+            await _messagesService.InsertAsync(newMessage);
+            var message = await _messagesService.FindAsync(messageId);
+            await _messagesService.DeleteAsync(messageId);
+            _messagesRepositoryMock.Setup(x => x.GetByIdAsync(messageId))
+                .ReturnsAsync(() => null);
+            var deletedMessage = await _messagesService.FindAsync(messageId);
+
+            //Assert
+            Assert.Null(deletedMessage);
+        }
+
+        #endregion
+
+        #region Delete Async By Object function
+
+        /// <summary>
+        /// Verify that function Delete Async By Object has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -1424,12 +2585,12 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Async delete message.
+        /// Async delete by object message.
         /// Should return nothing when message is deleted.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsync_ShouldReturnNothing_WhenMessageIsDeleted()
+        public async Task DeleteAsyncByObject_ShouldReturnNothing_WhenMessageIsDeleted()
         {
             //Arrange
             var random = new Random();
@@ -1480,6 +2641,138 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(deletedMessage);
+        }
+
+        #endregion
+
+        #region Delete Async By Enumerable function
+
+        /// <summary>
+        /// Verify that function Delete Async By Enumerable has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+
+            //Act
+            await _messagesService.InsertAsync(newMessages);
+            await _messagesService.DeleteAsync(newMessages);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.DeleteAsync(newMessages), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete Async By Enumerable message.
+        /// Should return nothing when message is deleted.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task DeleteAsyncByEnumerable_ShouldReturnNothing_WhenMessageDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var messageId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newMessages = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            var recipient = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = $"Test fn{messageId}",
+                LastName = $"Test ln{messageId}",
+                Email = $"test{messageId}@test.test",
+                UserName = $"test{messageId}@test.test"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newMessages.Add(new Message
+                {
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject{messageId}",
+                    Body = $"Test body{messageId}"
+                });
+            }
+
+            _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessages))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newMessages[i].Id = messageId + i;
+                    }
+                });
+            _messagesRepositoryMock.Setup(x => x.DeleteAsync(newMessages))
+                .Callback(() =>
+                {
+                    newMessages = null;
+                });
+
+            //Act
+            await _messagesService.InsertAsync(newMessages);
+            await _messagesService.DeleteAsync(newMessages);
+
+            //Assert
+            Assert.Null(newMessages);
         }
 
         #endregion
@@ -2486,139 +3779,7 @@ namespace Blog.ServicesTests.EntityServices
         #endregion
 
         #region NotTestedYet
-
-        /// <summary>
-        /// Verify that function Get All Async has been called.
-        /// </summary>
-        //[Fact]
-        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var messagesList = new List<Message>();
-
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var recipient = new ApplicationUser
-                {
-                    Id = new Guid().ToString(),
-                    FirstName = $"Test fn{i}",
-                    LastName = $"Test ln{i}",
-                    Email = $"test{i}@test.test",
-                    UserName = $"test{i}@test.test"
-                };
-                messagesList.Add(new Message
-                {
-                    Id = i,
-                    SenderId = sender.Id,
-                    Sender = sender,
-                    RecipientId = recipient.Id,
-                    Recipient = recipient,
-                    Subject = $"Test subject{i}",
-                    Body = $"Test body{i}"
-                });
-            }
-
-
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => commentslist);*/
-
-            //Act
-            var messages = await _messagesService.GetAllAsync();
-
-            //Assert
-            _messagesRepositoryMock.Verify(x => x.GetAll(), Times.Once);
-        }
-
-        /// <summary>
-        /// Async get all tags.
-        /// Should return tags when comments exists.
-        /// </summary>
-        /// <param name="notEqualCount">The not equal count.</param>
-        //[Theory]
-        //[InlineData(0)]
-        public async Task GetAllAsync_ShouldReturnTags_WhenTagsExists(int notEqualCount)
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var messagesList = new List<Message>();
-
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var recipient = new ApplicationUser
-                {
-                    Id = new Guid().ToString(),
-                    FirstName = $"Test fn{i}",
-                    LastName = $"Test ln{i}",
-                    Email = $"test{i}@test.test",
-                    UserName = $"test{i}@test.test"
-                };
-                messagesList.Add(new Message
-                {
-                    Id = i,
-                    SenderId = sender.Id,
-                    Sender = sender,
-                    RecipientId = recipient.Id,
-                    Recipient = recipient,
-                    Subject = $"Test subject{i}",
-                    Body = $"Test body{i}"
-                });
-            }
-
-
-            _messagesRepositoryMock.Setup(x => x.GetAll())
-                .Returns(() => messagesList.AsQueryable());
-
-            //Act
-            var messages = await _messagesService.GetAllAsync();
-
-            //Assert
-            Assert.NotNull(messages);
-            Assert.NotEmpty(messages);
-            Assert.NotEqual(notEqualCount, messages.ToList().Count);
-        }
-
-        /// <summary>
-        /// Async get all tags.
-        /// Should return nothing when tags does not exists.
-        /// </summary>
-        //[Fact]
-        public async Task GetAllAsync_ShouldReturnNothing_WhenTagDoesNotExists()
-        {
-            //Test failed
-            //Arrange
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => new List<Comment>());*/
-
-            //Act
-            var messages = await _messagesService.GetAllAsync();
-
-            //Assert
-            Assert.Empty(messages);
-        }
-
         //SearchAsync(SearchQuery<T> searchQuery)
-        //GetAllAsync(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion

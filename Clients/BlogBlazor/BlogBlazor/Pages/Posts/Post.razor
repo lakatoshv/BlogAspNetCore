@@ -1,0 +1,31 @@
+﻿@using Blazor.Contracts.V1.Responses.PostsResponses
+
+@inject BlogBlazor.Services.Interfaces.IPostsService _postsService
+
+@page "/posts/{id}"
+
+@if (IsLoaded)
+{
+    <h1>@post.Post.Title</h1>
+    <h1>@post.Post.Description</h1>
+}
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    public bool IsLoaded { get; set; }
+
+    public int PostId { get; set; }
+
+    public PostWithPagedCommentsResponse post { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        Id = Id ?? "0";
+        PostId = int.Parse(Id);
+
+        post = await _postsService.Show(PostId);
+        IsLoaded = true;
+    }
+}

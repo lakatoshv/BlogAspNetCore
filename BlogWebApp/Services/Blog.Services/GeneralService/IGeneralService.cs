@@ -154,17 +154,17 @@ namespace Blog.Services.GeneralService
         ICollection<T> GetAll();
 
         /// <summary>
+        /// Gets all asynchronous.
+        /// </summary>
+        /// <returns>Task.</returns>
+        Task<ICollection<T>> GetAllAsync();
+
+        /// <summary>
         /// Get all items by specification.
         /// </summary>
         /// <param name="specification">The specification.</param>
         /// <returns>ICollection.</returns>
         ICollection<T> GetAll(ISpecification<T> specification);
-
-        /// <summary>
-        /// Gets all asynchronous.
-        /// </summary>
-        /// <returns>Task.</returns>
-        Task<ICollection<T>> GetAllAsync();
 
         /// <summary>
         /// Async get all items by specification.

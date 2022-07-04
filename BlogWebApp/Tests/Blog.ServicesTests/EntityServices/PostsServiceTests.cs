@@ -141,6 +141,99 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get All Async function
+
+        /// <summary>
+        /// Verify that function Get All Async has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postsList = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsList.Add(new Post
+                {
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
+                });
+            }
+
+
+            _postsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(postsList);
+
+            //Act
+            await _postsService.GetAllAsync();
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.GetAllAsync(), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async posts.
+        /// Should return posts when posts exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public async Task GetAllAsync_ShouldReturnPosts_WhenPostsExists(int notEqualCount)
+        {
+            //Arrange
+            var random = new Random();
+            var postsList = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsList.Add(new Post
+                {
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
+                });
+            }
+
+
+            _postsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => postsList);
+
+            //Act
+            var posts = await _postsService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(posts);
+            Assert.NotEmpty(posts);
+            Assert.NotEqual(notEqualCount, posts.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async posts.
+        /// Should return nothing when posts does not exists.
+        /// </summary>
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnNothing_WhenPostDoesNotExists()
+        {
+            //Arrange
+            _postsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => new List<Post>());
+
+            //Act
+            var posts = await _postsService.GetAllAsync();
+
+            //Assert
+            Assert.Empty(posts);
+        }
+
+        #endregion
+
         #region Get all function With Specification
 
         /// <summary>
@@ -318,6 +411,187 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Empty(posts);
+        }
+
+        #endregion
+
+        #region Get all async function With Specification
+
+        /// <summary>
+        /// Verify that function Get All Async with specification has been called.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests ")]
+        public async Task Verify_FunctionGetAllAsync_WithSpecification_HasBeenCalled(string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsList = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsList.Add(new Post
+                {
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
+                });
+            }
+
+            var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
+            _postsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsList.Where(x => x.Title.Contains(titleSearch)).ToList());
+
+            //Act
+            await _postsService.GetAllAsync(specification);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.GetAllAsync(specification), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async posts with specification.
+        /// Should return posts with contains specification when posts exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData(0, "Created from ServicesTests ")]
+        public async Task GetAllAsync_ShouldReturnPosts_WithContainsSpecification_WhenPostsExists(int notEqualCount, string titleSearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var postsList = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsList.Add(new Post
+                {
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
+                });
+            }
+
+
+            var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
+            _postsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsList.Where(x => x.Title.Contains(titleSearch)).ToList());
+
+            //Act
+            var posts = await _postsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(posts);
+            Assert.NotEmpty(posts);
+            Assert.NotEqual(notEqualCount, posts.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async posts with specification.
+        /// Should return post with equal specification when posts exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData(1, "Created from ServicesTests 0")]
+        public async void GetAllAsync_ShouldReturnPost_WithEqualsSpecification_WhenPostsExists(int equalCount, string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsList = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsList.Add(new Post
+                {
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
+                });
+            }
+
+
+            var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
+            _postsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsList.Where(x => x.Title.Contains(titleSearch)).ToList());
+
+            //Act
+            var posts = await _postsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(posts);
+            Assert.NotEmpty(posts);
+            Assert.Equal(equalCount, posts.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async posts.
+        /// Should return nothing with  when posts does not exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData(0, "Created from ServicesTests -1")]
+        public async void GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostsExists(int equalCount, string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsList = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsList.Add(new Post
+                {
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
+                });
+            }
+
+
+            var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
+            _postsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsList.Where(x => x.Title.Contains(titleSearch)).ToList());
+
+            //Act
+            var posts = await _postsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(posts);
+            Assert.Empty(posts);
+            Assert.Equal(equalCount, posts.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async posts.
+        /// Should return nothing with  when posts does not exists.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests 0")]
+        public async Task GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostDoesNotExists(string titleSearch)
+        {
+            //Arrange
+            var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
+            _postsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => new List<Post>());
+
+            //Act
+            var posts = await _postsService.GetAllAsync();
+
+            //Assert
+            Assert.Null(posts);
         }
 
         #endregion
@@ -700,6 +974,94 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Insert Async Enumerable function
+
+        /// <summary>
+        /// Verify that function Insert Enumerable has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionInsertAsyncEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.InsertAsync(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+
+            //Act
+            await _postsService.InsertAsync(newPosts);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.InsertAsync(newPosts), Times.Once);
+        }
+
+        /// <summary>
+        /// Insert Async Enumerable posts.
+        /// Should return posts when posts created.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task InsertAsyncEnumerable_ShouldReturnPosts_WhenPostsExists()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.InsertAsync(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+
+            //Act
+            await _postsService.InsertAsync(newPosts);
+
+            //Assert
+            newPosts.ForEach(x =>
+            {
+                Assert.NotEqual(0, x.Id);
+            });
+        }
+
+        #endregion
+
         #region Upadate function
 
         /// <summary>
@@ -775,6 +1137,110 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Equal(newTitle, post.Title);
+        }
+
+        #endregion
+
+        #region Upadate Enumerable function
+
+        /// <summary>
+        /// Verify that function Update Enumerable has been called.
+        /// </summary>
+        /// <param name="newTitle">The new title.</param>
+        [Theory]
+        [InlineData("New title")]
+        public void Verify_FunctionUpdateEnumerable_HasBeenCalled(string newTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.Insert(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+
+            //Act
+            _postsService.Insert(newPosts);
+            newPosts.ForEach(post =>
+            {
+                post.Title = newTitle;
+            });
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newPosts[i].Title = $"{newTitle} {i}";
+            }
+            _postsService.Update(newPosts);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.Update(newPosts), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Enumerable post.
+        /// Should return post when post updated.
+        /// </summary>
+        /// <param name="newTitle">The new title.</param>
+        [Theory]
+        [InlineData("New title")]
+        public void UpdateEnumerable_ShouldReturnPost_WhenPostExists(string newTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.Insert(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+
+            //Act
+            _postsService.Insert(newPosts);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newPosts[i].Title = $"{newTitle} {i}";
+            }
+            _postsService.Update(newPosts);
+
+            //Assert
+            for (var i = 0; i < itemsCount; i++)
+            {
+                Assert.Equal($"{newTitle} {i}", newPosts[i].Title);
+            }
         }
 
         #endregion
@@ -861,13 +1327,193 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete function
+        #region Upadate Async Enumerable function
 
         /// <summary>
-        /// Verify that function Delete has been called.
+        /// Verify that function Update Enumerable has been called.
+        /// </summary>
+        /// <param name="newTitle">The new title.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("New title")]
+        public async Task Verify_FunctionUpdateAsyncEnumerable_HasBeenCalled(string newTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.InsertAsync(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+
+            //Act
+            await _postsService.InsertAsync(newPosts);
+            newPosts.ForEach(post =>
+            {
+                post.Title = newTitle;
+            });
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newPosts[i].Title = $"{newTitle} {i}";
+            }
+            await _postsService.UpdateAsync(newPosts);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.UpdateAsync(newPosts), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Enumerable post.
+        /// Should return post when post updated.
+        /// </summary>
+        /// <param name="newTitle">The new title.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("New title")]
+        public async Task UpdateAsyncEnumerable_ShouldReturnPost_WhenPostExists(string newTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.InsertAsync(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+
+            //Act
+            await _postsService.InsertAsync(newPosts);
+            for (var i = 0; i < itemsCount; i++)
+            {
+                newPosts[i].Title = $"{newTitle} {i}";
+            }
+            await _postsService.UpdateAsync(newPosts);
+
+            //Assert
+            for (var i = 0; i < itemsCount; i++)
+            {
+                Assert.Equal($"{newTitle} {i}", newPosts[i].Title);
+            }
+        }
+
+        #endregion
+
+        #region Delete By Id function
+
+        /// <summary>
+        /// Verify that function Delete By Id has been called.
         /// </summary>
         [Fact]
-        public void Verify_FunctionDelete_HasBeenCalled()
+        public void Verify_FunctionDeleteById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Id = postId,
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+            _postsRepositoryMock.Setup(x => x.GetById(postId))
+                .Returns(() => newPost);
+
+            //Act
+            _postsService.Insert(newPost);
+            var post = _postsService.Find(postId);
+            _postsService.Delete(postId);
+            _postsRepositoryMock.Setup(x => x.GetById(postId))
+                .Returns(() => null);
+            _postsService.Find(postId);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.Delete(newPost), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Id post.
+        /// Should return nothing when post is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteById_ShouldReturnNothing_WhenPostIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+
+            _postsRepositoryMock.Setup(x => x.Insert(newPost))
+                .Callback(() =>
+                {
+                    newPost.Id = postId;
+                });
+            _postsRepositoryMock.Setup(x => x.GetById(postId))
+                .Returns(() => newPost);
+
+            //Act
+            _postsService.Insert(newPost);
+            var post = _postsService.Find(postId);
+            _postsService.Delete(postId);
+            _postsRepositoryMock.Setup(x => x.GetById(postId))
+                .Returns(() => null);
+            var deletedPost = _postsService.Find(postId);
+
+            //Assert
+            Assert.Null(deletedPost);
+        }
+
+        #endregion
+
+        #region Delete By Object function
+
+        /// <summary>
+        /// Verify that function Delete By Object has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -896,11 +1542,11 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Delete post.
+        /// Delete By Object post.
         /// Should return nothing when post is deleted.
         /// </summary>
         [Fact]
-        public void Delete_ShouldReturnNothing_WhenPostIsDeleted()
+        public void DeleteByObject_ShouldReturnNothing_WhenPostIsDeleted()
         {
             //Arrange
             var random = new Random();
@@ -935,14 +1581,177 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete Async function
+        #region Delete By Enumerable function
 
         /// <summary>
-        /// Verify that function Delete Async has been called.
+        /// Verify that function Delete By Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.Insert(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+
+            //Act
+            _postsService.Insert(newPosts);
+            _postsService.Delete(newPosts);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.Delete(newPosts), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Enumerable post.
+        /// Should return nothing when post is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteByEnumerable_ShouldReturnNothing_WhenPostIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.Insert(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+            _postsRepositoryMock.Setup(x => x.Delete(newPosts))
+                .Callback(() =>
+                {
+                    newPosts = null;
+                });
+
+            //Act
+            _postsService.Insert(newPosts);
+            _postsService.Delete(newPosts);
+
+            //Assert
+            Assert.Null(newPosts);
+        }
+
+        #endregion
+
+        #region Delete Async By Id function
+
+        /// <summary>
+        /// Verify that function Delete Async By Id has been called.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task Verify_FunctionDeleteAsync_HasBeenCalled()
+        public async Task Verify_FunctionDeleteAsyncById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Id = postId,
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+            _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
+                .ReturnsAsync(() => newPost);
+
+            //Act
+            await _postsService.InsertAsync(newPost);
+            var post = await _postsService.FindAsync(postId);
+            await _postsService.DeleteAsync(postId);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.DeleteAsync(newPost), Times.Once);
+        }
+
+        /// <summary>
+        /// Async delete by id post.
+        /// Should return nothing when post is deleted.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task DeleteAsyncById_ShouldReturnNothing_WhenPostIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var newPost = new Post
+            {
+                Title = $"Created from ServicesTests {postId}",
+                Description = $"Created from ServicesTests {postId}",
+                Content = $"Created from ServicesTests {postId}",
+                ImageUrl = $"Created from ServicesTests {postId}",
+            };
+
+            _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
+                .Callback(() =>
+                {
+                    newPost.Id = postId;
+                });
+            _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
+                .ReturnsAsync(() => newPost);
+
+            //Act
+            await _postsService.InsertAsync(newPost);
+            var post = await _postsService.FindAsync(postId);
+            await _postsService.DeleteAsync(postId);
+            _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
+                .ReturnsAsync(() => null);
+            var deletedPost = await _postsService.FindAsync(postId);
+
+            //Assert
+            Assert.Null(deletedPost);
+        }
+
+        #endregion
+
+        #region Delete Async By Object function
+
+        /// <summary>
+        /// Verify that function Delete Async By Object has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -968,12 +1777,12 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Async delete post.
+        /// Async delete by object post.
         /// Should return nothing when post is deleted.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsync_ShouldReturnNothing_WhenPostIsDeleted()
+        public async Task DeleteAsyncByObject_ShouldReturnNothing_WhenPostIsDeleted()
         {
             //Arrange
             var random = new Random();
@@ -1004,6 +1813,96 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(deletedPost);
+        }
+
+        #endregion
+
+        #region Delete Async By Enumerable function
+
+        /// <summary>
+        /// Verify that function Delete Async By Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.InsertAsync(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+
+            //Act
+            await _postsService.InsertAsync(newPosts);
+            await _postsService.DeleteAsync(newPosts);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.DeleteAsync(newPosts), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete Async By Enumerable post.
+        /// Should return nothing when post is deleted.
+        /// </summary>
+        [Fact]
+        public async Task DeleteAsyncByEnumerable_ShouldReturnNothing_WhenPostIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPosts = new List<Post>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                newPosts.Add(new Post
+                {
+                    Title = $"Created from ServicesTests {postId}",
+                    Description = $"Created from ServicesTests {postId}",
+                    Content = $"Created from ServicesTests {postId}",
+                    ImageUrl = $"Created from ServicesTests {postId}",
+                });
+            }
+
+            _postsRepositoryMock.Setup(x => x.InsertAsync(newPosts))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPosts[i].Id = postId + i;
+                    }
+                });
+            _postsRepositoryMock.Setup(x => x.DeleteAsync(newPosts))
+                .Callback(() =>
+                {
+                    newPosts = null;
+                });
+
+            //Act
+            await _postsService.InsertAsync(newPosts);
+            await _postsService.DeleteAsync(newPosts);
+
+            //Assert
+            Assert.Null(newPosts);
         }
 
         #endregion
@@ -1706,101 +2605,7 @@ namespace Blog.ServicesTests.EntityServices
         #endregion
 
         #region NotTestedYet
-        /// <summary>
-        /// Verify that function Get All Async has been called.
-        /// </summary>
-        //[Fact]
-        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var postsList = new List<Post>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                postsList.Add(new Post
-                {
-                    Id = i,
-                    Title = $"Created from ServicesTests {i}",
-                    Description = $"Created from ServicesTests {i}",
-                    Content = $"Created from ServicesTests {i}",
-                    ImageUrl = $"Created from ServicesTests {i}",
-                });
-            }
-
-
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => postslist);*/
-
-            //Act
-            var posts = await _postsService.GetAllAsync();
-
-            //Assert
-            _postsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
-        }
-
-        /// <summary>
-        /// Async get all posts.
-        /// Should return posts when posts exists.
-        /// </summary>
-        /// <param name="notEqualCount">The not equal count.</param>
-        //[Theory]
-        //[InlineData(0)]
-        public async Task GetAllAsync_ShouldReturnPosts_WhenPostsExists(int notEqualCount)
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var postslist = new List<Post>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var postId = i;
-                postslist.Add(new Post
-                {
-                    Id = postId,
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
-                });
-            }
-
-
-            _postsRepositoryMock.Setup(x => x.GetAll())
-                .Returns(() => postslist.AsQueryable());
-
-            //Act
-            var posts = await _postsService.GetAllAsync();
-
-            //Assert
-            Assert.NotNull(posts);
-            Assert.NotEmpty(posts);
-            Assert.NotEqual(notEqualCount, posts.ToList().Count);
-        }
-
-        /// <summary>
-        /// Async get all posts.
-        /// Should return nothing when posts does not exists.
-        /// </summary>
-        //[Fact]
-        public async Task GetAllAsync_ShouldReturnNothing_WhenPostDoesNotExists()
-        {
-            //Test failed
-            //Arrange
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => new List<Post>());*/
-
-            //Act
-            var posts = await _postsService.GetAllAsync();
-
-            //Assert
-            Assert.Empty(posts);
-        }
-
         //SearchAsync(SearchQuery<T> searchQuery)
-        //GetAllAsync(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion

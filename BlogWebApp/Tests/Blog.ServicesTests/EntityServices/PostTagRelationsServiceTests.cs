@@ -259,6 +259,220 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get All Async function
+
+        /// <summary>
+        /// Verify that function Get All Async has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                });
+            }
+
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(postsTagsRelationsList);
+
+            //Act
+            await _postsTagsRelationsService.GetAllAsync();
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.GetAllAsync(), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations.
+        /// Should return post tag relations when post tag relations exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData(0)]
+        public async Task GetAllAsync_ShouldReturnPostTagRelations_WhenPostTagRelationExists(int notEqualCount)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsTagsRelationsList.Add(new PostsTagsRelations()
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i
+                });
+            }
+
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => postsTagsRelationsList);
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations.
+        /// Should return post tag relations when post tag relations exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">The tag title.</param>
+        [Theory]
+        [InlineData(0, "Post", "Tag")]
+        public async void GetAllAsync_ShouldReturnPostTagRelationsWithExistingPostAndTags_WhenPostTagRelationExists(int notEqualCount, string postTitle, string tagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(100);
+            var postEntity = new Post
+            {
+                Id = postId,
+                Title = $"{postTitle} {postId}",
+                Description = $"{postTitle} {postId}",
+                Content = $"{postTitle} {postId}",
+                ImageUrl = $"{postTitle} {postId}",
+            };
+
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{tagTitle} {i}",
+                };
+
+                postsTagsRelationsList.Add(new PostsTagsRelations()
+                {
+                    Id = i,
+                    PostId = postId,
+                    Post = postEntity,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => postsTagsRelationsList);
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
+
+            void Action(PostsTagsRelations postsTagsRelation)
+            {
+                Assert.NotNull(postsTagsRelation.Post);
+                Assert.Contains(postTitle, postsTagsRelation.Post.Title);
+
+                Assert.NotNull(postsTagsRelation.Tag);
+                Assert.Contains(tagTitle, postsTagsRelation.Tag.Title);
+            }
+
+            postsTagsRelations.ToList().ForEach(Action);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations.
+        /// Should return post tag relations when post tag relations exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">The tag title.</param>
+        [Theory]
+        [InlineData(0, "Post", "Tag")]
+        public async Task GetAllAsync_ShouldReturnPostTagRelationsWithExistingPostAndTagsAndShouldContainsTheSameTagsCount_WhenPostTagRelationExists(int notEqualCount, string postTitle, string tagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(100);
+            var postEntity = new Post
+            {
+                Id = postId,
+                Title = $"{postTitle} {postId}",
+                Description = $"{postTitle} {postId}",
+                Content = $"{postTitle} {postId}",
+                ImageUrl = $"{postTitle} {postId}",
+            };
+
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+            var postsTagsRelationsCount = random.Next(100);
+
+            for (var i = 0; i < postsTagsRelationsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{tagTitle} {i}",
+                };
+
+                postsTagsRelationsList.Add(new PostsTagsRelations()
+                {
+                    Id = i,
+                    PostId = postId,
+                    Post = postEntity,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => postsTagsRelationsList);
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync();
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
+            Assert.Equal(postsTagsRelationsCount, postsTagsRelations.Count);
+        }
+
+        /// <summary>
+        /// Get all post tag relations.
+        /// Should return nothing when post tag relations does not exists.
+        /// </summary>
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnNothing_WhenPostTagRelationsDoesNotExists()
+        {
+            //Arrange
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync())
+                .ReturnsAsync(() => new List<PostsTagsRelations>());
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync();
+
+            //Assert
+            Assert.Empty(postsTagsRelations);
+        }
+
+        #endregion
+
         #region Get all function With Specification
 
         /// <summary>
@@ -577,6 +791,328 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Empty(postsTagsRelations);
+        }
+
+        #endregion
+
+        #region Get all async function With Specification
+
+        /// <summary>
+        /// Verify that function Get All Async with specification has been called.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Tag ")]
+        public async Task Verify_FunctionGetAllAsync_WithSpecification_HasBeenCalled(string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{titleSearch} {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsTagsRelationsList.Where(x => x.Tag.Title.Contains(titleSearch)).ToList());
+
+            //Act
+            await _postsTagsRelationsService.GetAllAsync(specification);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.GetAllAsync(specification), Times.Once);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations with specification.
+        /// Should return post tag relations with contains specification when post tag relations exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData(0, "Created from ServicesTests ")]
+        public async void GetAllAsync_ShouldReturnPostTagRelations_WithContainsSpecification_WhenPostTagRelationsExists(int notEqualCount, string titleSearch)
+        {
+            //Test failed
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{titleSearch} {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsTagsRelationsList.Where(x => x.Tag.Title.Contains(titleSearch)).ToList());
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations with specification.
+        /// Should return post with equal specification when post tag relations exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData(1, "Tag 0")]
+        public async void GetAllAsync_ShouldReturnPost_WithEqualsSpecification_WhenPostsExists(int equalCount, string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsTagsRelationsList.Where(x => x.Tag.Title.Contains(titleSearch)).ToList());
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.Equal(equalCount, postsTagsRelations.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations.
+        /// Should return post tag relations when post tag relations exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">The tag title.</param>
+        [Theory]
+        [InlineData(0, "Post", "Tag")]
+        public async void GetAllAsync_ShouldReturnPostTagRelationsWithExistingPostAndTags_WithContainsSpecification_WhenPostTagRelationExists(int notEqualCount, string postTitle, string tagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(100);
+            var postEntity = new Post
+            {
+                Id = postId,
+                Title = $"{postTitle} {postId}",
+                Description = $"{postTitle} {postId}",
+                Content = $"{postTitle} {postId}",
+                ImageUrl = $"{postTitle} {postId}",
+            };
+
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{tagTitle} {i}",
+                };
+
+                postsTagsRelationsList.Add(new PostsTagsRelations()
+                {
+                    Id = i,
+                    PostId = postId,
+                    Post = postEntity,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(tagTitle));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsTagsRelationsList.Where(x => x.Tag.Title.Contains(tagTitle)).ToList());
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
+
+            void Action(PostsTagsRelations postsTagsRelation)
+            {
+                Assert.NotNull(postsTagsRelation.Post);
+                Assert.Contains(postTitle, postsTagsRelation.Post.Title);
+
+                Assert.NotNull(postsTagsRelation.Tag);
+                Assert.Contains(tagTitle, postsTagsRelation.Tag.Title);
+            }
+
+            postsTagsRelations.ToList().ForEach(Action);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations.
+        /// Should return post tag relations when post tag relations exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">The tag title.</param>
+        [Theory]
+        [InlineData(0, "Post", "Tag")]
+        public async Task GetAllAsync_ShouldReturnPostTagRelationsWithExistingPostAndTagsAndShouldContainsTheSameTagsCount_WithContainsSpecification_WhenPostTagRelationsExists(int notEqualCount, string postTitle, string tagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var postId = random.Next(100);
+            var postEntity = new Post
+            {
+                Id = postId,
+                Title = $"{postTitle} {postId}",
+                Description = $"{postTitle} {postId}",
+                Content = $"{postTitle} {postId}",
+                ImageUrl = $"{postTitle} {postId}",
+            };
+
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+            var postsTagsRelationsCount = random.Next(100);
+
+            for (var i = 0; i < postsTagsRelationsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{tagTitle} {i}",
+                };
+
+                postsTagsRelationsList.Add(new PostsTagsRelations()
+                {
+                    Id = i,
+                    PostId = postId,
+                    Post = postEntity,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(tagTitle));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsTagsRelationsList.Where(x => x.Tag.Title.Contains(tagTitle)).ToList());
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations);
+            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
+            Assert.Equal(postsTagsRelationsCount, postsTagsRelations.Count);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations.
+        /// Should return nothing with  when post tag relations does not exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData(0, "Tag -1")]
+        public async void GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostTagRelationsExists(int equalCount, string titleSearch)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => postsTagsRelationsList.Where(x => x.Tag.Title.Contains(titleSearch)).ToList());
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync(specification);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.Empty(postsTagsRelations);
+            Assert.Equal(equalCount, postsTagsRelations.ToList().Count);
+        }
+
+        /// <summary>
+        /// Get all async post tag relations.
+        /// Should return nothing with  when post tag relations does not exists.
+        /// </summary>
+        /// <param name="titleSearch">The title search.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests 0")]
+        public async Task GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostTagRelationsDoesNotExists(string titleSearch)
+        {
+            //Arrange
+            var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
+                .ReturnsAsync(() => new List<PostsTagsRelations>().ToList());
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync();
+
+            //Assert
+            Assert.Null(postsTagsRelations);
         }
 
         #endregion
@@ -1087,6 +1623,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <summary>
         /// Verify that function Insert Async has been called.
         /// </summary>
+        /// <returns>Task.</returns>
         [Fact]
         public async Task Verify_FunctionInsertAsync_HasBeenCalled()
         {
@@ -1206,6 +1743,102 @@ namespace Blog.ServicesTests.EntityServices
 
             Assert.NotNull(newPostsTagsRelation.Tag);
             Assert.Contains(tagTitle, newPostsTagsRelation.Tag.Title);
+        }
+
+        #endregion
+
+        #region Insert Async Enumerable function
+
+        /// <summary>
+        /// Verify that function Insert Enumerable has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionInsertAsyncEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            await _postsTagsRelationsService.InsertAsync(newPostsTagsRelations);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.InsertAsync(newPostsTagsRelations), Times.Once);
+        }
+
+        /// <summary>
+        /// Insert Async Enumerable post tag relations.
+        /// Should return post tag relations when post tag relations created.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task InsertAsyncEnumerable_ShouldReturnPostTagRelations_WhenPostTagRelationsExists()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            await _postsTagsRelationsService.InsertAsync(newPostsTagsRelations);
+
+            //Assert
+            newPostsTagsRelations.ForEach(x =>
+            {
+                Assert.NotEqual(0, x.Id);
+            });
         }
 
         #endregion
@@ -1369,6 +2002,189 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Contains(tagTitle, newPostsTagsRelation.Tag.Title);
             Assert.Equal(postsTagsRelations.TagId, newTag.Id);
             Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
+        }
+
+        #endregion
+
+        #region Upadate Enumerable function
+
+        /// <summary>
+        /// Verify that function Update Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionUpdateEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+            var newTag = new Tag
+            {
+                Id = id + 1,
+                Title = $"Tag {id + 1}"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelations);
+            newPostsTagsRelations.ForEach(postsTagsRelations =>
+            {
+                postsTagsRelations.TagId = newTag.Id;
+                postsTagsRelations.Tag = newTag;
+            });
+            _postsTagsRelationsService.Update(newPostsTagsRelations);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.Update(newPostsTagsRelations), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Enumerable post tag relation.
+        /// Should return post tag relation when post tag relation updated.
+        /// </summary>
+        [Fact]
+        public void UpdateEnumerable_ShouldReturnPostTagRelation_WhenPostTagRelationsExists()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+            var newTag = new Tag
+            {
+                Id = id + 1,
+                Title = $"Tag {id + 1}"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelations);
+            newPostsTagsRelations.ForEach(postsTagsRelations =>
+            {
+                postsTagsRelations.TagId = newTag.Id;
+                postsTagsRelations.Tag = newTag;
+            });
+            _postsTagsRelationsService.Update(newPostsTagsRelations);
+
+            //Assert
+            newPostsTagsRelations.ForEach(postsTagsRelations =>
+            {
+                Assert.Equal(postsTagsRelations.TagId, newTag.Id);
+                Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
+            });
+        }
+
+        /// <summary>
+        /// Update Enumerable post tag relations.
+        /// Should return post tag relations when post tag relations exists.
+        /// </summary>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">THe tag title.</param>
+        [Theory]
+        [InlineData("Post", "Tag")]
+        public void UpdateEnumerable_ShouldReturnPostTagRelationWithExistingPostAndTags_WhenPostTagRelationExists(string postTitle, string tagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+            var newTag = new Tag
+            {
+                Id = id + 1,
+                Title = $"Tag {id + 1}"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelations);
+            newPostsTagsRelations.ForEach(postsTagsRelations =>
+            {
+                postsTagsRelations.TagId = newTag.Id;
+                postsTagsRelations.Tag = newTag;
+            });
+            _postsTagsRelationsService.Update(newPostsTagsRelations);
+
+            //Assert
+            newPostsTagsRelations.ForEach(postsTagsRelations =>
+            {
+                Assert.NotEqual(0, postsTagsRelations.Id);
+
+                Assert.NotNull(postsTagsRelations.Tag);
+                Assert.Contains(tagTitle, postsTagsRelations.Tag.Title);
+                Assert.Equal(postsTagsRelations.TagId, newTag.Id);
+                Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
+            });
         }
 
         #endregion
@@ -1540,13 +2356,284 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete function
+        #region Upadate Async Enumerable function
 
         /// <summary>
-        /// Verify that function Delete has been called.
+        /// Verify that function Update Async Enumerable has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionUpdateAsyncEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+            var newTag = new Tag
+            {
+                Id = id + 1,
+                Title = $"Tag {id + 1}"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            await _postsTagsRelationsService.InsertAsync(newPostsTagsRelations);
+            newPostsTagsRelations.ForEach(postsTagsRelations =>
+            {
+                postsTagsRelations.TagId = newTag.Id;
+                postsTagsRelations.Tag = newTag;
+            });
+            await _postsTagsRelationsService.UpdateAsync(newPostsTagsRelations);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.UpdateAsync(newPostsTagsRelations), Times.Once);
+        }
+
+        /// <summary>
+        /// Update Async Enumerable post tag relation.
+        /// Should return post tag relation when post tag relation updated.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task UpdateAsyncEnumerable_ShouldReturnPostTagRelation_WhenPostTagRelationsExists()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+            var newTag = new Tag
+            {
+                Id = id + 1,
+                Title = $"Tag {id + 1}"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            await _postsTagsRelationsService.InsertAsync(newPostsTagsRelations);
+            newPostsTagsRelations.ForEach(postsTagsRelations =>
+            {
+                postsTagsRelations.TagId = newTag.Id;
+                postsTagsRelations.Tag = newTag;
+            });
+            await _postsTagsRelationsService.UpdateAsync(newPostsTagsRelations);
+
+            //Assert
+            newPostsTagsRelations.ForEach(postsTagsRelations =>
+            {
+                Assert.Equal(postsTagsRelations.TagId, newTag.Id);
+                Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
+            });
+        }
+
+        /// <summary>
+        /// Update Async Enumerable post tag relations.
+        /// Should return post tag relations when post tag relations exists.
+        /// </summary>
+        /// <param name="postTitle">The post title.</param>
+        /// <param name="tagTitle">THe tag title.</param>
+        /// <returns>Task.</returns>
+        [Theory]
+        [InlineData("Post", "Tag")]
+        public async Task UpdateAsyncEnumerable_ShouldReturnPostTagRelationWithExistingPostAndTags_WhenPostTagRelationExists(string postTitle, string tagTitle)
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+            var newTag = new Tag
+            {
+                Id = id + 1,
+                Title = $"Tag {id + 1}"
+            };
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            await _postsTagsRelationsService.InsertAsync(newPostsTagsRelations);
+            newPostsTagsRelations.ForEach(postsTagsRelations =>
+            {
+                postsTagsRelations.TagId = newTag.Id;
+                postsTagsRelations.Tag = newTag;
+            });
+            await _postsTagsRelationsService.UpdateAsync(newPostsTagsRelations);
+
+            //Assert
+            newPostsTagsRelations.ForEach(postsTagsRelations =>
+            {
+                Assert.NotEqual(0, postsTagsRelations.Id);
+
+                Assert.NotNull(postsTagsRelations.Tag);
+                Assert.Contains(tagTitle, postsTagsRelations.Tag.Title);
+                Assert.Equal(postsTagsRelations.TagId, newTag.Id);
+                Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
+            });
+        }
+
+        #endregion
+
+        #region Delete By Id function
+
+        /// <summary>
+        /// Verify that function Delete By Id has been called.
         /// </summary>
         [Fact]
-        public void Verify_FunctionDelete_HasBeenCalled()
+        public void Verify_FunctionDeleteById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelation))
+                .Callback(() =>
+                {
+                    newPostsTagsRelation.Id = id;
+                });
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
+                .Returns(() => newPostsTagsRelation);
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelation);
+            var postsTagsRelations = _postsTagsRelationsService.Find(id);
+            _postsTagsRelationsService.Delete(id);
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
+                .Returns(() => null);
+            _postsTagsRelationsService.Find(id);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.Delete(newPostsTagsRelation), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Id post tag relation.
+        /// Should return nothing when post tag relation is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteById_ShouldReturnNothing_WhenPostTagRelationIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelation))
+                .Callback(() =>
+                {
+                    newPostsTagsRelation.Id = id;
+                });
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
+                .Returns(() => newPostsTagsRelation);
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelation);
+            var postsTagsRelations = _postsTagsRelationsService.Find(id);
+            _postsTagsRelationsService.Delete(id);
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
+                .Returns(() => null);
+            var postsTagsRelation = _postsTagsRelationsService.Find(id);
+
+            //Assert
+            Assert.Null(postsTagsRelation);
+        }
+
+        #endregion
+
+        #region Delete By Object function
+
+        /// <summary>
+        /// Verify that function Delete By Object has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -1583,11 +2670,11 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Delete post tag relation.
+        /// Delete By Object post tag relation.
         /// Should return nothing when post tag relation is deleted.
         /// </summary>
         [Fact]
-        public void Delete_ShouldReturnNothing_WhenPostTagRelationIsDeleted()
+        public void DeleteByObject_ShouldReturnNothing_WhenPostTagRelationIsDeleted()
         {
             //Arrange
             var random = new Random();
@@ -1625,14 +2712,204 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
-        #region Delete Async function
+        #region Delete By Enumerable function
 
         /// <summary>
-        /// Verify that function Delete Async has been called.
+        /// Verify that function Delete By Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public void Verify_FunctionDeleteByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelations);
+            _postsTagsRelationsService.Delete(newPostsTagsRelations);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.Delete(newPostsTagsRelations), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete By Enumerable post tag relation.
+        /// Should return nothing when post tag relation is deleted.
+        /// </summary>
+        [Fact]
+        public void DeleteByEnumerable_ShouldReturnNothing_WhenPostTagRelationIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+            _postsTagsRelationsRepositoryMock.Setup(x => x.Delete(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations = null;
+                    }
+                });
+
+            //Act
+            _postsTagsRelationsService.Insert(newPostsTagsRelations);
+            _postsTagsRelationsService.Delete(newPostsTagsRelations);
+
+            //Assert
+            Assert.Null(newPostsTagsRelations);
+        }
+
+        #endregion
+
+        #region Delete Async By Id function
+
+        /// <summary>
+        /// Verify that function Delete Async By Id has been called.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task Verify_FunctionDeleteAsync_HasBeenCalled()
+        public async Task Verify_FunctionDeleteAsyncById_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+            _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelation))
+                .Callback(() =>
+                {
+                    newPostsTagsRelation.Id = id;
+                });
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
+                .ReturnsAsync(() => newPostsTagsRelation);
+
+            //Act
+            await _postsTagsRelationsService.InsertAsync(newPostsTagsRelation);
+            var postsTagsRelation = await _postsTagsRelationsService.FindAsync(id);
+            await _postsTagsRelationsService.DeleteAsync(id);
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
+                .ReturnsAsync(() => null);
+            await _postsTagsRelationsService.FindAsync(id);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.DeleteAsync(newPostsTagsRelation), Times.Once);
+        }
+
+        /// <summary>
+        /// Async delete by id post tag relation.
+        /// Should return nothing when post tag relation is deleted.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task DeleteAsyncById_ShouldReturnNothing_WhenPostTagRelationIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var tag = new Tag
+            {
+                Id = id,
+                Title = $"Tag {id}"
+            };
+            var newPostsTagsRelation = new PostsTagsRelations
+            {
+                PostId = id,
+                TagId = id,
+                Tag = tag
+            };
+            _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelation))
+                .Callback(() =>
+                {
+                    newPostsTagsRelation.Id = id;
+                });
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
+                .ReturnsAsync(() => newPostsTagsRelation);
+
+            //Act
+            await _postsTagsRelationsService.InsertAsync(newPostsTagsRelation);
+            var postsTagsRelations = await _postsTagsRelationsService.FindAsync(id);
+            await _postsTagsRelationsService.DeleteAsync(id);
+            _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
+                .ReturnsAsync(() => null);
+            var postsTagsRelation = await _postsTagsRelationsService.FindAsync(id);
+
+            //Assert
+            Assert.Null(postsTagsRelation);
+        }
+
+        #endregion
+
+        #region Delete Async By Object function
+
+        /// <summary>
+        /// Verify that function Delete Async By Object has been called.
+        /// </summary>
+        /// <returns>Task.</returns>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncByObject_HasBeenCalled()
         {
             //Arrange
             var random = new Random();
@@ -1669,12 +2946,12 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         /// <summary>
-        /// Async delete post tag relation.
+        /// Async delete by object post tag relation.
         /// Should return nothing when post tag relation is deleted.
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsync_ShouldReturnNothing_WhenPostTagRelationIsDeleted()
+        public async Task DeleteAsyncByObject_ShouldReturnNothing_WhenPostTagRelationIsDeleted()
         {
             //Arrange
             var random = new Random();
@@ -1708,6 +2985,106 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.Null(postsTagsRelation);
+        }
+
+        #endregion
+
+        #region Delete Async By Enumerable function
+
+        /// <summary>
+        /// Verify that function Delete Async By Enumerable has been called.
+        /// </summary>
+        [Fact]
+        public async Task Verify_FunctionDeleteAsyncByEnumerable_HasBeenCalled()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+
+            //Act
+            await _postsTagsRelationsService.InsertAsync(newPostsTagsRelations);
+            await _postsTagsRelationsService.DeleteAsync(newPostsTagsRelations);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.DeleteAsync(newPostsTagsRelations), Times.Once);
+        }
+
+        /// <summary>
+        /// Delete Async By Enumerable post tag relation.
+        /// Should return nothing when post tag relation is deleted.
+        /// </summary>
+        [Fact]
+        public async Task DeleteAsyncByEnumerable_ShouldReturnNothing_WhenPostTagRelationIsDeleted()
+        {
+            //Arrange
+            var random = new Random();
+            var id = random.Next(52);
+            var itemsCount = random.Next(10);
+            var newPostsTagsRelations = new List<PostsTagsRelations>();
+
+
+            for (int i = 0; i < itemsCount; i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}"
+                };
+                newPostsTagsRelations.Add(new PostsTagsRelations
+                {
+                    PostId = id,
+                    TagId = tag.Id,
+                    Tag = tag
+                });
+            }
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    for (var i = 0; i < itemsCount; i++)
+                    {
+                        newPostsTagsRelations[i].Id = id + i;
+                    }
+                });
+            _postsTagsRelationsRepositoryMock.Setup(x => x.DeleteAsync(newPostsTagsRelations))
+                .Callback(() =>
+                {
+                    newPostsTagsRelations = null;
+                });
+
+            //Act
+            await _postsTagsRelationsService.InsertAsync(newPostsTagsRelations);
+            await _postsTagsRelationsService.DeleteAsync(newPostsTagsRelations);
+
+            //Assert
+            Assert.Null(newPostsTagsRelations);
         }
 
         #endregion
@@ -2474,88 +3851,7 @@ namespace Blog.ServicesTests.EntityServices
         #endregion
 
         #region NotTestedYet
-        /// <summary>
-        /// Verify that function Get All Async has been called.
-        /// </summary>
-        //[Fact]
-        public async Task Verify_FunctionGetAllAsync_HasBeenCalled()
-        {
-            //Test failed
-            //Arrange
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => postslist);*/
-
-            //Act
-            await _postsTagsRelationsService.GetAllAsync();
-
-            //Assert
-            _postsTagsRelationsRepositoryMock.Verify(x => x.GetAll(), Times.Once);
-        }
-
-        /// <summary>
-        /// Async get all posts.
-        /// Should return post tag relations when post tag relations exists.
-        /// </summary>
-        /// <param name="notEqualCount">The not equal count.</param>
-        //[Theory]
-        //[InlineData(0)]
-        public async Task GetAllAsync_ShouldReturnPosts_WhenPostsExists(int notEqualCount)
-        {
-            //Test failed
-            //Arrange
-            var random = new Random();
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var tag = new Tag
-                {
-                    Id = i,
-                    Title = $"Tag {i}"
-                };
-                postsTagsRelationsList.Add(new PostsTagsRelations
-                {
-                    Id = i,
-                    PostId = i,
-                    TagId = i,
-                    Tag = tag
-                });
-            }
-
-
-            _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll())
-                .Returns(() => postsTagsRelationsList.AsQueryable());
-
-            //Act
-            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync();
-
-            //Assert
-            Assert.NotNull(postsTagsRelations);
-            Assert.NotEmpty(postsTagsRelations);
-            Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
-        }
-
-        /// <summary>
-        /// Async get all posts.
-        /// Should return nothing when post tag relations does not exists.
-        /// </summary>
-        //[Fact]
-        public async Task GetAllAsync_ShouldReturnNothing_WhenPostDoesNotExists()
-        {
-            //Test failed
-            //Arrange
-            /*_generalServiceMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => new List<Post>());*/
-
-            //Act
-            var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync();
-
-            //Assert
-            Assert.Empty(postsTagsRelations);
-        }
-
         //SearchAsync(SearchQuery<T> searchQuery)
-        //GetAllAsync(ISpecification<T> specification)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion

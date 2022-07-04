@@ -36,11 +36,24 @@ namespace Blog.Data.Repository
         IQueryable<T> GetAll();
 
         /// <summary>
+        /// Gets all asynchronous.
+        /// </summary>
+        /// <returns>Type.</returns>
+        Task<ICollection<T>> GetAllAsync();
+
+        /// <summary>
         /// Gets all.
         /// </summary>
         /// <param name="specification">The specification.</param>
         /// <returns>IQueryable.</returns>
         IQueryable<T> GetAll(ISpecification<T> specification);
+
+        /// <summary>
+        /// Gets all asynchronous.
+        /// </summary>
+        /// <param name="specification">The specification.</param>
+        /// <returns>Type.</returns>
+        Task<ICollection<T>> GetAllAsync(ISpecification<T> specification);
 
         /// <summary>
         /// Get item by id.

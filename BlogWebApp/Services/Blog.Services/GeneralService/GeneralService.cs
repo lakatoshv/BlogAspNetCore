@@ -15,7 +15,6 @@ namespace Blog.Services.GeneralService
     using Blog.Core.TableFilters;
     using Blog.Data.Core;
     using Blog.Data.Repository;
-    using Microsoft.EntityFrameworkCore;
 
     /// <summary>
     /// General service.
@@ -167,19 +166,19 @@ namespace Blog.Services.GeneralService
         /// <inheritdoc cref="IGeneralService{T}"/>
         public async Task<ICollection<T>> GetAllAsync()
         {
-            return await this.Repository.GetAll().ToListAsync();
-        }
-
-        /// <inheritdoc cref="IGeneralService{T}"/>
-        public async Task<ICollection<T>> GetAllAsync(ISpecification<T> specification)
-        {
-            return await this.Repository.GetAll(specification).ToListAsync();
+            return await this.Repository.GetAllAsync();
         }
 
         /// <inheritdoc cref="IGeneralService{T}"/>
         public ICollection<T> GetAll(ISpecification<T> specification)
         {
             return this.Repository.GetAll(specification).ToList();
+        }
+
+        /// <inheritdoc cref="IGeneralService{T}"/>
+        public async Task<ICollection<T>> GetAllAsync(ISpecification<T> specification)
+        {
+            return await this.Repository.GetAllAsync(specification);
         }
 
         /// <inheritdoc cref="IGeneralService{T}"/>
