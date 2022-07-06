@@ -2569,6 +2569,55 @@ namespace Blog.ServicesTests.EntityServices
             _commentsRepositoryMock.Verify(x => x.SearchAsync(query), Times.Once);
         }
 
+        /// <summary>
+        /// Search async comments.
+        /// Should return comments when comments exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData("Comment ", 0, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment ", 10, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment ", 10, 20, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment ", 0, 100, "CommentBody", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnComments_WhenCommentsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var commentsList = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                commentsList.Add(new Comment
+                {
+                    Id = i,
+                    CommentBody = $"Comment {i}",
+                });
+            }
+
+            var query = new SearchQuery<Comment>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Comment>(fieldName, orderType));
+
+            query.AddFilter(x => x.CommentBody.ToUpper().Contains($"{search}".ToUpper()));
+
+            _commentsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, commentsList);
+                });
+
+            //Act
+            var comments = await _commentsService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(comments);
+            Assert.NotEmpty(comments.Entities);
+        }
+
         #endregion
 
         #region NotTestedYet
