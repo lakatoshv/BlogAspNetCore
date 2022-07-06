@@ -2618,6 +2618,57 @@ namespace Blog.ServicesTests.EntityServices
             Assert.NotEmpty(comments.Entities);
         }
 
+        /// <summary>
+        /// Search async comments with specification.
+        /// Should return comment with equal specification when comments exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        [Theory]
+        [InlineData("Comment 0", 0, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment 11", 10, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment 11", 10, 20, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment 11", 0, 100, "CommentBody", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnComment_WithEqualsSpecification_WhenCommentsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var commentsList = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                commentsList.Add(new Comment
+                {
+                    Id = i,
+                    CommentBody = $"Comment {i}",
+                });
+            }
+
+            var query = new SearchQuery<Comment>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Comment>(fieldName, orderType));
+
+            query.AddFilter(x => x.CommentBody.ToUpper().Equals($"{search}".ToUpper()));
+
+            _commentsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, commentsList);
+                });
+
+            //Act
+            var comments = await _commentsService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(comments);
+            Assert.NotEmpty(comments.Entities);
+            Assert.Single(comments.Entities);
+        }
+
         #endregion
 
         #region NotTestedYet
