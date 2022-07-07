@@ -2719,6 +2719,38 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Empty(comments.Entities);
         }
 
+        /// <summary>
+        /// Search async comments.
+        /// Should return nothing when comments does not exists.
+        /// </summary>
+        [Theory]
+        [InlineData("Comment 0", 0, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment 11", 10, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment 11", 10, 20, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment 11", 0, 100, "CommentBody", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnNothing_WhenCommentsDoesNotExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var query = new SearchQuery<Comment>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Comment>(fieldName, orderType));
+
+            query.AddFilter(x => x.CommentBody.ToUpper().Contains($"{search}".ToUpper()));
+
+            _commentsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() => new PagedListResult<Comment>());
+
+            //Act
+            var comments = await _commentsService.SearchAsync(query);
+
+            //Assert
+            Assert.Empty(comments.Entities);
+        }
+
         #endregion
 
         #region NotTestedYet
