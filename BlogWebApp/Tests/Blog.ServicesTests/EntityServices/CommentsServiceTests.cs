@@ -2526,6 +2526,11 @@ namespace Blog.ServicesTests.EntityServices
         /// <summary>
         /// Verify that function Search async has been called.
         /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
         [Theory]
         [InlineData("Comment ", 0, 10, "CommentBody", OrderType.Ascending)]
         [InlineData("Comment ", 10, 10, "CommentBody", OrderType.Ascending)]
@@ -2573,7 +2578,11 @@ namespace Blog.ServicesTests.EntityServices
         /// Search async comments.
         /// Should return comments when comments exists.
         /// </summary>
-        /// <param name="notEqualCount">The not equal count.</param>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
         [Theory]
         [InlineData("Comment ", 0, 10, "CommentBody", OrderType.Ascending)]
         [InlineData("Comment ", 10, 10, "CommentBody", OrderType.Ascending)]
@@ -2622,8 +2631,11 @@ namespace Blog.ServicesTests.EntityServices
         /// Search async comments with specification.
         /// Should return comment with equal specification when comments exists.
         /// </summary>
-        /// <param name="equalCount">The equal count.</param>
-        /// <param name="commentBodySearch">The CommentBody search.</param>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
         [Theory]
         [InlineData("Comment 0", 0, 10, "CommentBody", OrderType.Ascending)]
         [InlineData("Comment 11", 10, 10, "CommentBody", OrderType.Ascending)]
@@ -2673,8 +2685,11 @@ namespace Blog.ServicesTests.EntityServices
         /// Search async comments with specification.
         /// Should return nothing with  when comments does not exists.
         /// </summary>
-        /// <param name="equalCount">The equal count.</param>
-        /// <param name="commentBodySearch">The CommentBody search.</param>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
         [Theory]
         [InlineData("Comment -0", 0, 10, "CommentBody", OrderType.Ascending)]
         [InlineData("Comment -11", 10, 10, "CommentBody", OrderType.Ascending)]
@@ -2723,6 +2738,11 @@ namespace Blog.ServicesTests.EntityServices
         /// Search async comments.
         /// Should return nothing when comments does not exists.
         /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
         [Theory]
         [InlineData("Comment 0", 0, 10, "CommentBody", OrderType.Ascending)]
         [InlineData("Comment 11", 10, 10, "CommentBody", OrderType.Ascending)]
