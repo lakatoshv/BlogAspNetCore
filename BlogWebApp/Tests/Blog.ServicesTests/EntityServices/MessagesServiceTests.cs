@@ -4010,6 +4010,85 @@ namespace Blog.ServicesTests.EntityServices
             Assert.NotEmpty(messages.Entities);
         }
 
+        /// <summary>
+        /// Search async messages with specification.
+        /// Should return message with equal specification when messages exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Test subject 1", 0, 10, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject 10", 10, 10, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject 11", 10, 20, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject 20", 0, 100, "Subject", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnMessage_WithEqualsSpecification_WhenCMessagesExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject {i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var query = new SearchQuery<Message>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Message>(fieldName, orderType));
+
+            query.AddFilter(x => x.Body.ToUpper().Contains($"{search}".ToUpper()));
+
+            _messagesRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, messagesList);
+                });
+
+            //Act
+            await _messagesService.SearchAsync(query);
+
+            //Act
+            var messages = await _messagesService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(messages);
+            Assert.NotEmpty(messages.Entities);
+            Assert.Single(messages.Entities);
+        }
+
         #endregion
 
         #region NotTestedYet
