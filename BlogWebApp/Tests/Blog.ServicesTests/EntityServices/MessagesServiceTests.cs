@@ -4167,6 +4167,43 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Empty(messages.Entities);
         }
 
+        /// <summary>
+        /// Search async messages.
+        /// Should return nothing when messages does not exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Test subject 1", 0, 10, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject 10", 10, 10, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject 11", 10, 20, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject 20", 0, 100, "Subject", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnNothing_WhenMessagesDoesNotExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var query = new SearchQuery<Message>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Message>(fieldName, orderType));
+
+            query.AddFilter(x => x.Body.ToUpper().Contains($"{search}".ToUpper()));
+
+            _messagesRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() => new PagedListResult<Message>());
+
+            //Act
+            var comments = await _messagesService.SearchAsync(query);
+
+            //Assert
+            Assert.Empty(comments.Entities);
+        }
+
         #endregion
 
         #region NotTestedYet
