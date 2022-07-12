@@ -2685,6 +2685,60 @@ namespace Blog.ServicesTests.EntityServices
             };
         }
 
+        /// <summary>
+        /// Verify that function Search async has been called.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests ", 0, 10, "Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests ", 10, 10, "Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests ", 10, 20, "Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests ", 0, 100, "Title", OrderType.Ascending)]
+        public async Task Verify_FunctionSearchAsync_HasBeenCalled(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var postsList = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsList.Add(new Post
+                {
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
+                });
+            }
+
+            var query = new SearchQuery<Post>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Post>(fieldName, orderType));
+
+            query.AddFilter(x => x.Title.ToUpper().Contains($"{search}".ToUpper()));
+
+            _postsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, postsList);
+                });
+
+            //Act
+            await _postsService.SearchAsync(query);
+
+            //Assert
+            _postsRepositoryMock.Verify(x => x.SearchAsync(query), Times.Once);
+        }
+
         #endregion
 
         #region NotTestedYet
