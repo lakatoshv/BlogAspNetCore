@@ -2852,6 +2852,62 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Single(posts.Entities);
         }
 
+        /// <summary>
+        /// Search async posts with specification.
+        /// Should return nothing with  when posts exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests -0", 0, 10, "Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests -11", 10, 10, "Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests -11", 10, 20, "Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests -11", 0, 100, "Title", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var postsList = new List<Post>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                postsList.Add(new Post
+                {
+                    Id = i,
+                    Title = $"Created from ServicesTests {i}",
+                    Description = $"Created from ServicesTests {i}",
+                    Content = $"Created from ServicesTests {i}",
+                    ImageUrl = $"Created from ServicesTests {i}",
+                });
+            }
+
+            var query = new SearchQuery<Post>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Post>(fieldName, orderType));
+
+            query.AddFilter(x => x.Title.ToUpper().Contains($"{search}".ToUpper()));
+
+            _postsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, postsList);
+                });
+
+            //Act
+            var posts = await _postsService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(posts);
+            Assert.Empty(posts.Entities);
+        }
+
         #endregion
 
         #region NotTestedYet
