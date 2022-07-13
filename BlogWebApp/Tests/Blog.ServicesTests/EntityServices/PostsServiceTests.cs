@@ -2908,6 +2908,43 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Empty(posts.Entities);
         }
 
+        /// <summary>
+        /// Search async posts.
+        /// Should return nothing when posts does not exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests 0", 0, 10, "Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests 11", 10, 10, "Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests 11", 10, 20, "Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests 11", 0, 100, "Title", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnNothing_WhenPostsDoesNotExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var query = new SearchQuery<Post>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Post>(fieldName, orderType));
+
+            query.AddFilter(x => x.Title.ToUpper().Contains($"{search}".ToUpper()));
+
+            _postsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() => new PagedListResult<Post>());
+
+            //Act
+            var posts = await _postsService.SearchAsync(query);
+
+            //Assert
+            Assert.Empty(posts.Entities);
+        }
+
         #endregion
 
         #region NotTestedYet
