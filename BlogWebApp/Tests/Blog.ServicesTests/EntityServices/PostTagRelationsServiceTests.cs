@@ -9,6 +9,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blog.Data.Specifications.Base;
 using Xunit;
+using Blog.Core.Infrastructure.Pagination;
+using Microsoft.EntityFrameworkCore;
+using Blog.Core.Enums;
+using Blog.Core.Infrastructure;
 
 namespace Blog.ServicesTests.EntityServices
 {
@@ -3850,8 +3854,86 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Search async function
+
+        /// <summary>
+        /// Search the specified query.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="postsTagsRelationsList">The posts tags relations list.</param>
+        /// <returns>PagedListResult.</returns>
+        protected PagedListResult<PostsTagsRelations> Search(SearchQuery<PostsTagsRelations> query, List<PostsTagsRelations> postsTagsRelationsList)
+        {
+            var sequence = postsTagsRelationsList.AsQueryable();
+
+            // Applying filters
+            if (query.Filters != null && query.Filters.Count > 0)
+            {
+                foreach (var filterClause in query.Filters)
+                {
+                    sequence = sequence.Where(filterClause);
+                    var a = sequence.Select(x => x).ToList();
+                }
+            }
+
+            // Include Properties
+            if (!string.IsNullOrWhiteSpace(query.IncludeProperties))
+            {
+                var properties = query.IncludeProperties.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
+                sequence = properties.Aggregate(sequence, (current, includeProperty) => current.Include(includeProperty));
+            }
+            var b = sequence.ToList();
+
+            // Resolving Sort Criteria
+            // This code applies the sorting criterias sent as the parameter
+            if (query.SortCriterias != null && query.SortCriterias.Count > 0)
+            {
+                var sortCriteria = query.SortCriterias[0];
+                var orderedSequence = sortCriteria.ApplyOrdering(sequence, false);
+
+                if (query.SortCriterias.Count > 1)
+                {
+                    for (var i = 1; i < query.SortCriterias.Count; i++)
+                    {
+                        var sc = query.SortCriterias[i];
+                        orderedSequence = sc.ApplyOrdering(orderedSequence, true);
+                    }
+                }
+
+                sequence = orderedSequence;
+            }
+            else
+            {
+                sequence = ((IOrderedQueryable<PostsTagsRelations>)sequence).OrderBy(x => true);
+            }
+
+            var c = sequence.ToList();
+
+            // Counting the total number of object.
+            var resultCount = sequence.Count();
+
+            var result = (query.Take > 0)
+                                ? sequence.Skip(query.Skip).Take(query.Take).ToList()
+                                : sequence.ToList();
+
+            // Debug info of what the query looks like
+            // Console.WriteLine(sequence.ToString());
+
+            // Setting up the return object.
+            bool hasNext = (query.Skip > 0 || query.Take > 0) && (query.Skip + query.Take < resultCount);
+            return new PagedListResult<PostsTagsRelations>()
+            {
+                Entities = result,
+                HasNext = hasNext,
+                HasPrevious = query.Skip > 0,
+                Count = resultCount,
+            };
+        }
+
+        #endregion
+
         #region NotTestedYet
-        //SearchAsync(SearchQuery<T> searchQuery)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion
