@@ -4110,6 +4110,66 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Single(postsTagsRelations.Entities);
         }
 
+        /// <summary>
+        /// Search async posts tags relations with specification.
+        /// Should return nothing with  when posts tags relations exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests -0", 0, 10, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests -11", 10, 10, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests -11", 10, 20, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests -11", 0, 100, "Post.Title", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostsTagsRelationsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{search} {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+            var query = new SearchQuery<PostsTagsRelations>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<PostsTagsRelations>(fieldName, orderType));
+
+            query.AddFilter(x => x.Post.Title.ToUpper().Contains($"{search}".ToUpper()));
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, postsTagsRelationsList);
+                });
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.Empty(postsTagsRelations.Entities);
+        }
+
         #endregion
 
         #region NotTestedYet
