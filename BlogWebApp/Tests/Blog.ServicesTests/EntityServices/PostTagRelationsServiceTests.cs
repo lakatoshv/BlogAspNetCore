@@ -4170,6 +4170,43 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Empty(postsTagsRelations.Entities);
         }
 
+        /// <summary>
+        /// Search async posts tags relations.
+        /// Should return nothing when posts tags relations does not exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests 0", 0, 10, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests 11", 10, 10, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests 11", 10, 20, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests 11", 0, 100, "Post.Title", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnNothing_WhenPostsTagsRelationsDoesNotExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var query = new SearchQuery<PostsTagsRelations>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<PostsTagsRelations>(fieldName, orderType));
+
+            query.AddFilter(x => x.Post.Title.ToUpper().Contains($"{search}".ToUpper()));
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() => new PagedListResult<PostsTagsRelations>());
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.SearchAsync(query);
+
+            //Assert
+            Assert.Empty(postsTagsRelations.Entities);
+        }
+
         #endregion
 
         #region NotTestedYet
