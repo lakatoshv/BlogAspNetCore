@@ -1,15 +1,20 @@
 ﻿using AutoMapper;
+using Blog.Core.Enums;
+using Blog.Core.Infrastructure;
+using Blog.Core.Infrastructure.Pagination;
 using Blog.Data.Models;
 using Blog.Data.Repository;
 using Blog.Data.Specifications;
 using Blog.Services;
 using Blog.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
+using ProfileModel = Blog.Data.Models.Profile;
 
 namespace Blog.ServicesTests.EntityServices
 {
@@ -28,7 +33,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <summary>
         /// The profile repository mock.
         /// </summary>
-        private readonly Mock<IRepository<Data.Models.Profile>> _profileRepositoryMock;
+        private readonly Mock<IRepository<ProfileModel>> _profileRepositoryMock;
 
         #endregion
 
@@ -39,7 +44,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         public ProfileServiceTests()
         {
-            _profileRepositoryMock = new Mock<IRepository<Data.Models.Profile>>();
+            _profileRepositoryMock = new Mock<IRepository<ProfileModel>>();
             var mapper = new Mock<IMapper>();
             _profileService = new ProfileService(_profileRepositoryMock.Object, mapper.Object);
         }
@@ -56,7 +61,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange  
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
@@ -69,7 +74,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -99,7 +104,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
@@ -112,7 +117,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -142,7 +147,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             _profileRepositoryMock.Setup(x => x.GetAll())
-                .Returns(() => new List<Data.Models.Profile>().AsQueryable());
+                .Returns(() => new List<ProfileModel>().AsQueryable());
 
             //Act
             var profiles = _profileService.GetAll();
@@ -163,7 +168,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange  
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
@@ -176,7 +181,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -206,7 +211,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
 
             for (var i = 0; i < random.Next(100); i++)
             {
@@ -219,7 +224,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -249,7 +254,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             _profileRepositoryMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => new List<Data.Models.Profile>());
+                .ReturnsAsync(() => new List<ProfileModel>());
 
             //Act
             var profiles = await _profileService.GetAllAsync();
@@ -270,7 +275,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = new Guid().ToString();
 
             for (var i = 0; i < random.Next(100); i++)
@@ -284,7 +289,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -315,7 +320,7 @@ namespace Blog.ServicesTests.EntityServices
             //Test failed
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = new Guid().ToString();
 
             for (var i = 0; i < random.Next(100); i++)
@@ -329,7 +334,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -361,7 +366,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = $"{new Guid()}1";
 
             for (var i = 0; i < random.Next(100); i++)
@@ -375,7 +380,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -407,7 +412,7 @@ namespace Blog.ServicesTests.EntityServices
             var searchUserId = new Guid().ToString();
             var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
             _profileRepositoryMock.Setup(x => x.GetAll(specification))
-                .Returns(() => new List<Data.Models.Profile>().AsQueryable());
+                .Returns(() => new List<ProfileModel>().AsQueryable());
 
             //Act
             var messages = _profileService.GetAll();
@@ -428,7 +433,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = new Guid().ToString();
 
             for (var i = 0; i < random.Next(100); i++)
@@ -442,7 +447,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -473,7 +478,7 @@ namespace Blog.ServicesTests.EntityServices
             //Test failed
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = new Guid().ToString();
 
             for (var i = 0; i < random.Next(100); i++)
@@ -487,7 +492,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -519,7 +524,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = $"{new Guid()}1";
 
             for (var i = 0; i < random.Next(100); i++)
@@ -533,7 +538,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -565,7 +570,7 @@ namespace Blog.ServicesTests.EntityServices
             var searchUserId = new Guid().ToString();
             var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
             _profileRepositoryMock.Setup(x => x.GetAllAsync(specification))
-                .ReturnsAsync(() => new List<Data.Models.Profile>());
+                .ReturnsAsync(() => new List<ProfileModel>());
 
             //Act
             var messages = await _profileService.GetAllAsync();
@@ -597,7 +602,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 Id = profileId,
                 UserId = userId,
@@ -635,7 +640,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 Id = profileId,
                 UserId = userId,
@@ -697,7 +702,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 Id = profileId,
                 UserId = userId,
@@ -736,7 +741,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 Id = profileId,
                 UserId = userId,
@@ -798,7 +803,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 UserId = userId,
                 User = user,
@@ -838,7 +843,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 UserId = userId,
                 User = user,
@@ -872,7 +877,7 @@ namespace Blog.ServicesTests.EntityServices
             var random = new Random();
             var profileId = random.Next(52);
             var itemsCount = random.Next(10);
-            var newProfiles = new List<Data.Models.Profile>();
+            var newProfiles = new List<ProfileModel>();
 
             for (int i = 0; i < itemsCount; i++)
             {
@@ -885,7 +890,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                newProfiles.Add(new Data.Models.Profile
+                newProfiles.Add(new ProfileModel
                 {
                     UserId = userId,
                     User = user,
@@ -920,7 +925,7 @@ namespace Blog.ServicesTests.EntityServices
             var random = new Random();
             var profileId = random.Next(52);
             var itemsCount = random.Next(10);
-            var newProfiles = new List<Data.Models.Profile>();
+            var newProfiles = new List<ProfileModel>();
 
             for (int i = 0; i < itemsCount; i++)
             {
@@ -933,7 +938,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                newProfiles.Add(new Data.Models.Profile
+                newProfiles.Add(new ProfileModel
                 {
                     UserId = userId,
                     User = user,
@@ -983,7 +988,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 UserId = userId,
                 User = user,
@@ -1024,7 +1029,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 UserId = userId,
                 User = user,
@@ -1059,7 +1064,7 @@ namespace Blog.ServicesTests.EntityServices
             var random = new Random();
             var profileId = random.Next(52);
             var itemsCount = random.Next(10);
-            var newProfiles = new List<Data.Models.Profile>();
+            var newProfiles = new List<ProfileModel>();
 
             for (int i = 0; i < itemsCount; i++)
             {
@@ -1072,7 +1077,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                newProfiles.Add(new Data.Models.Profile
+                newProfiles.Add(new ProfileModel
                 {
                     UserId = userId,
                     User = user,
@@ -1108,7 +1113,7 @@ namespace Blog.ServicesTests.EntityServices
             var random = new Random();
             var profileId = random.Next(52);
             var itemsCount = random.Next(10);
-            var newProfiles = new List<Data.Models.Profile>();
+            var newProfiles = new List<ProfileModel>();
 
             for (int i = 0; i < itemsCount; i++)
             {
@@ -1121,7 +1126,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                newProfiles.Add(new Data.Models.Profile
+                newProfiles.Add(new ProfileModel
                 {
                     UserId = userId,
                     User = user,
@@ -1171,7 +1176,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 UserId = userId,
                 User = user,
@@ -1216,7 +1221,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 UserId = userId,
                 User = user,
@@ -1257,7 +1262,7 @@ namespace Blog.ServicesTests.EntityServices
             var profileId = random.Next(52);
             var itemsCount = random.Next(10);
             var profileIds = new List<string>();
-            var newProfiles = new List<Data.Models.Profile>();
+            var newProfiles = new List<ProfileModel>();
 
             for (int i = 0; i < itemsCount; i++)
             {
@@ -1270,7 +1275,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                newProfiles.Add(new Data.Models.Profile
+                newProfiles.Add(new ProfileModel
                 {
                     UserId = userId,
                     User = user,
@@ -1311,7 +1316,7 @@ namespace Blog.ServicesTests.EntityServices
             var random = new Random();
             var profileId = random.Next(52);
             var itemsCount = random.Next(10);
-            var newProfiles = new List<Data.Models.Profile>();
+            var newProfiles = new List<ProfileModel>();
             var profileIds = new List<string>();
 
             for (int i = 0; i < itemsCount; i++)
@@ -1325,7 +1330,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                newProfiles.Add(new Data.Models.Profile
+                newProfiles.Add(new ProfileModel
                 {
                     UserId = userId,
                     User = user,
@@ -1385,7 +1390,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 UserId = userId,
                 User = user,
@@ -1431,7 +1436,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 UserId = userId,
                 User = user,
@@ -1473,7 +1478,7 @@ namespace Blog.ServicesTests.EntityServices
             var profileId = random.Next(52);
             var itemsCount = random.Next(10);
             var profileIds = new List<string>();
-            var newProfiles = new List<Data.Models.Profile>();
+            var newProfiles = new List<ProfileModel>();
 
             for (int i = 0; i < itemsCount; i++)
             {
@@ -1486,7 +1491,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                newProfiles.Add(new Data.Models.Profile
+                newProfiles.Add(new ProfileModel
                 {
                     UserId = userId,
                     User = user,
@@ -1528,7 +1533,7 @@ namespace Blog.ServicesTests.EntityServices
             var random = new Random();
             var profileId = random.Next(52);
             var itemsCount = random.Next(10);
-            var newProfiles = new List<Data.Models.Profile>();
+            var newProfiles = new List<ProfileModel>();
             var profileIds = new List<string>();
 
             for (int i = 0; i < itemsCount; i++)
@@ -1542,7 +1547,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                newProfiles.Add(new Data.Models.Profile
+                newProfiles.Add(new ProfileModel
                 {
                     UserId = userId,
                     User = user,
@@ -1600,7 +1605,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 UserId = userId,
                 User = user,
@@ -1647,7 +1652,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 UserId = userId,
                 User = user,
@@ -1697,7 +1702,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 UserId = userId,
                 User = user,
@@ -1744,7 +1749,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 UserId = userId,
                 User = user,
@@ -1785,7 +1790,7 @@ namespace Blog.ServicesTests.EntityServices
             var random = new Random();
             var profileId = random.Next(52);
             var itemsCount = random.Next(10);
-            var newProfiles = new List<Data.Models.Profile>();
+            var newProfiles = new List<ProfileModel>();
 
             for (int i = 0; i < itemsCount; i++)
             {
@@ -1798,7 +1803,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                newProfiles.Add(new Data.Models.Profile
+                newProfiles.Add(new ProfileModel
                 {
                     UserId = userId,
                     User = user,
@@ -1834,7 +1839,7 @@ namespace Blog.ServicesTests.EntityServices
             var random = new Random();
             var profileId = random.Next(52);
             var itemsCount = random.Next(10);
-            var newProfiles = new List<Data.Models.Profile>();
+            var newProfiles = new List<ProfileModel>();
 
             for (int i = 0; i < itemsCount; i++)
             {
@@ -1847,7 +1852,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                newProfiles.Add(new Data.Models.Profile
+                newProfiles.Add(new ProfileModel
                 {
                     UserId = userId,
                     User = user,
@@ -1901,7 +1906,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 UserId = userId,
                 User = user,
@@ -1946,7 +1951,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 UserId = userId,
                 User = user,
@@ -1997,7 +2002,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 UserId = userId,
                 User = user,
@@ -2042,7 +2047,7 @@ namespace Blog.ServicesTests.EntityServices
                 Email = "test@test.test",
                 UserName = "test@test.test"
             };
-            var newProfile = new Data.Models.Profile
+            var newProfile = new ProfileModel
             {
                 UserId = userId,
                 User = user,
@@ -2083,7 +2088,7 @@ namespace Blog.ServicesTests.EntityServices
             var random = new Random();
             var profileId = random.Next(52);
             var itemsCount = random.Next(10);
-            var newProfiles = new List<Data.Models.Profile>();
+            var newProfiles = new List<ProfileModel>();
 
             for (int i = 0; i < itemsCount; i++)
             {
@@ -2096,7 +2101,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                newProfiles.Add(new Data.Models.Profile
+                newProfiles.Add(new ProfileModel
                 {
                     UserId = userId,
                     User = user,
@@ -2132,7 +2137,7 @@ namespace Blog.ServicesTests.EntityServices
             var random = new Random();
             var profileId = random.Next(52);
             var itemsCount = random.Next(10);
-            var newProfiles = new List<Data.Models.Profile>();
+            var newProfiles = new List<ProfileModel>();
 
             for (int i = 0; i < itemsCount; i++)
             {
@@ -2145,7 +2150,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                newProfiles.Add(new Data.Models.Profile
+                newProfiles.Add(new ProfileModel
                 {
                     UserId = userId,
                     User = user,
@@ -2187,7 +2192,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = new Guid().ToString();
 
             for (var i = 0; i < random.Next(100); i++)
@@ -2203,7 +2208,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -2233,7 +2238,7 @@ namespace Blog.ServicesTests.EntityServices
             //Test failed
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = new Guid().ToString();
 
             for (var i = 0; i < random.Next(100); i++)
@@ -2249,7 +2254,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -2278,7 +2283,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = $"{new Guid().ToString()}1";
 
             for (var i = 0; i < random.Next(100); i++)
@@ -2292,7 +2297,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -2345,7 +2350,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = new Guid().ToString();
 
             for (var i = 0; i < random.Next(100); i++)
@@ -2361,7 +2366,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -2392,7 +2397,7 @@ namespace Blog.ServicesTests.EntityServices
             //Test failed
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = new Guid().ToString();
 
             for (var i = 0; i < random.Next(100); i++)
@@ -2408,7 +2413,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -2438,7 +2443,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = $"{new Guid().ToString()}1";
 
             for (var i = 0; i < random.Next(100); i++)
@@ -2452,7 +2457,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -2505,7 +2510,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = new Guid().ToString();
 
             for (var i = 0; i < random.Next(100); i++)
@@ -2521,7 +2526,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -2551,7 +2556,7 @@ namespace Blog.ServicesTests.EntityServices
             //Test failed
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = new Guid().ToString();
 
             for (var i = 0; i < random.Next(100); i++)
@@ -2567,7 +2572,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -2585,7 +2590,7 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.NotNull(profile);
-            Assert.IsType<Data.Models.Profile>(profile);
+            Assert.IsType<ProfileModel>(profile);
         }
 
         /// <summary>
@@ -2597,7 +2602,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = $"{new Guid().ToString()}1";
 
             for (var i = 0; i < random.Next(100); i++)
@@ -2611,7 +2616,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -2663,7 +2668,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = new Guid().ToString();
 
             for (var i = 0; i < random.Next(100); i++)
@@ -2679,7 +2684,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -2709,7 +2714,7 @@ namespace Blog.ServicesTests.EntityServices
             //Test failed
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = new Guid().ToString();
 
             for (var i = 0; i < random.Next(100); i++)
@@ -2725,7 +2730,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -2743,7 +2748,7 @@ namespace Blog.ServicesTests.EntityServices
 
             //Assert
             Assert.NotNull(profile);
-            Assert.IsType<Data.Models.Profile>(profile);
+            Assert.IsType<ProfileModel>(profile);
         }
 
         /// <summary>
@@ -2755,7 +2760,7 @@ namespace Blog.ServicesTests.EntityServices
         {
             //Arrange
             var random = new Random();
-            var profilesList = new List<Data.Models.Profile>();
+            var profilesList = new List<ProfileModel>();
             var searchUserId = $"{new Guid().ToString()}1";
 
             for (var i = 0; i < random.Next(100); i++)
@@ -2769,7 +2774,7 @@ namespace Blog.ServicesTests.EntityServices
                     Email = "test@test.test",
                     UserName = "test@test.test"
                 };
-                profilesList.Add(new Data.Models.Profile
+                profilesList.Add(new ProfileModel
                 {
                     Id = i,
                     UserId = userId,
@@ -2811,8 +2816,8 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        
         #region NotTestedYet
-        //SearchAsync(SearchQuery<T> searchQuery)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion
