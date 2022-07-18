@@ -2958,6 +2958,73 @@ namespace Blog.ServicesTests.EntityServices
             _profileRepositoryMock.Verify(x => x.SearchAsync(query), Times.Once);
         }
 
+        /// <summary>
+        /// Search async profiles.
+        /// Should return profiles when profiles exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("test", 0, 10, "User.Email", OrderType.Ascending)]
+        [InlineData("test", 10, 10, "User.Email", OrderType.Ascending)]
+        [InlineData("test", 10, 20, "User.Email", OrderType.Ascending)]
+        [InlineData("test", 0, 100, "User.Email", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnProfiles_WhenProfilesExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var profilesList = new List<ProfileModel>();
+            var searchUserId = new Guid().ToString();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var userId = i == 0
+                    ? searchUserId
+                    : new Guid().ToString();
+                var user = new ApplicationUser
+                {
+                    Id = userId,
+                    FirstName = "Test fn",
+                    LastName = "Test ln",
+                    Email = "test@test.test",
+                    UserName = "test@test.test"
+                };
+                profilesList.Add(new ProfileModel
+                {
+                    Id = i,
+                    UserId = userId,
+                    User = user,
+                    ProfileImg = $"img{i}.jpg"
+                });
+            }
+
+            var query = new SearchQuery<ProfileModel>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<ProfileModel>(fieldName, orderType));
+
+            query.AddFilter(x => x.User.Email.ToUpper().Contains($"{search}".ToUpper()));
+
+            _profileRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, profilesList);
+                });
+
+            //Act
+            var posts = await _profileService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(posts);
+            Assert.NotEmpty(posts.Entities);
+        }
+
         #endregion
 
         #region NotTestedYet
