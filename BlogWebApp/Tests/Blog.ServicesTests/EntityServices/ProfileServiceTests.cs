@@ -3160,6 +3160,43 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Empty(posts.Entities);
         }
 
+        /// <summary>
+        /// Search async profiles.
+        /// Should return nothing when profiles does not exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests 0", 0, 10, "User.Email", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests 11", 10, 10, "User.Email", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests 11", 10, 20, "User.Email", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests 11", 0, 100, "User.Email", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnNothing_WhenProfilesDoesNotExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var query = new SearchQuery<ProfileModel>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<ProfileModel>(fieldName, orderType));
+
+            query.AddFilter(x => x.User.Email.ToUpper().Contains($"{search}".ToUpper()));
+
+            _profileRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() => new PagedListResult<ProfileModel>());
+
+            //Act
+            var posts = await _profileService.SearchAsync(query);
+
+            //Assert
+            Assert.Empty(posts.Entities);
+        }
+
         #endregion
 
         #region NotTestedYet
