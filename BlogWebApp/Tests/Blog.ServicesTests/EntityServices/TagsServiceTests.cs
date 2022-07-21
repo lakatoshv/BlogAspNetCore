@@ -2504,6 +2504,52 @@ namespace Blog.ServicesTests.EntityServices
             };
         }
 
+        /// <summary>
+        /// Verify that function Search async has been called.
+        /// </summary>
+        [Theory]
+        [InlineData("Tag ", 0, 10, "Title", OrderType.Ascending)]
+        [InlineData("Tag ", 10, 10, "Title", OrderType.Ascending)]
+        [InlineData("Tag ", 10, 20, "Title", OrderType.Ascending)]
+        [InlineData("Tag ", 0, 100, "Title", OrderType.Ascending)]
+        public async Task Verify_FunctionSearchAsync_HasBeenCalled(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+            var query = new SearchQuery<Tag>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Tag>(fieldName, orderType));
+
+            query.AddFilter(x => x.Title.ToUpper().Contains($"{search}".ToUpper()));
+
+            _tagsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, tagsList);
+                });
+
+            //Act
+            await _tagsService.SearchAsync(query);
+
+            //Assert
+            _tagsRepositoryMock.Verify(x => x.SearchAsync(query), Times.Once);
+        }
+
         #endregion
 
         #region NotTestedYet
