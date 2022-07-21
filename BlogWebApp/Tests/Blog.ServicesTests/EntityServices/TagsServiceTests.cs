@@ -2550,6 +2550,55 @@ namespace Blog.ServicesTests.EntityServices
             _tagsRepositoryMock.Verify(x => x.SearchAsync(query), Times.Once);
         }
 
+        /// <summary>
+        /// Search async tags.
+        /// Should return tags when tags exists.
+        /// </summary>
+        /// <param name="notEqualCount">The not equal count.</param>
+        [Theory]
+        [InlineData("Tag ", 0, 10, "Title", OrderType.Ascending)]
+        [InlineData("Tag ", 10, 10, "Title", OrderType.Ascending)]
+        [InlineData("Tag ", 10, 20, "Title", OrderType.Ascending)]
+        [InlineData("Tag ", 0, 100, "Title", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnTags_WhenTagsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+            var query = new SearchQuery<Tag>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Tag>(fieldName, orderType));
+
+            query.AddFilter(x => x.Title.ToUpper().Contains($"{search}".ToUpper()));
+
+            _tagsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, tagsList);
+                });
+
+            //Act
+            var tags = await _tagsService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(tags);
+            Assert.NotEmpty(tags.Entities);
+        }
+
         #endregion
 
         #region NotTestedYet
