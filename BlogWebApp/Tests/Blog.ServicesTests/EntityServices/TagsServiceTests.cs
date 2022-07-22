@@ -2650,6 +2650,56 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Single(tags.Entities);
         }
 
+        /// <summary>
+        /// Search async tags with specification.
+        /// Should return nothing with  when tags does not exists.
+        /// </summary>
+        /// <param name="equalCount">The equal count.</param>
+        /// <param name="commentBodySearch">The CommentBody search.</param>
+        [Theory]
+        [InlineData("Tag -0", 0, 10, "Title", OrderType.Ascending)]
+        [InlineData("Tag -1", 10, 10, "Title", OrderType.Ascending)]
+        [InlineData("Tag -10", 10, 20, "Title", OrderType.Ascending)]
+        [InlineData("Tag -90", 0, 100, "Title", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnNothing_WithEqualSpecification_WhenTagsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var tagsList = new List<Tag>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                tagsList.Add(new Tag
+                {
+                    Id = i,
+                    Title = $"Tag {i}",
+                });
+            }
+
+            var query = new SearchQuery<Tag>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Tag>(fieldName, orderType));
+
+            query.AddFilter(x => x.Title.ToUpper().Contains($"{search}".ToUpper()));
+
+            _tagsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, tagsList);
+                });
+
+            //Act
+            var tags = await _tagsService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(tags);
+            Assert.Empty(tags.Entities);
+        }
+
         #endregion
 
         #region NotTestedYet
