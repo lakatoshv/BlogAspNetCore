@@ -2700,6 +2700,38 @@ namespace Blog.ServicesTests.EntityServices
             Assert.Empty(tags.Entities);
         }
 
+        /// <summary>
+        /// Search async tags.
+        /// Should return nothing when tags does not exists.
+        /// </summary>
+        [Theory]
+        [InlineData("Comment 0", 0, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment 11", 10, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment 11", 10, 20, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment 11", 0, 100, "CommentBody", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnNothing_WhenTagsDoesNotExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var query = new SearchQuery<Tag>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Tag>(fieldName, orderType));
+
+            query.AddFilter(x => x.Title.ToUpper().Contains($"{search}".ToUpper()));
+
+            _tagsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() => new PagedListResult<Tag>());
+
+            //Act
+            var tags = await _tagsService.SearchAsync(query);
+
+            //Assert
+            Assert.Empty(tags.Entities);
+        }
+
         #endregion
 
         #region NotTestedYet
