@@ -28,7 +28,7 @@ namespace Blog.IntegrationTests.General
         /// </summary>
         protected GeneralIntegrationTest()
         {
-            var appFactory = new WebApplicationFactory<Startup>()
+            var appFactory = new WebApplicationFactory<Program>()
                 .WithWebHostBuilder(builder =>
                     {
                         builder.ConfigureServices(services =>
