@@ -63,3 +63,4 @@
 /Clients/BlogBlazor/Shared/Blazor.Contracts/bin/Debug/net5.0
 /Clients/BlogBlazor/Shared/Blazor.Contracts/obj
 /BlogWebApp/Tests/Blog.ServicesTests/bin/Debug/net6.0
+/BlogWebApp/Tests/Blog.UnitTests/bin/Debug/net6.0
