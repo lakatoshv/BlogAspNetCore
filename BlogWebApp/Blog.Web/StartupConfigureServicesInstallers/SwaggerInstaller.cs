@@ -80,7 +80,7 @@ namespace Blog.Web.StartupConfigureServicesInstallers
                 c.OperationFilter<ApplySummariesOperationFilter>();
             });
 
-            services.AddSwaggerExamplesFromAssemblyOf<Startup>();
+            services.AddSwaggerExamplesFromAssemblyOf<Program>();
         }
     }
 }
