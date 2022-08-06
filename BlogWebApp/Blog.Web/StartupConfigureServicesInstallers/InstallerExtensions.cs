@@ -18,7 +18,7 @@
         /// <param name="configuration">The configuration.</param>
         public static void InstallServicesInAssembly(this IServiceCollection services, IConfiguration configuration)
         {
-            var installers = typeof(Startup).Assembly.ExportedTypes.Where(x =>
+            var installers = typeof(Program).Assembly.ExportedTypes.Where(x =>
                     typeof(IInstaller).IsAssignableFrom(x)
                     && !x.IsInterface
                     && !x.IsAbstract)
