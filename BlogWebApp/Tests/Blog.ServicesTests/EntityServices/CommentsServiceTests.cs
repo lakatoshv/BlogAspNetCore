@@ -1,8 +1,12 @@
-﻿using Blog.Data.Models;
+﻿using Blog.Core.Enums;
+using Blog.Core.Infrastructure;
+using Blog.Core.Infrastructure.Pagination;
+using Blog.Data.Models;
 using Blog.Data.Repository;
 using Blog.Data.Specifications;
 using Blog.Services;
 using Blog.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -2442,8 +2446,334 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Search async function
+
+        /// <summary>
+        /// Search the specified query.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="commentsList">The comments list.</param>
+        /// <returns>PagedListResult.</returns>
+        protected PagedListResult<Comment> Search(SearchQuery<Comment> query, List<Comment> commentsList)
+        {
+            var sequence = commentsList.AsQueryable();
+
+            // Applying filters
+            if (query.Filters != null && query.Filters.Count > 0)
+            {
+                foreach (var filterClause in query.Filters)
+                {
+                    sequence = sequence.Where(filterClause);
+                    var a = sequence.Select(x => x).ToList();
+                }
+            }
+
+            // Include Properties
+            if (!string.IsNullOrWhiteSpace(query.IncludeProperties))
+            {
+                var properties = query.IncludeProperties.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
+                sequence = properties.Aggregate(sequence, (current, includeProperty) => current.Include(includeProperty));
+            }
+            var b = sequence.ToList();
+
+            // Resolving Sort Criteria
+            // This code applies the sorting criterias sent as the parameter
+            if (query.SortCriterias != null && query.SortCriterias.Count > 0)
+            {
+                var sortCriteria = query.SortCriterias[0];
+                var orderedSequence = sortCriteria.ApplyOrdering(sequence, false);
+
+                if (query.SortCriterias.Count > 1)
+                {
+                    for (var i = 1; i < query.SortCriterias.Count; i++)
+                    {
+                        var sc = query.SortCriterias[i];
+                        orderedSequence = sc.ApplyOrdering(orderedSequence, true);
+                    }
+                }
+
+                sequence = orderedSequence;
+            }
+            else
+            {
+                sequence = ((IOrderedQueryable<Comment>)sequence).OrderBy(x => true);
+            }
+
+            var c = sequence.ToList();
+
+            // Counting the total number of object.
+            var resultCount = sequence.Count();
+
+            var result = (query.Take > 0)
+                                ? sequence.Skip(query.Skip).Take(query.Take).ToList()
+                                : sequence.ToList();
+
+            // Debug info of what the query looks like
+            // Console.WriteLine(sequence.ToString());
+
+            // Setting up the return object.
+            bool hasNext = (query.Skip > 0 || query.Take > 0) && (query.Skip + query.Take < resultCount);
+            return new PagedListResult<Comment>()
+            {
+                Entities = result,
+                HasNext = hasNext,
+                HasPrevious = query.Skip > 0,
+                Count = resultCount,
+            };
+        }
+
+        /// <summary>
+        /// Verify that function Search async has been called.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Comment ", 0, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment ", 10, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment ", 10, 20, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment ", 0, 100, "CommentBody", OrderType.Ascending)]
+        public async Task Verify_FunctionSearchAsync_HasBeenCalled(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var commentsList = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                commentsList.Add(new Comment
+                {
+                    Id = i,
+                    CommentBody = $"Comment {i}",
+                });
+            }
+
+            var query = new SearchQuery<Comment>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Comment>(fieldName, orderType));
+
+            query.AddFilter(x => x.CommentBody.ToUpper().Contains($"{search}".ToUpper()));
+
+            _commentsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, commentsList);
+                });
+
+            //Act
+            await _commentsService.SearchAsync(query);
+
+            //Assert
+            _commentsRepositoryMock.Verify(x => x.SearchAsync(query), Times.Once);
+        }
+
+        /// <summary>
+        /// Search async comments.
+        /// Should return comments when comments exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Comment ", 0, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment ", 10, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment ", 10, 20, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment ", 0, 100, "CommentBody", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnComments_WhenCommentsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var commentsList = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                commentsList.Add(new Comment
+                {
+                    Id = i,
+                    CommentBody = $"Comment {i}",
+                });
+            }
+
+            var query = new SearchQuery<Comment>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Comment>(fieldName, orderType));
+
+            query.AddFilter(x => x.CommentBody.ToUpper().Contains($"{search}".ToUpper()));
+
+            _commentsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, commentsList);
+                });
+
+            //Act
+            var comments = await _commentsService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(comments);
+            Assert.NotEmpty(comments.Entities);
+        }
+
+        /// <summary>
+        /// Search async comments with specification.
+        /// Should return comment with equal specification when comments exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Comment 0", 0, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment 11", 10, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment 11", 10, 20, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment 11", 0, 100, "CommentBody", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnComment_WithEqualsSpecification_WhenCommentsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var commentsList = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                commentsList.Add(new Comment
+                {
+                    Id = i,
+                    CommentBody = $"Comment {i}",
+                });
+            }
+
+            var query = new SearchQuery<Comment>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Comment>(fieldName, orderType));
+
+            query.AddFilter(x => x.CommentBody.ToUpper().Equals($"{search}".ToUpper()));
+
+            _commentsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, commentsList);
+                });
+
+            //Act
+            var comments = await _commentsService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(comments);
+            Assert.NotEmpty(comments.Entities);
+            Assert.Single(comments.Entities);
+        }
+
+        /// <summary>
+        /// Search async comments with specification.
+        /// Should return nothing with  when comments does not exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Comment -0", 0, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment -11", 10, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment -11", 10, 20, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment -11", 0, 100, "CommentBody", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnNothing_WithEqualSpecification_WhenCommentsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var commentsList = new List<Comment>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                commentsList.Add(new Comment
+                {
+                    Id = i,
+                    CommentBody = $"Comment {i}",
+                });
+            }
+
+            var query = new SearchQuery<Comment>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Comment>(fieldName, orderType));
+
+            query.AddFilter(x => x.CommentBody.ToUpper().Equals($"{search}".ToUpper()));
+
+            _commentsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, commentsList);
+                });
+
+            //Act
+            var comments = await _commentsService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(comments);
+            Assert.Empty(comments.Entities);
+        }
+
+        /// <summary>
+        /// Search async comments.
+        /// Should return nothing when comments does not exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Comment 0", 0, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment 11", 10, 10, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment 11", 10, 20, "CommentBody", OrderType.Ascending)]
+        [InlineData("Comment 11", 0, 100, "CommentBody", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnNothing_WhenCommentsDoesNotExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var query = new SearchQuery<Comment>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Comment>(fieldName, orderType));
+
+            query.AddFilter(x => x.CommentBody.ToUpper().Contains($"{search}".ToUpper()));
+
+            _commentsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() => new PagedListResult<Comment>());
+
+            //Act
+            var comments = await _commentsService.SearchAsync(query);
+
+            //Assert
+            Assert.Empty(comments.Entities);
+        }
+
+        #endregion
+
         #region NotTestedYet
-        //SearchAsync(SearchQuery<T> searchQuery)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion

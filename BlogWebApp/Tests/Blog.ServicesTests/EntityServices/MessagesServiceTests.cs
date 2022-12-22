@@ -1,8 +1,12 @@
-﻿using Blog.Data.Models;
+﻿using Blog.Core.Enums;
+using Blog.Core.Infrastructure;
+using Blog.Core.Infrastructure.Pagination;
+using Blog.Data.Models;
 using Blog.Data.Repository;
 using Blog.Data.Specifications;
 using Blog.Services;
 using Blog.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -3778,8 +3782,431 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Search async function
+
+        /// <summary>
+        /// Search the specified query.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="messagesList">The messages list.</param>
+        /// <returns>PagedListResult.</returns>
+        protected PagedListResult<Message> Search(SearchQuery<Message> query, List<Message> messagesList)
+        {
+            var sequence = messagesList.AsQueryable();
+
+            // Applying filters
+            if (query.Filters != null && query.Filters.Count > 0)
+            {
+                foreach (var filterClause in query.Filters)
+                {
+                    sequence = sequence.Where(filterClause);
+                    var a = sequence.Select(x => x).ToList();
+                }
+            }
+
+            // Include Properties
+            if (!string.IsNullOrWhiteSpace(query.IncludeProperties))
+            {
+                var properties = query.IncludeProperties.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
+                sequence = properties.Aggregate(sequence, (current, includeProperty) => current.Include(includeProperty));
+            }
+            var b = sequence.ToList();
+
+            // Resolving Sort Criteria
+            // This code applies the sorting criterias sent as the parameter
+            if (query.SortCriterias != null && query.SortCriterias.Count > 0)
+            {
+                var sortCriteria = query.SortCriterias[0];
+                var orderedSequence = sortCriteria.ApplyOrdering(sequence, false);
+
+                if (query.SortCriterias.Count > 1)
+                {
+                    for (var i = 1; i < query.SortCriterias.Count; i++)
+                    {
+                        var sc = query.SortCriterias[i];
+                        orderedSequence = sc.ApplyOrdering(orderedSequence, true);
+                    }
+                }
+
+                sequence = orderedSequence;
+            }
+            else
+            {
+                sequence = ((IOrderedQueryable<Message>)sequence).OrderBy(x => true);
+            }
+
+            var c = sequence.ToList();
+
+            // Counting the total number of object.
+            var resultCount = sequence.Count();
+
+            var result = (query.Take > 0)
+                                ? sequence.Skip(query.Skip).Take(query.Take).ToList()
+                                : sequence.ToList();
+
+            // Debug info of what the query looks like
+            // Console.WriteLine(sequence.ToString());
+
+            // Setting up the return object.
+            bool hasNext = (query.Skip > 0 || query.Take > 0) && (query.Skip + query.Take < resultCount);
+            return new PagedListResult<Message>()
+            {
+                Entities = result,
+                HasNext = hasNext,
+                HasPrevious = query.Skip > 0,
+                Count = resultCount,
+            };
+        }
+
+        /// <summary>
+        /// Verify that function Search async has been called.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Test subject ", 0, 10, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject ", 10, 10, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject ", 10, 20, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject ", 0, 100, "Subject", OrderType.Ascending)]
+        public async Task Verify_FunctionSearchAsync_HasBeenCalled(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject {i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var query = new SearchQuery<Message>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Message>(fieldName, orderType));
+
+            query.AddFilter(x => x.Body.ToUpper().Contains($"{search}".ToUpper()));
+
+            _messagesRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, messagesList);
+                });
+
+            //Act
+            await _messagesService.SearchAsync(query);
+
+            //Assert
+            _messagesRepositoryMock.Verify(x => x.SearchAsync(query), Times.Once);
+        }
+
+        /// <summary>
+        /// Search async messages.
+        /// Should return messages when messages exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Test subject ", 0, 10, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject ", 10, 10, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject ", 10, 20, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject ", 0, 100, "Subject", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnMessages_WhenMessagesExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject {i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var query = new SearchQuery<Message>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Message>(fieldName, orderType));
+
+            query.AddFilter(x => x.Body.ToUpper().Contains($"{search}".ToUpper()));
+
+            _messagesRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, messagesList);
+                });
+
+            //Act
+            await _messagesService.SearchAsync(query);
+
+            //Act
+            var messages = await _messagesService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(messages);
+            Assert.NotEmpty(messages.Entities);
+        }
+
+        /// <summary>
+        /// Search async messages with specification.
+        /// Should return message with equal specification when messages exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Test subject 1", 0, 10, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject 10", 10, 10, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject 11", 10, 20, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject 20", 0, 100, "Subject", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnMessage_WithEqualsSpecification_WhenCMessagesExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject {i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var query = new SearchQuery<Message>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Message>(fieldName, orderType));
+
+            query.AddFilter(x => x.Body.ToUpper().Contains($"{search}".ToUpper()));
+
+            _messagesRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, messagesList);
+                });
+
+            //Act
+            await _messagesService.SearchAsync(query);
+
+            //Act
+            var messages = await _messagesService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(messages);
+            Assert.NotEmpty(messages.Entities);
+            Assert.Single(messages.Entities);
+        }
+
+        /// <summary>
+        /// Search async messages with specification.
+        /// Should return nothing with  when messages does not exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Test subject -1", 0, 10, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject -10", 10, 10, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject -11", 10, 20, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject -20", 0, 100, "Subject", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnNothing_WithEqualSpecification_WhenMessagesExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var messagesList = new List<Message>();
+
+            var sender = new ApplicationUser
+            {
+                Id = new Guid().ToString(),
+                FirstName = "Test fn",
+                LastName = "Test ln",
+                Email = "test@test.test",
+                UserName = "test@test.test"
+            };
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var recipient = new ApplicationUser
+                {
+                    Id = new Guid().ToString(),
+                    FirstName = $"Test fn{i}",
+                    LastName = $"Test ln{i}",
+                    Email = $"test{i}@test.test",
+                    UserName = $"test{i}@test.test"
+                };
+                messagesList.Add(new Message
+                {
+                    Id = i,
+                    SenderId = sender.Id,
+                    Sender = sender,
+                    RecipientId = recipient.Id,
+                    Recipient = recipient,
+                    Subject = $"Test subject {i}",
+                    Body = $"Test body{i}"
+                });
+            }
+
+            var query = new SearchQuery<Message>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Message>(fieldName, orderType));
+
+            query.AddFilter(x => x.Body.ToUpper().Contains($"{search}".ToUpper()));
+
+            _messagesRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, messagesList);
+                });
+
+            //Act
+            await _messagesService.SearchAsync(query);
+
+            //Act
+            var messages = await _messagesService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(messages);
+            Assert.Empty(messages.Entities);
+        }
+
+        /// <summary>
+        /// Search async messages.
+        /// Should return nothing when messages does not exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Test subject 1", 0, 10, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject 10", 10, 10, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject 11", 10, 20, "Subject", OrderType.Ascending)]
+        [InlineData("Test subject 20", 0, 100, "Subject", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnNothing_WhenMessagesDoesNotExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var query = new SearchQuery<Message>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<Message>(fieldName, orderType));
+
+            query.AddFilter(x => x.Body.ToUpper().Contains($"{search}".ToUpper()));
+
+            _messagesRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() => new PagedListResult<Message>());
+
+            //Act
+            var comments = await _messagesService.SearchAsync(query);
+
+            //Assert
+            Assert.Empty(comments.Entities);
+        }
+
+        #endregion
+
         #region NotTestedYet
-        //SearchAsync(SearchQuery<T> searchQuery)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion

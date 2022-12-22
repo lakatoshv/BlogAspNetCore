@@ -9,6 +9,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blog.Data.Specifications.Base;
 using Xunit;
+using Blog.Core.Infrastructure.Pagination;
+using Microsoft.EntityFrameworkCore;
+using Blog.Core.Enums;
+using Blog.Core.Infrastructure;
 
 namespace Blog.ServicesTests.EntityServices
 {
@@ -3850,8 +3854,362 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Search async function
+
+        /// <summary>
+        /// Search the specified query.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="postsTagsRelationsList">The posts tags relations list.</param>
+        /// <returns>PagedListResult.</returns>
+        protected PagedListResult<PostsTagsRelations> Search(SearchQuery<PostsTagsRelations> query, List<PostsTagsRelations> postsTagsRelationsList)
+        {
+            var sequence = postsTagsRelationsList.AsQueryable();
+
+            // Applying filters
+            if (query.Filters != null && query.Filters.Count > 0)
+            {
+                foreach (var filterClause in query.Filters)
+                {
+                    sequence = sequence.Where(filterClause);
+                    var a = sequence.Select(x => x).ToList();
+                }
+            }
+
+            // Include Properties
+            if (!string.IsNullOrWhiteSpace(query.IncludeProperties))
+            {
+                var properties = query.IncludeProperties.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
+                sequence = properties.Aggregate(sequence, (current, includeProperty) => current.Include(includeProperty));
+            }
+            var b = sequence.ToList();
+
+            // Resolving Sort Criteria
+            // This code applies the sorting criterias sent as the parameter
+            if (query.SortCriterias != null && query.SortCriterias.Count > 0)
+            {
+                var sortCriteria = query.SortCriterias[0];
+                var orderedSequence = sortCriteria.ApplyOrdering(sequence, false);
+
+                if (query.SortCriterias.Count > 1)
+                {
+                    for (var i = 1; i < query.SortCriterias.Count; i++)
+                    {
+                        var sc = query.SortCriterias[i];
+                        orderedSequence = sc.ApplyOrdering(orderedSequence, true);
+                    }
+                }
+
+                sequence = orderedSequence;
+            }
+            else
+            {
+                sequence = ((IOrderedQueryable<PostsTagsRelations>)sequence).OrderBy(x => true);
+            }
+
+            var c = sequence.ToList();
+
+            // Counting the total number of object.
+            var resultCount = sequence.Count();
+
+            var result = (query.Take > 0)
+                                ? sequence.Skip(query.Skip).Take(query.Take).ToList()
+                                : sequence.ToList();
+
+            // Debug info of what the query looks like
+            // Console.WriteLine(sequence.ToString());
+
+            // Setting up the return object.
+            bool hasNext = (query.Skip > 0 || query.Take > 0) && (query.Skip + query.Take < resultCount);
+            return new PagedListResult<PostsTagsRelations>()
+            {
+                Entities = result,
+                HasNext = hasNext,
+                HasPrevious = query.Skip > 0,
+                Count = resultCount,
+            };
+        }
+
+        /// <summary>
+        /// Verify that function Search async has been called.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests ", 0, 10, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests ", 10, 10, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests ", 10, 20, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests ", 0, 100, "Post.Title", OrderType.Ascending)]
+        public async Task Verify_FunctionSearchAsync_HasBeenCalled(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{search} {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+            var query = new SearchQuery<PostsTagsRelations>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<PostsTagsRelations>(fieldName, orderType));
+
+            query.AddFilter(x => x.Post.Title.ToUpper().Contains($"{search}".ToUpper()));
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, postsTagsRelationsList);
+                });
+
+            //Act
+            await _postsTagsRelationsService.SearchAsync(query);
+
+            //Assert
+            _postsTagsRelationsRepositoryMock.Verify(x => x.SearchAsync(query), Times.Once);
+        }
+
+        /// <summary>
+        /// Search async posts tags relations.
+        /// Should return posts tags relations when posts tags relations exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests ", 0, 10, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests ", 10, 10, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests ", 10, 20, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests ", 0, 100, "Post.Title", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnPostsTagsRelations_WhenPostsTagsRelationsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{search} {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+            var query = new SearchQuery<PostsTagsRelations>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<PostsTagsRelations>(fieldName, orderType));
+
+            query.AddFilter(x => x.Post.Title.ToUpper().Contains($"{search}".ToUpper()));
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, postsTagsRelationsList);
+                });
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations.Entities);
+        }
+
+        /// <summary>
+        /// Search async posts tags relations with specification.
+        /// Should return posts tags relation with equal specification when posts tags relations exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests 0", 0, 10, "Post.Title ", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests 11", 10, 10, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests 11", 10, 20, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests 11", 0, 100, "Post.Title", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnPostsTagsRelation_WithEqualsSpecification_WhenPostsTagsRelationsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{search} {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+            var query = new SearchQuery<PostsTagsRelations>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<PostsTagsRelations>(fieldName, orderType));
+
+            query.AddFilter(x => x.Post.Title.ToUpper().Contains($"{search}".ToUpper()));
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, postsTagsRelationsList);
+                });
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.NotEmpty(postsTagsRelations.Entities);
+            Assert.Single(postsTagsRelations.Entities);
+        }
+
+        /// <summary>
+        /// Search async posts tags relations with specification.
+        /// Should return nothing with  when posts tags relations exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests -0", 0, 10, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests -11", 10, 10, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests -11", 10, 20, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests -11", 0, 100, "Post.Title", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostsTagsRelationsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var random = new Random();
+            var postsTagsRelationsList = new List<PostsTagsRelations>();
+
+            for (var i = 0; i < random.Next(100); i++)
+            {
+                var tag = new Tag
+                {
+                    Id = i,
+                    Title = $"{search} {i}"
+                };
+                postsTagsRelationsList.Add(new PostsTagsRelations
+                {
+                    Id = i,
+                    PostId = i,
+                    TagId = i,
+                    Tag = tag
+                });
+            }
+
+            var query = new SearchQuery<PostsTagsRelations>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<PostsTagsRelations>(fieldName, orderType));
+
+            query.AddFilter(x => x.Post.Title.ToUpper().Contains($"{search}".ToUpper()));
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() =>
+                {
+                    return Search(query, postsTagsRelationsList);
+                });
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.SearchAsync(query);
+
+            //Assert
+            Assert.NotNull(postsTagsRelations);
+            Assert.Empty(postsTagsRelations.Entities);
+        }
+
+        /// <summary>
+        /// Search async posts tags relations.
+        /// Should return nothing when posts tags relations does not exists.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="take">The take.</param>
+        /// <param name="fieldName">The field name.</param>
+        /// <param name="orderType">The order type.</param>
+        [Theory]
+        [InlineData("Created from ServicesTests 0", 0, 10, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests 11", 10, 10, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests 11", 10, 20, "Post.Title", OrderType.Ascending)]
+        [InlineData("Created from ServicesTests 11", 0, 100, "Post.Title", OrderType.Ascending)]
+        public async Task SearchAsync_ShouldReturnNothing_WhenPostsTagsRelationsDoesNotExists(string search, int start, int take, string fieldName, OrderType orderType)
+        {
+            //Arrange
+            var query = new SearchQuery<PostsTagsRelations>
+            {
+                Skip = start,
+                Take = take
+            };
+
+            query.AddSortCriteria(new FieldSortOrder<PostsTagsRelations>(fieldName, orderType));
+
+            query.AddFilter(x => x.Post.Title.ToUpper().Contains($"{search}".ToUpper()));
+
+            _postsTagsRelationsRepositoryMock.Setup(x => x.SearchAsync(query))
+                .ReturnsAsync(() => new PagedListResult<PostsTagsRelations>());
+
+            //Act
+            var postsTagsRelations = await _postsTagsRelationsService.SearchAsync(query);
+
+            //Assert
+            Assert.Empty(postsTagsRelations.Entities);
+        }
+
+        #endregion
+
         #region NotTestedYet
-        //SearchAsync(SearchQuery<T> searchQuery)
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion

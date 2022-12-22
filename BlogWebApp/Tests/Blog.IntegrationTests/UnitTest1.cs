@@ -12,7 +12,7 @@ namespace Blog.IntegrationTests
         private readonly HttpClient _client;
         public UnitTest1()
         {
-            var appFactory = new WebApplicationFactory<Startup>();
+            var appFactory = new WebApplicationFactory<Program>();
             _client = appFactory.CreateClient();
         }
 

@@ -17,7 +17,7 @@
             // file upload dependency
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(Program));
             services.AddOptions();
             services.AddLocalization();
             services.AddMemoryCache();
