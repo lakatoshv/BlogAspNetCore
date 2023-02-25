@@ -18,9 +18,9 @@ import { CustomToastrService } from 'src/app/core/services/custom-toastr.service
 })
 export class EditCommentComponent implements OnInit {
   /**
-   * @param comment Comment
+   * @param comment Comment | undefined
    */
-  @Input() comment: Comment;
+  @Input() comment: Comment | undefined;
 
   /**
    * @param onEdit EventEmitter<any>
@@ -33,9 +33,9 @@ export class EditCommentComponent implements OnInit {
   public loggedIn = false;
 
   /**
-   * @param user User
+   * @param user User | undefined
    */
-  public user: User = null;
+  public user: User | undefined;
 
   /**
    * @param commentForm FormGroup
@@ -65,7 +65,7 @@ export class EditCommentComponent implements OnInit {
       this._globalService.resetUserData();
       this.user = this._globalService._currentUser;
     }
-    if (this.user.id === this.comment.userId) {
+    if (this.user?.id === this.comment?.userId) {
       this.setFormValue();
     }
   }
@@ -75,9 +75,9 @@ export class EditCommentComponent implements OnInit {
    * @returns void
    */
   public setFormValue(): void {
-    this.commentForm.get('name').setValue(this.comment.user.firstName + ' ' + this.comment.user.lastName);
-    this.commentForm.get('email').setValue(this.comment.user.email);
-    this.commentForm.get('content').setValue(this.comment.commentBody);
+    this.commentForm.get('name')?.setValue(this.comment?.user?.firstName + ' ' + this.comment?.user?.lastName);
+    this.commentForm.get('email')?.setValue(this.comment?.user?.email);
+    this.commentForm.get('content')?.setValue(this.comment?.commentBody);
   }
 
   /**
@@ -86,9 +86,10 @@ export class EditCommentComponent implements OnInit {
    * @returns void
    */
   public edit(): void {
-    if (this.user.id === this.comment.userId
-      && this.commentForm.valid) {
-      this.comment.commentBody = this.commentForm.get('content').value;
+    if (this.user?.id === this.comment?.userId
+      && this.commentForm.valid
+      && this.comment) {
+      this.comment.commentBody = this.commentForm.get('content')?.value;
       this._commentService.edit(this.comment.id, this.comment).subscribe(
         (response: any) => {
           this.onEdit.emit(response);

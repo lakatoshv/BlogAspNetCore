@@ -13,6 +13,7 @@ import { TinyMCEOptions } from 'src/app/core/data/TinyMCEOptions';
 import { UsersService } from 'src/app/core/services/users-services/users.service';
 import { Tag } from 'src/app/core/models/Tag';
 import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { SelectedTag } from 'src/app/core/models/SelectedTag';
 
 @Component({
   selector: 'app-add-post',
@@ -21,9 +22,9 @@ import { CustomToastrService } from 'src/app/core/services/custom-toastr.service
 })
 export class AddPostComponent implements OnInit {
   /**
-   * @param tagInput ElementRef
+   * @param tagInput ElementRef | undefined
    */
-  @ViewChild('tag') tagInput: ElementRef;
+  @ViewChild('tag') tagInput: ElementRef | undefined;
 
   /**
    * @param postForm FormGroup
@@ -58,15 +59,15 @@ export class AddPostComponent implements OnInit {
   /**
    * @param selectedTag object
    */
-  selectedTag: object = {
+  selectedTag: SelectedTag = {
     value: '',
-    id: null
+    id: undefined
   };
 
   /**
-   * @param user User
+   * @param user User | undefined
    */
-  user: User;
+  user: User | undefined;
 
   /**
    * @param tinyMCEOptions TinyMCEOptionsObject
@@ -160,7 +161,7 @@ export class AddPostComponent implements OnInit {
    */
   onEditTagAction(tag: any): void {
     const index = this.selectedTag['id'];
-    if (index > -1) {
+    if (index && index > -1) {
       this.tagsList[index].title = tag;
       this.clearFormData();
     }
@@ -185,7 +186,7 @@ export class AddPostComponent implements OnInit {
     if (this.postForm.valid) {
       this.postForm.value.id = 0;
       this.postForm.value.tags = this.tagsList;
-      this.postForm.value.authorId = this.user.id;
+      this.postForm.value.authorId = this.user?.id;
       this._postService.add({
         ...this.postForm.value
       }).subscribe(
@@ -240,7 +241,9 @@ export class AddPostComponent implements OnInit {
     this.tagLabel = 'Додати новий тег';
     this.action = 'add';
     this.selectedTag['value'] = '';
-    this.selectedTag['id'] = null;
-    this.tagInput.nativeElement.value = '';
+    this.selectedTag['id'] = undefined;
+    if(this.tagInput) {
+      this.tagInput.nativeElement.value = '';
+    }
   }
 }

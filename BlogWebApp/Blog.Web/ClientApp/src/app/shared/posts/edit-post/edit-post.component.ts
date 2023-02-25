@@ -14,6 +14,7 @@ import { TagsService } from 'src/app/core/services/posts-services/tags.service';
 import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
 import { Messages } from 'src/app/core/data/Messages';
 import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { SelectedTag } from 'src/app/core/models/SelectedTag';
 
 @Component({
   selector: 'app-edit-post',
@@ -22,9 +23,9 @@ import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
 })
 export class EditPostComponent implements OnInit {
   /**
-   * @param tagInput ElementRef
+   * @param tagInput ElementRef | undefined
    */
-  @ViewChild('tag') tagInput: ElementRef;
+  @ViewChild('tag') tagInput: ElementRef | undefined;
 
   /**
    * @param postForm FormGroup
@@ -34,7 +35,7 @@ export class EditPostComponent implements OnInit {
   /**
    * @param post Post
    */
-  post: Post;
+  post: Post | undefined;
 
   /**
    * @param availableTags Tag[]
@@ -69,20 +70,20 @@ export class EditPostComponent implements OnInit {
   /**
    * @param selectedTag object
    */
-  selectedTag: object = {
+  selectedTag: SelectedTag = {
     value: '',
-    id: null
+    id: undefined
   };
 
   /**
    * @param user User
    */
-  user: User;
+  user: User | undefined;
 
   /**
    * @param _postId number
    */
-  private _postId: number;
+  private _postId: number | undefined;
 
   /**
    * @param tinyMCEOptions TinyMCEOptionsObject
@@ -112,7 +113,7 @@ export class EditPostComponent implements OnInit {
    * @inheritdoc
    */
   ngOnInit() {
-    this._postId = parseInt(this._globalService.getRouteParam('post-id', this._activatedRoute), null);
+    this._postId = parseInt(this._globalService.getRouteParam('post-id', this._activatedRoute) ?? '', undefined);
 
     this.isLoggedIn = this._usersService.isLoggedIn();
     if (this._usersService.isLoggedIn()) {
@@ -153,10 +154,13 @@ export class EditPostComponent implements OnInit {
    * @returns void
    */
   edit(post: Post): void {
-    if (this.isCurrentUserPost && this.postForm.valid) {
+    if (this.isCurrentUserPost 
+      && this.postForm.valid
+      && this._postId
+      && this.user) {
       post.id = this._postId;
-      post.tags = this.post.tags;
-      post.authorId = this.user.id;
+      post.tags = this.post?.tags;
+      post.authorId = this.user?.id;
       this._postService.edit(this._postId, post).subscribe(
         () => {
           this._customToastrService.displaySuccessMessage(Messages.POST_EDITED_SUCCESSFULLY);
@@ -172,7 +176,7 @@ export class EditPostComponent implements OnInit {
    * Delete post action.
    */
   deleteAction(): void {
-    if (this.isCurrentUserPost) {
+    if (this.isCurrentUserPost && this._postId && this._globalService._currentUser) {
       this._postService.delete(this._postId, this._globalService._currentUser.id).subscribe(
         () => {
           this._customToastrService.displaySuccessMessage(Messages.POST_DELETED_SUCCESSFULLY);
@@ -206,7 +210,7 @@ export class EditPostComponent implements OnInit {
    */
   editTag(tag: Tag): void {
     this.selectedTag['value'] = tag.title;
-    this.selectedTag['id'] = this.post.tags.indexOf(tag);
+    this.selectedTag['id'] = this.post?.tags?.indexOf(tag);
     this.action = 'edit';
     this.tagLabel = 'Редагувати тег';
   }
@@ -219,13 +223,13 @@ export class EditPostComponent implements OnInit {
   onAddTagAction(tag: string): void {
     if (tag !== '' && this.availableTags.findIndex(x => x.title === tag) !== -1) {
       const index = this.availableTags.findIndex(x => x.title === tag);
-      if (index > -1) {
-        this.post.tags = this.post.tags === null ? [] : this.post.tags;
+      if (this.post?.tags && index > -1) {
+        this.post.tags = this.post?.tags === null ? [] : this.post?.tags;
         this.post.tags.unshift(this.availableTags[index]);
         this._removeFromAvailableTags(this.availableTags[index]);
       }
     } else {
-      this.post.tags.unshift(new Tag(0, tag));
+      this.post?.tags?.unshift(new Tag(0, tag));
     }
     this.clearFormData();
   }
@@ -237,7 +241,7 @@ export class EditPostComponent implements OnInit {
    */
   onEditTagAction(tag: any): void {
     const index = this.selectedTag['id'];
-    if (index > -1) {
+    if (this.post?.tags && index && index > -1) {
       this.post.tags[index].title = tag;
       this.clearFormData();
     }
@@ -248,9 +252,9 @@ export class EditPostComponent implements OnInit {
    * @param tag any
    */
   onDeleteTagAction(tag: any): void {
-    const index = this.post.tags.indexOf(tag);
-    if (index > -1) {
-      this.post.tags.splice(index, 1);
+    const index = this.post?.tags?.indexOf(tag);
+    if (index && index > -1) {
+      this.post?.tags?.splice(index, 1);
     }
   }
 
@@ -259,21 +263,25 @@ export class EditPostComponent implements OnInit {
    * @returns void
    */
   private _getPost(): void {
-    this._postService.showPost(this._postId).subscribe(
-      (response: any) => {
-        this.post = response.post;
-        this.post.tags = response.tags;
-        if (! this.isLoggedIn || this.user.id !== this.post.authorId) {
-          this._router.navigateByUrl('/');
-        }
-        if (this.user.id === this.post.authorId) {
-          this.isCurrentUserPost = true;
-        }
-        this._setFormData();
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
-      });
+    if(this._postId) {
+      this._postService.showPost(this._postId).subscribe(
+        (response: any) => {
+          this.post = response.post;
+          if(this.post) {
+            this.post.tags = response.tags;
+            if (! this.isLoggedIn || this.user?.id !== this.post.authorId) {
+              this._router.navigateByUrl('/');
+            }
+            if (this.user?.id === this.post.authorId) {
+              this.isCurrentUserPost = true;
+            }
+            this._setFormData();
+          }
+        },
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
+    }
   }
 
   /**
@@ -296,10 +304,10 @@ export class EditPostComponent implements OnInit {
    */
   private _setFormData(): void {
     // this.postForm.get('id').setValue(this.post.Id)
-    this.postForm.get('title').setValue(this.post.title);
-    this.postForm.get('description').setValue(this.post.description);
-    this.postForm.get('content').setValue(this.post.content);
-    this.postForm.get('imageUrl').setValue(this.post.imageUrl);
+    this.postForm.get('title')?.setValue(this.post?.title);
+    this.postForm.get('description')?.setValue(this.post?.description);
+    this.postForm.get('content')?.setValue(this.post?.content);
+    this.postForm.get('imageUrl')?.setValue(this.post?.imageUrl);
     this.isLoadEdit = true;
   }
 
@@ -323,7 +331,9 @@ export class EditPostComponent implements OnInit {
     this.tagLabel = 'Додати новий тег';
     this.action = 'add';
     this.selectedTag['value'] = '';
-    this.selectedTag['id'] = null;
-    this.tagInput.nativeElement.value = '';
+    this.selectedTag['id'] = undefined;
+    if(this.tagInput) {
+      this.tagInput.nativeElement.value = '';
+    }
   }
 }

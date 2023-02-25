@@ -83,9 +83,9 @@ export class HttpClientService {
    * @returns object
    */
   private _getOptions(
-    params?,
-    isFormData?,
-    isNonAuthRequest?): object {
+    params?: any,
+    isFormData?: any,
+    isNonAuthRequest?: any): object {
       const options = {
         headers: this._getAuthHeaders(isFormData, isNonAuthRequest),
         params: params

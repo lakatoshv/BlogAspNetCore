@@ -19,9 +19,9 @@ import { Messages } from 'src/app/core/data/Messages';
 })
 export class ChangePhoneNumberComponent implements OnInit {
 /**
-   * @param user User
+   * @param user User | undefined
    */
-  public user: User = null;
+  public user: User | undefined;
 
   /**
    * @param isLoggedIn boolean
@@ -58,7 +58,9 @@ export class ChangePhoneNumberComponent implements OnInit {
     this.isLoggedIn = this._usersService.isLoggedIn();
     if (this._usersService.isLoggedIn()) {
       this._globalService.resetUserData();
-      this._getProfile(this._globalService._currentUser.profile.id);
+      if(this._globalService._currentUser?.profile) {
+        this._getProfile(this._globalService._currentUser.profile.id);
+      }
 
     } else {
       this._router.navigateByUrl('/authorization');
@@ -87,28 +89,31 @@ export class ChangePhoneNumberComponent implements OnInit {
    * @returns void
    */
   edit(profileModel: any): void {
-
-    const profile = new ProfileViewDto(
-      this.user.email,
-      this.user.firstName,
-      this.user.lastName,
-      profileModel.phoneNumber,
-      null,
-      this.user.profile.about);
-    this._usersService.updateProfile(this._globalService._currentUser.profile.id, profile).subscribe(
-      (result: any) => {
-        this._globalService._currentUser.userName = result.firstName + ' ' + result.lastName;
-        this._globalService._currentUser.email = result.email;
-        this._globalService._currentUser.firstName = result.firstName;
-        this._globalService._currentUser.lastName = result.lastName;
-        this._globalService._currentUser.phoneNumber = result.phoneNumber;
-        this._globalService._currentUser.profile.about = result.about;
-        // this._usersService.saveUser(JSON.stringify(this._globalService._currentUser));*/
-        this._customToastrService.displaySuccessMessage(Messages.PHONE_NUMBER_CHANGED_SUCCESSFULLY);
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
-      });
+    if(this.user && this._globalService._currentUser?.profile) {
+      const profile = new ProfileViewDto(
+        this.user.email ?? '',
+        this.user.firstName,
+        this.user.lastName,
+        profileModel.phoneNumber,
+        undefined,
+        this.user.profile?.about);
+      this._usersService.updateProfile(this._globalService._currentUser.profile.id, profile).subscribe(
+        (result: any) => {
+          if(this._globalService._currentUser?.profile) {
+            this._globalService._currentUser.userName = result.firstName + ' ' + result.lastName;
+            this._globalService._currentUser.email = result.email;
+            this._globalService._currentUser.firstName = result.firstName;
+            this._globalService._currentUser.lastName = result.lastName;
+            this._globalService._currentUser.phoneNumber = result.phoneNumber;
+            this._globalService._currentUser.profile.about = result.about;
+          }
+          // this._usersService.saveUser(JSON.stringify(this._globalService._currentUser));*/
+          this._customToastrService.displaySuccessMessage(Messages.PHONE_NUMBER_CHANGED_SUCCESSFULLY);
+        },
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
+    }
   }
 
   /**
@@ -116,12 +121,12 @@ export class ChangePhoneNumberComponent implements OnInit {
    * @returns void
    */
   private _setFormData(): void {
-    this.profileForm.get('userName').setValue(this.user.firstName + ' ' + this.user.lastName);
-    this.profileForm.get('email').setValue(this.user.email);
-    this.profileForm.get('firstName').setValue(this.user.firstName);
-    this.profileForm.get('lastName').setValue(this.user.lastName);
-    this.profileForm.get('phoneNumber').setValue(this.user.phoneNumber);
-    this.profileForm.get('about').setValue(this.user.profile.about);
+    this.profileForm.get('userName')?.setValue(this.user?.firstName + ' ' + this.user?.lastName);
+    this.profileForm.get('email')?.setValue(this.user?.email);
+    this.profileForm.get('firstName')?.setValue(this.user?.firstName);
+    this.profileForm.get('lastName')?.setValue(this.user?.lastName);
+    this.profileForm.get('phoneNumber')?.setValue(this.user?.phoneNumber);
+    this.profileForm.get('about')?.setValue(this.user?.profile?.about);
   }
 
   /**

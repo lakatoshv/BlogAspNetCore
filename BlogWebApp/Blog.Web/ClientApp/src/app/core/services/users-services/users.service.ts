@@ -24,19 +24,19 @@ export class UsersService {
   public _isLoadedData = false;
 
   /**
-   * @param _currentUser User
+   * @param _currentUser User | undefined
    */
-  public _currentUser: User;
+  public _currentUser: User | undefined;
 
   /**
-   * @param _avatarUrl string
+   * @param _avatarUrl string | undefined
    */
-  public _avatarUrl: string;
+  public _avatarUrl: string | undefined;
 
   /**
    * @param roles string[]
    */
-  public roles: string[];
+  public roles: string[] = [];
 
   /**
    * @param _httpClient HttpClientService
@@ -93,7 +93,7 @@ export class UsersService {
    * Check if user is login.
    */
   isLoggedIn() {
-    const token: string = localStorage.getItem('token');
+    const token: string | null = localStorage.getItem('token');
     if (token != null && !this._jwt.isTokenExpired(token)) {
       return true;
     }

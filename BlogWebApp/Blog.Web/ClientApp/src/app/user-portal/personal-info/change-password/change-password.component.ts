@@ -19,9 +19,9 @@ import { Messages } from 'src/app/core/data/Messages';
 })
 export class ChangePasswordComponent implements OnInit {
   /**
-   * @param user User
+   * @param user User | undefined
    */
-  public user: User = null;
+  public user: User | undefined;
 
   /**
    * @param isLoggedIn boolean
@@ -58,7 +58,9 @@ export class ChangePasswordComponent implements OnInit {
     this.isLoggedIn = this._usersService.isLoggedIn();
     if (this._usersService.isLoggedIn()) {
       this._globalService.resetUserData();
-      this._getProfile(this._globalService._currentUser.profile.id);
+      if(this._globalService._currentUser?.profile) {
+        this._getProfile(this._globalService._currentUser.profile.id);
+      }
 
     } else {
       this._router.navigateByUrl('/authorization');

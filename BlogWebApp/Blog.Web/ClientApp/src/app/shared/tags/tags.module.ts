@@ -3,10 +3,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { TagsRoutingModule } from './tags-routing.module';
+import { TagsListComponent } from './tags-list/tags-list.component';
 import { PopularTagsComponent } from './popular-tags/popular-tags.component';
 
 @NgModule({
   declarations: [
+    TagsListComponent,
     PopularTagsComponent
   ],
   imports: [
@@ -14,6 +16,7 @@ import { PopularTagsComponent } from './popular-tags/popular-tags.component';
     TagsRoutingModule
   ],
   exports: [
+    TagsListComponent,
     PopularTagsComponent
   ],
   providers: [

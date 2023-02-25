@@ -17,14 +17,14 @@ import { CustomToastrService } from 'src/app/core/services/custom-toastr.service
 })
 export class AddCommentComponent implements OnInit {
   /**
-   * @param postId number
+   * @param postId number | undefined
    */
-  @Input() postId: number;
+  @Input() postId: number | undefined;
 
   /**
-   * @param user User
+   * @param user User | undefined
    */
-  @Input() user: User = null;
+  @Input() user: User | undefined;
 
   /**
    * @param onAdd EventEmitter<any>
@@ -53,8 +53,8 @@ export class AddCommentComponent implements OnInit {
    */
   ngOnInit() {
     if (this.user) {
-      this.commentForm.get('name').setValue(this.user.firstName + ' ' + this.user.lastName);
-      this.commentForm.get('email').setValue(this.user.email);
+      this.commentForm.get('name')?.setValue(this.user.firstName + ' ' + this.user.lastName);
+      this.commentForm.get('email')?.setValue(this.user.email);
     }
   }
 
@@ -63,16 +63,16 @@ export class AddCommentComponent implements OnInit {
    * @returns void
    */
   addComment(): void {
-    if (this._usersService.isLoggedIn && this.commentForm.valid) {
+    if (this._usersService.isLoggedIn() && this.commentForm.valid) {
       const comment: Comment = new Comment ();
       comment.postId = this.postId;
-      comment.commentBody = this.commentForm.get('content').value;
+      comment.commentBody = this.commentForm.get('content')?.value;
       comment.createdAt = new Date();
       if (this.user) {
         comment.userId = this.user.id;
       } else {
-        comment.email = this.commentForm.get('email').value;
-        comment.name = this.commentForm.get('name').value;
+        comment.email = this.commentForm.get('email')?.value;
+        comment.name = this.commentForm.get('name')?.value;
       }
 
       this._commentService.add(comment).subscribe(

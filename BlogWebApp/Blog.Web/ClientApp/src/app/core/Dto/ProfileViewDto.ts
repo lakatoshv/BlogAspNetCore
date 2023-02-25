@@ -5,18 +5,18 @@ export class ProfileViewDto {
   /**
    * Profile view dto.
    * @param email string
-   * @param firstName string
-   * @param lastName string
-   * @param phoneNumber string
-   * @param password string
-   * @param about string
+   * @param firstName string | undefined
+   * @param lastName string | undefined
+   * @param phoneNumber string | undefined
+   * @param password string | undefined
+   * @param about string | undefined
    */
   constructor(
     public email: string,
-    public firstName: string,
-    public lastName: string,
-    public phoneNumber: string,
-    public password: string,
-    public about: string
+    public firstName?: string | undefined,
+    public lastName?: string | undefined,
+    public phoneNumber?: string | undefined,
+    public password?: string | undefined,
+    public about?: string | undefined
   ) {}
 }

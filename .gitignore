@@ -62,3 +62,4 @@
 /Clients/BlogBlazor/Shared/Blazor.Core/obj
 /Clients/BlogBlazor/Shared/Blazor.Contracts/bin/Debug/net5.0
 /Clients/BlogBlazor/Shared/Blazor.Contracts/obj
+/BlogWebApp/Blog.Web/ClientApp/.vscode

@@ -22,9 +22,9 @@ export class ContactsComponent implements OnInit {
   public messageForm: FormGroup = new MessageForm().messageForm;
 
   /**
-   * @param user User
+   * @param user User | undefined
    */
-  public user: User = null;
+  public user: User | undefined;
 
   /**
    * @param isLoggedIn boolean

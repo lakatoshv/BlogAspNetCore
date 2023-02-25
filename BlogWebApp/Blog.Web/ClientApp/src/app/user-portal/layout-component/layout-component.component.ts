@@ -10,9 +10,9 @@ import { GlobalService } from 'src/app/core/services/global-service/global-servi
 })
 export class LayoutComponentComponent implements OnInit {
   /**
-   * @param user User
+   * @param user User | undefined
    */
-  user: User;
+  user: User | undefined;
 
   /**
    * @param loggedIn boolean

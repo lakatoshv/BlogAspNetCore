@@ -42,9 +42,9 @@ export class PostsListComponent implements OnInit {
   public orderBy = 'asc';
 
   /**
-   * @param user User
+   * @param user User | undefined
    */
-  public user: User;
+  public user: User | undefined;
 
   /**
    * @param pageInfo PageInfo
@@ -56,9 +56,9 @@ export class PostsListComponent implements OnInit {
   };
 
   /**
-   * @param _postId number
+   * @param _postId number | undefined
    */
-  private _postId: number;
+  private _postId: number | undefined;
 
   /**
    * @param users User[]
@@ -104,7 +104,7 @@ export class PostsListComponent implements OnInit {
   ngOnInit() {
     this._searchFilter = this._generalService.getRouteParam('search-filter', this._activatedRoute);
 
-    this._postId = parseInt(this._generalService.getRouteParam('post', this._activatedRoute), null);
+    this._postId = parseInt(this._generalService.getRouteParam('post', this._activatedRoute) ?? '', undefined);
     this._getPosts();
     this.loggedIn = this._usersService.isLoggedIn();
     if (this.loggedIn) {
@@ -119,7 +119,7 @@ export class PostsListComponent implements OnInit {
    */
   deleteAction(postId: number): void {
     const postItem = this.posts.find(post =>  post.id === postId);
-    if (this.loggedIn && postItem.authorId === this._globalService._currentUser.id) {
+    if (this.loggedIn && this._globalService._currentUser && postItem?.authorId === this._globalService._currentUser?.id) {
       this._postService.delete(postId, this._globalService._currentUser.id).subscribe(
         (response: any) => {
           this._customToastrService.displaySuccessMessage(Messages.POST_DELETED_SUCCESSFULLY);

@@ -1,5 +1,6 @@
 import { Tag } from './Tag';
 import { User } from './User';
+import { Comment } from './Comment';
 
 /**
  * Post model.
@@ -53,7 +54,7 @@ export class Post {
     public imageUrl: string,
     public createdAt: string,
     public commentsCount: number,
-    public comments?: Comment[],
+    public comments?: Comment[] | undefined,
     public tags?: Tag[],
   ) {}
 }

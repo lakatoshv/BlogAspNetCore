@@ -12,6 +12,8 @@ import { AuthorizationComponent } from './user/authorization/authorization.compo
 import { ProfilePageComponent } from './profile/profile-page/profile-page.component';
 import { EditProfileComponent } from './profile/edit-profile/edit-profile.component';
 import { NotFoundComponent } from '../shared/errors/not-found/not-found.component';
+import { PostsModule } from '../shared/posts/posts.module';
+import { ProfileModule } from './profile/profile.module';
 
 const routes: Routes = [
   {
@@ -20,7 +22,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: '../shared/posts/posts.module#PostsModule'
+        loadChildren: () => PostsModule
       },
       {
         path: 'about',
@@ -40,7 +42,7 @@ const routes: Routes = [
       },
       {
         path: 'profile',
-        loadChildren: '../user-portal/profile/profile.module#ProfileModule'
+        loadChildren: () =>  ProfileModule
       },
       {
         path: 'my-profile',
