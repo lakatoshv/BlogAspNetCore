@@ -30,7 +30,7 @@ namespace Blog.Core.Mapping
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ProjectTo(membersToExpand);
+            return source.ProjectTo(null, membersToExpand);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Blog.Core.Mapping
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.ProjectTo<TDestination>(parameters);
+            return source.ProjectTo<TDestination>((AutoMapper.IConfigurationProvider)parameters);
         }
     }
 }
