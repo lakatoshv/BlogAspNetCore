@@ -64,3 +64,4 @@
 /Clients/BlogBlazor/Shared/Blazor.Contracts/obj
 /BlogWebApp/Blog.Web/ClientApp/.vscode
 /Sdk/Blog.Sdk/bin/Debug/net6.0
+/Sdk/Blog.Sdk.ExampleUsage/bin/Debug/net6.0
