@@ -11,7 +11,7 @@ namespace Blog.Services.Security
     using Microsoft.AspNetCore.Identity;
 
     /// <summary>
-    /// Permission service
+    /// Permission service.
     /// </summary>
     public class PermissionService : IPermissionService
     {
