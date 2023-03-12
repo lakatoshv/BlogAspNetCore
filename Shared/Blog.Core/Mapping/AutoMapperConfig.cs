@@ -24,15 +24,16 @@ namespace Blog.Core.Mapping
         public static void RegisterMappings(params Assembly[] assemblies)
         {
             var types = assemblies.SelectMany(a => a.GetExportedTypes()).ToList();
-
-            Mapper.Initialize(configuration =>
+            var config = new MapperConfiguration(cfg =>
             {
-                RegisterStandardFromMappings(configuration, types);
+                RegisterStandardFromMappings(cfg, types);
 
-                RegisterStandardToMappings(configuration, types);
+                RegisterStandardToMappings(cfg, types);
 
-                RegisterCustomMaps(configuration, types);
+                RegisterCustomMaps(cfg, types);
             });
+
+            config.CreateMapper();
         }
 
         /// <summary>

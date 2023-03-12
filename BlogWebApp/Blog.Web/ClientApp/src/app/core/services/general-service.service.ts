@@ -15,7 +15,7 @@ export class GeneralServiceService {
    * @param paramName string
    * @param activatedRoute ActivatedRoute
    */
-  public getRouteParam(paramName: string, activatedRoute: ActivatedRoute): string {
+  public getRouteParam(paramName: string, activatedRoute: ActivatedRoute): string | null {
     const snapshot = activatedRoute.snapshot;
     return this._getParamValue(paramName, snapshot);
   }
@@ -25,7 +25,7 @@ export class GeneralServiceService {
    * @param paramName string
    * @param routeObject ActivatedRouteSnapshot
    */
-  private _getParamValue(paramName: string, routeObject: ActivatedRouteSnapshot): string {
+  private _getParamValue(paramName: string, routeObject: ActivatedRouteSnapshot | null): string | null{
     if (!routeObject) {
       return null;
     }
@@ -35,7 +35,7 @@ export class GeneralServiceService {
     }
 
     if (routeObject.paramMap.get(paramName) !== null) {
-      return routeObject.paramMap.get(paramName);
+      return routeObject?.paramMap?.get(paramName);
     } else {
       return this._getParamValue(paramName, routeObject.parent);
     }

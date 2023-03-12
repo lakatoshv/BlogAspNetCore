@@ -35,7 +35,7 @@
                 <li class="nav-item" *ngIf="!loggedIn"><a routerLink="/blog/registration" class="nav-link"><i class="fa fa-user"></i> Зареєструватись</a></li>
                 <li class="nav-item dropdow" *ngIf="loggedIn">
                     <a routerLink="/blog/my-profile" class="nav-link">
-                      {{user.email}}
+                      {{user?.email}}
                     </a>
                 </li>
                 <li class="nav-item" *ngIf="loggedIn"><a routerLink="/blog/logout" class="nav-link"><i class="fa fa-sign-in"></i> Вийти</a></li>

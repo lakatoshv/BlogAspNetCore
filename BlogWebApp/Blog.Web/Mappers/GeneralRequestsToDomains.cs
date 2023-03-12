@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Blog.Services.Core.Dtos;
 using Blog.Contracts.V1.Requests;
+using Blog.Contracts.V1.Responses;
+using Blog.Core.Helpers;
 
 namespace Blog.Web.Mappers
 {
@@ -17,6 +19,7 @@ namespace Blog.Web.Mappers
         {
             CreateMap<SearchParametersRequest, SearchParametersDto>();
             CreateMap<SortParametersRequest, SortParametersDto>();
+            CreateMap<PageInfo, PageInfoResponse>();
         }
     }
 }

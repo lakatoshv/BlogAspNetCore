@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-md-3 col-lg-3 ">
                     <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="img-circle img-responsive"><br>
-                    <h3>{{user.firstName + " " + user.lastName}}</h3>
+                    <h3>{{user?.firstName + " " + user?.lastName}}</h3>
                 </div>
                 <div class=" col-md-9 col-lg-9">
                     <ul class="nav nav-tabs">
@@ -30,15 +30,15 @@
                                     </tr>
                                     <tr>
                                         <td>Ім'я:</td>
-                                        <td><b>{{user.firstName}}</b></td>
+                                        <td><b>{{user?.firstName}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Фамілія:</td>
-                                        <td><b>{{user.lastName}}</b></td>
+                                        <td><b>{{user?.lastName}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Електронна пошта:</td>
-                                        <td><b><a routerLink="/blogmailto:test@test.test">{{user.email}}</a></b></td>
+                                        <td><b><a routerLink="/blogmailto:test@test.test">{{user?.email}}</a></b></td>
                                     </tr>
                                     <tr>
                                         <td>Адреса:</td>
@@ -46,7 +46,7 @@
                                     </tr>
                                     <tr>
                                         <td>Номер телефону:</td>
-                                        <td><b>{{user.phoneNumber}}</b></td>
+                                        <td><b>{{user?.phoneNumber}}</b></td>
                                     </tr>
                                     <tr>
                                         <td>Статус:</td>
@@ -56,7 +56,7 @@
                             </table>
                             <div class="bs-callout bs-callout-danger">
                                 <h4>Про мене:</h4>
-                                <div [innerHTML]="user.profile.about">
+                                <div [innerHTML]="user?.profile?.about">
                                 </div>
                             </div>
                         </div>
@@ -66,18 +66,18 @@
                                     <tr>
                                         <td>Електронна пошта:</td>
                                         <td>
-                                            <b>{{user.email}}</b>
+                                            <b>{{user?.email}}</b>
                                         </td>
                                         <td>
                                             <a routerLink="personal-info/change-email"><b><i class="fa fa-edit"></i></b></a>
                                             <a class="btn btn-default" (click)="verifyEmail()">Підтвердити</a>
                                         </td>
-                                        <td><i *ngIf="user.emailConfirmed" class="fa fa-check text-success"></i></td>
+                                        <td><i *ngIf="user?.emailConfirmed" class="fa fa-check text-success"></i></td>
                                     </tr>
                                     <tr>
                                         <td>Телефон:</td>
                                         <td>
-                                            <b>{{user.phoneNumber}}</b>
+                                            <b>{{user?.phoneNumber}}</b>
                                         </td>
                                         <td>
                                             <a routerLink="personal-info/change-phone-number"><b><i class="fa fa-edit"></i></b></a>
@@ -117,7 +117,7 @@
                             <div class="tab-content">
                                 <div *ngIf="postsTab === 'my'" [ngClass]="{'active': postsTab === 'my'}" class="tab-pane active" id="my">
                                     <p><b>Пости</b></p>
-                                    <app-posts-table [userId]="user.profile.userId" (postsCount)="postsCount = $event"></app-posts-table>
+                                    <app-posts-table [userId]="user?.profile?.userId" (postsCount)="postsCount = $event"></app-posts-table>
                                 </div>
                                 <div *ngIf="postsTab === 'saved'" [ngClass]="{'active': postsTab === 'saved'}" class="tab-pane" id="saved">
                                     Збережені пости

@@ -3,36 +3,36 @@
         <div class="col-lg-12 col-md-10 mx-auto">
             <div class="post-preview">
                 <h2 class="post-title text-center">
-                    {{post.title}}
+                    {{post?.title}}
                 </h2>
-                <div class="pull-right" *ngIf="loggedIn && post.authorId === user.id">
-                    <a class="btn btn-sm text-white btn-primary" routerLink="/blog/post/edit/{{post.id}}">
+                <div class="pull-right" *ngIf="loggedIn && post?.authorId === user?.id">
+                    <a class="btn btn-sm text-white btn-primary" routerLink="/blog/post/edit/{{post?.id}}">
                         <i class="fa fa-edit"></i> Редагувати
                     </a>
-                    <button type="button" class="btn btn-sm text-white btn-danger" (click)="deleteAction(post.id)">
+                    <button type="button" class="btn btn-sm text-white btn-danger" (click)="deleteAction()">
               <i class="fa fa-trash"></i>
               Видалити
           </button>
                 </div>
-                <img style="width: 100%; height: 300px;" src="{{post.imageUrl}}" />
-                <h3 class="post-subtitle text-center" [innerHTML]="post.description">
+                <img style="width: 100%; height: 300px;" src="{{post?.imageUrl}}" />
+                <h3 class="post-subtitle text-center" [innerHTML]="post?.description">
                 </h3>
             </div>
             <p class="post-meta">
-                <span><i class="fa fa-fw fa-eye"></i> {{post.seen}}</span>
-                <span><i class="fa fa-fw fa-thumbs-up"></i> {{post.likes}}</span>
-                <span><i class="fa fa-fw fa-thumbs-down"></i> {{post.dislikes}}</span>
+                <span><i class="fa fa-fw fa-eye"></i> {{post?.seen}}</span>
+                <span><i class="fa fa-fw fa-thumbs-up"></i> {{post?.likes}}</span>
+                <span><i class="fa fa-fw fa-thumbs-down"></i> {{post?.dislikes}}</span>
             </p>
             <p class="post-meta">Теги:
-                <a routerLink="/blog/posts/{{tag.title}}" *ngFor="let tag of post.tags; let isLast=last"> {{tag.title}}{{isLast ? '' : ', '}}</a>
+                <a routerLink="/blog/posts/{{tag.title}}" *ngFor="let tag of post?.tags; let isLast=last"> {{tag.title}}{{isLast ? '' : ', '}}</a>
             </p>
-            <p class="text-justify" [innerHTML]="post.content"></p>
+            <p class="text-justify" [innerHTML]="post?.content"></p>
             <p class="post-meta">
-                Написав: <b><a routerLink="/blog/profile/{{post.author.profile?.id}}">{{post.author.firstName + " " + post.author.lastName}}</a><i>, 10.11.2018</i></b>
+                Написав: <b><a routerLink="/blog/profile/{{post?.author?.profile?.id}}">{{post?.author?.firstName + " " + post?.author?.lastName}}</a><i>, 10.11.2018</i></b>
             </p>
-            <button class="btn btn-xs btn-info" (click)="like(post.id)"><span class="fa fa-thumbs-up"></span> Подобається</button>
-            <button class="btn btn-sm btn-danger" (click)="dislike(post.id)"><span class="fa fa-thumbs-down"></span> Неподобається</button>
+            <button class="btn btn-xs btn-info" (click)="like(post?.id ?? 0)"><span class="fa fa-thumbs-up"></span> Подобається</button>
+            <button class="btn btn-sm btn-danger" (click)="dislike(post?.id ?? 0)"><span class="fa fa-thumbs-down"></span> Неподобається</button>
         </div>
     </div>
 </div>
-<app-comments-list *ngIf="isLoaded" [post-id]="postId" [comments]="post?.comments" [pageInfo]="pageInfo"></app-comments-list>
+<app-comments-list *ngIf="isLoaded" [post-id]="postId" [comments]="post?.comments ?? []" [pageInfo]="pageInfo"></app-comments-list>

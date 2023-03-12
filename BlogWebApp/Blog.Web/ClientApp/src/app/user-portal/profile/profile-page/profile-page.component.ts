@@ -16,9 +16,9 @@ import { Messages } from 'src/app/core/data/Messages';
 })
 export class ProfilePageComponent implements OnInit {
   /**
-   * @param user User
+   * @param user User | undefined
    */
-  public user: User = null;
+  public user: User | undefined;
 
   /**
    * @param topTab string
@@ -76,7 +76,7 @@ export class ProfilePageComponent implements OnInit {
    * @inheritdoc
    */
   public ngOnInit() {
-    this._profileId = parseInt(this._generalService.getRouteParam('profile-id', this._activatedRoute), null);
+    this._profileId = parseInt(this._generalService.getRouteParam('profile-id', this._activatedRoute) ?? '', undefined);
     this.isLoggedIn = this._usersService.isLoggedIn();
     if (this._usersService.isLoggedIn()) {
       this._globalService.resetUserData();
@@ -84,7 +84,7 @@ export class ProfilePageComponent implements OnInit {
     }
     this.isForCurrentUser =
       this._router.url.includes('/my-profile') ||
-      (this._profileId !== null && this.user !== null && this.user.profile.id === this._profileId);
+      (this._profileId !== null && this.user !== null && this.user?.profile?.id === this._profileId);
 
     if (!this.isForCurrentUser) {
       if (this._profileId !== null) {
@@ -95,7 +95,7 @@ export class ProfilePageComponent implements OnInit {
     } else if (!this.isLoggedIn) {
       this._router.navigateByUrl('/authorization');
     } else {
-      this._getProfile(this.user.profile.id);
+      this._getProfile(this.user?.profile?.id ?? 0);
     }
   }
 

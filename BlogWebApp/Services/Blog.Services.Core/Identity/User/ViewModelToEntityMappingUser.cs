@@ -4,7 +4,11 @@
 
 namespace Blog.Services.Core.Identity.User
 {
+    using Blog.Contracts.V1.Requests.UsersRequests;
+    using Blog.Contracts.V1.Responses.UsersResponses;
     using Blog.Data.Models;
+    using Blog.Services.Core.Dtos.User;
+    using System.Linq;
 
     /// <summary>
     /// View model to entity mapping user.
@@ -16,11 +20,16 @@ namespace Blog.Services.Core.Identity.User
         /// </summary>
         public ViewModelToEntityMappingUser()
         {
-            this.CreateMap<ApplicationUser, ApplicationUser>()
-                .ForMember(x => x.UserName, opt => opt.MapFrom(s => s.UserName))
-                .ForMember(x => x.Email, opt => opt.MapFrom(s => s.Email))
-                .ForMember(x => x.PhoneNumber, opt => opt.MapFrom(s => s.PhoneNumber))
-                .ForAllOtherMembers(opt => opt.Ignore());
+            CreateMap<UserRegistrationDto, ApplicationUser>();
+            CreateMap<ApplicationUserDto, ApplicationUser>();
+            CreateMap<ApplicationUserDto, ApplicationUserResponse>();
+            CreateMap<RegistrationRequest, ApplicationUser>()
+                .ForMember(destinationMember => destinationMember.Roles, memberOptions
+                    => memberOptions.Ignore());
+            CreateMap<ApplicationUser, ApplicationUserDto>();
+            CreateMap<ApplicationUser, AccountResponse>()
+                .ForMember(destinationMember => destinationMember.Roles, memberOptions
+                    => memberOptions.MapFrom(src => src.Roles.Select(x => new RoleResponse { Id = x.RoleId })));
         }
     }
 }

@@ -18,19 +18,19 @@ import { CustomToastrService } from 'src/app/core/services/custom-toastr.service
 })
 export class ShowComponent implements OnInit {
   /**
-   * @param tagInput ElementRef
+   * @param tagInput ElementRef | undefined
    */
-  @ViewChild('tag') tagInput: ElementRef;
+  @ViewChild('tag') tagInput: ElementRef | undefined;
 
   /**
-   * @param post Post
+   * @param post Post | undefined
    */
-  public post: Post;
+  public post: Post | undefined;
 
   /**
-   * @param user User
+   * @param user User | undefined
    */
-  public user: User;
+  public user: User | undefined;
 
   /**
    * @param loggedIn boolean
@@ -43,9 +43,9 @@ export class ShowComponent implements OnInit {
   public isLoaded = false;
 
   /**
-   * @param postId number
+   * @param postId number | undefined
    */
-  public postId: number;
+  public postId: number | undefined;
 
   /**
    * @param pageInfo PageInfo
@@ -79,7 +79,7 @@ export class ShowComponent implements OnInit {
    * @inheritdoc
    */
   ngOnInit() {
-    this.postId = parseInt(this._generalService.getRouteParam('post-id', this._activatedRoute), null);
+    this.postId = parseInt(this._generalService.getRouteParam('post-id', this._activatedRoute) ?? '', undefined);
     this._getPost();
     this.loggedIn = this._usersService.isLoggedIn();
     if (this.loggedIn) {
@@ -94,13 +94,15 @@ export class ShowComponent implements OnInit {
    * @returns void
    */
   public like(id: number): void {
-    this._postService.like(this.postId).subscribe(
-      (response: any) => {
-        this.post = response;
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
-      });
+    if(this.postId) {
+      this._postService.like(this.postId).subscribe(
+        (response: any) => {
+          this.post = response;
+        },
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
+    }
   }
 
   /**
@@ -109,20 +111,22 @@ export class ShowComponent implements OnInit {
    * @returns void
    */
   public dislike(id: number): void {
-    this._postService.dislike(this.postId).subscribe(
-      (response: any) => {
-        this.post = response;
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
-      });
+    if(this.postId) {
+      this._postService.dislike(this.postId).subscribe(
+        (response: any) => {
+          this.post = response;
+        },
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
+    }
   }
 
   /**
    * Delete post.
    */
   public deleteAction() {
-    if (this.loggedIn && this.post.authorId === this.user.id) {
+    if (this.loggedIn && this.post && this.post?.authorId === this.user?.id) {
       this._postService.delete(this.post.id, this.user.id).subscribe(
         () => {
           this._router.navigateByUrl('/blog');
@@ -144,17 +148,21 @@ export class ShowComponent implements OnInit {
    * Get post by id.
    */
   private _getPost() {
-    this._postService.showPost(this.postId).subscribe(
-      (response: any) => {
-        this.post = response.post;
-        this.post.tags = response.tags;
-        this.post.comments = response.comments.comments;
-        this.pageInfo = response.comments.pageInfo;
-        this.isLoaded = true;
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
-      });
+    if(this.postId) {
+      this._postService.showPost(this.postId).subscribe(
+        (response: any) => {
+          this.post = response.post;
+          if(this.post) {
+            this.post.tags = response.tags;
+            this.post.comments = response.comments.comments;
+          }
+          this.pageInfo = response.comments.pageInfo;
+          this.isLoaded = true;
+        },
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
+    }
   }
 
 }

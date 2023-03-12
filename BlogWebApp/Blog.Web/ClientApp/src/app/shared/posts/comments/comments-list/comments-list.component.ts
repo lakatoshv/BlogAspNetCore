@@ -17,9 +17,9 @@ import { Messages } from 'src/app/core/data/Messages';
 })
 export class CommentsListComponent implements OnInit {
   /**
-   * @param postId number
+   * @param postId number | undefined
    */
-  @Input("post-id") postId: number;
+  @Input("post-id") postId: number | undefined;
 
   /**
    * @param comments Comment[]
@@ -36,14 +36,14 @@ export class CommentsListComponent implements OnInit {
   };
 
   /**
-   * @param comment Comment
+   * @param comment Comment | undefined
    */
-  public comment: Comment;
+  public comment: Comment | undefined;
 
   /**
-   * @param user User
+   * @param user User | undefined
    */
-  public user: User;
+  public user: User | undefined;
 
   /**
    * @param loggedIn boolean
@@ -51,9 +51,9 @@ export class CommentsListComponent implements OnInit {
   public loggedIn = false;
 
   /**
-   * @param editPostId number
+   * @param editPostId number | undefined
    */
-  public editPostId: number;
+  public editPostId: number | undefined;
 
   /**
    * @param isLoadEdit boolean
@@ -97,14 +97,16 @@ export class CommentsListComponent implements OnInit {
       pageSize: 10,
       displayType: null
     };
-    this._commentService.list(this.postId, sortParameters)
-      .subscribe((response: any) => {
-        this.comments = response.comments;
-        this.pageInfo = response.pageInfo;
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
-      });
+    if(this.postId) {
+      this._commentService.list(this.postId, sortParameters)
+        .subscribe((response: any) => {
+          this.comments = response.comments;
+          this.pageInfo = response.pageInfo;
+        },
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
+    }
   }
 
   /**
@@ -135,8 +137,8 @@ export class CommentsListComponent implements OnInit {
    * @returns void
    */
   onEditAction(comment: Comment): void {
-    const index = this.comments.findIndex(x => x.id === comment.id);
-    if (index > -1) {
+    const index = this.comments?.findIndex(x => x.id === comment.id);
+    if (this.comments && index && index > -1) {
       this.comments[index] = comment;
       this.isLoadEdit = false;
     }
@@ -148,7 +150,7 @@ export class CommentsListComponent implements OnInit {
    * @returns void
    */
   editAction(comment: Comment): void {
-    if (this.loggedIn && this.user.id === comment.userId) {
+    if (this.loggedIn && this.user?.id === comment.userId) {
       this.editPostId = comment.id;
       this.comment = comment;
       this.isLoadEdit = true;
@@ -177,8 +179,8 @@ export class CommentsListComponent implements OnInit {
    * @returns void
    */
   onDeleteCommentAction(commentId: number): void {
-    const index = this.comments.findIndex(x => x.id === commentId);
-    if (index > -1) {
+    const index = this.comments?.findIndex(x => x.id === commentId);
+    if (this.comments && index && index > -1) {
       this.comments.splice(index, 1);
     }
 

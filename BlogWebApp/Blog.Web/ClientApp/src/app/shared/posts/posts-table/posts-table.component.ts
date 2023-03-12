@@ -13,9 +13,9 @@ import { CustomToastrService } from 'src/app/core/services/custom-toastr.service
 })
 export class PostsTableComponent implements OnInit {
   /**
-   * @param userId string
+   * @param userId string | undefineds
    */
-  @Input() userId: string = null;
+  @Input() userId: string | undefined;
 
   /**
    * @param postsCount EventEmitter<number>

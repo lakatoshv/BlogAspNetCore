@@ -8,6 +8,7 @@
     using Blog.Core;
     using Blog.Data.Repository;
     using Blog.Data.RepositoryFactory;
+    using EntityFrameworkCore.AutoHistory.Extensions;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.ChangeTracking;
     using Microsoft.EntityFrameworkCore.Infrastructure;

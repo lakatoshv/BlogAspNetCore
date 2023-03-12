@@ -25,9 +25,9 @@ export class MyPostsComponent implements OnInit {
   public posts: Post[] = [];
 
   /**
-   * @param user User
+   * @param user User | undefined
    */
-  public user: User;
+  public user: User | undefined;
 
   /**
    * @param pageInfo PageInfo
@@ -74,9 +74,9 @@ export class MyPostsComponent implements OnInit {
   public searchForm: FormGroup = new SearchForm().searchForm;
 
   /**
-   * @param _userId number
+   * @param _userId string | undefined
    */
-  private _userId: string;
+  private _userId: string | undefined;
 
   /**
    * @param _searchFilter any
@@ -117,10 +117,10 @@ export class MyPostsComponent implements OnInit {
     }
 
     if (this._router.url.includes('/my-posts')) {
-      this._userId = this.user.id;
+      this._userId = this.user?.id;
       this.isCurrentUserPosts = true;
     } else {
-      this._userId = this._globalService.getRouteParam('user-id', this._activatedRoute);
+      this._userId = this._globalService.getRouteParam('user-id', this._activatedRoute) ?? undefined;
       this.isCurrentUserPosts = false;
     }
     this._getPosts();
@@ -137,7 +137,7 @@ export class MyPostsComponent implements OnInit {
    */
   public deleteAction(postId: number): void {
     const post = this.posts.find(p =>  p.id === postId);
-    if (this.isLoggedIn && this.posts[postId].author.id === this.user.id) {
+    if (this.isLoggedIn && this.posts[postId].author.id === this.user?.id && this._globalService._currentUser) {
       this._postService.delete(postId, this._globalService._currentUser.id).subscribe(
         (response: any) => {
           this._customToastrService.displaySuccessMessage(Messages.POST_DELETED_SUCCESSFULLY);
@@ -208,16 +208,18 @@ export class MyPostsComponent implements OnInit {
       tag: this._searchFilter,
       sortParameters: null,
     };
-    this._postService.userPosts(this._userId, model).subscribe(
-      (response: any) => {
-        this.posts = response.posts;
-        this.pageInfo = this.pageInfo;
-        this.isLoaded = true;
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
-        this.isLoaded = true;
-      });
+    if(this._userId) {
+      this._postService.userPosts(this._userId, model).subscribe(
+        (response: any) => {
+          this.posts = response.posts;
+          this.pageInfo = this.pageInfo;
+          this.isLoaded = true;
+        },
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+          this.isLoaded = true;
+        });
+    }
   }
 
   /**
@@ -237,15 +239,17 @@ export class MyPostsComponent implements OnInit {
       tag: this._searchFilter,
       sortParameters: sortParameters,
     };
-    this._postService.userPosts(this._userId, model).subscribe(
-      (response: any) => {
-        this.posts = response.posts;
-        this.pageInfo = response.pageInfo;
-
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
-      });
+    if(this._userId) {
+      this._postService.userPosts(this._userId, model).subscribe(
+        (response: any) => {
+          this.posts = response.posts;
+          this.pageInfo = response.pageInfo;
+  
+        },
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
+    }
   }
 
   /**
@@ -265,15 +269,17 @@ export class MyPostsComponent implements OnInit {
       tag: this._searchFilter,
       sortParameters: sortParameters,
     };
-    this._postService.userPosts(this._userId, model).subscribe(
-      (response: any) => {
-        this.posts = response.posts;
-        this.pageInfo = response.pageInfo;
-        this.isLoaded = true;
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
-      });
+    if(this._userId) {
+      this._postService.userPosts(this._userId, model).subscribe(
+        (response: any) => {
+          this.posts = response.posts;
+          this.pageInfo = response.pageInfo;
+          this.isLoaded = true;
+        },
+        (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        });
+    }
 
     this.pageInfo.totalItems = this.posts.length;
   }

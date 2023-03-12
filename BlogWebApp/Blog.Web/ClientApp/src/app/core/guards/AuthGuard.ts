@@ -5,7 +5,6 @@ import { UsersService } from "../services/users-services/users.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild {
-
     constructor(
         private _usersService: UsersService,
         private _router: Router) {
@@ -20,7 +19,8 @@ export class AuthGuard implements CanActivate, CanActivateChild {
             return true;
         }
 
-        this._router.navigate(['/']);
+        this._router.navigate(['/'], { queryParams: { returnUrl: state.url } });
+        return false;
     }
 
     canActivateChild(

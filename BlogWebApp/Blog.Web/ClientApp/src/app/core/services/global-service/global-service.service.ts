@@ -19,19 +19,19 @@ export class GlobalService {
   public _isLoadedData = false;
 
   /**
-   * @param _currentUser User
+   * @param _currentUser User | undefined
    */
-  public _currentUser: User;
+  public _currentUser: User | undefined;
 
   /**
-   * @param _avatarUrl string
+   * @param _avatarUrl string | undefined
    */
-  public _avatarUrl: string;
+  public _avatarUrl: string | undefined;
 
   /**
    * @param _roles string[]
    */
-  public _roles: string[];
+  public _roles: string[] = [];
 
   /**
    * @param _jwt JwtHelperService
@@ -102,7 +102,7 @@ export class GlobalService {
     user.firstName = decoded['firstName'];
     user.lastName = decoded['lastName'];
     user.phoneNumber = decoded['phoneNumber'];
-    user.profile = new Profile(parseInt(decoded['profileId'], null), id);
+    user.profile = new Profile(parseInt(decoded['profileId'], undefined), id);
     // user.IsEmailVerified = decoded['isEmailVerified'] == 'True';
     // user. = decoded['avatarUrl'];
     user.roles = decoded['roles'];
@@ -116,7 +116,7 @@ export class GlobalService {
    * @param routeObject ActivatedRouteSnapshot
    * @returns string|null
    */
-  private _getId(idName: string, routeObject: ActivatedRouteSnapshot): string|null {
+  private _getId(idName: string, routeObject: ActivatedRouteSnapshot | null): string | null {
     if (!routeObject) {
       return null;
     }
