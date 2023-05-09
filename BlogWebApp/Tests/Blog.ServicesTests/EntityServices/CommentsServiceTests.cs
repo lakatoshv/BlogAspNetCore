@@ -48,6 +48,8 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get All service tests
+
         #region Get All function
 
         /// <summary>
@@ -560,6 +562,10 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #endregion
+
+        #region Find service tests
+
         #region Find function
 
         /// <summary>
@@ -708,6 +714,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Insert service tests
 
         #region Insert function
 
@@ -989,6 +999,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Update service tests
 
         #region Upadate function
 
@@ -1330,6 +1344,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Delete service tests
 
         #region Delete By Id function
 
@@ -1771,6 +1789,10 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #endregion
+
+        #region Any service tests
+
         #region Any function With Specification
 
         /// <summary>
@@ -2093,6 +2115,8 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             Assert.False(areAnyComments);
         }
+
+        #endregion
 
         #endregion
 
