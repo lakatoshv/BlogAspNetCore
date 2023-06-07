@@ -94,7 +94,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="notEqualCount">The not equal count.</param>
         [Theory]
         [InlineData(0)]
-        public void GetAll_ShouldReturnPosts_WhenPostsExists(int notEqualCount)
+        public void GetAll_WhenPostsExists_ShouldReturnPosts(int notEqualCount)
         {
             //Arrange
             var random = new Random();
@@ -130,7 +130,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when posts does not exists.
         /// </summary>
         [Fact]
-        public void GetAll_ShouldReturnNothing_WhenPostDoesNotExists()
+        public void GetAll_WhenPostDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             _postsRepositoryMock.Setup(x => x.GetAll())
@@ -187,7 +187,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="notEqualCount">The not equal count.</param>
         [Theory]
         [InlineData(0)]
-        public async Task GetAllAsync_ShouldReturnPosts_WhenPostsExists(int notEqualCount)
+        public async Task GetAllAsync_WhenPostsExists_ShouldReturnPosts(int notEqualCount)
         {
             //Arrange
             var random = new Random();
@@ -223,7 +223,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when posts does not exists.
         /// </summary>
         [Fact]
-        public async Task GetAllAsync_ShouldReturnNothing_WhenPostDoesNotExists()
+        public async Task GetAllAsync_WhenPostDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             _postsRepositoryMock.Setup(x => x.GetAllAsync())
@@ -283,7 +283,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData(0, "Created from ServicesTests ")]
-        public void GetAll_ShouldReturnPosts_WithContainsSpecification_WhenPostsExists(int notEqualCount, string titleSearch)
+        public void GetAll_WithContainsSpecification_WhenPostsExists_ShouldReturnPosts(int notEqualCount, string titleSearch)
         {
             //Test failed
             //Arrange
@@ -324,7 +324,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData(1, "Created from ServicesTests 0")]
-        public void GetAll_ShouldReturnPost_WithEqualsSpecification_WhenPostsExists(int equalCount, string titleSearch)
+        public void GetAll_WithEqualsSpecification_WhenPostsExists_ShouldReturnPost(int equalCount, string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -364,7 +364,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData(0, "Created from ServicesTests -1")]
-        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenPostsExists(int equalCount, string titleSearch)
+        public void GetAll_WithEqualSpecification_WhenPostsExists_ShouldReturnNothing(int equalCount, string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -403,7 +403,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests 0")]
-        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenPostDoesNotExists(string titleSearch)
+        public void GetAll_WithEqualSpecification_WhenPostDoesNotExists_ShouldReturnNothing(string titleSearch)
         {
             //Arrange
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
@@ -464,7 +464,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData(0, "Created from ServicesTests ")]
-        public async Task GetAllAsync_ShouldReturnPosts_WithContainsSpecification_WhenPostsExists(int notEqualCount, string titleSearch)
+        public async Task GetAllAsync_WithContainsSpecification_WhenPostsExists_ShouldReturnPosts(int notEqualCount, string titleSearch)
         {
             //Test failed
             //Arrange
@@ -505,7 +505,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData(1, "Created from ServicesTests 0")]
-        public async void GetAllAsync_ShouldReturnPost_WithEqualsSpecification_WhenPostsExists(int equalCount, string titleSearch)
+        public async void GetAllAsync_WithEqualsSpecification_WhenPostsExists_ShouldReturnPost(int equalCount, string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -545,7 +545,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData(0, "Created from ServicesTests -1")]
-        public async void GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostsExists(int equalCount, string titleSearch)
+        public async void GetAllAsync_WithEqualSpecification_WhenPostsExists_ShouldReturnNothing(int equalCount, string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -584,7 +584,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests 0")]
-        public async Task GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostDoesNotExists(string titleSearch)
+        public async Task GetAllAsync_WithEqualSpecification_WhenPostDoesNotExists_ShouldReturnNothing(string titleSearch)
         {
             //Arrange
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
@@ -634,7 +634,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return post when post exists.
         /// </summary>
         [Fact]
-        public void Find_ShouldReturnPost_WhenPostExists()
+        public void Find_WhenPostExists_ShouldReturnPost()
         {
             //Arrange
             var random = new Random();
@@ -662,7 +662,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when post does not exists.
         /// </summary>
         [Fact]
-        public void Find_ShouldReturnNothing_WhenPostDoesNotExists()
+        public void Find_WhenPostDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -715,7 +715,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task FindAsync_ShouldReturnPost_WhenPostExists()
+        public async Task FindAsync_WhenPostExists_ShouldReturnPost()
         {
             //Arrange
             var random = new Random();
@@ -744,7 +744,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task FindAsync_ShouldReturnNothing_WhenPostDoesNotExists()
+        public async Task FindAsync_WhenPostDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -798,7 +798,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return post when post created.
         /// </summary>
         [Fact]
-        public void Insert_ShouldReturnPost_WhenPostExists()
+        public void Insert_WhenPostExists_ShouldReturnPost()
         {
             //Arrange
             var random = new Random();
@@ -872,7 +872,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return posts when posts created.
         /// </summary>
         [Fact]
-        public void InsertEnumerable_ShouldReturnPosts_WhenPostsExists()
+        public void InsertEnumerable_WhenPostsExists_ShouldReturnPosts()
         {
             //Arrange
             var random = new Random();
@@ -950,7 +950,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task InsertAsync_ShouldReturnPost_WhenPostExists()
+        public async Task InsertAsync_WhenPostExists_ShouldReturnPost()
         {
             //Arrange
             var random = new Random();
@@ -1026,7 +1026,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task InsertAsyncEnumerable_ShouldReturnPosts_WhenPostsExists()
+        public async Task InsertAsyncEnumerable_WhenPostsExists_ShouldReturnPosts()
         {
             //Arrange
             var random = new Random();
@@ -1112,7 +1112,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="newTitle">The new title.</param>
         [Theory]
         [InlineData("New title")]
-        public void Update_ShouldReturnPost_WhenPostExists(string newTitle)
+        public void Update_WhenPostExists_ShouldReturnPost(string newTitle)
         {
             //Arrange
             var random = new Random();
@@ -1204,7 +1204,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="newTitle">The new title.</param>
         [Theory]
         [InlineData("New title")]
-        public void UpdateEnumerable_ShouldReturnPost_WhenPostExists(string newTitle)
+        public void UpdateEnumerable_WhenPostExists_ShouldReturnPost(string newTitle)
         {
             //Arrange
             var random = new Random();
@@ -1298,7 +1298,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("New title")]
-        public async Task UpdateAsync_ShouldReturnPost_WhenPostExists(string newTitle)
+        public async Task UpdateAsync_WhenPostExists_ShouldReturnPost(string newTitle)
         {
             //Arrange
             var random = new Random();
@@ -1392,7 +1392,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("New title")]
-        public async Task UpdateAsyncEnumerable_ShouldReturnPost_WhenPostExists(string newTitle)
+        public async Task UpdateAsyncEnumerable_WhenPostExists_ShouldReturnPost(string newTitle)
         {
             //Arrange
             var random = new Random();
@@ -1476,7 +1476,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when post is deleted.
         /// </summary>
         [Fact]
-        public void DeleteById_ShouldReturnNothing_WhenPostIsDeleted()
+        public void DeleteById_WhenPostIsDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -1550,7 +1550,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when post is deleted.
         /// </summary>
         [Fact]
-        public void DeleteByObject_ShouldReturnNothing_WhenPostIsDeleted()
+        public void DeleteByObject_WhenPostIsDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -1632,7 +1632,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when post is deleted.
         /// </summary>
         [Fact]
-        public void DeleteByEnumerable_ShouldReturnNothing_WhenPostIsDeleted()
+        public void DeleteByEnumerable_WhenPostIsDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -1713,7 +1713,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsyncById_ShouldReturnNothing_WhenPostIsDeleted()
+        public async Task DeleteAsyncById_WhenPostIsDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -1786,7 +1786,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsyncByObject_ShouldReturnNothing_WhenPostIsDeleted()
+        public async Task DeleteAsyncByObject_WhenPostIsDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -1868,7 +1868,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when post is deleted.
         /// </summary>
         [Fact]
-        public async Task DeleteAsyncByEnumerable_ShouldReturnNothing_WhenPostIsDeleted()
+        public async Task DeleteAsyncByEnumerable_WhenPostIsDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -1955,7 +1955,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests ")]
-        public void Any_ShouldReturnTrue_WithContainsSpecification_WhenPostsExists(string titleSearch)
+        public void Any_WithContainsSpecification_WhenPostsExists_ShouldReturnTrue(string titleSearch)
         {
             //Test failed
             //Arrange
@@ -1993,7 +1993,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests 0")]
-        public void Any_ShouldReturnTrue_WithEqualsSpecification_WhenPostsExists(string titleSearch)
+        public void Any_WithEqualsSpecification_WhenPostsExists_ShouldReturnTrue(string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -2030,7 +2030,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests -1")]
-        public void Any_ShouldReturnFalse_WithEqualSpecification_WhenPostsExists(string titleSearch)
+        public void Any_WithEqualSpecification_WhenPostsExists_ShouldReturnFalse(string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -2067,7 +2067,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests 0")]
-        public void Any_ShouldReturnNothing_WithEqualSpecification_WhenPostDoesNotExists(string titleSearch)
+        public void Any_WithEqualSpecification_WhenPostDoesNotExists_ShouldReturnNothing(string titleSearch)
         {
             //Arrange
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
@@ -2129,7 +2129,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("Created from ServicesTests ")]
-        public async Task AnyAsync_ShouldReturnTrue_WithContainsSpecification_WhenPostsExists(string titleSearch)
+        public async Task AnyAsync_WithContainsSpecification_WhenPostsExists_ShouldReturnTrue(string titleSearch)
         {
             //Test failed
             //Arrange
@@ -2168,7 +2168,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("Created from ServicesTests 0")]
-        public async Task AnyAsync_ShouldReturnTrue_WithEqualsSpecification_WhenPostsExists(string titleSearch)
+        public async Task AnyAsync_WithEqualsSpecification_WhenPostsExists_ShouldReturnTrue(string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -2206,7 +2206,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("Created from ServicesTests -1")]
-        public async Task AnyAsync_ShouldReturnFalse_WithEqualSpecification_WhenPostsExists(string titleSearch)
+        public async Task AnyAsync_WithEqualSpecification_WhenPostsExists_ShouldReturnFalse(string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -2244,7 +2244,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("Created from ServicesTests 0")]
-        public async Task AnyAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostDoesNotExists(string titleSearch)
+        public async Task AnyAsync_WithEqualSpecification_WhenPostDoesNotExists_ShouldReturnNothing(string titleSearch)
         {
             //Arrange
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
@@ -2304,7 +2304,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests ")]
-        public void FirstOrDefault_ShouldReturnTrue_WithContainsSpecification_WhenPostsExists(string titleSearch)
+        public void FirstOrDefault_WithContainsSpecification_WhenPostsExists_ShouldReturnTrue(string titleSearch)
         {
             //Test failed
             //Arrange
@@ -2343,7 +2343,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests 0")]
-        public void FirstOrDefault_ShouldReturnTrue_WithEqualsSpecification_WhenPostsExists(string titleSearch)
+        public void FirstOrDefault_WithEqualsSpecification_WhenPostsExists_ShouldReturnTrue(string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -2381,7 +2381,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests -1")]
-        public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenPostsExists(string titleSearch)
+        public void FirstOrDefault_WithEqualSpecification_WhenPostsExists_ShouldReturnNothing(string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -2418,7 +2418,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests 0")]
-        public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenPostDoesNotExists(string titleSearch)
+        public void FirstOrDefault_WithEqualSpecification_WhenPostDoesNotExists_ShouldReturnNothing(string titleSearch)
         {
             //Arrange
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
@@ -2478,7 +2478,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests ")]
-        public void LastOrDefault_ShouldReturnTrue_WithContainsSpecification_WhenPostsExists(string titleSearch)
+        public void LastOrDefault_WithContainsSpecification_WhenPostsExists_ShouldReturnTrue(string titleSearch)
         {
             //Test failed
             //Arrange
@@ -2517,7 +2517,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests 0")]
-        public void LastOrDefault_ShouldReturnTrue_WithEqualsSpecification_WhenPostsExists(string titleSearch)
+        public void LastOrDefault_WithEqualsSpecification_WhenPostsExists_ShouldReturnTrue(string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -2555,7 +2555,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests -1")]
-        public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenPostsExists(string titleSearch)
+        public void LastOrDefault_WithEqualSpecification_WhenPostsExists_ShouldReturnNothing(string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -2592,7 +2592,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData("Created from ServicesTests 0")]
-        public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenPostDoesNotExists(string titleSearch)
+        public void LastOrDefault_WithEqualSpecification_WhenPostDoesNotExists_ShouldReturnNothing(string titleSearch)
         {
             //Arrange
             var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
@@ -2753,7 +2753,7 @@ namespace Blog.ServicesTests.EntityServices
         [InlineData("Created from ServicesTests ", 10, 10, "Title", OrderType.Ascending)]
         [InlineData("Created from ServicesTests ", 10, 20, "Title", OrderType.Ascending)]
         [InlineData("Created from ServicesTests ", 0, 100, "Title", OrderType.Ascending)]
-        public async Task SearchAsync_ShouldReturnPosts_WhenPostsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        public async Task SearchAsync_WhenPostsExists_ShouldReturnPosts(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
             var random = new Random();
@@ -2809,7 +2809,7 @@ namespace Blog.ServicesTests.EntityServices
         [InlineData("Created from ServicesTests 11", 10, 10, "Title", OrderType.Ascending)]
         [InlineData("Created from ServicesTests 11", 10, 20, "Title", OrderType.Ascending)]
         [InlineData("Created from ServicesTests 11", 0, 100, "Title", OrderType.Ascending)]
-        public async Task SearchAsync_ShouldReturnPost_WithEqualsSpecification_WhenPostsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        public async Task SearchAsync_WithEqualsSpecification_WhenPostsExists_ShouldReturnPost(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
             var random = new Random();
@@ -2866,7 +2866,7 @@ namespace Blog.ServicesTests.EntityServices
         [InlineData("Created from ServicesTests -11", 10, 10, "Title", OrderType.Ascending)]
         [InlineData("Created from ServicesTests -11", 10, 20, "Title", OrderType.Ascending)]
         [InlineData("Created from ServicesTests -11", 0, 100, "Title", OrderType.Ascending)]
-        public async Task SearchAsync_ShouldReturnNothing_WithEqualSpecification_WhenPostsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        public async Task SearchAsync_WithEqualSpecification_WhenPostsExists_ShouldReturnNothing(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
             var random = new Random();
@@ -2922,7 +2922,7 @@ namespace Blog.ServicesTests.EntityServices
         [InlineData("Created from ServicesTests 11", 10, 10, "Title", OrderType.Ascending)]
         [InlineData("Created from ServicesTests 11", 10, 20, "Title", OrderType.Ascending)]
         [InlineData("Created from ServicesTests 11", 0, 100, "Title", OrderType.Ascending)]
-        public async Task SearchAsync_ShouldReturnNothing_WhenPostsDoesNotExists(string search, int start, int take, string fieldName, OrderType orderType)
+        public async Task SearchAsync_WhenPostsDoesNotExists_ShouldReturnNothing(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
             var query = new SearchQuery<Post>
