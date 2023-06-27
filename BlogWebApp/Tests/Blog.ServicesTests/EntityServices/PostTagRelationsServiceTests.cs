@@ -49,6 +49,8 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get All
+
         #region Get All function
 
         /// <summary>
@@ -1121,6 +1123,10 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #endregion
+
+        #region Find
+
         #region Find function
 
         /// <summary>
@@ -1400,6 +1406,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Insert
 
         #region Insert function
 
@@ -1846,6 +1856,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Update
 
         #region Upadate function
 
@@ -2546,6 +2560,10 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #endregion
+
+        #region Delete
+
         #region Delete By Id function
 
         /// <summary>
@@ -3093,6 +3111,10 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #endregion
+
+        #region Any
+
         #region Any function With Specification
 
         /// <summary>
@@ -3471,6 +3493,8 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             Assert.False(areAnyPosts);
         }
+
+        #endregion
 
         #endregion
 
