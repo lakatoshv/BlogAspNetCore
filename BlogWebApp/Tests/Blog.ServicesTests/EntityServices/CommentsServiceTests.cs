@@ -48,6 +48,8 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get All service tests
+
         #region Get All function
 
         /// <summary>
@@ -87,7 +89,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="notEqualCount">The not equal count.</param>
         [Theory]
         [InlineData(0)]
-        public void GetAll_ShouldReturnComments_WhenCommentsExists(int notEqualCount)
+        public void GetAll_WhenCommentsExists_ShouldReturnComments(int notEqualCount)
         {
             //Arrange
             var random = new Random();
@@ -121,7 +123,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when comments does not exists.
         /// </summary>
         [Fact]
-        public void GetAll_ShouldReturnNothing_WhenCommentsDoesNotExists()
+        public void GetAll_WhenCommentsDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             _commentsRepositoryMock.Setup(x => x.GetAll())
@@ -174,7 +176,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="notEqualCount">The not equal count.</param>
         [Theory]
         [InlineData(0)]
-        public async Task GetAllAsync_ShouldReturnComments_WhenCommentsExists(int notEqualCount)
+        public async Task GetAllAsync_WhenCommentsExists_ShouldReturnComments(int notEqualCount)
         {
             //Arrange
             var random = new Random();
@@ -208,7 +210,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when comments does not exists.
         /// </summary>
         [Fact]
-        public async void GetAllAsync_ShouldReturnNothing_WhenCommentsDoesNotExists()
+        public async void GetAllAsync_WhenCommentsDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             _commentsRepositoryMock.Setup(x => x.GetAllAsync())
@@ -265,7 +267,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData(0, "Comment ")]
-        public void GetAll_ShouldReturnComments_WithContainsSpecification_WhenCommentsExists(int notEqualCount, string commentBodySearch)
+        public void GetAll_WithContainsSpecification_WhenCommentsExists_ShouldReturnComments(int notEqualCount, string commentBodySearch)
         {
             //Test failed
             //Arrange
@@ -303,7 +305,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData(1, "Comment 0")]
-        public void GetAll_ShouldReturnComment_WithEqualsSpecification_WhenCommentsExists(int equalCount, string commentBodySearch)
+        public void GetAll_WithEqualsSpecification_WhenCommentsExists_ShouldReturnComment(int equalCount, string commentBodySearch)
         {
             //Arrange
             var random = new Random();
@@ -340,7 +342,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData(0, "Comment -1")]
-        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenCommentsExists(int equalCount, string commentBodySearch)
+        public void GetAll_WithEqualSpecification_WhenCommentsExists_ShouldReturnNothing(int equalCount, string commentBodySearch)
         {
             //Arrange
             var random = new Random();
@@ -376,7 +378,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData("Comment 0")]
-        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenCommentDoesNotExists(string commentBodySearch)
+        public void GetAll_WithEqualSpecification_WhenCommentDoesNotExists_ShouldReturnNothing(string commentBodySearch)
         {
             //Arrange
             var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
@@ -434,7 +436,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData(0, "Comment ")]
-        public async Task GetAllAsync_ShouldReturnComments_WithContainsSpecification_WhenCommentsExists(int notEqualCount, string commentBodySearch)
+        public async Task GetAllAsync_WithContainsSpecification_WhenCommentsExists_ShouldReturnComments(int notEqualCount, string commentBodySearch)
         {
             //Test failed
             //Arrange
@@ -472,7 +474,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData(1, "Comment 0")]
-        public async Task GetAllAsync_ShouldReturnComment_WithEqualsSpecification_WhenCommentsExists(int equalCount, string commentBodySearch)
+        public async Task GetAllAsync_WithEqualsSpecification_WhenCommentsExists_ShouldReturnComment(int equalCount, string commentBodySearch)
         {
             //Arrange
             var random = new Random();
@@ -508,7 +510,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData(0, "Comment -1")]
-        public async void GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenCommentsExists(int equalCount, string commentBodySearch)
+        public async void GetAllAsync_WithEqualSpecification_WhenCommentsExists_ShouldReturnNothing(int equalCount, string commentBodySearch)
         {
             //Arrange
             var random = new Random();
@@ -544,7 +546,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData("Comment 0")]
-        public async Task GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenCommentDoesNotExists(string commentBodySearch)
+        public async Task GetAllAsync_WithEqualSpecification_WhenCommentDoesNotExists_ShouldReturnNothing(string commentBodySearch)
         {
             //Arrange
             var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
@@ -559,6 +561,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Find service tests
 
         #region Find function
 
@@ -591,7 +597,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return comment when comment exists.
         /// </summary>
         [Fact]
-        public void Find_ShouldReturnComment_WhenCommentExists()
+        public void Find_WhenCommentExists_ShouldReturnComment()
         {
             //Arrange
             var random = new Random();
@@ -616,7 +622,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when comment does not exists.
         /// </summary>
         [Fact]
-        public void Find_ShouldReturnNothing_WhenCommentDoesNotExists()
+        public void Find_WhenCommentDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -666,7 +672,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task FindAsync_ShouldReturnComment_WhenCommentExists()
+        public async Task FindAsync_WhenCommentExists_ShouldReturnComment()
         {
             //Arrange
             var random = new Random();
@@ -692,7 +698,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task FindAsync_ShouldReturnNothing_WhenCommentDoesNotExists()
+        public async Task FindAsync_WhenCommentDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -708,6 +714,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Insert service tests
 
         #region Insert function
 
@@ -743,7 +753,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return comment when comment created.
         /// </summary>
         [Fact]
-        public void Insert_ShouldReturnComment_WhenCommentExists()
+        public void Insert_WhenCommentExists_ShouldReturnComment()
         {
             //Arrange
             var random = new Random();
@@ -811,7 +821,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return comments when comments created.
         /// </summary>
         [Fact]
-        public void InsertEnumerable_ShouldReturnComments_WhenCommentsExists()
+        public void InsertEnumerable_WhenCommentsExists_ShouldReturnComments()
         {
             //Arrange
             var random = new Random();
@@ -883,7 +893,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task InsertAsync_ShouldReturnComment_WhenCommentExists()
+        public async Task InsertAsync_WhenCommentExists_ShouldReturnComment()
         {
             //Arrange
             var random = new Random();
@@ -953,7 +963,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task InsertAsyncEnumerable_ShouldReturnComments_WhenCommentsExists()
+        public async Task InsertAsyncEnumerable_WhenCommentsExists_ShouldReturnComments()
         {
             //Arrange
             var random = new Random();
@@ -989,6 +999,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Update service tests
 
         #region Upadate function
 
@@ -1033,7 +1047,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="newCommentBody">The new CommentBody.</param>
         [Theory]
         [InlineData("New CommentBody")]
-        public void Update_ShouldReturnComment_WhenCommentExists(string newCommentBody)
+        public void Update_WhenCommentExists_ShouldReturnComment(string newCommentBody)
         {
             //Arrange
             var random = new Random();
@@ -1115,7 +1129,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="newCommentBody">The new CommentBody.</param>
         [Theory]
         [InlineData("New CommentBody")]
-        public void UpdateEnumerable_ShouldReturnComment_WhenCommentExists(string newCommentBody)
+        public void UpdateEnumerable_WhenCommentExists_ShouldReturnComment(string newCommentBody)
         {
             //Arrange
             var random = new Random();
@@ -1204,7 +1218,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("New CommentBody")]
-        public async Task UpdateAsync_ShouldReturnComment_WhenCommentExists(string newCommentBody)
+        public async Task UpdateAsync_WhenCommentExists_ShouldReturnComment(string newCommentBody)
         {
             //Arrange
             var random = new Random();
@@ -1288,7 +1302,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("New CommentBody")]
-        public async Task UpdateAsyncEnumerable_ShouldReturnComment_WhenCommentExists(string newCommentBody)
+        public async Task UpdateAsyncEnumerable_WhenCommentExists_ShouldReturnComment(string newCommentBody)
         {
             //Arrange
             var random = new Random();
@@ -1331,6 +1345,10 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #endregion
+
+        #region Delete service tests
+
         #region Delete By Id function
 
         /// <summary>
@@ -1367,7 +1385,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when comment is deleted.
         /// </summary>
         [Fact]
-        public void DeleteById_ShouldReturnNothing_WhenCommentIsDeleted()
+        public void DeleteById_WhenCommentIsDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -1435,7 +1453,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when comment is deleted.
         /// </summary>
         [Fact]
-        public void DeleteByObject_ShouldReturnNothing_WhenCommentIsDeleted()
+        public void DeleteByObject_WhenCommentIsDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -1511,7 +1529,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when comment is deleted.
         /// </summary>
         [Fact]
-        public void DeleteByEnumerable_ShouldReturnNothing_WhenCommentIsDeleted()
+        public void DeleteByEnumerable_WhenCommentIsDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -1586,7 +1604,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsyncById_ShouldReturnNothing_WhenCommentIsDeleted()
+        public async Task DeleteAsyncById_WhenCommentIsDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -1653,7 +1671,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsyncByObject_ShouldReturnNothing_WhenCommentIsDeleted()
+        public async Task DeleteAsyncByObject_WhenCommentIsDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -1731,7 +1749,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsyncByEnumerable_ShouldReturnNothing_WhenCommentIsDeleted()
+        public async Task DeleteAsyncByEnumerable_WhenCommentIsDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -1770,6 +1788,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Any service tests
 
         #region Any function With Specification
 
@@ -1812,7 +1834,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData("Comment ")]
-        public void Any_ShouldReturnTrue_WithContainsSpecification_WhenCommentsExists(string commentBodySearch)
+        public void Any_WithContainsSpecification_WhenCommentsExists_ShouldReturnTrue(string commentBodySearch)
         {
             //Test failed
             //Arrange
@@ -1847,7 +1869,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData("Comment 0")]
-        public void Any_ShouldReturnTrue_WithEqualsSpecification_WhenCommentsExists(string commentBodySearch)
+        public void Any_WithEqualsSpecification_WhenCommentsExists_ShouldReturnTrue(string commentBodySearch)
         {
             //Arrange
             var random = new Random();
@@ -1881,7 +1903,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData("Comment -1")]
-        public void Any_ShouldReturnFalse_WithEqualSpecification_WhenCommentsExists(string commentBodySearch)
+        public void Any_WithEqualSpecification_WhenCommentsExists_ShouldReturnFalse(string commentBodySearch)
         {
             //Arrange
             var random = new Random();
@@ -1915,7 +1937,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData("Comment 0")]
-        public void Any_ShouldReturnNothing_WithEqualSpecification_WhenCommentDoesNotExists(string commentBodySearch)
+        public void Any_WithEqualSpecification_WhenCommentDoesNotExists_ShouldReturnNothing(string commentBodySearch)
         {
             //Arrange
             var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
@@ -1974,7 +1996,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("Comment ")]
-        public async Task AnyAsync_ShouldReturnTrue_WithContainsSpecification_WhenCommentsExists(string commentBodySearch)
+        public async Task AnyAsync_WithContainsSpecification_WhenCommentsExists_ShouldReturnTrue(string commentBodySearch)
         {
             //Test failed
             //Arrange
@@ -2010,7 +2032,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("Comment 0")]
-        public async Task AnyAsync_ShouldReturnTrue_WithEqualsSpecification_WhenCommentsExists(string commentBodySearch)
+        public async Task AnyAsync_WithEqualsSpecification_WhenCommentsExists_ShouldReturnTrue(string commentBodySearch)
         {
             //Arrange
             var random = new Random();
@@ -2045,7 +2067,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("Comment -1")]
-        public async Task AnyAsync_ShouldReturnFalse_WithEqualSpecification_WhenCommentsExists(string commentBodySearch)
+        public async Task AnyAsync_WithEqualSpecification_WhenCommentsExists_ShouldReturnFalse(string commentBodySearch)
         {
             //Arrange
             var random = new Random();
@@ -2080,7 +2102,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("Comment 0")]
-        public async Task AnyAsync_ShouldReturnNothing_WithEqualSpecification_WhenCommentDoesNotExists(string commentBodySearch)
+        public async Task AnyAsync_WithEqualSpecification_WhenCommentDoesNotExists_ShouldReturnNothing(string commentBodySearch)
         {
             //Arrange
             var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
@@ -2093,6 +2115,8 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             Assert.False(areAnyComments);
         }
+
+        #endregion
 
         #endregion
 
@@ -2137,7 +2161,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData("Comment ")]
-        public void FirstOrDefault_ShouldReturnTrue_WithContainsSpecification_WhenCommentsExists(string commentBodySearch)
+        public void FirstOrDefault_WithContainsSpecification_WhenCommentsExists_ShouldReturnTrue(string commentBodySearch)
         {
             //Test failed
             //Arrange
@@ -2173,7 +2197,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData("Comment 0")]
-        public void FirstOrDefault_ShouldReturnTrue_WithEqualsSpecification_WhenCommentsExists(string commentBodySearch)
+        public void FirstOrDefault_WithEqualsSpecification_WhenCommentsExists_ShouldReturnTrue(string commentBodySearch)
         {
             //Arrange
             var random = new Random();
@@ -2208,7 +2232,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData("Comment -1")]
-        public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenCommentsExists(string commentBodySearch)
+        public void FirstOrDefault_WithEqualSpecification_WhenCommentsExists_ShouldReturnNothing(string commentBodySearch)
         {
             //Arrange
             var random = new Random();
@@ -2242,7 +2266,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData("Comment 0")]
-        public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenCommentDoesNotExists(string commentBodySearch)
+        public void FirstOrDefault_WithEqualSpecification_WhenCommentDoesNotExists_ShouldReturnNothing(string commentBodySearch)
         {
             //Arrange
             var random = new Random();
@@ -2312,7 +2336,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData("Comment ")]
-        public void LastOrDefault_ShouldReturnTrue_WithContainsSpecification_WhenCommentsExists(string commentBodySearch)
+        public void LastOrDefault_WithContainsSpecification_WhenCommentsExists_ShouldReturnTrue(string commentBodySearch)
         {
             //Test failed
             //Arrange
@@ -2348,7 +2372,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData("Comment 0")]
-        public void LastOrDefault_ShouldReturnTrue_WithEqualsSpecification_WhenCommentsExists(string commentBodySearch)
+        public void LastOrDefault_WithEqualsSpecification_WhenCommentsExists_ShouldReturnTrue(string commentBodySearch)
         {
             //Arrange
             var random = new Random();
@@ -2383,7 +2407,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData("Comment -1")]
-        public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenCommentsExists(string commentBodySearch)
+        public void LastOrDefault_WithEqualSpecification_WhenCommentsExists_ShouldReturnNothing(string commentBodySearch)
         {
             //Arrange
             var random = new Random();
@@ -2417,7 +2441,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData("Comment 0")]
-        public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenCommentDoesNotExists(string commentBodySearch)
+        public void LastOrDefault_WithEqualSpecification_WhenCommentDoesNotExists_ShouldReturnNothing(string commentBodySearch)
         {
             //Arrange
             var random = new Random();
@@ -2588,7 +2612,7 @@ namespace Blog.ServicesTests.EntityServices
         [InlineData("Comment ", 10, 10, "CommentBody", OrderType.Ascending)]
         [InlineData("Comment ", 10, 20, "CommentBody", OrderType.Ascending)]
         [InlineData("Comment ", 0, 100, "CommentBody", OrderType.Ascending)]
-        public async Task SearchAsync_ShouldReturnComments_WhenCommentsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        public async Task SearchAsync_WhenCommentsExists_ShouldReturnComments(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
             var random = new Random();
@@ -2641,7 +2665,7 @@ namespace Blog.ServicesTests.EntityServices
         [InlineData("Comment 11", 10, 10, "CommentBody", OrderType.Ascending)]
         [InlineData("Comment 11", 10, 20, "CommentBody", OrderType.Ascending)]
         [InlineData("Comment 11", 0, 100, "CommentBody", OrderType.Ascending)]
-        public async Task SearchAsync_ShouldReturnComment_WithEqualsSpecification_WhenCommentsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        public async Task SearchAsync_WithEqualsSpecification_WhenCommentsExists_ShouldReturnComment(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
             var random = new Random();
@@ -2695,7 +2719,7 @@ namespace Blog.ServicesTests.EntityServices
         [InlineData("Comment -11", 10, 10, "CommentBody", OrderType.Ascending)]
         [InlineData("Comment -11", 10, 20, "CommentBody", OrderType.Ascending)]
         [InlineData("Comment -11", 0, 100, "CommentBody", OrderType.Ascending)]
-        public async Task SearchAsync_ShouldReturnNothing_WithEqualSpecification_WhenCommentsExists(string search, int start, int take, string fieldName, OrderType orderType)
+        public async Task SearchAsync_WithEqualSpecification_WhenCommentsExists_ShouldReturnNothing(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
             var random = new Random();
@@ -2748,7 +2772,7 @@ namespace Blog.ServicesTests.EntityServices
         [InlineData("Comment 11", 10, 10, "CommentBody", OrderType.Ascending)]
         [InlineData("Comment 11", 10, 20, "CommentBody", OrderType.Ascending)]
         [InlineData("Comment 11", 0, 100, "CommentBody", OrderType.Ascending)]
-        public async Task SearchAsync_ShouldReturnNothing_WhenCommentsDoesNotExists(string search, int start, int take, string fieldName, OrderType orderType)
+        public async Task SearchAsync_WhenCommentsDoesNotExists_ShouldReturnNothing(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
             var query = new SearchQuery<Comment>

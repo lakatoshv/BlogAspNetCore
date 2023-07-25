@@ -51,6 +51,8 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get All
+
         #region Get All function
 
         /// <summary>
@@ -100,7 +102,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="notEqualCount">The not equal count.</param>
         [Theory]
         [InlineData(0)]
-        public void GetAll_ShouldReturnProfiles_WhenProfilesExists(int notEqualCount)
+        public void GetAll_WhenProfilesExists_ShouldReturnProfiles(int notEqualCount)
         {
             //Arrange
             var random = new Random();
@@ -143,7 +145,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when profiles does not exists.
         /// </summary>
         [Fact]
-        public void GetAll_ShouldReturnNothing_WhenProfilesDoesNotExists()
+        public void GetAll_WhenProfilesDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             _profileRepositoryMock.Setup(x => x.GetAll())
@@ -207,7 +209,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="notEqualCount">The not equal count.</param>
         [Theory]
         [InlineData(0)]
-        public async Task GetAllAsync_ShouldReturnProfiles_WhenProfilesExists(int notEqualCount)
+        public async Task GetAllAsync_WhenProfilesExists_ShouldReturnProfiles(int notEqualCount)
         {
             //Arrange
             var random = new Random();
@@ -250,7 +252,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when profiles does not exists.
         /// </summary>
         [Fact]
-        public async Task GetAllAsync_ShouldReturnNothing_WhenProfilesDoesNotExists()
+        public async Task GetAllAsync_WhenProfilesDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             _profileRepositoryMock.Setup(x => x.GetAllAsync())
@@ -315,7 +317,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="notEqualCount">The not equal count.</param>
         [Theory]
         [InlineData(0)]
-        public void GetAll_ShouldReturnProfiles_WithEqualsSpecification_WhenProfilesExists(int notEqualCount)
+        public void GetAll_WithEqualsSpecification_WhenProfilesExists_ShouldReturnProfiles(int notEqualCount)
         {
             //Test failed
             //Arrange
@@ -362,7 +364,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="equalCount">The equal count.</param>
         [Theory]
         [InlineData(0)]
-        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenProfilesExists(int equalCount)
+        public void GetAll_WithEqualSpecification_WhenProfilesExists_ShouldReturnNothing(int equalCount)
         {
             //Arrange
             var random = new Random();
@@ -406,7 +408,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing with  when messages does not exists.
         /// </summary>
         [Fact]
-        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists()
+        public void GetAll_WithEqualSpecification_WhenMessagesDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             var searchUserId = new Guid().ToString();
@@ -473,7 +475,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="notEqualCount">The not equal count.</param>
         [Theory]
         [InlineData(0)]
-        public async Task GetAllAsync_ShouldReturnProfiles_WithEqualsSpecification_WhenProfilesExists(int notEqualCount)
+        public async Task GetAllAsync_WithEqualsSpecification_WhenProfilesExists_ShouldReturnProfiles(int notEqualCount)
         {
             //Test failed
             //Arrange
@@ -520,7 +522,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="equalCount">The equal count.</param>
         [Theory]
         [InlineData(0)]
-        public async void GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenProfilesExists(int equalCount)
+        public async void GetAllAsync_WithEqualSpecification_WhenProfilesExists_ShouldReturnNothing(int equalCount)
         {
             //Arrange
             var random = new Random();
@@ -564,7 +566,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing with  when messages does not exists.
         /// </summary>
         [Fact]
-        public async Task GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists()
+        public async Task GetAllAsync_WithEqualSpecification_WhenMessagesDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             var searchUserId = new Guid().ToString();
@@ -580,6 +582,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Find
 
         #region Find function
 
@@ -625,7 +631,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return profile when profiles exists.
         /// </summary>
         [Fact]
-        public void Find_ShouldReturnProfile_WhenProfilesExists()
+        public void Find_WhenProfilesExists_ShouldReturnProfile()
         {
             //Arrange
             var random = new Random();
@@ -663,7 +669,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when profiles does not exists.
         /// </summary>
         [Fact]
-        public void Find_ShouldReturnNothing_WhenProfilesDoesNotExists()
+        public void Find_WhenProfilesDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -726,7 +732,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task FindAsync_ShouldReturnProfiles_WhenProfilesExists()
+        public async Task FindAsync_WhenProfilesExists_ShouldReturnProfiles()
         {
             //Arrange
             var random = new Random();
@@ -765,7 +771,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task FindAsync_ShouldReturnNothing_WhenProfilesDoesNotExists()
+        public async Task FindAsync_WhenProfilesDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -781,6 +787,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Insert
 
         #region Insert function
 
@@ -828,7 +838,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return profile when profile created.
         /// </summary>
         [Fact]
-        public void Insert_ShouldReturnProfile_WhenProfileExists()
+        public void Insert_WhenProfileExists_ShouldReturnProfile()
         {
             //Arrange
             var random = new Random();
@@ -919,7 +929,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return profiles when profiles created.
         /// </summary>
         [Fact]
-        public void InsertEnumerable_ShouldReturnProfiles_WhenProfilesExists()
+        public void InsertEnumerable_WhenProfilesExists_ShouldReturnProfiles()
         {
             //Arrange
             var random = new Random();
@@ -1014,7 +1024,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task InsertAsync_ShouldReturnProfile_WhenProfileExists()
+        public async Task InsertAsync_WhenProfileExists_ShouldReturnProfile()
         {
             //Arrange
             var random = new Random();
@@ -1107,7 +1117,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task InsertAsyncEnumerable_ShouldReturnProfiles_WhenProfilesExists()
+        public async Task InsertAsyncEnumerable_WhenProfilesExists_ShouldReturnProfiles()
         {
             //Arrange
             var random = new Random();
@@ -1154,6 +1164,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Update
 
         #region Upadate function
 
@@ -1206,7 +1220,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return profile when profile updated.
         /// </summary>
         [Fact]
-        public void Update_ShouldReturnProfile_WhenProfileExists()
+        public void Update_WhenProfileExists_ShouldReturnProfile()
         {
             //Arrange
             var random = new Random();
@@ -1310,7 +1324,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return profile when profile updated.
         /// </summary>
         [Fact]
-        public void UpdateEnumerable_ShouldReturnProfile_WhenProfileExists()
+        public void UpdateEnumerable_WhenProfileExists_ShouldReturnProfile()
         {
             //Arrange
             var random = new Random();
@@ -1421,7 +1435,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task UpdateAsync_ShouldReturnMessage_WhenMessageExists()
+        public async Task UpdateAsync_WhenMessageExists_ShouldReturnMessage()
         {
             //Arrange
             var random = new Random();
@@ -1527,7 +1541,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task UpdateAsyncEnumerable_ShouldReturnProfile_WhenProfileExists()
+        public async Task UpdateAsyncEnumerable_WhenProfileExists_ShouldReturnProfile()
         {
             //Arrange
             var random = new Random();
@@ -1584,6 +1598,10 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #endregion
+
+        #region Delete
+
         #region Delete By Id function
 
         /// <summary>
@@ -1637,7 +1655,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when profile is deleted.
         /// </summary>
         [Fact]
-        public void DeleteById_ShouldReturnNothing_WhenProfileDeleted()
+        public void DeleteById_WhenProfileDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -1734,7 +1752,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when profile is deleted.
         /// </summary>
         [Fact]
-        public void DeleteByObject_ShouldReturnNothing_WhenProfileDeleted()
+        public void DeleteByObject_WhenProfileDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -1833,7 +1851,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when profile is deleted.
         /// </summary>
         [Fact]
-        public void DeleteByEnumerable_ShouldReturnNothing_WhenProfileDeleted()
+        public void DeleteByEnumerable_WhenProfileDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -1936,7 +1954,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsyncById_ShouldReturnNothing_WhenProfileIsDeleted()
+        public async Task DeleteAsyncById_WhenProfileIsDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -2032,7 +2050,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsyncByObject_ShouldReturnNothing_WhenProfileIsDeleted()
+        public async Task DeleteAsyncByObject_WhenProfileIsDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -2131,7 +2149,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when profile is deleted.
         /// </summary>
         [Fact]
-        public async Task DeleteAsyncByEnumerable_ShouldReturnNothing_WhenProfileDeleted()
+        public async Task DeleteAsyncByEnumerable_WhenProfileDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -2181,6 +2199,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Any
 
         #region Any function With Specification
 
@@ -2233,7 +2255,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return true with equals specification when profiles exists.
         /// </summary>
         [Fact]
-        public void Any_ShouldReturnTrue_WithEqualsSpecification_WhenProfilesExists()
+        public void Any_WithEqualsSpecification_WhenProfilesExists_ShouldReturnTrue()
         {
             //Test failed
             //Arrange
@@ -2279,7 +2301,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return false with when messages does not exists.
         /// </summary>
         [Fact]
-        public void Any_ShouldReturnFalse_WithEqualSpecification_WhenProfilesExists()
+        public void Any_WithEqualSpecification_WhenProfilesExists_ShouldReturnFalse()
         {
             //Arrange
             var random = new Random();
@@ -2322,7 +2344,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return false with when profiles does not exists.
         /// </summary>
         [Fact]
-        public void Any_ShouldReturnNothing_WithEqualSpecification_WhenProfilesDoesNotExists()
+        public void Any_WithEqualSpecification_WhenProfilesDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             var searchUserId = new Guid().ToString();
@@ -2392,7 +2414,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task AnyAsync_ShouldReturnTrue_WithEqualsSpecification_WhenProfilesExists()
+        public async Task AnyAsync_WithEqualsSpecification_WhenProfilesExists_ShouldReturnTrue()
         {
             //Test failed
             //Arrange
@@ -2439,7 +2461,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task AnyAsync_ShouldReturnFalse_WithEqualSpecification_WhenProfilesExists()
+        public async Task AnyAsync_WithEqualSpecification_WhenProfilesExists_ShouldReturnFalse()
         {
             //Arrange
             var random = new Random();
@@ -2483,7 +2505,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task AnyAsync_ShouldReturnNothing_WithEqualSpecification_WhenProfilesDoesNotExists()
+        public async Task AnyAsync_WithEqualSpecification_WhenProfilesDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             var searchUserId = new Guid().ToString();
@@ -2497,6 +2519,8 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             Assert.False(areAnyProfiles);
         }
+
+        #endregion
 
         #endregion
 
@@ -2551,7 +2575,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return profile with equals specification when profiles exists.
         /// </summary>
         [Fact]
-        public void FirstOrDefault_ShouldReturnProfile_WithContainsSpecification_WhenProfilesExists()
+        public void FirstOrDefault_WithContainsSpecification_WhenProfilesExists_ShouldReturnProfile()
         {
             //Test failed
             //Arrange
@@ -2598,7 +2622,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing with when profiles exists.
         /// </summary>
         [Fact]
-        public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenProfilesExists()
+        public void FirstOrDefault_WithEqualSpecification_WhenProfilesExists_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -2641,7 +2665,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing with equal specification when profiles does not exists.
         /// </summary>
         [Fact]
-        public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenProfilesDoesNotExists()
+        public void FirstOrDefault_WithEqualSpecification_WhenProfilesDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             var searchUserId = new Guid().ToString();
@@ -2709,7 +2733,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return profile with equals specification when profiles exists.
         /// </summary>
         [Fact]
-        public void LastOrDefault_ShouldReturnProfile_WithEqualsSpecification_WhenProfilesExists()
+        public void LastOrDefault_WithEqualsSpecification_WhenProfilesExists_ShouldReturnProfile()
         {
             //Test failed
             //Arrange
@@ -2756,7 +2780,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing with equals specification when profiles does not exists.
         /// </summary>
         [Fact]
-        public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenProfilesExists()
+        public void LastOrDefault_WithEqualSpecification_WhenProfilesExists_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -2799,7 +2823,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing with specification when profiles does not exists.
         /// </summary>
         [Fact]
-        public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenProfilesDoesNotExists()
+        public void LastOrDefault_WithEqualSpecification_WhenProfilesDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             var searchUserId = new Guid().ToString();
@@ -2972,7 +2996,7 @@ namespace Blog.ServicesTests.EntityServices
         [InlineData("test", 10, 10, "User.Email", OrderType.Ascending)]
         [InlineData("test", 10, 20, "User.Email", OrderType.Ascending)]
         [InlineData("test", 0, 100, "User.Email", OrderType.Ascending)]
-        public async Task SearchAsync_ShouldReturnProfiles_WhenProfilesExists(string search, int start, int take, string fieldName, OrderType orderType)
+        public async Task SearchAsync_WhenProfilesExists_ShouldReturnProfiles(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
             var random = new Random();
@@ -3039,7 +3063,7 @@ namespace Blog.ServicesTests.EntityServices
         [InlineData("test11", 10, 10, "User.Email", OrderType.Ascending)]
         [InlineData("test11", 10, 20, "User.Email", OrderType.Ascending)]
         [InlineData("test11", 0, 100, "User.Email", OrderType.Ascending)]
-        public async Task SearchAsync_ShouldReturnProfile_WithEqualsSpecification_WhenProfilesExists(string search, int start, int take, string fieldName, OrderType orderType)
+        public async Task SearchAsync_WithEqualsSpecification_WhenProfilesExists_ShouldReturnProfile(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
             var random = new Random();
@@ -3107,7 +3131,7 @@ namespace Blog.ServicesTests.EntityServices
         [InlineData("test-2", 10, 10, "User.Email", OrderType.Ascending)]
         [InlineData("test-11", 10, 20, "User.Email", OrderType.Ascending)]
         [InlineData("test-1", 0, 100, "User.Email", OrderType.Ascending)]
-        public async Task SearchAsync_ShouldReturnNothing_WithEqualSpecification_WhenProfilesExists(string search, int start, int take, string fieldName, OrderType orderType)
+        public async Task SearchAsync_WithEqualSpecification_WhenProfilesExists_ShouldReturnNothing(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
             var random = new Random();
@@ -3174,7 +3198,7 @@ namespace Blog.ServicesTests.EntityServices
         [InlineData("Created from ServicesTests 11", 10, 10, "User.Email", OrderType.Ascending)]
         [InlineData("Created from ServicesTests 11", 10, 20, "User.Email", OrderType.Ascending)]
         [InlineData("Created from ServicesTests 11", 0, 100, "User.Email", OrderType.Ascending)]
-        public async Task SearchAsync_ShouldReturnNothing_WhenProfilesDoesNotExists(string search, int start, int take, string fieldName, OrderType orderType)
+        public async Task SearchAsync_WhenProfilesDoesNotExists_ShouldReturnNothing(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
             var query = new SearchQuery<ProfileModel>

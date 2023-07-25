@@ -48,6 +48,8 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #region Get All
+
         #region Get All function
 
         /// <summary>
@@ -108,7 +110,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="notEqualCount">The not equal count.</param>
         [Theory]
         [InlineData(0)]
-        public void GetAll_ShouldReturnMessages_WhenMessagesExists(int notEqualCount)
+        public void GetAll_WhenMessagesExists_ShouldReturnMessages(int notEqualCount)
         {
             //Arrange
             var random = new Random();
@@ -163,7 +165,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when messages does not exists.
         /// </summary>
         [Fact]
-        public void GetAll_ShouldReturnNothing_WhenMessagesDoesNotExists()
+        public void GetAll_WhenMessagesDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             _messagesRepositoryMock.Setup(x => x.GetAll())
@@ -238,7 +240,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="notEqualCount">The not equal count.</param>
         [Theory]
         [InlineData(0)]
-        public async Task GetAllAsync_ShouldReturnMessages_WhenMessagesExists(int notEqualCount)
+        public async Task GetAllAsync_WhenMessagesExists_ShouldReturnMessages(int notEqualCount)
         {
             //Arrange
             var random = new Random();
@@ -293,7 +295,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when messages does not exists.
         /// </summary>
         [Fact]
-        public void GetAllAsync_ShouldReturnNothing_WhenMessagesDoesNotExists()
+        public void GetAllAsync_WhenMessagesDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             _messagesRepositoryMock.Setup(x => x.GetAllAsync())
@@ -372,7 +374,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="bodySearch">The body search.</param>
         [Theory]
         [InlineData(0, "Test body")]
-        public void GetAll_ShouldReturnMessages_WithContainsSpecification_WhenMessagesExists(int notEqualCount, string bodySearch)
+        public void GetAll_WithContainsSpecification_WhenMessagesExists_ShouldReturnMessages(int notEqualCount, string bodySearch)
         {
             //Test failed
             //Arrange
@@ -432,7 +434,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="bodySearch">The body search.</param>
         [Theory]
         [InlineData(1, "Test body0")]
-        public void GetAll_ShouldReturnMessage_WithEqualsSpecification_WhenMessagesExists(int equalCount, string bodySearch)
+        public void GetAll_WithEqualsSpecification_WhenMessagesExists_ShouldReturnMessage(int equalCount, string bodySearch)
         {
             //Arrange
             var random = new Random();
@@ -490,7 +492,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="bodySearch">The body search.</param>
         [Theory]
         [InlineData(0, "Test body-1")]
-        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenMessagesExists(int equalCount, string bodySearch)
+        public void GetAll_WithEqualSpecification_WhenMessagesExists_ShouldReturnNothing(int equalCount, string bodySearch)
         {
             //Arrange
             var random = new Random();
@@ -547,7 +549,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="bodySearch">The message search.</param>
         [Theory]
         [InlineData("Tag 0")]
-        public void GetAll_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string bodySearch)
+        public void GetAll_WithEqualSpecification_WhenMessagesDoesNotExists_ShouldReturnNothing(string bodySearch)
         {
             //Arrange
             var specification = new MessageSpecification(x => x.Body.Equals(bodySearch));
@@ -627,7 +629,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="bodySearch">The body search.</param>
         [Theory]
         [InlineData(0, "Test body")]
-        public async Task GetAllAsync_ShouldReturnMessages_WithContainsSpecification_WhenMessagesExists(int notEqualCount, string bodySearch)
+        public async Task GetAllAsync_WithContainsSpecification_WhenMessagesExists_ShouldReturnMessages(int notEqualCount, string bodySearch)
         {
             //Test failed
             //Arrange
@@ -686,7 +688,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="bodySearch">The body search.</param>
         [Theory]
         [InlineData(1, "Test body0")]
-        public async Task GetAllAsync_ShouldReturnMessage_WithEqualsSpecification_WhenMessagesExists(int equalCount, string bodySearch)
+        public async Task GetAllAsync_WithEqualsSpecification_WhenMessagesExists_ShouldReturnMessage(int equalCount, string bodySearch)
         {
             //Arrange
             var random = new Random();
@@ -744,7 +746,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="bodySearch">The body search.</param>
         [Theory]
         [InlineData(0, "Test body-1")]
-        public async Task GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenMessagesExists(int equalCount, string bodySearch)
+        public async Task GetAllAsync_WithEqualSpecification_WhenMessagesExists_ShouldReturnNothing(int equalCount, string bodySearch)
         {
             //Arrange
             var random = new Random();
@@ -801,7 +803,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="bodySearch">The message search.</param>
         [Theory]
         [InlineData("Tag 0")]
-        public async Task GetAllAsync_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string bodySearch)
+        public async Task GetAllAsync_WithEqualSpecification_WhenMessagesDoesNotExists_ShouldReturnNothing(string bodySearch)
         {
             //Arrange
             var specification = new MessageSpecification(x => x.Body.Equals(bodySearch));
@@ -816,6 +818,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Find
 
         #region Find function
 
@@ -871,7 +877,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return message when message exists.
         /// </summary>
         [Fact]
-        public void Find_ShouldReturnMessage_WhenMessageExists()
+        public void Find_WhenMessageExists_ShouldReturnMessage()
         {
             //Arrange
             var random = new Random();
@@ -919,7 +925,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when message does not exists.
         /// </summary>
         [Fact]
-        public void Find_ShouldReturnNothing_WhenMessageDoesNotExists()
+        public void Find_WhenMessageDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -992,7 +998,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task FindAsync_ShouldReturnMessage_WhenMessageExists()
+        public async Task FindAsync_WhenMessageExists_ShouldReturnMessage()
         {
             //Arrange
             var random = new Random();
@@ -1041,7 +1047,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task FindAsync_ShouldReturnNothing_WhenMessageDoesNotExists()
+        public async Task FindAsync_WhenMessageDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -1057,6 +1063,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Insert
 
         #region Insert function
 
@@ -1115,7 +1125,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return message when message created.
         /// </summary>
         [Fact]
-        public void Insert_ShouldReturnMessage_WhenMessageExists()
+        public void Insert_WhenMessageExists_ShouldReturnMessage()
         {
             //Arrange
             var random = new Random();
@@ -1229,7 +1239,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return comments when comments created.
         /// </summary>
         [Fact]
-        public void InsertEnumerable_ShouldReturnComments_WhenCommentsExists()
+        public void InsertEnumerable_WhenCommentsExists_ShouldReturnComments()
         {
             //Arrange
             var random = new Random();
@@ -1348,7 +1358,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task InsertAsync_ShouldReturnMessage_WhenMessageExists()
+        public async Task InsertAsync_WhenMessageExists_ShouldReturnMessage()
         {
             //Arrange
             var random = new Random();
@@ -1464,7 +1474,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task InsertAsyncEnumerable_ShouldReturnComments_WhenCommentsExists()
+        public async Task InsertAsyncEnumerable_WhenCommentsExists_ShouldReturnComments()
         {
             //Arrange
             var random = new Random();
@@ -1523,6 +1533,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Update
 
         #region Upadate function
 
@@ -1590,7 +1604,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="newMessageSubject">The new message subject.</param>
         [Theory]
         [InlineData("New subject")]
-        public void Update_ShouldReturnMessage_WhenMessageExists(string newMessageSubject)
+        public void Update_WhenMessageExists_ShouldReturnMessage(string newMessageSubject)
         {
             //Arrange
             var random = new Random();
@@ -1718,7 +1732,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="newMessageSubject">The new message subject.</param>
         [Theory]
         [InlineData("New subject")]
-        public void UpdateEnumerable_ShouldReturnMessage_WhenMessageExists(string newMessageSubject)
+        public void UpdateEnumerable_WhenMessageExists_ShouldReturnMessage(string newMessageSubject)
         {
             //Arrange
             var random = new Random();
@@ -1852,7 +1866,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("New Tag")]
-        public async Task UpdateAsync_ShouldReturnMessage_WhenMessageExists(string newMessageSubject)
+        public async Task UpdateAsync_WhenMessageExists_ShouldReturnMessage(string newMessageSubject)
         {
             //Arrange
             var random = new Random();
@@ -1982,7 +1996,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("New subject")]
-        public async void UpdateAsyncEnumerable_ShouldReturnMessage_WhenMessageExists(string newMessageSubject)
+        public async void UpdateAsyncEnumerable_WhenMessageExists_ShouldReturnMessage(string newMessageSubject)
         {
             //Arrange
             var random = new Random();
@@ -2047,6 +2061,10 @@ namespace Blog.ServicesTests.EntityServices
 
         #endregion
 
+        #endregion
+
+        #region Delete
+
         #region Delete By Id function
 
         /// <summary>
@@ -2110,7 +2128,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when message is deleted.
         /// </summary>
         [Fact]
-        public void DeleteById_ShouldReturnNothing_WhenMessageDeleted()
+        public void DeleteById_WhenMessageDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -2228,7 +2246,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when message is deleted.
         /// </summary>
         [Fact]
-        public void DeleteByObject_ShouldReturnNothing_WhenMessageDeleted()
+        public void DeleteByObject_WhenMessageDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -2350,7 +2368,7 @@ namespace Blog.ServicesTests.EntityServices
         /// Should return nothing when message is deleted.
         /// </summary>
         [Fact]
-        public void DeleteByEnumerable_ShouldReturnNothing_WhenMessageDeleted()
+        public void DeleteByEnumerable_WhenMessageDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -2476,7 +2494,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsyncById_ShouldReturnNothing_WhenMessageIsDeleted()
+        public async Task DeleteAsyncById_WhenMessageIsDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -2594,7 +2612,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsyncByObject_ShouldReturnNothing_WhenMessageIsDeleted()
+        public async Task DeleteAsyncByObject_WhenMessageIsDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -2718,7 +2736,7 @@ namespace Blog.ServicesTests.EntityServices
         /// </summary>
         /// <returns>Task.</returns>
         [Fact]
-        public async Task DeleteAsyncByEnumerable_ShouldReturnNothing_WhenMessageDeleted()
+        public async Task DeleteAsyncByEnumerable_WhenMessageDeleted_ShouldReturnNothing()
         {
             //Arrange
             var random = new Random();
@@ -2780,6 +2798,10 @@ namespace Blog.ServicesTests.EntityServices
         }
 
         #endregion
+
+        #endregion
+
+        #region Any
 
         #region Any function With Specification
 
@@ -2844,7 +2866,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
         [InlineData("Test subject")]
-        public void Any_ShouldReturnTrue_WithContainsSpecification_WhenMessagesExists(string subjectSearch)
+        public void Any_WithContainsSpecification_WhenMessagesExists_ShouldReturnTrue(string subjectSearch)
         {
             //Test failed
             //Arrange
@@ -2901,7 +2923,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
         [InlineData("Test subject0")]
-        public void Any_ShouldReturnTrue_WithEqualsSpecification_WhenMessagesExists(string subjectSearch)
+        public void Any_WithEqualsSpecification_WhenMessagesExists_ShouldReturnTrue(string subjectSearch)
         {
             //Arrange
             var random = new Random();
@@ -2957,7 +2979,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
         [InlineData("Test subject-1")]
-        public void Any_ShouldReturnFalse_WithEqualSpecification_WhenMessagesExists(string subjectSearch)
+        public void Any_WithEqualSpecification_WhenMessagesExists_ShouldReturnFalse(string subjectSearch)
         {
             //Arrange
             var random = new Random();
@@ -3013,7 +3035,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
         [InlineData("Test subject0")]
-        public void Any_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string subjectSearch)
+        public void Any_WithEqualSpecification_WhenMessagesDoesNotExists_ShouldReturnNothing(string subjectSearch)
         {
             //Arrange
             var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
@@ -3094,7 +3116,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("Test subject")]
-        public async Task AnyAsync_ShouldReturnTrue_WithContainsSpecification_WhenMessagesExists(string subjectSearch)
+        public async Task AnyAsync_WithContainsSpecification_WhenMessagesExists_ShouldReturnTrue(string subjectSearch)
         {
             //Test failed
             //Arrange
@@ -3152,7 +3174,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("Test subject0")]
-        public async Task AnyAsync_ShouldReturnTrue_WithEqualsSpecification_WhenMessagesExists(string subjectSearch)
+        public async Task AnyAsync_WithEqualsSpecification_WhenMessagesExists_ShouldReturnTrue(string subjectSearch)
         {
             //Arrange
             var random = new Random();
@@ -3209,7 +3231,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("Test subject-1")]
-        public async Task AnyAsync_ShouldReturnFalse_WithEqualSpecification_WhenMessagesExists(string subjectSearch)
+        public async Task AnyAsync_WithEqualSpecification_WhenMessagesExists_ShouldReturnFalse(string subjectSearch)
         {
             //Arrange
             var random = new Random();
@@ -3266,7 +3288,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("Test subject0")]
-        public async Task AnyAsync_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string subjectSearch)
+        public async Task AnyAsync_WithEqualSpecification_WhenMessagesDoesNotExists_ShouldReturnNothing(string subjectSearch)
         {
             //Arrange
             var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
@@ -3279,6 +3301,8 @@ namespace Blog.ServicesTests.EntityServices
             //Assert
             Assert.False(areAnyMessages);
         }
+
+        #endregion
 
         #endregion
 
@@ -3345,7 +3369,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
         [InlineData("Test subject")]
-        public void FirstOrDefault_ShouldReturnMessage_WithContainsSpecification_WhenMessagesExists(string subjectSearch)
+        public void FirstOrDefault_WithContainsSpecification_WhenMessagesExists_ShouldReturnMessage(string subjectSearch)
         {
             //Test failed
             //Arrange
@@ -3403,7 +3427,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
         [InlineData("Test subject0")]
-        public void FirstOrDefault_ShouldReturnMessage_WithEqualsSpecification_WhenMessagesExists(string subjectSearch)
+        public void FirstOrDefault_WithEqualsSpecification_WhenMessagesExists_ShouldReturnMessage(string subjectSearch)
         {
             //Arrange
             var random = new Random();
@@ -3460,7 +3484,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
         [InlineData("Test subject-1")]
-        public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenMessagesExists(string subjectSearch)
+        public void FirstOrDefault_WithEqualSpecification_WhenMessagesExists_ShouldReturnNothing(string subjectSearch)
         {
             //Arrange
             var random = new Random();
@@ -3516,7 +3540,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
         [InlineData("Test subject0")]
-        public void FirstOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string subjectSearch)
+        public void FirstOrDefault_WithEqualSpecification_WhenMessagesDoesNotExists_ShouldReturnNothing(string subjectSearch)
         {
             //Arrange
             var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
@@ -3540,7 +3564,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
         [InlineData("Test subject")]
-        public void Verify_FunctionLastOrDefault_WithSpecification_HasBeenCalled(string subjectSearch)
+        public void Verify_WithSpecification_HasBeenCalled_FunctionLastOrDefault(string subjectSearch)
         {
             //Arrange
             var random = new Random();
@@ -3595,7 +3619,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
         [InlineData("Test subject")]
-        public void LastOrDefault_ShouldReturnMessage_WithContainsSpecification_WhenMessagesExists(string subjectSearch)
+        public void LastOrDefault_WithContainsSpecification_WhenMessagesExists_ShouldReturnMessage(string subjectSearch)
         {
             //Test failed
             //Arrange
@@ -3653,7 +3677,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
         [InlineData("Test subject0")]
-        public void LastOrDefault_ShouldReturnMessage_WithEqualsSpecification_WhenMessagesExists(string subjectSearch)
+        public void LastOrDefault_WithEqualsSpecification_WhenMessagesExists_ShouldReturnMessage(string subjectSearch)
         {
             //Arrange
             var random = new Random();
@@ -3710,7 +3734,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
         [InlineData("Test subject-1")]
-        public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenMessagesExists(string subjectSearch)
+        public void LastOrDefault_WithEqualSpecification_WhenMessagesExists_ShouldReturnNothing(string subjectSearch)
         {
             //Arrange
             var random = new Random();
@@ -3766,7 +3790,7 @@ namespace Blog.ServicesTests.EntityServices
         /// <param name="subjectSearch">The subject search.</param>
         [Theory]
         [InlineData("Test subject0")]
-        public void LastOrDefault_ShouldReturnNothing_WithEqualSpecification_WhenMessagesDoesNotExists(string subjectSearch)
+        public void LastOrDefault_WithEqualSpecification_WhenMessagesDoesNotExists_ShouldReturnNothing(string subjectSearch)
         {
             //Arrange
             var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
@@ -3946,7 +3970,7 @@ namespace Blog.ServicesTests.EntityServices
         [InlineData("Test subject ", 10, 10, "Subject", OrderType.Ascending)]
         [InlineData("Test subject ", 10, 20, "Subject", OrderType.Ascending)]
         [InlineData("Test subject ", 0, 100, "Subject", OrderType.Ascending)]
-        public async Task SearchAsync_ShouldReturnMessages_WhenMessagesExists(string search, int start, int take, string fieldName, OrderType orderType)
+        public async Task SearchAsync_WhenMessagesExists_ShouldReturnMessages(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
             var random = new Random();
@@ -4024,7 +4048,7 @@ namespace Blog.ServicesTests.EntityServices
         [InlineData("Test subject 10", 10, 10, "Subject", OrderType.Ascending)]
         [InlineData("Test subject 11", 10, 20, "Subject", OrderType.Ascending)]
         [InlineData("Test subject 20", 0, 100, "Subject", OrderType.Ascending)]
-        public async Task SearchAsync_ShouldReturnMessage_WithEqualsSpecification_WhenCMessagesExists(string search, int start, int take, string fieldName, OrderType orderType)
+        public async Task SearchAsync_WithEqualsSpecification_WhenCMessagesExists_ShouldReturnMessage(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
             var random = new Random();
@@ -4103,7 +4127,7 @@ namespace Blog.ServicesTests.EntityServices
         [InlineData("Test subject -10", 10, 10, "Subject", OrderType.Ascending)]
         [InlineData("Test subject -11", 10, 20, "Subject", OrderType.Ascending)]
         [InlineData("Test subject -20", 0, 100, "Subject", OrderType.Ascending)]
-        public async Task SearchAsync_ShouldReturnNothing_WithEqualSpecification_WhenMessagesExists(string search, int start, int take, string fieldName, OrderType orderType)
+        public async Task SearchAsync_WithEqualSpecification_WhenMessagesExists_ShouldReturnNothing(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
             var random = new Random();
@@ -4181,7 +4205,7 @@ namespace Blog.ServicesTests.EntityServices
         [InlineData("Test subject 10", 10, 10, "Subject", OrderType.Ascending)]
         [InlineData("Test subject 11", 10, 20, "Subject", OrderType.Ascending)]
         [InlineData("Test subject 20", 0, 100, "Subject", OrderType.Ascending)]
-        public async Task SearchAsync_ShouldReturnNothing_WhenMessagesDoesNotExists(string search, int start, int take, string fieldName, OrderType orderType)
+        public async Task SearchAsync_WhenMessagesDoesNotExists_ShouldReturnNothing(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
             var query = new SearchQuery<Message>
