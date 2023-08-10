@@ -12,6 +12,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { GlobalService } from './core/services/global-service/global-service.service';
 import { AuthGuard } from './core/guards/AuthGuard';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { UsersService } from './core/services/users-services/users.service';
+import { HttpClientService } from './core/services/global-service/http-client-services/http-client.service';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptorService, multi: true },
     CustomToastrService,
     GlobalService,
+    HttpClientService,
+    UsersService,
     AuthGuard
   ]
 })

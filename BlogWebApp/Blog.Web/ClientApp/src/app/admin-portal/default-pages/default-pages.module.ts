@@ -14,7 +14,8 @@ import { AdminPostsModule } from '../admin-posts/admin-posts.module';
   ],
   imports: [
     CommonModule,
-    DefaultPagesRoutingModule
+    DefaultPagesRoutingModule,
+    AdminPostsModule
   ]
 })
 export class DefaultPagesModule { }
