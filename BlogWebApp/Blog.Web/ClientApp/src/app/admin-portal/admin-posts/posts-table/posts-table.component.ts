@@ -86,7 +86,7 @@ export class PostsTableComponent {
       sortBy: null,
       orderBy: null,
       currentPage: page,
-      pageSize: 1000,
+      pageSize: 10,
       displayType: null
     };
     const model = {
@@ -106,5 +106,14 @@ export class PostsTableComponent {
           this._customToastrService.displayErrorMessage(error);
           this.isLoaded = true;
         });
+  }
+
+  /**
+   * Post pagination.
+   * @param page number
+   * @returns void
+   */
+  public paginate(page: number): void {
+    this.pageInfo.pageNumber = page;
   }
 }
