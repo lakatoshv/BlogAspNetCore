@@ -11,6 +11,7 @@ namespace Blog.Services
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
+    using Blog.Contracts.V1.Responses.Chart;
     using Blog.Core.Helpers;
     using Blog.Data.Models;
     using Blog.Data.Repository;
@@ -275,5 +276,20 @@ namespace Blog.Services
             post.PostsTagsRelations = new Collection<PostsTagsRelations>();
             await this.postsTagsRelationsService.AddTagsToPost(post.Id, post.PostsTagsRelations.ToList(), tags).ConfigureAwait(false);
         }
+
+        /// <inheritdoc cref="IPostsService"/>
+        public async Task<ChartDataModel> GetPostsActivity()
+            => new()
+            {
+                Name = "Posts",
+                Series = await Repository.TableNoTracking
+                    .GroupBy(x => x.CreatedAt)
+                    .Select(x => new ChartItem
+                    {
+                        Name = x.Key.ToString("dd/MM/yyyy"),
+                        Value = x.Count(),
+                    })
+                    .ToListAsync(),
+            };
     }
 }

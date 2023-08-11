@@ -20,6 +20,7 @@ namespace Blog.Web.Controllers.V1
     using Core.Consts;
     using Microsoft.AspNetCore.Authorization;
     using Blog.Contracts.V1.Requests;
+    using Blog.Contracts.V1.Responses.Chart;
 
     /// <summary>
     /// Posts controller.
@@ -89,6 +90,28 @@ namespace Blog.Web.Controllers.V1
             }
 
             return Ok(_mapper.Map<List<PostResponse>>(posts.ToList()));
+        }
+
+        // GET: Posts/posts-activity
+        /// <summary>
+        /// Async get posts activity.
+        /// </summary>]
+        /// <returns>Task.</returns>
+        /// <response code="200">Get posts activity.</response>
+        /// <response code="404">Unable to get posts activity.</response>
+        [HttpGet(ApiRoutes.PostsController.PostsActivity)]
+        [ProducesResponseType(typeof(ChartDataModel), 200)]
+        [ProducesResponseType(404)]
+        [Cached(600)]
+        public async Task<ActionResult> PostsActivity()
+        {
+            var postsActivity = await _postsService.GetPostsActivity().ConfigureAwait(false);
+            if (postsActivity == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(postsActivity);
         }
 
         // POST: Posts/get-posts

@@ -2,6 +2,8 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using Blog.Contracts.V1.Responses.Chart;
+
 namespace Blog.Services.Interfaces
 {
     using System.Collections.Generic;
@@ -53,5 +55,11 @@ namespace Blog.Services.Interfaces
         /// <param name="tags">The tags.</param>
         /// <returns>Task.</returns>
         Task InsertAsync(Post post, IEnumerable<Tag> tags);
+
+        /// <summary>
+        /// Asynchronous Get posts activity.
+        /// </summary>
+        /// <returns>Task.</returns>
+        Task<ChartDataModel> GetPostsActivity();
     }
 }
