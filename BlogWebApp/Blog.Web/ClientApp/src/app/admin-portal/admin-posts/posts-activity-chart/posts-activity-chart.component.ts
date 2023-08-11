@@ -1,6 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ChartOptionsData } from 'src/app/core/data/chart/ChartOptionsData';
 import { ChartOptions } from 'src/app/core/models/chart/ChartOptions';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { PostService } from 'src/app/core/services/posts-services/post.service';
 
 @Component({
   selector: 'app-posts-activity-chart',
@@ -19,15 +22,32 @@ export class PostsActivityChartComponent implements OnInit {
   chartOptions: ChartOptions = ChartOptionsData;
 
   /**
-   * @inheritdoc
+   * @param isLoaded boolean
    */
-  ngOnInit(): void {
-  }
+  isLoaded: boolean = false;
 
   /**
    * @inheritdoc
    */
-  constructor() {
+  ngOnInit(): void {
+    this._postService.postsActivity().subscribe(
+      (response: any) => {
+        this.chartOptions.Data[0] = response;
+        this.chartOptions = this.chartOptions;
+        this.isLoaded = true;
+      },
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
+      });
+  }
+
+  /**
+   * @param _postService PostService
+   * @param _customToastrService CustomToastrService
+   */
+  constructor(
+    private _postService: PostService,
+    private _customToastrService: CustomToastrService) {
   }
 
   /**

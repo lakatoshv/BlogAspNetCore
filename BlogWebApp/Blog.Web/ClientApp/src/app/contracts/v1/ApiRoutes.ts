@@ -109,6 +109,12 @@ export class APiRoutes {
   public static readonly GET_POSTS = APiRoutes.POSTS_CONTROLLER + '/get-posts';
 
   /**
+   * Posts activity method.
+   * @param POSTS_ACTIVITY string
+   */
+  public static readonly POSTS_ACTIVITY = APiRoutes.POSTS_CONTROLLER + '/posts-activity';
+
+  /**
    * Show post method.
    * @param SHOW_POST string
    */

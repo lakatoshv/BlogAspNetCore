@@ -64,6 +64,14 @@ export class PostService {
   }
 
   /**
+   * Get posts activity.
+   * @returns Observable<any>
+   */
+  public postsActivity(): Observable<any> {
+    return this._httpClient.get(APiRoutes.POSTS_ACTIVITY);
+  }
+
+  /**
    * Like post by id
    * @param id number
    * @returns Observable<any>

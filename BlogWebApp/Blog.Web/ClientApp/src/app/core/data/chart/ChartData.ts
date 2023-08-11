@@ -4,7 +4,7 @@ import { ChartDataModel } from './../../models/chart/ChartDataModel';
  */
 export const ChartData: ChartDataModel[] = [
   {
-    name: 'Luxembourg',
+    name: 'Posts',
     series: [
       {
         value: 6953,
