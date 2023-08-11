@@ -1,0 +1,53 @@
+<div class="table-responsive">
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" *ngIf="isLoaded">
+        <thead>
+            <tr>
+                <th><b>Назва:</b></th>
+                <th><b>Теги:</b></th>
+                <th><b>Автор:</b></th>
+                <th><b>Статус</b></th>
+                <th><b>Кількість переглядів:</b></th>
+                <th><b>Кількість лайків:</b></th>
+                <th><b>Кількість дизлайків:</b></th>
+                <th><b>Кількість коментарів:</b></th>
+                <th><b>Дата створення:</b></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th><b>Назва:</b></th>
+                <th><b>Теги:</b></th>
+                <th><b>Автор:</b></th>
+                <th><b>Статус</b></th>
+                <th><b>Кількість переглядів:</b></th>
+                <th><b>Кількість лайків:</b></th>
+                <th><b>Кількість дизлайків:</b></th>
+                <th><b>Кількість коментарів:</b></th>
+                <th><b>Дата створення:</b></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        <tbody>
+            <tr *ngFor="let post of posts">
+                <td><a [routerLink]="[postsUrl, 'show', post.id]">{{post.title}}</a></td>
+                <td><a [routerLink]="['/blog/posts', tag.title]" *ngFor="let tag of post.tags; let isLast=last"> {{tag.title}}{{isLast ? '' : ', '}}</a></td>
+                <td><a [routerLink]="['/blog/profile', post.authorId]">{{post.author.firstName + " " + post.author.lastName}}</a></td>
+                <td>
+                    <app-change-status [status]="null" (onChanged)="onChangeStatusAction(post.id, $event)"></app-change-status>
+                </td>
+                <td>{{post.seen}}</td>
+                <td>{{post.likes}}</td>
+                <td>{{post.dislikes}}</td>
+                <td><a [routerLink]="['/admin/comments', post.id]">{{post.commentsCount}}</a></td>
+                <td>2011/04/25</td>
+                <td class="actions" data-th="">
+                    <a class="btn btn-primary" [routerLink]="['post/edit', post.id]"><i class="fa fa-edit"></i></a>
+                    <button type="button" class="btn btn-sm text-white btn-danger" id="post.Post.Id" (click)="deleteAction(post.id)" data-toggle="modal" data-target="#delete-post">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

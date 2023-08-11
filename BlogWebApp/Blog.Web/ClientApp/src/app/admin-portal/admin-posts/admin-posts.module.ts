@@ -6,11 +6,15 @@ import { AdminPostsRoutingModule } from './admin-posts-routing.module';
 import { PostsActivityChartComponent } from './posts-activity-chart/posts-activity-chart.component';
 import { PostService } from 'src/app/core/services/posts-services/post.service';
 import { HttpClientService } from 'src/app/core/services/global-service/http-client-services/http-client.service';
+import { PostsTableComponent } from './posts-table/posts-table.component';
+import { ChangeStatusComponent } from './posts-table/change-status/change-status.component';
 
 
 @NgModule({
   declarations: [
-    PostsActivityChartComponent
+    PostsActivityChartComponent,
+    PostsTableComponent,
+    ChangeStatusComponent
   ],
   imports: [
     CommonModule,
@@ -18,7 +22,8 @@ import { HttpClientService } from 'src/app/core/services/global-service/http-cli
     NgxChartsModule
   ],
   exports: [
-    PostsActivityChartComponent
+    PostsActivityChartComponent,
+    PostsTableComponent
   ],
   providers: [PostService, HttpClientService]
 })

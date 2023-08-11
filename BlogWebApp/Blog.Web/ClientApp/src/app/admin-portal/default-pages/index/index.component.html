@@ -10,4 +10,22 @@
     <app-icons-card></app-icons-card>
 
     <app-posts-activity-chart></app-posts-activity-chart>
+
+    <!-- DataTables Example -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a [routerLink]="['posts']" class="navbar-brand">Нові пости</a>
+                </li>
+                <li class="nav-item">
+                    <a [routerLink]="['posts']" class="navbar-brand">Усі пости</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <app-posts-table></app-posts-table>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
 </div>
