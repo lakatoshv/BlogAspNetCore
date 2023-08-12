@@ -8,11 +8,11 @@ import { CustomToastrService } from 'src/app/core/services/custom-toastr.service
 import { PostService } from 'src/app/core/services/posts-services/post.service';
 
 @Component({
-  selector: 'app-posts-table',
-  templateUrl: './posts-table.component.html',
-  styleUrls: ['./posts-table.component.scss']
+  selector: 'app-admin-posts-table',
+  templateUrl: './admin-posts-table.component.html',
+  styleUrls: ['./admin-posts-table.component.scss']
 })
-export class PostsTableComponent {
+export class AdminPostsTableComponent {
   /**
    * @param posts Post[]
    */
