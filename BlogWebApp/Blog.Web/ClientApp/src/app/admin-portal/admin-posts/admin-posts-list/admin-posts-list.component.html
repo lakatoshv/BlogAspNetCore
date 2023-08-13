@@ -1,0 +1,46 @@
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="#">Admin</a>
+        </li>
+        <li class="breadcrumb-item active">Posts</li>
+    </ol>
+
+    <app-posts-activity-chart></app-posts-activity-chart>
+
+    <a [routerLink]="['add']" class="btn btn-default">Додати новий пост</a>
+    <a [routerLink]="['add']" class="btn btn-light">Імпортувати пости з файлу</a>
+
+    <div class="btn-group" dropdown>
+        <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle"
+                aria-controls="dropdown-basic">
+          Експортувати пости<span class="caret"></span>
+        </button>
+        <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+            role="menu" aria-labelledby="button-basic">
+          <li role="menuitem"><a class="dropdown-item" href="#">Excel</a></li>
+          <li role="menuitem"><a class="dropdown-item" href="#">XML</a></li>
+          <li role="menuitem"><a class="dropdown-item" href="#">PDF</a></li>
+          <li role="menuitem"><a class="dropdown-item" href="#">Doc</a></li>
+          <li role="menuitem"><a class="dropdown-item" href="#">TXT</a></li>
+        </ul>
+      </div>
+    <!-- DataTables Example -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="#" class="navbar-brand">Нові пости</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="navbar-brand">Усі пости</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <app-posts-table></app-posts-table>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+</div>

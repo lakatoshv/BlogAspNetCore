@@ -23,7 +23,7 @@ import { UsersService } from '../core/services/users-services/users.service';
     AdminPortalRoutingModule,
     DefaultPagesModule,
     ErrorsModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot()
   ]
 })
 export class AdminPortalModule { }

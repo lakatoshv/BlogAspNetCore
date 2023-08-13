@@ -4,6 +4,7 @@ import { AuthGuard } from '../core/guards/AuthGuard';
 import { LayoutComponentComponent } from './layout-component/layout-component.component';
 import { DefaultPagesModule } from './default-pages/default-pages.module';
 import { NotFoundComponent } from '../shared/errors/not-found/not-found.component';
+import { AdminPostsModule } from './admin-posts/admin-posts.module';
 
 const routes: Routes = [
   {
@@ -14,6 +15,10 @@ const routes: Routes = [
       {
         path: '',
         loadChildren: () => DefaultPagesModule
+      },
+      {
+        path: 'posts',
+        loadChildren: () => AdminPostsModule
       },
       {
         path: 'not-found',
