@@ -49,7 +49,7 @@ export class AdminPostsTableComponent {
    * @inheritdoc
    */
   ngOnInit() {
-    this.postsUrl = this._router.url.includes('posts') ? "" : "posts";
+    this.postsUrl = this._router.url.includes('posts') ? "/admin/posts" : "posts";
     this._getPosts();
   }
 
