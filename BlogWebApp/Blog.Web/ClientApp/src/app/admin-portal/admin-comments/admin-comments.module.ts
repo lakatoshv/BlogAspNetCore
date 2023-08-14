@@ -5,11 +5,13 @@ import { AdminCommentsRoutingModule } from './admin-comments-routing.module';
 import { CommentsActivityChartComponent } from './comments-activity-chart/comments-activity-chart.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CommentService } from 'src/app/core/services/posts-services/comment.service';
+import { AdminCommentsTableComponent } from './admin-comments-table/admin-comments-table.component';
 
 
 @NgModule({
   declarations: [
-    CommentsActivityChartComponent
+    CommentsActivityChartComponent,
+    AdminCommentsTableComponent
   ],
   imports: [
     CommonModule,
@@ -17,7 +19,8 @@ import { CommentService } from 'src/app/core/services/posts-services/comment.ser
     NgxChartsModule
   ],
   exports: [
-    CommentsActivityChartComponent
+    CommentsActivityChartComponent,
+    AdminCommentsTableComponent
   ],
   providers: [CommentService]
 })

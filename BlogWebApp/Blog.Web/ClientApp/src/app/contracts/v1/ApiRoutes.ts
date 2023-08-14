@@ -152,6 +152,12 @@ export class APiRoutes {
   public static readonly COMMENTS_ACTIVITY = APiRoutes.COMMENTS_CONTROLLER + '/comments-activity';
 
   /**
+   * Get comments by filter method.
+   * @param GET_COMMENTS_BY_FILTER string
+   */
+  public static readonly GET_COMMENTS_BY_FILTER = APiRoutes.COMMENTS_CONTROLLER + '/get-comments-by-filter';
+
+  /**
    * Create new comment.
    * @param CREATE_COMMENT string
    */
