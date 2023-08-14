@@ -15,6 +15,7 @@ namespace Blog.Web.Mappers
         public DomainToResponseProfile()
         {
             CreateMap<Profile, ProfileResponse>();
+            CreateMap<ApplicationUser, ApplicationUserResponse>();
         }
     }
 }
