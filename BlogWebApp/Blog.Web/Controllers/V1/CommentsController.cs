@@ -19,6 +19,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.ModelBinding;
     using static System.DateTime;
+    using Blog.Contracts.V1.Responses.Chart;
 
     /// <summary>
     /// Comments controller.
@@ -65,6 +66,28 @@
         public async Task<ActionResult> GetAllComments()
         {
             return Ok(_mapper.Map<List<CommentResponse>>(await _commentService.GetAllAsync().ConfigureAwait(false)));
+        }
+
+        // GET: Comments/comments-activity
+        /// <summary>
+        /// Async get comments activity.
+        /// </summary>]
+        /// <returns>Task.</returns>
+        /// <response code="200">Get comments activity.</response>
+        /// <response code="404">Unable to get comments activity.</response>
+        [HttpGet(ApiRoutes.CommentsController.CommentsActivity)]
+        [ProducesResponseType(typeof(ChartDataModel), 200)]
+        [ProducesResponseType(404)]
+        [Cached(600)]
+        public async Task<ActionResult> CommentsActivity()
+        {
+            var postsActivity = await _commentService.GetCommentsActivity().ConfigureAwait(false);
+            if (postsActivity == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(postsActivity);
         }
 
         /// <summary>
