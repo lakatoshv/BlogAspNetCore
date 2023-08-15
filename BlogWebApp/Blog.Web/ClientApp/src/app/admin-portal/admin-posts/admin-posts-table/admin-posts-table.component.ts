@@ -81,7 +81,6 @@ export class AdminPostsTableComponent {
    * Get all posts
    */
   private _getPosts(page = 1): void {
-    debugger
     const sortParameters = {
       sortBy: null,
       orderBy: null,
