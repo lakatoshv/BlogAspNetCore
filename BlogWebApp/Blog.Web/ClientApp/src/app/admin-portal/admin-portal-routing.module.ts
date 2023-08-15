@@ -5,6 +5,7 @@ import { LayoutComponentComponent } from './layout-component/layout-component.co
 import { DefaultPagesModule } from './default-pages/default-pages.module';
 import { NotFoundComponent } from '../shared/errors/not-found/not-found.component';
 import { AdminPostsModule } from './admin-posts/admin-posts.module';
+import { AdminCommentsModule } from './admin-comments/admin-comments.module';
 
 const routes: Routes = [
   {
@@ -19,6 +20,10 @@ const routes: Routes = [
       {
         path: 'posts',
         loadChildren: () => AdminPostsModule
+      },
+      {
+        path: 'comments',
+        loadChildren: () => AdminCommentsModule
       },
       {
         path: 'not-found',

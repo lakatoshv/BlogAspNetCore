@@ -6,12 +6,14 @@ import { CommentsActivityChartComponent } from './comments-activity-chart/commen
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CommentService } from 'src/app/core/services/posts-services/comment.service';
 import { AdminCommentsTableComponent } from './admin-comments-table/admin-comments-table.component';
+import { AdminCommentsListComponent } from './admin-comments-list/admin-comments-list.component';
 
 
 @NgModule({
   declarations: [
     CommentsActivityChartComponent,
-    AdminCommentsTableComponent
+    AdminCommentsTableComponent,
+    AdminCommentsListComponent
   ],
   imports: [
     CommonModule,
