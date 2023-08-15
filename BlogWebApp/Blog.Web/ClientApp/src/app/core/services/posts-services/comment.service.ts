@@ -29,6 +29,14 @@ export class CommentService {
   }
 
   /**
+   * Get posts activity.
+   * @returns Observable<any>
+   */
+  public commentsActivity(): Observable<any> {
+    return this._httpClient.get(APiRoutes.COMMENTS_ACTIVITY);
+  }
+
+  /**
    * Add new comment.
    * @param model any
    * @returns Observable<any>

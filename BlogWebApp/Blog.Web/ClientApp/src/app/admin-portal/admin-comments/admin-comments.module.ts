@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AdminCommentsRoutingModule } from './admin-comments-routing.module';
 import { CommentsActivityChartComponent } from './comments-activity-chart/comments-activity-chart.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { CommentService } from 'src/app/core/services/posts-services/comment.service';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
   ],
   exports: [
     CommentsActivityChartComponent
-  ]
+  ],
+  providers: [CommentService]
 })
 export class AdminCommentsModule { }

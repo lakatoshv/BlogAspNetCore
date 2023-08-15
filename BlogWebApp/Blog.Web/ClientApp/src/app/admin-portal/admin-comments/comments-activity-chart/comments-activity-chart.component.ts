@@ -1,6 +1,9 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ChartOptionsData } from 'src/app/core/data/chart/ChartOptionsData';
 import { ChartOptions } from 'src/app/core/models/chart/ChartOptions';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { CommentService } from 'src/app/core/services/posts-services/comment.service';
 
 @Component({
   selector: 'app-comments-activity-chart',
@@ -19,15 +22,32 @@ export class CommentsActivityChartComponent {
   chartOptions: ChartOptions = ChartOptionsData;
 
   /**
-   * @inheritdoc
+   * @param isLoaded boolean
    */
-  ngOnInit(): void {
-  }
+  isLoaded: boolean = false;
 
   /**
    * @inheritdoc
    */
-  constructor() {
+  ngOnInit(): void {
+    this._commentService.commentsActivity().subscribe(
+      (response: any) => {
+        this.chartOptions.Data[0] = response;
+        this.chartOptions = this.chartOptions;
+        this.isLoaded = true;
+      },
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
+      });
+  }
+
+  /**
+   * @param _commentService CommentService
+   * @param _customToastrService CustomToastrService
+   */
+  constructor(
+    private _commentService: CommentService,
+    private _customToastrService: CustomToastrService) {
   }
 
   /**
