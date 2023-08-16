@@ -6,6 +6,7 @@ import { IconsCardComponent } from './icons-card/icons-card.component';
 import { IndexComponent } from './index/index.component';
 import { AdminPostsModule } from '../admin-posts/admin-posts.module';
 import { AdminCommentsModule } from '../admin-comments/admin-comments.module';
+import { AdminUsersModule } from '../admin-users/admin-users.module';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { AdminCommentsModule } from '../admin-comments/admin-comments.module';
     CommonModule,
     DefaultPagesRoutingModule,
     AdminPostsModule,
-    AdminCommentsModule
+    AdminCommentsModule,
+    AdminUsersModule
   ]
 })
 export class DefaultPagesModule { }
