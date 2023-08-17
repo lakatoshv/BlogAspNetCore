@@ -7,6 +7,7 @@ import { IndexComponent } from './index/index.component';
 import { AdminPostsModule } from '../admin-posts/admin-posts.module';
 import { AdminCommentsModule } from '../admin-comments/admin-comments.module';
 import { AdminUsersModule } from '../admin-users/admin-users.module';
+import { AdminTagsModule } from '../admin-tags/admin-tags.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { AdminUsersModule } from '../admin-users/admin-users.module';
     DefaultPagesRoutingModule,
     AdminPostsModule,
     AdminCommentsModule,
-    AdminUsersModule
+    AdminUsersModule,
+    AdminTagsModule
   ]
 })
 export class DefaultPagesModule { }
