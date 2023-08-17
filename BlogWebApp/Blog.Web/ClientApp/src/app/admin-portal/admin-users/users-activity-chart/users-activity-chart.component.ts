@@ -1,6 +1,9 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ChartOptionsData } from 'src/app/core/data/chart/ChartOptionsData';
 import { ChartOptions } from 'src/app/core/models/chart/ChartOptions';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { UsersService } from 'src/app/core/services/users-services/users.service';
 
 @Component({
   selector: 'app-users-activity-chart',
@@ -19,15 +22,33 @@ export class UsersActivityChartComponent {
   chartOptions: ChartOptions = ChartOptionsData;
 
   /**
-   * @inheritdoc
+   * @param isLoaded boolean
    */
-  ngOnInit(): void {
-  }
+  isLoaded: boolean = false;
 
   /**
    * @inheritdoc
    */
-  constructor() {
+  ngOnInit(): void {
+    this._usersService.usersActivity().subscribe(
+      (response: any) => {
+        this.chartOptions.Data[0] = response;
+        this.chartOptions = this.chartOptions;
+        this.isLoaded = true;
+      },
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
+      });
+  }
+
+  /**
+   * @param _usersService UsersService
+   * @param _customToastrService CustomToastrService
+   */
+  constructor(
+    private _usersService: UsersService,
+    private _customToastrService: CustomToastrService
+  ) {
   }
 
   /**

@@ -20,6 +20,8 @@
     using Blog.Contracts.V1.Responses.UsersResponses;
     using Blog.Core.Consts;
     using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Blog.Contracts.V1.Responses.Chart;
+    using Blog.Web.Cache;
 
     /// <summary>
     /// Accounts controller.
@@ -148,6 +150,27 @@
             await _emailExtensionService.SendVerificationEmailAsync(UserName, token);
 
             return NoContent();
+        }
+
+        /// <summary>
+        /// Async get users activity.
+        /// </summary>]
+        /// <returns>Task.</returns>
+        /// <response code="200">Get users activity.</response>
+        /// <response code="404">Unable to get users activity.</response>
+        [HttpGet(ApiRoutes.AccountsController.UsersActivity)]
+        [ProducesResponseType(typeof(ChartDataModel), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [Cached(600)]
+        public async Task<IActionResult> GetUsersActivity()
+        {
+            var postsActivity = await _userService.GetUsersActivity().ConfigureAwait(false);
+            if (postsActivity == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(postsActivity);
         }
 
         /// <summary>

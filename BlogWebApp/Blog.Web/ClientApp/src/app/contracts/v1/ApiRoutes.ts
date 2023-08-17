@@ -95,6 +95,12 @@ export class APiRoutes {
    */
   public static readonly SEND_CONFIRMATION_EMAIL = APiRoutes.ACCOUNTS_CONTROLLER + '/send-confirmation-email';
 
+  /**
+   * Users activity method.
+   * @param USERS_ACTIVITY string
+   */
+  public static readonly USERS_ACTIVITY = APiRoutes.ACCOUNTS_CONTROLLER + '/users-activity';
+
   // Posts controller methods
   /**
    * Create post method.
