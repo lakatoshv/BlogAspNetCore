@@ -20,6 +20,7 @@ namespace Blog.Web.Controllers.V1
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.ModelBinding;
+    using Blog.Contracts.V1.Responses.Chart;
 
     /// <summary>
     /// Tags controller.
@@ -147,6 +148,28 @@ namespace Blog.Web.Controllers.V1
             }
 
             return Ok(_mapper.Map<TagResponse>(tag));
+        }
+
+        // GET: Tags/tags-activity
+        /// <summary>
+        /// Async get tags activity.
+        /// </summary>]
+        /// <returns>Task.</returns>
+        /// <response code="200">Get tags activity.</response>
+        /// <response code="404">Unable to get tags activity.</response>
+        [HttpGet(ApiRoutes.TagsController.TagsActivity)]
+        [ProducesResponseType(typeof(ChartDataModel), 200)]
+        [ProducesResponseType(404)]
+        [Cached(600)]
+        public async Task<ActionResult> TagsActivity()
+        {
+            var tagsActivity = await _tagsService.GetTagsActivity().ConfigureAwait(false);
+            if (tagsActivity == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(tagsActivity);
         }
 
         /// <summary>

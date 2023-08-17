@@ -199,4 +199,10 @@ export class APiRoutes {
    * @param GET_TAG string
    */
   public static readonly GET_TAG = APiRoutes.TAGS_CONTROLLER + '/get-tag';
+
+  /**
+   * Tags activity method.
+   * @param TAGS_ACTIVITY string
+   */
+  public static readonly TAGS_ACTIVITY = APiRoutes.ACCOUNTS_CONTROLLER + '/tags-activity';
 }

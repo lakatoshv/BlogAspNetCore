@@ -1,6 +1,9 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ChartOptionsData } from 'src/app/core/data/chart/ChartOptionsData';
 import { ChartOptions } from 'src/app/core/models/chart/ChartOptions';
+import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
+import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { TagsService } from 'src/app/core/services/posts-services/tags.service';
 
 @Component({
   selector: 'app-tags-activity-chart',
@@ -19,15 +22,33 @@ export class TagsActivityChartComponent {
   chartOptions: ChartOptions = ChartOptionsData;
 
   /**
-   * @inheritdoc
+   * @param isLoaded boolean
    */
-  ngOnInit(): void {
-  }
+  isLoaded: boolean = false;
 
   /**
    * @inheritdoc
    */
-  constructor() {
+  ngOnInit(): void {
+    this._tagsService.tagsActivity().subscribe(
+      (response: any) => {
+        this.chartOptions.Data[0] = response;
+        this.chartOptions = this.chartOptions;
+        this.isLoaded = true;
+      },
+      (error: ErrorResponse) => {
+        this._customToastrService.displayErrorMessage(error);
+      });
+  }
+
+  /**
+   * @param _tagsService UsersService
+   * @param _customToastrService CustomToastrService
+   */
+  constructor(
+    private _tagsService: TagsService,
+    private _customToastrService: CustomToastrService
+  ) {
   }
 
   /**
