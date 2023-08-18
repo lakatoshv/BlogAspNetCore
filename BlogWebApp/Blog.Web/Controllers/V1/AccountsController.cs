@@ -164,13 +164,13 @@
         [Cached(600)]
         public async Task<IActionResult> GetUsersActivity()
         {
-            var postsActivity = await _userService.GetUsersActivity().ConfigureAwait(false);
-            if (postsActivity == null)
+            var usersActivity = await _userService.GetUsersActivity().ConfigureAwait(false);
+            if (usersActivity == null)
             {
                 return NotFound();
             }
 
-            return Ok(postsActivity);
+            return Ok(usersActivity);
         }
 
         /// <summary>

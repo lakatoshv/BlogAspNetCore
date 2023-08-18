@@ -81,13 +81,13 @@
         [Cached(600)]
         public async Task<ActionResult> CommentsActivity()
         {
-            var postsActivity = await _commentService.GetCommentsActivity().ConfigureAwait(false);
-            if (postsActivity == null)
+            var commentsActivity = await _commentService.GetCommentsActivity().ConfigureAwait(false);
+            if (commentsActivity == null)
             {
                 return NotFound();
             }
 
-            return Ok(postsActivity);
+            return Ok(commentsActivity);
         }
 
         /// <summary>
