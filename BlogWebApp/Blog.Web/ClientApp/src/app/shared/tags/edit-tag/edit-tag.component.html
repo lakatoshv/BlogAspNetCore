@@ -1,0 +1,20 @@
+<div class="container">
+    <div class="row" data-ref="container">
+        <div class="col-lg-8 col-md-8 mx-auto">
+            <h2 class="text-center" id="form-header">Змінити тег</h2>
+            <form #f="ngForm" [formGroup]="tagForm" (ngSubmit)="edit(f.value)">
+                <div class="form-group">
+
+                    <label for="title" tag="" class="optional">
+                    Тег:
+                </label>
+
+                    <input type="text" name="title" id="title" value="" class="form-control" formControlName="title">
+                </div>
+
+                <input type="submit" name="submit" id="submit" value="Редагувати" class="btn btn-default" [disabled]="tagForm.invalid">
+
+            </form>
+        </div>
+    </div>
+</div>

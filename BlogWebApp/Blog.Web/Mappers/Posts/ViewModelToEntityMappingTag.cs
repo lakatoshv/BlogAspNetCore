@@ -17,6 +17,7 @@
         public ViewModelToEntityMappingTag()
         {
             CreateMap<TagViewDto, TagResponse>();
+            CreateMap<Tag, TagResponse>();
             CreateMap<TagsViewDto, PagedTagsResponse>();
             CreateMap<TagRequest, Tag>();
             CreateMap<CreateTagRequest, Tag>();

@@ -7,12 +7,14 @@ import { TagsListComponent } from './tags-list/tags-list.component';
 import { PopularTagsComponent } from './popular-tags/popular-tags.component';
 import { AddTagComponent } from './add-tag/add-tag.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { EditTagComponent } from './edit-tag/edit-tag.component';
 
 @NgModule({
   declarations: [
     TagsListComponent,
     PopularTagsComponent,
-    AddTagComponent
+    AddTagComponent,
+    EditTagComponent
   ],
   imports: [
     CommonModule,

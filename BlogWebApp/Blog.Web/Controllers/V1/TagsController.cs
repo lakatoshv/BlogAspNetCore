@@ -137,7 +137,7 @@ namespace Blog.Web.Controllers.V1
         /// <response code="404">Unable to gets the tag by id.</response>
         [ProducesResponseType(typeof(TagResponse), 200)]
         [ProducesResponseType(404)]
-        [HttpGet("{id}", Name = ApiRoutes.TagsController.GetTag)]
+        [HttpGet(ApiRoutes.TagsController.GetTag)]
         // GET: Posts/Show/5
         public async Task<ActionResult> GetTag([FromRoute] int id)
         {

@@ -63,4 +63,13 @@ export class TagsService {
   public tagsActivity(): Observable<any> {
     return this._httpClient.get(APiRoutes.USERS_ACTIVITY);
   }
+
+  /**
+   * Get tag by id.
+   * @param id number
+   * @returns Observable<any>
+   */
+  public getTag(id: number): Observable<any> {
+    return this._httpClient.get(APiRoutes.GET_TAG.concat('/', id.toString()));
+  }
 }
