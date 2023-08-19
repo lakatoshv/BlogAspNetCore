@@ -6,6 +6,7 @@ import { TagsActivityChartComponent } from './tags-activity-chart/tags-activity-
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { AdminTagsListComponent } from './admin-tags-list/admin-tags-list.component';
 import { AdminTagsTableComponent } from './admin-tags-table/admin-tags-table.component';
+import { TagsModule } from 'src/app/shared/tags/tags.module';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { AdminTagsTableComponent } from './admin-tags-table/admin-tags-table.com
     CommonModule,
     AdminTagsRoutingModule,
     NgxChartsModule,
+    TagsModule
   ],
   exports: [
     TagsActivityChartComponent, 
