@@ -2,16 +2,15 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Core.TableFilters
+namespace Blog.Core.TableFilters;
+
+/// <summary>
+/// Table column.
+/// </summary>
+public class TableColumn
 {
     /// <summary>
-    /// Table column.
+    /// Gets or sets data.
     /// </summary>
-    public class TableColumn
-    {
-        /// <summary>
-        /// Gets or sets data.
-        /// </summary>
-        public string Data { get; set; }
-    }
+    public string Data { get; set; }
 }

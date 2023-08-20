@@ -2,13 +2,12 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Core.Mapping.Interfaces
+namespace Blog.Core.Mapping.Interfaces;
+
+/// <summary>
+/// Map To interface.
+/// </summary>
+/// <typeparam name="T">Type.</typeparam>
+public interface IMapTo<T>
 {
-    /// <summary>
-    /// Map To interface.
-    /// </summary>
-    /// <typeparam name="T">Type.</typeparam>
-    public interface IMapTo<T>
-    {
-    }
 }

@@ -2,31 +2,30 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Core.Infrastructure.OperationResults
+namespace Blog.Core.Infrastructure.OperationResults;
+
+/// <summary>
+/// Metadata type.
+/// </summary>
+public enum MetadataType
 {
     /// <summary>
-    /// Metadata type.
+    /// The information.
     /// </summary>
-    public enum MetadataType
-    {
-        /// <summary>
-        /// The information.
-        /// </summary>
-        Info,
+    Info,
 
-        /// <summary>
-        /// The success.
-        /// </summary>
-        Success,
+    /// <summary>
+    /// The success.
+    /// </summary>
+    Success,
 
-        /// <summary>
-        /// The warning.
-        /// </summary>
-        Warning,
+    /// <summary>
+    /// The warning.
+    /// </summary>
+    Warning,
 
-        /// <summary>
-        /// The error.
-        /// </summary>
-        Error,
-    }
+    /// <summary>
+    /// The error.
+    /// </summary>
+    Error,
 }

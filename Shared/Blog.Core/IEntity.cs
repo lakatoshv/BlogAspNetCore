@@ -2,43 +2,42 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Core
+namespace Blog.Core;
+
+/// <summary>
+/// Entity interface.
+/// </summary>
+public interface IEntity
+{
+}
+
+/// <summary>
+/// Entity base interface.
+/// </summary>
+public interface IEntityBase : IEntity
+{
+}
+
+/// <summary>
+/// Entity interface.
+/// </summary>
+/// <typeparam name="T">Type.</typeparam>
+public interface IEntity<T> : IEntity
 {
     /// <summary>
-    /// Entity interface.
+    /// Gets or sets id.
     /// </summary>
-    public interface IEntity
-    {
-    }
+    T Id { get; set; }
+}
 
+/// <summary>
+/// Entity base interface.
+/// </summary>
+/// <typeparam name="T">Type.</typeparam>
+public interface IEntityBase<T> : IEntityBase
+{
     /// <summary>
-    /// Entity base interface.
+    /// Gets or sets id.
     /// </summary>
-    public interface IEntityBase : IEntity
-    {
-    }
-
-    /// <summary>
-    /// Entity interface.
-    /// </summary>
-    /// <typeparam name="T">Type.</typeparam>
-    public interface IEntity<T> : IEntity
-    {
-        /// <summary>
-        /// Gets or sets id.
-        /// </summary>
-        T Id { get; set; }
-    }
-
-    /// <summary>
-    /// Entity base interface.
-    /// </summary>
-    /// <typeparam name="T">Type.</typeparam>
-    public interface IEntityBase<T> : IEntityBase
-    {
-        /// <summary>
-        /// Gets or sets id.
-        /// </summary>
-        T Id { get; set; }
-    }
+    T Id { get; set; }
 }

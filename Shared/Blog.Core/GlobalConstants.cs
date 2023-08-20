@@ -2,16 +2,15 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Core
+namespace Blog.Core;
+
+/// <summary>
+/// Global constants.
+/// </summary>
+public static class GlobalConstants
 {
     /// <summary>
-    /// Global constants.
+    /// Administrator role name.
     /// </summary>
-    public static class GlobalConstants
-    {
-        /// <summary>
-        /// Administrator role name.
-        /// </summary>
-        public const string AdministratorRoleName = "Administrator";
-    }
+    public const string AdministratorRoleName = "Administrator";
 }

@@ -2,17 +2,16 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Core.Infrastructure.OperationResults.Interfaces
+namespace Blog.Core.Infrastructure.OperationResults.Interfaces;
+
+/// <summary>
+/// Have data object interface.
+/// </summary>
+public interface IHaveDataObject
 {
     /// <summary>
-    /// Have data object interface.
+    /// Adds the data.
     /// </summary>
-    public interface IHaveDataObject
-    {
-        /// <summary>
-        /// Adds the data.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        void AddData(object data);
-    }
+    /// <param name="data">The data.</param>
+    void AddData(object data);
 }
