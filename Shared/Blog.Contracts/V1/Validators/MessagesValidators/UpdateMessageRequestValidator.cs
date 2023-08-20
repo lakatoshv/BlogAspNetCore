@@ -1,26 +1,25 @@
 ﻿using Blog.Contracts.V1.Requests.MessagesRequests;
 using FluentValidation;
 
-namespace Blog.Contracts.V1.Validators.MessagesValidators
+namespace Blog.Contracts.V1.Validators.MessagesValidators;
+
+/// <summary>
+/// Update message request validator.
+/// </summary>
+/// <seealso cref="AbstractValidator{UpdateMessageRequest}" />
+public class UpdateMessageRequestValidator : AbstractValidator<UpdateMessageRequest>
 {
     /// <summary>
-    /// Update message request validator.
+    /// Initializes a new instance of the <see cref="UpdateMessageRequestValidator"/> class.
     /// </summary>
-    /// <seealso cref="AbstractValidator{UpdateMessageRequest}" />
-    public class UpdateMessageRequestValidator : AbstractValidator<UpdateMessageRequest>
+    public UpdateMessageRequestValidator()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UpdateMessageRequestValidator"/> class.
-        /// </summary>
-        public UpdateMessageRequestValidator()
-        {
-            RuleFor(x => x.Subject)
-                .NotEmpty()
-                .Matches("^[a-zA-Z0-9 ]*S");
+        RuleFor(x => x.Subject)
+            .NotEmpty()
+            .Matches("^[a-zA-Z0-9 ]*S");
 
-            RuleFor(x => x.Body)
-                .NotEmpty()
-                .Matches("^[a-zA-Z0-9 ]*S");
-        }
+        RuleFor(x => x.Body)
+            .NotEmpty()
+            .Matches("^[a-zA-Z0-9 ]*S");
     }
 }

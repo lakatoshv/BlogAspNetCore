@@ -1,9 +1,8 @@
-﻿namespace Blog.Contracts.V1.Requests.Interfaces
+﻿namespace Blog.Contracts.V1.Requests.Interfaces;
+
+/// <summary>
+/// Request base interface.
+/// </summary>
+public interface IRequest
 {
-    /// <summary>
-    /// Request base interface.
-    /// </summary>
-    public interface IRequest
-    {
-    }
 }
