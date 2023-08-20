@@ -6,6 +6,7 @@ namespace Blog.Services
 {
     using System.Linq;
     using System.Threading.Tasks;
+    using Blog.Contracts.V1.Responses.Chart;
     using Blog.Core.Helpers;
     using Blog.Data.Models;
     using Blog.Data.Repository;
@@ -72,5 +73,20 @@ namespace Blog.Services
 
             return tags;
         }
+
+        /// <inheritdoc cref="IPostsService"/>
+        public async Task<ChartDataModel> GetTagsActivity()
+            => new()
+            {
+                Name = "Posts",
+                Series = await Repository.TableNoTracking
+                    .GroupBy(x => x.Title)
+                    .Select(x => new ChartItem
+                    {
+                        Name = x.Key,
+                        Value = x.Count(),
+                    })
+                    .ToListAsync(),
+            };
     }
 }

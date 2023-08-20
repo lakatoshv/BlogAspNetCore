@@ -195,7 +195,7 @@ namespace Blog.Services.Identity.Auth
                 UserName = userToVerify.UserName,
                 PhoneNumber = userToVerify.PhoneNumber,
                 IsEmailVerified = userToVerify.EmailConfirmed,
-                ProfileId = userToVerify.Profile.Id,
+                ProfileId = userToVerify.Profile != null ? userToVerify.Profile.Id : 1,
             };
         }
     }

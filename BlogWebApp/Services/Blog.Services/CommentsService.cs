@@ -8,6 +8,7 @@ namespace Blog.Services
 {
     using System.Linq;
     using System.Threading.Tasks;
+    using Blog.Contracts.V1.Responses.Chart;
     using Blog.Core.Helpers;
     using Blog.Data.Models;
     using Blog.Data.Repository;
@@ -145,5 +146,20 @@ namespace Blog.Services
                 .Where(new CommentSpecification(x => x.Id.Equals(id)).Filter)
                 .FirstOrDefaultAsync();
         }
+
+        /// <inheritdoc cref="ICommentsService"/>
+        public async Task<ChartDataModel> GetCommentsActivity()
+            => new()
+            {
+                Name = "Comments",
+                Series = await Repository.TableNoTracking
+                    .GroupBy(x => x.CreatedAt)
+                    .Select(x => new ChartItem
+                    {
+                        Name = x.Key.ToString("dd/MM/yyyy"),
+                        Value = x.Count(),
+                    })
+                    .ToListAsync(),
+            };
     }
 }

@@ -59,6 +59,11 @@
             /// The change password.
             /// </summary>
             public const string ChangePassword = "change-password";
+
+            /// <summary>
+            /// The users activity.
+            /// </summary>
+            public const string UsersActivity = "users-activity";
         }
 
         /// <summary>
@@ -100,6 +105,11 @@
             /// The delete comment.
             /// </summary>
             public const string DeleteComment = "{id}";
+
+            /// <summary>
+            /// The comments activity.
+            /// </summary>
+            public const string CommentsActivity = "comments-activity";
         }
 
         /// <summary>
@@ -162,6 +172,11 @@
             /// The dislike post.
             /// </summary>
             public const string DislikePost = "dislike/{id}";
+
+            /// <summary>
+            /// The posts activity.
+            /// </summary>
+            public const string PostsActivity = "posts-activity";
         }
 
         /// <summary>
@@ -203,12 +218,17 @@
             /// <summary>
             /// The get tag.
             /// </summary>
-            public const string GetTag = "get-tag";
+            public const string GetTag = "get-tag/{id}";
 
             /// <summary>
             /// The create tag.
             /// </summary>
             public const string CreateTag = "create";
+
+            /// <summary>
+            /// The tags activity.
+            /// </summary>
+            public const string TagsActivity = "tags-activity";
         }
 
         /// <summary>

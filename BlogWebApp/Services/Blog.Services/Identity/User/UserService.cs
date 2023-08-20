@@ -8,8 +8,10 @@ namespace Blog.Services.Identity.User
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
+    using Blog.Contracts.V1.Responses.Chart;
     using Blog.Core.Infrastructure.Pagination;
     using Blog.Core.TableFilters;
+    using Blog.Data;
     using Blog.Data.Models;
     using Blog.Data.Repository;
     using Microsoft.AspNetCore.Identity;
@@ -229,6 +231,21 @@ namespace Blog.Services.Identity.User
 
             return await this.applicationUserRepository.SearchBySquenceAsync(this.AddFilter(tableFilter), sequence);
         }
+
+        /// <inheritdoc cref="IUserService"/>
+        public async Task<ChartDataModel> GetUsersActivity()
+            => new()
+            {
+                Name = "Posts",
+                Series = await applicationUserRepository.TableNoTracking
+                    .GroupBy(x => x.CreatedOn)
+                    .Select(x => new ChartItem
+                    {
+                        Name = x.Key.ToString("dd/MM/yyyy"),
+                        Value = x.Count(),
+                    })
+                    .ToListAsync(),
+            };
 
         /// <summary>
         /// Add filter.

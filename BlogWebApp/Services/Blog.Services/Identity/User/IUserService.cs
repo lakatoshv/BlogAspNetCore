@@ -6,6 +6,7 @@ namespace Blog.Services.Identity.User
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Blog.Contracts.V1.Responses.Chart;
     using Blog.Core.Infrastructure.Pagination;
     using Blog.Core.TableFilters;
     using Blog.Data.Models;
@@ -185,5 +186,11 @@ namespace Blog.Services.Identity.User
         /// <param name="newPassword">newPassword.</param>
         /// <returns>Task.</returns>
         Task<IdentityResult> ResetPasswordAsync(string userName, string token, string newPassword);
+
+        /// <summary>
+        /// Asynchronous Get posts activity.
+        /// </summary>
+        /// <returns>Task.</returns>
+        Task<ChartDataModel> GetUsersActivity();
     }
 }

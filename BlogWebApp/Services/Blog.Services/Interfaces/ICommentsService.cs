@@ -5,6 +5,7 @@
 namespace Blog.Services.Interfaces
 {
     using System.Threading.Tasks;
+    using Blog.Contracts.V1.Responses.Chart;
     using Blog.Data.Models;
     using Blog.Services.Core.Dtos;
     using Blog.Services.Core.Dtos.Posts;
@@ -37,5 +38,11 @@ namespace Blog.Services.Interfaces
         /// <param name="sortParameters">The sort parameters.</param>
         /// <returns></returns>
         Task<CommentsViewDto> GetPagedComments(SortParametersDto sortParameters);
+
+        /// <summary>
+        /// Asynchronous Get comments activity.
+        /// </summary>
+        /// <returns>Task.</returns>
+        Task<ChartDataModel> GetCommentsActivity();
     }
 }

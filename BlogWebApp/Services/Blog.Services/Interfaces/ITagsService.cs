@@ -5,6 +5,7 @@
 namespace Blog.Services.Interfaces
 {
     using System.Threading.Tasks;
+    using Blog.Contracts.V1.Responses.Chart;
     using Blog.Data.Models;
     using Blog.Services.Core.Dtos;
     using Blog.Services.Core.Dtos.Posts;
@@ -22,5 +23,11 @@ namespace Blog.Services.Interfaces
         /// <param name="searchParameters">The search parameters.</param>
         /// <returns>Task.</returns>
         Task<TagsViewDto> GetTagsAsync(SearchParametersDto searchParameters);
+
+        /// <summary>
+        /// Asynchronous Get tags activity.
+        /// </summary>
+        /// <returns>Task.</returns>
+        Task<ChartDataModel> GetTagsActivity();
     }
 }
