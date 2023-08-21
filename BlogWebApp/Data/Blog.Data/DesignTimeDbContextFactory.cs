@@ -2,37 +2,36 @@
 // Copyright (c) Blog. All rights reserved.
 // </copyright>
 
-namespace Blog.Data
+namespace Blog.Data;
+
+using System.IO;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Configuration;
+
+/// <summary>
+/// Design time database context factory.
+/// </summary>
+public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
 {
-    using System.IO;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Design;
-    using Microsoft.EntityFrameworkCore.Diagnostics;
-    using Microsoft.Extensions.Configuration;
-
-    /// <summary>
-    /// Design time database context factory.
-    /// </summary>
-    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
+    /// <inheritdoc cref="IDesignTimeDbContextFactory{ApplicationDbContext}"/>
+    public ApplicationDbContext CreateDbContext(string[] args)
     {
-        /// <inheritdoc cref="IDesignTimeDbContextFactory{ApplicationDbContext}"/>
-        public ApplicationDbContext CreateDbContext(string[] args)
-        {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .Build();
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .Build();
 
-            var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
+        var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
 
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            builder.UseSqlServer(connectionString);
+        builder.UseSqlServer(connectionString);
 
-            // Stop client query evaluation
-            builder.ConfigureWarnings(w => w.Throw(RelationalEventId.QueryPossibleUnintendedUseOfEqualsWarning));
+        // Stop client query evaluation
+        builder.ConfigureWarnings(w => w.Throw(RelationalEventId.QueryPossibleUnintendedUseOfEqualsWarning));
 
-            return new ApplicationDbContext(builder.Options);
-        }
+        return new ApplicationDbContext(builder.Options);
     }
 }

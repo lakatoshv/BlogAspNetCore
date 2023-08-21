@@ -2,33 +2,32 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Data.Specifications
+namespace Blog.Data.Specifications;
+
+using System;
+using System.Linq.Expressions;
+using Models;
+using Base;
+
+/// <summary>
+/// Profile specification.
+/// </summary>
+/// <seealso cref="BaseSpecification{Profile}" />
+public class ProfileSpecification : BaseSpecification<Profile>
 {
-    using System;
-    using System.Linq.Expressions;
-    using Blog.Data.Models;
-    using Blog.Data.Specifications.Base;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ProfileSpecification"/> class.
+    /// </summary>
+    public ProfileSpecification()
+    {
+    }
 
     /// <summary>
-    /// Profile specification.
+    /// Initializes a new instance of the <see cref="ProfileSpecification"/> class.
     /// </summary>
-    /// <seealso cref="BaseSpecification{Profile}" />
-    public class ProfileSpecification : BaseSpecification<Profile>
+    /// <param name="filter">The filter.</param>
+    public ProfileSpecification(Expression<Func<Profile, bool>> filter)
+        : base(filter)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProfileSpecification"/> class.
-        /// </summary>
-        public ProfileSpecification()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProfileSpecification"/> class.
-        /// </summary>
-        /// <param name="filter">The filter.</param>
-        public ProfileSpecification(Expression<Func<Profile, bool>> filter)
-            : base(filter)
-        {
-        }
     }
 }
