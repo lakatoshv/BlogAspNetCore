@@ -2,31 +2,30 @@
 // Copyright (c) Blog. All rights reserved.
 // </copyright>
 
-namespace Blog.Data.Models
+namespace Blog.Data.Models;
+
+using System.Collections.Generic;
+using Core;
+
+/// <summary>
+/// Tag entity.
+/// </summary>
+/// <seealso cref="Entity" />
+public class Tag : Entity
 {
-    using System.Collections.Generic;
-    using Core;
+    /// <summary>
+    /// Gets or sets the title.
+    /// </summary>
+    /// <value>
+    /// The title.
+    /// </value>
+    public string Title { get; set; }
 
     /// <summary>
-    /// Tag entity.
+    /// Gets or sets the posts tags relations.
     /// </summary>
-    /// <seealso cref="Entity" />
-    public class Tag : Entity
-    {
-        /// <summary>
-        /// Gets or sets the title.
-        /// </summary>
-        /// <value>
-        /// The title.
-        /// </value>
-        public string Title { get; set; }
-
-        /// <summary>
-        /// Gets or sets the posts tags relations.
-        /// </summary>
-        /// <value>
-        /// The posts tags relations.
-        /// </value>
-        public ICollection<PostsTagsRelations> PostsTagsRelations { get; set; }
-    }
+    /// <value>
+    /// The posts tags relations.
+    /// </value>
+    public ICollection<PostsTagsRelations> PostsTagsRelations { get; set; }
 }
