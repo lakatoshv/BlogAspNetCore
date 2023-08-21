@@ -2,23 +2,22 @@
 // Copyright (c) Blog. All rights reserved.
 // </copyright>
 
-namespace Blog.Data.Core.Models.Interfaces
+namespace Blog.Data.Core.Models.Interfaces;
+
+using System;
+
+/// <summary>
+/// Audit info interface.
+/// </summary>
+public interface IAuditInfo
 {
-    using System;
+    /// <summary>
+    /// Gets or sets created on.
+    /// </summary>
+    DateTime CreatedOn { get; set; }
 
     /// <summary>
-    /// Audit info interface.
+    /// Gets or sets modified on.
     /// </summary>
-    public interface IAuditInfo
-    {
-        /// <summary>
-        /// Gets or sets created on.
-        /// </summary>
-        DateTime CreatedOn { get; set; }
-
-        /// <summary>
-        /// Gets or sets modified on.
-        /// </summary>
-        DateTime? ModifiedOn { get; set; }
-    }
+    DateTime? ModifiedOn { get; set; }
 }

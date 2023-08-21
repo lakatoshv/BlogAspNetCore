@@ -2,23 +2,22 @@
 // Copyright (c) Blog. All rights reserved.
 // </copyright>
 
-namespace Blog.Data.Core.Models.Interfaces
+namespace Blog.Data.Core.Models.Interfaces;
+
+using System;
+
+/// <summary>
+/// Deletable entity interface.
+/// </summary>
+public interface IDeletableEntity
 {
-    using System;
+    /// <summary>
+    /// Gets or sets a value indicating whether is deleted.
+    /// </summary>
+    bool IsDeleted { get; set; }
 
     /// <summary>
-    /// Deletable entity interface.
+    /// Gets or sets deleted on.
     /// </summary>
-    public interface IDeletableEntity
-    {
-        /// <summary>
-        /// Gets or sets a value indicating whether is deleted.
-        /// </summary>
-        bool IsDeleted { get; set; }
-
-        /// <summary>
-        /// Gets or sets deleted on.
-        /// </summary>
-        DateTime? DeletedOn { get; set; }
-    }
+    DateTime? DeletedOn { get; set; }
 }
