@@ -2,23 +2,22 @@
 using Blog.CommonServices.Interfaces;
 using Blog.Services.Core.Dtos.User;
 
-namespace Blog.CommonServices
+namespace Blog.CommonServices;
+
+public class ActiveDirectoryService : IActiveDirectoryService
 {
-    public class ActiveDirectoryService : IActiveDirectoryService
+    public ActiveDirectoryUserDto GetActiveDirectoryUserByIdentity(string identity)
     {
-        public ActiveDirectoryUserDto GetActiveDirectoryUserByIdentity(string identity)
-        {
-            throw new System.NotImplementedException();
-        }
+        throw new System.NotImplementedException();
+    }
 
-        public ActiveDirectoryUserDto GetActiveDirectoryUserByEmployeeId(string employeeId)
-        {
-            throw new System.NotImplementedException();
-        }
+    public ActiveDirectoryUserDto GetActiveDirectoryUserByEmployeeId(string employeeId)
+    {
+        throw new System.NotImplementedException();
+    }
 
-        public List<ActiveDirectoryUserDto> GetActiveDirectoryUsersByGroup(string groupName)
-        {
-            throw new System.NotImplementedException();
-        }
+    public List<ActiveDirectoryUserDto> GetActiveDirectoryUsersByGroup(string groupName)
+    {
+        throw new System.NotImplementedException();
     }
 }
