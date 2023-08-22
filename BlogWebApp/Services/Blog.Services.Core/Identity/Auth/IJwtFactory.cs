@@ -2,37 +2,36 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Core.Identity.Auth
+namespace Blog.Services.Core.Identity.Auth;
+
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Blog.Core;
+
+/// <summary>
+/// Jwt factory interface.
+/// </summary>
+public interface IJwtFactory
 {
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using Blog.Core;
+    /// <summary>
+    /// Generate encoded token.
+    /// </summary>
+    /// <param name="userName">userName.</param>
+    /// <param name="identity">identity.</param>
+    /// <returns>Task.</returns>
+    Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity);
 
     /// <summary>
-    /// Jwt factory interface.
+    /// Generate refresh token.
     /// </summary>
-    public interface IJwtFactory
-    {
-        /// <summary>
-        /// Generate encoded token.
-        /// </summary>
-        /// <param name="userName">userName.</param>
-        /// <param name="identity">identity.</param>
-        /// <returns>Task.</returns>
-        Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity);
+    /// <param name="userName">userName.</param>
+    /// <returns>Task.</returns>
+    Task<string> GenerateRefreshToken(string userName);
 
-        /// <summary>
-        /// Generate refresh token.
-        /// </summary>
-        /// <param name="userName">userName.</param>
-        /// <returns>Task.</returns>
-        Task<string> GenerateRefreshToken(string userName);
-
-        /// <summary>
-        /// Generate claims identity.
-        /// </summary>
-        /// <param name="claimsIdentityUserModel">claimsIdentityUserModel.</param>
-        /// <returns>ClaimsIdentity.</returns>
-        ClaimsIdentity GenerateClaimsIdentity(ClaimsIdentityUserModel claimsIdentityUserModel);
-    }
+    /// <summary>
+    /// Generate claims identity.
+    /// </summary>
+    /// <param name="claimsIdentityUserModel">claimsIdentityUserModel.</param>
+    /// <returns>ClaimsIdentity.</returns>
+    ClaimsIdentity GenerateClaimsIdentity(ClaimsIdentityUserModel claimsIdentityUserModel);
 }

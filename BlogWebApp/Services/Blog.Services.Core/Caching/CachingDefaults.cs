@@ -2,21 +2,20 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Core.Caching
+namespace Blog.Services.Core.Caching;
+
+/// <summary>
+/// Caching defaults.
+/// </summary>
+public static class CachingDefaults
 {
     /// <summary>
-    /// Caching defaults.
+    /// Gets cache time.
     /// </summary>
-    public static class CachingDefaults
-    {
-        /// <summary>
-        /// Gets cache time.
-        /// </summary>
-        public static int CacheTime => 60;
+    public static int CacheTime => 60;
 
-        /// <summary>
-        /// Gets redis data protection key.
-        /// </summary>
-        public static string RedisDataProtectionKey => "Blog.DataProtectionKeys";
-    }
+    /// <summary>
+    /// Gets redis data protection key.
+    /// </summary>
+    public static string RedisDataProtectionKey => "Blog.DataProtectionKeys";
 }

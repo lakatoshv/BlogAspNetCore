@@ -2,12 +2,11 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Core.Caching.Interfaces
+namespace Blog.Services.Core.Caching.Interfaces;
+
+/// <summary>
+/// Static cache manager interface.
+/// </summary>
+public interface IStaticCacheManager : ICacheManager
 {
-    /// <summary>
-    /// Static cache manager interface.
-    /// </summary>
-    public interface IStaticCacheManager : ICacheManager
-    {
-    }
 }
