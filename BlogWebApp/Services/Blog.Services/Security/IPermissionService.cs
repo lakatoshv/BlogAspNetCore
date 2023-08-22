@@ -2,17 +2,16 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Security
+namespace Blog.Services.Security;
+
+/// <summary>
+/// Permission service interface.
+/// </summary>
+public interface IPermissionService
 {
     /// <summary>
-    /// Permission service interface.
+    /// Authorize permission.
     /// </summary>
-    public interface IPermissionService
-    {
-        /// <summary>
-        /// Authorize permission.
-        /// </summary>
-        /// <returns>bool.</returns>
-        bool Authorize();
-    }
+    /// <returns>bool.</returns>
+    bool Authorize();
 }

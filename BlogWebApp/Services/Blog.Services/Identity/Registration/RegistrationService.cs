@@ -2,63 +2,62 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Identity.Registration
+namespace Blog.Services.Identity.Registration;
+
+using System;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Data.Models;
+using User;
+
+/// <summary>
+/// Registration service.
+/// </summary>
+public class RegistrationService : IRegistrationService
 {
-    using System;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using Blog.Data.Models;
-    using Blog.Services.Identity.User;
-    using Microsoft.AspNetCore.Identity;
+    /// <summary>
+    /// User service.
+    /// </summary>
+    private readonly IUserService userService;
+
+    // private readonly IEmailExtensionService _emailExtensionService;
+
+    // TODO: Investigate if it is possible to abstracted out userManager and Application context should to interfaces
 
     /// <summary>
-    /// Registration service.
+    /// Initializes a new instance of the <see cref="RegistrationService"/> class.
     /// </summary>
-    public class RegistrationService : IRegistrationService
+    /// <param name="userService">userService.</param>
+    public RegistrationService(IUserService userService)
     {
-        /// <summary>
-        /// User service.
-        /// </summary>
-        private readonly IUserService userService;
+        this.userService = userService;
+    }
 
-        // private readonly IEmailExtensionService _emailExtensionService;
+    /// <inheritdoc cref="IRegistrationService"/>
+    public IdentityResult Register(ApplicationUser user, string password)
+    {
+        // TODO: Either implement or remove
+        throw new NotImplementedException();
+    }
 
-        // TODO: Investigate if it is possible to abstracted out userManager and Application context should to interfaces
+    // TODO: Get rid of IdentityResult, introduce own IServiceResult
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RegistrationService"/> class.
-        /// </summary>
-        /// <param name="userService">userService.</param>
-        public RegistrationService(IUserService userService)
+    /// <inheritdoc cref="IRegistrationService"/>
+    public async Task<IdentityResult> RegisterAsync(ApplicationUser user, string password)
+    {
+        user.UserName = Regex.Replace(user.UserName, @"\s+", " ").Trim();
+
+        var result = await this.userService.CreateAsync(user, password);
+
+        if (result.Succeeded)
         {
-            this.userService = userService;
+            // var token =
+            await this.userService.GetEmailVerificationTokenAsync(user.UserName);
+
+            // await _emailExtensionService.SendVerificationEmailAsync(user.UserName, token);
         }
 
-        /// <inheritdoc cref="IRegistrationService"/>
-        public IdentityResult Register(ApplicationUser user, string password)
-        {
-            // TODO: Either implement or remove
-            throw new NotImplementedException();
-        }
-
-        // TODO: Get rid of IdentityResult, introduce own IServiceResult
-
-        /// <inheritdoc cref="IRegistrationService"/>
-        public async Task<IdentityResult> RegisterAsync(ApplicationUser user, string password)
-        {
-            user.UserName = Regex.Replace(user.UserName, @"\s+", " ").Trim();
-
-            var result = await this.userService.CreateAsync(user, password);
-
-            if (result.Succeeded)
-            {
-                // var token =
-                await this.userService.GetEmailVerificationTokenAsync(user.UserName);
-
-                // await _emailExtensionService.SendVerificationEmailAsync(user.UserName, token);
-            }
-
-            return result;
-        }
+        return result;
     }
 }
