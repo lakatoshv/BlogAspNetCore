@@ -20,12 +20,23 @@ export class CommentService {
    * @param model any
    * @returns Observable<any>
    */
-  public list(postId: number, model?: any): Observable<any> {
-    if (model) {
+  public list(postId: number | null, model?: any): Observable<any> {
+    if (model && postId !== null) {
       return this._httpClient.post(APiRoutes.GET_COMMENTS_BY_POST.concat("/", postId.toString()), model);
+    }
+    else if (model) {
+      return this._httpClient.post(APiRoutes.GET_COMMENTS_BY_FILTER, model);
     }
 
     return this._httpClient.get(APiRoutes.COMMENTS_CONTROLLER);
+  }
+
+  /**
+   * Get posts activity.
+   * @returns Observable<any>
+   */
+  public commentsActivity(): Observable<any> {
+    return this._httpClient.get(APiRoutes.COMMENTS_ACTIVITY);
   }
 
   /**

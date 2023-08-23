@@ -1,37 +1,36 @@
-﻿namespace Blog.Contracts.V1.Responses.PostsResponses
+﻿namespace Blog.Contracts.V1.Responses.PostsResponses;
+
+using System.Collections.Generic;
+using CommentsResponses;
+using TagsResponses;
+
+/// <summary>
+/// Post with paged comments response.
+/// </summary>
+public class PostWithPagedCommentsResponse
 {
-    using System.Collections.Generic;
-    using Blog.Contracts.V1.Responses.CommentsResponses;
-    using Blog.Contracts.V1.Responses.TagsResponses;
+    /// <summary>
+    /// Gets or sets post.
+    /// </summary>
+    public PostViewResponse Post { get; set; }
 
     /// <summary>
-    /// Post with paged comments response.
+    /// Gets or sets the comments.
     /// </summary>
-    public class PostWithPagedCommentsResponse
-    {
-        /// <summary>
-        /// Gets or sets post.
-        /// </summary>
-        public PostViewResponse Post { get; set; }
+    /// <value>
+    /// The comments.
+    /// </value>
+    public PagedCommentsResponse Comments { get; set; }
 
-        /// <summary>
-        /// Gets or sets the comments.
-        /// </summary>
-        /// <value>
-        /// The comments.
-        /// </value>
-        public PagedCommentsResponse Comments { get; set; }
+    // public Comment Comment { get; set; }
+    // public int CommentsCount { get; set; }
+    // public Profile Profile { get; set; }
 
-        // public Comment Comment { get; set; }
-        // public int CommentsCount { get; set; }
-        // public Profile Profile { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tags.
-        /// </summary>
-        /// <value>
-        /// The tags.
-        /// </value>
-        public IList<TagResponse> Tags { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the tags.
+    /// </summary>
+    /// <value>
+    /// The tags.
+    /// </value>
+    public IList<TagResponse> Tags { get; set; }
 }

@@ -1,50 +1,49 @@
-﻿using Blog.Contracts.V1.Responses;
-using Blog.Contracts.V1.Responses.TagsResponses;
-using Blog.Core.Consts;
-using Swashbuckle.AspNetCore.Filters;
+﻿namespace Blog.Web.SwaggerExamples.Responses.TagsResponses;
+
 using System.Collections.Generic;
+using Swashbuckle.AspNetCore.Filters;
+using Blog.Contracts.V1.Responses;
+using Blog.Contracts.V1.Responses.TagsResponses;
+using Core.Consts;
 
-namespace Blog.Web.SwaggerExamples.Responses.TagsResponses
+/// <summary>
+/// Paged tags response example.
+/// </summary>
+/// <seealso cref="IExamplesProvider{PagedTagsResponse}" />
+public class PagedTagsResponseExample : IExamplesProvider<PagedTagsResponse>
 {
-    /// <summary>
-    /// Paged tags response example.
-    /// </summary>
-    /// <seealso cref="IExamplesProvider{PagedTagsResponse}" />
-    public class PagedTagsResponseExample : IExamplesProvider<PagedTagsResponse>
+    /// <inheritdoc cref="IExamplesProvider{T}"/>
+    public PagedTagsResponse GetExamples()
     {
-        /// <inheritdoc cref="IExamplesProvider{T}"/>
-        public PagedTagsResponse GetExamples()
+        return new PagedTagsResponse
         {
-            return new PagedTagsResponse
+            PageInfo = new PageInfoResponse
             {
-                PageInfo = new PageInfoResponse
+                PageNumber = 1,
+                PageSize = 10,
+                TotalItems = 100,
+            },
+
+            Tags = new List<TagResponse>
+            {
+                new TagResponse
                 {
-                    PageNumber = 1,
-                    PageSize = 10,
-                    TotalItems = 100,
+                    Id = 0,
+                    Title = SwaggerExamplesConsts.TagResponseExample.Title + "1",
                 },
 
-                Tags = new List<TagResponse>
+                new TagResponse
                 {
-                    new TagResponse
-                    {
-                        Id = 0,
-                        Title = SwaggerExamplesConsts.TagResponseExample.Title + "1",
-                    },
-
-                    new TagResponse
-                    {
-                        Id = 0,
-                        Title = SwaggerExamplesConsts.TagResponseExample.Title + "2",
-                    },
+                    Id = 0,
+                    Title = SwaggerExamplesConsts.TagResponseExample.Title + "2",
+                },
                     
-                    new TagResponse
-                    {
-                        Id = 0,
-                        Title = SwaggerExamplesConsts.TagResponseExample.Title + "3",
-                    }
-                },
-            };
-        }
+                new TagResponse
+                {
+                    Id = 0,
+                    Title = SwaggerExamplesConsts.TagResponseExample.Title + "3",
+                }
+            },
+        };
     }
 }

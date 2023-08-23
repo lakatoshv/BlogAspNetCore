@@ -2,46 +2,45 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Core.Emails
+namespace Blog.Core.Emails;
+
+using System.Collections.Generic;
+
+/// <summary>
+/// Email.
+/// </summary>
+public class Email
 {
-    using System.Collections.Generic;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Email"/> class.
+    /// </summary>
+    public Email()
+    {
+        this.Attachments = new List<byte[]>();
+    }
 
     /// <summary>
-    /// Email.
+    /// Gets or sets body.
     /// </summary>
-    public class Email
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Email"/> class.
-        /// </summary>
-        public Email()
-        {
-            this.Attachments = new List<byte[]>();
-        }
+    public string Body { get; set; }
 
-        /// <summary>
-        /// Gets or sets body.
-        /// </summary>
-        public string Body { get; set; }
+    /// <summary>
+    /// Gets or sets subject.
+    /// </summary>
+    public string Subject { get; set; }
 
-        /// <summary>
-        /// Gets or sets subject.
-        /// </summary>
-        public string Subject { get; set; }
+    /// <summary>
+    /// Gets or sets from.
+    /// </summary>
+    public string From { get; set; }
 
-        /// <summary>
-        /// Gets or sets from.
-        /// </summary>
-        public string From { get; set; }
+    /// <summary>
+    /// Gets or sets to.
+    /// </summary>
+    public string To { get; set; }
 
-        /// <summary>
-        /// Gets or sets to.
-        /// </summary>
-        public string To { get; set; }
-
-        /// <summary>
-        /// Gets or sets attachments.
-        /// </summary>
-        public List<byte[]> Attachments { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets attachments.
+    /// </summary>
+    public List<byte[]> Attachments { get; set; }
 }

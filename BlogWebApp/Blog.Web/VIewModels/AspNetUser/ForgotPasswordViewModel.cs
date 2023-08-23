@@ -1,17 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace BLog.Web.ViewModels.AspNetUser;
 
-namespace BLog.Web.ViewModels.AspNetUser
+using System.ComponentModel.DataAnnotations;
+
+/// <summary>
+/// Forgot password view model
+/// </summary>
+public class ForgotPasswordViewModel
 {
     /// <summary>
-    /// Forgot password view model
+    /// Gets or sets email.
     /// </summary>
-    public class ForgotPasswordViewModel
-    {
-        /// <summary>
-        /// Gets or sets email.
-        /// </summary>
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
-    }
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; }
 }

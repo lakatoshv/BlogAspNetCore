@@ -2,28 +2,27 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Core.Infrastructure.Pagination.Interfaces
+namespace Blog.Core.Infrastructure.Pagination.Interfaces;
+
+using System.Linq;
+using Enums;
+
+/// <summary>
+/// Sort items by criteria interface.
+/// </summary>
+/// <typeparam name="T">Type.</typeparam>
+public interface ISortCriteria<T>
 {
-    using System.Linq;
-    using Blog.Core.Enums;
+    /// <summary>
+    /// Gets or sets direction.
+    /// </summary>
+    OrderType Direction { get; set; }
 
     /// <summary>
-    /// Sort items by criteria interface.
+    /// Apply ordering.
     /// </summary>
-    /// <typeparam name="T">Type.</typeparam>
-    public interface ISortCriteria<T>
-    {
-        /// <summary>
-        /// Gets or sets direction.
-        /// </summary>
-        OrderType Direction { get; set; }
-
-        /// <summary>
-        /// Apply ordering.
-        /// </summary>
-        /// <param name="query">query.</param>
-        /// <param name="useThenBy">useThenBy.</param>
-        /// <returns>IOrderedQueryable.</returns>
-        IOrderedQueryable<T> ApplyOrdering(IQueryable<T> query, bool useThenBy);
-    }
+    /// <param name="query">query.</param>
+    /// <param name="useThenBy">useThenBy.</param>
+    /// <returns>IOrderedQueryable.</returns>
+    IOrderedQueryable<T> ApplyOrdering(IQueryable<T> query, bool useThenBy);
 }

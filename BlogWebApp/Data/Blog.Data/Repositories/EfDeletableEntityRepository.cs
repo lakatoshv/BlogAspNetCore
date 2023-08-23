@@ -2,70 +2,69 @@
 // Copyright (c) Blog. All rights reserved.
 // </copyright>
 
-namespace Blog.Data.Repositories
+namespace Blog.Data.Repositories;
+
+/*
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using BLog.Data.Core.Models.Interfaces;
+using BLog.Data.Core.Repositories;
+using Microsoft.EntityFrameworkCore;
+
+public class EfDeletableEntityRepository<TEntity> : EfRepository<TEntity>, IDeletableEntityRepository<TEntity>
+    where TEntity : class, IDeletableEntity
 {
-    /*
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using BLog.Data.Core.Models.Interfaces;
-    using BLog.Data.Core.Repositories;
-    using Microsoft.EntityFrameworkCore;
-
-    public class EfDeletableEntityRepository<TEntity> : EfRepository<TEntity>, IDeletableEntityRepository<TEntity>
-        where TEntity : class, IDeletableEntity
+    public EfDeletableEntityRepository(ApplicationDbContext context)
+        : base(context)
     {
-        public EfDeletableEntityRepository(ApplicationDbContext context)
-            : base(context)
+    }
+
+    public override IQueryable<TEntity> All() => base.All().Where(x => !x.IsDeleted);
+
+    public override IQueryable<TEntity> AllAsNoTracking() => base.AllAsNoTracking().Where(x => !x.IsDeleted);
+
+    public IQueryable<TEntity> AllWithDeleted() => base.All().IgnoreQueryFilters();
+
+    public IQueryable<TEntity> AllAsNoTrackingWithDeleted() => base.AllAsNoTracking().IgnoreQueryFilters();
+
+    public override async Task<TEntity> GetByIdAsync(params object[] id)
+    {
+        var entity = await base.GetByIdAsync(id);
+
+        if (entity?.IsDeleted ?? false)
         {
+            entity = null;
         }
 
-        public override IQueryable<TEntity> All() => base.All().Where(x => !x.IsDeleted);
+        return entity;
+    }
 
-        public override IQueryable<TEntity> AllAsNoTracking() => base.AllAsNoTracking().Where(x => !x.IsDeleted);
+    public Task<TEntity> GetByIdWithDeletedAsync(params object[] id)
+    {
+        var byIdPredicate = EfExpressionHelper.BuildByIdPredicate<TEntity>(this.Context, id);
 
-        public IQueryable<TEntity> AllWithDeleted() => base.All().IgnoreQueryFilters();
+        return this.AllWithDeleted().FirstOrDefaultAsync(byIdPredicate);
+    }
 
-        public IQueryable<TEntity> AllAsNoTrackingWithDeleted() => base.AllAsNoTracking().IgnoreQueryFilters();
+    public void HardDelete(TEntity entity)
+    {
+        base.Delete(entity);
+    }
 
-        public override async Task<TEntity> GetByIdAsync(params object[] id)
-        {
-            var entity = await base.GetByIdAsync(id);
+    public void Undelete(TEntity entity)
+    {
+        entity.IsDeleted = false;
+        entity.DeletedOn = null;
 
-            if (entity?.IsDeleted ?? false)
-            {
-                entity = null;
-            }
+        this.Update(entity);
+    }
 
-            return entity;
-        }
+    public override void Delete(TEntity entity)
+    {
+        entity.IsDeleted = true;
+        entity.DeletedOn = DateTime.UtcNow;
 
-        public Task<TEntity> GetByIdWithDeletedAsync(params object[] id)
-        {
-            var byIdPredicate = EfExpressionHelper.BuildByIdPredicate<TEntity>(this.Context, id);
-
-            return this.AllWithDeleted().FirstOrDefaultAsync(byIdPredicate);
-        }
-
-        public void HardDelete(TEntity entity)
-        {
-            base.Delete(entity);
-        }
-
-        public void Undelete(TEntity entity)
-        {
-            entity.IsDeleted = false;
-            entity.DeletedOn = null;
-
-            this.Update(entity);
-        }
-
-        public override void Delete(TEntity entity)
-        {
-            entity.IsDeleted = true;
-            entity.DeletedOn = DateTime.UtcNow;
-
-            this.Update(entity);
-        }
-    }*/
-}
+        this.Update(entity);
+    }
+}*/

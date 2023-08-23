@@ -2,56 +2,55 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright
 
-namespace Blog.CommonServices
+namespace Blog.CommonServices;
+
+using System;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
+using Interfaces;
+
+/// <summary>
+/// Response cache service.
+/// </summary>
+/// <seealso cref="IResponseCacheService" />
+public class ResponseCacheService : IResponseCacheService
 {
-    using System;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.Caching.Distributed;
-    using Newtonsoft.Json;
-    using Blog.CommonServices.Interfaces;
+    /// <summary>
+    /// The distributed cache.
+    /// </summary>
+    private readonly IDistributedCache distributedCache;
 
     /// <summary>
-    /// Response cache service.
+    /// Initializes a new instance of the <see cref="ResponseCacheService"/> class.
     /// </summary>
-    /// <seealso cref="IResponseCacheService" />
-    public class ResponseCacheService : IResponseCacheService
+    /// <param name="distributedCache">The distributed cache.</param>
+    public ResponseCacheService(IDistributedCache distributedCache)
     {
-        /// <summary>
-        /// The distributed cache.
-        /// </summary>
-        private readonly IDistributedCache distributedCache;
+        this.distributedCache = distributedCache;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ResponseCacheService"/> class.
-        /// </summary>
-        /// <param name="distributedCache">The distributed cache.</param>
-        public ResponseCacheService(IDistributedCache distributedCache)
+    /// <inheritdoc cref="IResponseCacheService"/>
+    public async Task CacheResponseAsync(string cacheKey, object response, TimeSpan lifeTime)
+    {
+        if (response == null)
         {
-            this.distributedCache = distributedCache;
+            return;
         }
 
-        /// <inheritdoc cref="IResponseCacheService"/>
-        public async Task CacheResponseAsync(string cacheKey, object response, TimeSpan lifeTime)
+        var serializedResponse = JsonConvert.SerializeObject(response);
+
+        await this.distributedCache.SetStringAsync(cacheKey, serializedResponse, new DistributedCacheEntryOptions
         {
-            if (response == null)
-            {
-                return;
-            }
+            AbsoluteExpirationRelativeToNow = lifeTime,
+        });
+    }
 
-            var serializedResponse = JsonConvert.SerializeObject(response);
+    /// <inheritdoc cref="IResponseCacheService"/>
+    public async Task<string> GetCachedResponseAsync(string cacheKey)
+    {
+        var cachedResponse = await this.distributedCache.GetStringAsync(cacheKey);
 
-            await this.distributedCache.SetStringAsync(cacheKey, serializedResponse, new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = lifeTime,
-            });
-        }
-
-        /// <inheritdoc cref="IResponseCacheService"/>
-        public async Task<string> GetCachedResponseAsync(string cacheKey)
-        {
-            var cachedResponse = await this.distributedCache.GetStringAsync(cacheKey);
-
-            return string.IsNullOrEmpty(cachedResponse) ? null : cachedResponse;
-        }
+        return string.IsNullOrEmpty(cachedResponse) ? null : cachedResponse;
     }
 }

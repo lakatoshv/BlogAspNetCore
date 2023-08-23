@@ -2,35 +2,34 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Data.Specifications
+namespace Blog.Data.Specifications;
+
+using System;
+using System.Linq.Expressions;
+using Models;
+using Base;
+
+/// <summary>
+/// Category specification.
+/// </summary>
+/// <seealso cref="BaseSpecification{Category}" />
+public class CategorySpecification : BaseSpecification<Category>
 {
-    using System;
-    using System.Linq.Expressions;
-    using Blog.Data.Models;
-    using Blog.Data.Specifications.Base;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CategorySpecification"/> class.
+    /// </summary>
+    public CategorySpecification()
+    {
+        this.AddInclude(x => x.Categories);
+        this.AddInclude(x => x.Posts);
+    }
 
     /// <summary>
-    /// Category specification.
+    /// Initializes a new instance of the <see cref="CategorySpecification"/> class.
     /// </summary>
-    /// <seealso cref="BaseSpecification{Category}" />
-    public class CategorySpecification : BaseSpecification<Category>
+    /// <param name="filter">The filter.</param>
+    public CategorySpecification(Expression<Func<Category, bool>> filter)
+        : base(filter)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CategorySpecification"/> class.
-        /// </summary>
-        public CategorySpecification()
-        {
-            this.AddInclude(x => x.Categories);
-            this.AddInclude(x => x.Posts);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CategorySpecification"/> class.
-        /// </summary>
-        /// <param name="filter">The filter.</param>
-        public CategorySpecification(Expression<Func<Category, bool>> filter)
-            : base(filter)
-        {
-        }
     }
 }

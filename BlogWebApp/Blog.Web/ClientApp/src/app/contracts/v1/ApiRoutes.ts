@@ -95,6 +95,12 @@ export class APiRoutes {
    */
   public static readonly SEND_CONFIRMATION_EMAIL = APiRoutes.ACCOUNTS_CONTROLLER + '/send-confirmation-email';
 
+  /**
+   * Users activity method.
+   * @param USERS_ACTIVITY string
+   */
+  public static readonly USERS_ACTIVITY = APiRoutes.ACCOUNTS_CONTROLLER + '/users-activity';
+
   // Posts controller methods
   /**
    * Create post method.
@@ -107,6 +113,12 @@ export class APiRoutes {
    * @param GET_POSTS string
    */
   public static readonly GET_POSTS = APiRoutes.POSTS_CONTROLLER + '/get-posts';
+
+  /**
+   * Posts activity method.
+   * @param POSTS_ACTIVITY string
+   */
+  public static readonly POSTS_ACTIVITY = APiRoutes.POSTS_CONTROLLER + '/posts-activity';
 
   /**
    * Show post method.
@@ -138,6 +150,18 @@ export class APiRoutes {
    * @param GET_COMMENTS_BY_POST string
    */
   public static readonly GET_COMMENTS_BY_POST = APiRoutes.COMMENTS_CONTROLLER + '/get-comments-by-post';
+
+  /**
+   * Comments activity method.
+   * @param COMMENTS_ACTIVITY string
+   */
+  public static readonly COMMENTS_ACTIVITY = APiRoutes.COMMENTS_CONTROLLER + '/comments-activity';
+
+  /**
+   * Get comments by filter method.
+   * @param GET_COMMENTS_BY_FILTER string
+   */
+  public static readonly GET_COMMENTS_BY_FILTER = APiRoutes.COMMENTS_CONTROLLER + '/get-comments-by-filter';
 
   /**
    * Create new comment.
@@ -175,4 +199,10 @@ export class APiRoutes {
    * @param GET_TAG string
    */
   public static readonly GET_TAG = APiRoutes.TAGS_CONTROLLER + '/get-tag';
+
+  /**
+   * Tags activity method.
+   * @param TAGS_ACTIVITY string
+   */
+  public static readonly TAGS_ACTIVITY = APiRoutes.ACCOUNTS_CONTROLLER + '/tags-activity';
 }

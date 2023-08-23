@@ -237,7 +237,6 @@ export class PostsListComponent implements OnInit {
    * @returns void
    */
   private _getPosts(page = 1): void {
-    debugger
     const sortParameters = {
       sortBy: null,
       orderBy: null,

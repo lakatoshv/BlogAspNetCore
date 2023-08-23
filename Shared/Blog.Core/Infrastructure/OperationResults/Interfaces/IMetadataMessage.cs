@@ -2,28 +2,27 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Core.Infrastructure.OperationResults.Interfaces
+namespace Blog.Core.Infrastructure.OperationResults.Interfaces;
+
+/// <summary>
+/// Metadata message interface.
+/// </summary>
+/// <seealso cref="IHaveDataObject" />
+public interface IMetadataMessage : IHaveDataObject
 {
     /// <summary>
-    /// Metadata message interface.
+    /// Gets the message.
     /// </summary>
-    /// <seealso cref="IHaveDataObject" />
-    public interface IMetadataMessage : IHaveDataObject
-    {
-        /// <summary>
-        /// Gets the message.
-        /// </summary>
-        /// <value>
-        /// The message.
-        /// </value>
-        string Message { get; }
+    /// <value>
+    /// The message.
+    /// </value>
+    string Message { get; }
 
-        /// <summary>
-        /// Gets the data object.
-        /// </summary>
-        /// <value>
-        /// The data object.
-        /// </value>
-        object DataObject { get; }
-    }
+    /// <summary>
+    /// Gets the data object.
+    /// </summary>
+    /// <value>
+    /// The data object.
+    /// </value>
+    object DataObject { get; }
 }

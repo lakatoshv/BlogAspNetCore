@@ -2,24 +2,23 @@
 // Copyright (c) Blog. All rights reserved.
 // </copyright>
 
-namespace Blog.Data.Models
+namespace Blog.Data.Models;
+
+using Core;
+
+/// <summary>
+/// Setting.
+/// </summary>
+
+public class Setting : Entity
 {
-    using Core;
+    /// <summary>
+    /// Gets or sets name.
+    /// </summary>
+    public string Name { get; set; }
 
     /// <summary>
-    /// Setting.
+    /// Gets or sets value.
     /// </summary>
-
-    public class Setting : Entity
-    {
-        /// <summary>
-        /// Gets or sets name.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets value.
-        /// </summary>
-        public string Value { get; set; }
-    }
+    public string Value { get; set; }
 }

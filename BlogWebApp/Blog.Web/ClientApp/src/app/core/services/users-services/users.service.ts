@@ -156,4 +156,12 @@ export class UsersService {
   public changePassword(model: ChangePasswordDto): Observable<any> {
     return this._httpClient.put(APiRoutes.CHANGE_PASSWORD, model);
   }
+
+  /**
+   * Get users activity.
+   * @returns Observable<any>
+   */
+  public usersActivity(): Observable<any> {
+    return this._httpClient.get(APiRoutes.USERS_ACTIVITY);
+  }
 }

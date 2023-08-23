@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using Blog.Web.Filters.SwaggerFilters;
-
-namespace Blog.Web.StartupConfigureServicesInstallers
+﻿namespace Blog.Web.StartupConfigureServicesInstallers
 {
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -10,9 +7,11 @@ namespace Blog.Web.StartupConfigureServicesInstallers
     using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
-    using Blog.Core.Consts;
-    using Blog.Contracts.V1;
+    using System.Linq;
     using Swashbuckle.AspNetCore.Filters;
+    using Core.Consts;
+    using Contracts.V1;
+    using Filters.SwaggerFilters;
 
     /// <summary>
     /// Swagger installer.

@@ -56,7 +56,6 @@ export class AuthorizationComponent implements OnInit {
         .subscribe(
           (jwt: JwtToken) => {
             if (jwt) {
-             debugger
               this.succesLogin(jwt);
             }
           },
@@ -82,7 +81,6 @@ export class AuthorizationComponent implements OnInit {
      if(this._globalService._currentUser) {
        const initializeSubscription = this._accountService.initialize(this._globalService._currentUser.id).subscribe(
          (initializationData: any) => {
-            debugger
              this._customToastrService.displaySuccessMessage(Messages.AUTHORIZED_SUCCESSFULLY);
              this._router.navigate(['/'])
                .then(() => {

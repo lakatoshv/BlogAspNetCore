@@ -1,23 +1,22 @@
-﻿namespace Blog.Web.Mappers.AspNetUser
-{
-    using Blog.Contracts.V1.Responses.UsersResponses;
-    using Blog.Data.Models;
-    using Microsoft.AspNetCore.Identity;
-    using Profile = AutoMapper.Profile;
+﻿namespace Blog.Web.Mappers.AspNetUser;
 
+using Microsoft.AspNetCore.Identity;
+using Profile = AutoMapper.Profile;
+using Contracts.V1.Responses.UsersResponses;
+using Data.Models;
+
+/// <summary>
+/// VIew model to entity mapping role.
+/// </summary>
+/// <seealso cref="Profile" />
+public class VIewModelToEntityMappingRole : Profile
+{
     /// <summary>
-    /// VIew model to entity mapping role.
+    /// Initializes a new instance of the <see cref="VIewModelToEntityMappingRole"/> class.
     /// </summary>
-    /// <seealso cref="Profile" />
-    public class VIewModelToEntityMappingRole : Profile
+    public VIewModelToEntityMappingRole()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VIewModelToEntityMappingRole"/> class.
-        /// </summary>
-        public VIewModelToEntityMappingRole()
-        {
-            CreateMap<IdentityUserRole<string>, RoleResponse>();
-            CreateMap<ApplicationRole, RoleResponse>();
-        }
+        CreateMap<IdentityUserRole<string>, RoleResponse>();
+        CreateMap<ApplicationRole, RoleResponse>();
     }
 }

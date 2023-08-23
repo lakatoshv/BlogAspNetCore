@@ -2,21 +2,20 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Core.Emails
+namespace Blog.Core.Emails;
+
+/// <summary>
+/// Email Extension Options.
+/// </summary>
+public class EmailExtensionOptions
 {
     /// <summary>
-    /// Email Extension Options.
+    /// Gets or sets baseUrl.
     /// </summary>
-    public class EmailExtensionOptions
-    {
-        /// <summary>
-        /// Gets or sets baseUrl.
-        /// </summary>
-        public string BaseUrl { get; set; }
+    public string BaseUrl { get; set; }
 
-        /// <summary>
-        /// Gets or sets from.
-        /// </summary>
-        public string From { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets from.
+    /// </summary>
+    public string From { get; set; }
 }

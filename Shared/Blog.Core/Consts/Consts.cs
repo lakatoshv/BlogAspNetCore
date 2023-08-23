@@ -2,52 +2,51 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Core.Consts
+namespace Blog.Core.Consts;
+
+/// <summary>
+/// Consts.
+/// </summary>
+public static class Consts
 {
     /// <summary>
-    /// Consts.
+    /// Policy Prefix.
     /// </summary>
-    public static class Consts
+    public const string PolicyPrefix = "Permission";
+
+    /// <summary>
+    /// Month Count.
+    /// </summary>
+    public const int MonthCount = 12;
+
+    /// <summary>
+    /// First Index.
+    /// </summary>
+    public const int FirstIndex = 1;
+
+    /// <summary>
+    /// DefaultCacheTimeMinutes.
+    /// </summary>
+    public const int DefaultCacheTimeMinutes = 60;
+
+    /// <summary>
+    /// The application name.
+    /// </summary>
+    public const string ApplicationName = "Blog Web Api";
+
+    /// <summary>
+    /// The json type.
+    /// </summary>
+    public const string JsonType = "application/json";
+
+    /// <summary>
+    /// Roles.
+    /// </summary>
+    public static class Roles
     {
         /// <summary>
-        /// Policy Prefix.
+        /// The user.
         /// </summary>
-        public const string PolicyPrefix = "Permission";
-
-        /// <summary>
-        /// Month Count.
-        /// </summary>
-        public const int MonthCount = 12;
-
-        /// <summary>
-        /// First Index.
-        /// </summary>
-        public const int FirstIndex = 1;
-
-        /// <summary>
-        /// DefaultCacheTimeMinutes.
-        /// </summary>
-        public const int DefaultCacheTimeMinutes = 60;
-
-        /// <summary>
-        /// The application name.
-        /// </summary>
-        public const string ApplicationName = "Blog Web Api";
-
-        /// <summary>
-        /// The json type.
-        /// </summary>
-        public const string JsonType = "application/json";
-
-        /// <summary>
-        /// Roles.
-        /// </summary>
-        public static class Roles
-        {
-            /// <summary>
-            /// The user.
-            /// </summary>
-            public const string User = "User";
-        }
+        public const string User = "User";
     }
 }

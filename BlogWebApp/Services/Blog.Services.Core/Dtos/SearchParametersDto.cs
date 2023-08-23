@@ -2,21 +2,20 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Core.Dtos
+namespace Blog.Services.Core.Dtos;
+
+/// <summary>
+/// Search parameters dto.
+/// </summary>
+public class SearchParametersDto
 {
     /// <summary>
-    /// Search parameters dto.
+    /// Gets or sets search.
     /// </summary>
-    public class SearchParametersDto
-    {
-        /// <summary>
-        /// Gets or sets search.
-        /// </summary>
-        public string Search { get; set; }
+    public string Search { get; set; }
 
-        /// <summary>
-        /// Gets or sets sortParameters.
-        /// </summary>
-        public SortParametersDto SortParameters { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets sortParameters.
+    /// </summary>
+    public SortParametersDto SortParameters { get; set; }
 }

@@ -2,25 +2,24 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Core.Utilities
+namespace Blog.Services.Core.Utilities;
+
+using System.Security.Claims;
+
+/// <summary>
+/// Identity extensions.
+/// </summary>
+public static partial class Extensions
 {
-    using System.Security.Claims;
-
     /// <summary>
-    /// Identity extensions.
+    /// Get user name.
     /// </summary>
-    public static partial class Extensions
+    /// <param name="identity">identity.</param>
+    /// <returns>string.</returns>
+    public static string GetUserName(this ClaimsPrincipal identity)
     {
-        /// <summary>
-        /// Get user name.
-        /// </summary>
-        /// <param name="identity">identity.</param>
-        /// <returns>string.</returns>
-        public static string GetUserName(this ClaimsPrincipal identity)
-        {
-            var username = identity.FindFirst(ClaimTypes.NameIdentifier);
+        var username = identity.FindFirst(ClaimTypes.NameIdentifier);
 
-            return username?.Value;
-        }
+        return username?.Value;
     }
 }

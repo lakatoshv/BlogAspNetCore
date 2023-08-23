@@ -55,4 +55,21 @@ export class TagsService {
   public delete(id: number): Observable<any> {
     return this._httpClient.delete(APiRoutes.TAGS_CONTROLLER.concat('/', id.toString()));
   }
+
+  /**
+   * Get tags activity.
+   * @returns Observable<any>
+   */
+  public tagsActivity(): Observable<any> {
+    return this._httpClient.get(APiRoutes.USERS_ACTIVITY);
+  }
+
+  /**
+   * Get tag by id.
+   * @param id number
+   * @returns Observable<any>
+   */
+  public getTag(id: number): Observable<any> {
+    return this._httpClient.get(APiRoutes.GET_TAG.concat('/', id.toString()));
+  }
 }

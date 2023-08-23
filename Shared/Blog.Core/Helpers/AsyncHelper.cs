@@ -2,53 +2,52 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Core.Helpers
+namespace Blog.Core.Helpers;
+
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+/// <summary>
+/// Run Asynchronous methods as Synchronous.
+/// </summary>
+public static class AsyncHelper
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
+    /// <summary>
+    /// The application task factory.
+    /// </summary>
+    private static readonly TaskFactory AppTaskFactory = new
+        TaskFactory(
+            CancellationToken.None,
+            TaskCreationOptions.None,
+            TaskContinuationOptions.None,
+            TaskScheduler.Default);
 
     /// <summary>
-    /// Run Asynchronous methods as Synchronous.
+    /// Runs the synchronize.
     /// </summary>
-    public static class AsyncHelper
+    /// <typeparam name="TResult">The type of the result.</typeparam>
+    /// <param name="func">The function.</param>
+    /// <returns></returns>
+    public static TResult RunSync<TResult>(Func<Task<TResult>> func)
     {
-        /// <summary>
-        /// The application task factory.
-        /// </summary>
-        private static readonly TaskFactory AppTaskFactory = new
-            TaskFactory(
-                CancellationToken.None,
-                TaskCreationOptions.None,
-                TaskContinuationOptions.None,
-                TaskScheduler.Default);
+        return AppTaskFactory
+            .StartNew(func)
+            .Unwrap()
+            .GetAwaiter()
+            .GetResult();
+    }
 
-        /// <summary>
-        /// Runs the synchronize.
-        /// </summary>
-        /// <typeparam name="TResult">The type of the result.</typeparam>
-        /// <param name="func">The function.</param>
-        /// <returns></returns>
-        public static TResult RunSync<TResult>(Func<Task<TResult>> func)
-        {
-            return AppTaskFactory
-                .StartNew(func)
-                .Unwrap()
-                .GetAwaiter()
-                .GetResult();
-        }
-
-        /// <summary>
-        /// Runs the synchronize.
-        /// </summary>
-        /// <param name="func">The function.</param>
-        public static void RunSync(Func<Task> func)
-        {
-            AppTaskFactory
-                .StartNew(func)
-                .Unwrap()
-                .GetAwaiter()
-                .GetResult();
-        }
+    /// <summary>
+    /// Runs the synchronize.
+    /// </summary>
+    /// <param name="func">The function.</param>
+    public static void RunSync(Func<Task> func)
+    {
+        AppTaskFactory
+            .StartNew(func)
+            .Unwrap()
+            .GetAwaiter()
+            .GetResult();
     }
 }

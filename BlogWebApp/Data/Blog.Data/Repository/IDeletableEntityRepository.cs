@@ -2,49 +2,48 @@
 // Copyright (c) Blog. All rights reserved.
 // </copyright>
 
-namespace Blog.Data.Repository
+namespace Blog.Data.Repository;
+
+using System.Linq;
+using System.Threading.Tasks;
+using Blog.Core;
+using Blog.Data.Core.Models.Interfaces;
+
+/// <summary>
+/// Deletable entity repository interface.
+/// </summary>
+/// <typeparam name="TEntity">TEntity.</typeparam>
+public interface IDeletableEntityRepository<TEntity> : IRepository<TEntity>
+    where TEntity : IEntity, IDeletableEntity
 {
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Blog.Core;
-    using Blog.Data.Core.Models.Interfaces;
+    /// <summary>
+    /// All with deleted.
+    /// </summary>
+    /// <returns>IQueryable.</returns>
+    IQueryable<TEntity> AllWithDeleted();
 
     /// <summary>
-    /// Deletable entity repository interface.
+    /// All as no tracking with deleted.
     /// </summary>
-    /// <typeparam name="TEntity">TEntity.</typeparam>
-    public interface IDeletableEntityRepository<TEntity> : IRepository<TEntity>
-        where TEntity : IEntity, IDeletableEntity
-    {
-        /// <summary>
-        /// All with deleted.
-        /// </summary>
-        /// <returns>IQueryable.</returns>
-        IQueryable<TEntity> AllWithDeleted();
+    /// <returns>IQueryable.</returns>
+    IQueryable<TEntity> AllAsNoTrackingWithDeleted();
 
-        /// <summary>
-        /// All as no tracking with deleted.
-        /// </summary>
-        /// <returns>IQueryable.</returns>
-        IQueryable<TEntity> AllAsNoTrackingWithDeleted();
+    /// <summary>
+    /// Get by id with deleted async.
+    /// </summary>
+    /// <param name="id">id.</param>
+    /// <returns>Task.</returns>
+    Task<TEntity> GetByIdWithDeletedAsync(params object[] id);
 
-        /// <summary>
-        /// Get by id with deleted async.
-        /// </summary>
-        /// <param name="id">id.</param>
-        /// <returns>Task.</returns>
-        Task<TEntity> GetByIdWithDeletedAsync(params object[] id);
+    /// <summary>
+    /// Hard delete.
+    /// </summary>
+    /// <param name="entity">entity.</param>
+    void HardDelete(TEntity entity);
 
-        /// <summary>
-        /// Hard delete.
-        /// </summary>
-        /// <param name="entity">entity.</param>
-        void HardDelete(TEntity entity);
-
-        /// <summary>
-        /// Undelete.
-        /// </summary>
-        /// <param name="entity">entity.</param>
-        void Undelete(TEntity entity);
-    }
+    /// <summary>
+    /// Undelete.
+    /// </summary>
+    /// <param name="entity">entity.</param>
+    void Undelete(TEntity entity);
 }

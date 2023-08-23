@@ -1,16 +1,15 @@
-﻿using Blog.Web.ViewModels.AspNetUser;
-using System.Collections.Generic;
+﻿namespace BLog.Web.ViewModels.AspNetUser;
 
-namespace BLog.Web.ViewModels.AspNetUser
+using System.Collections.Generic;
+using Blog.Web.ViewModels.AspNetUser;
+
+/// <summary>
+/// User collection view model
+/// </summary>
+public class UserCollectionViewModel
 {
     /// <summary>
-    /// User collection view model
+    /// Gets or sets users.
     /// </summary>
-    public class UserCollectionViewModel
-    {
-        /// <summary>
-        /// Gets or sets users.
-        /// </summary>
-        public IList<UserItemViewModel> Users { get; set; }
-    }
+    public IList<UserItemViewModel> Users { get; set; }
 }

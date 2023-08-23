@@ -2,18 +2,17 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.ControllerContext
-{
-    using Blog.Data.Models;
+namespace Blog.Services.ControllerContext;
 
+using Data.Models;
+
+/// <summary>
+/// Controller context interface.
+/// </summary>
+public interface IControllerContext
+{
     /// <summary>
-    /// Controller context interface.
+    /// Gets or sets current user.
     /// </summary>
-    public interface IControllerContext
-    {
-        /// <summary>
-        /// Gets or sets current user.
-        /// </summary>
-        ApplicationUser CurrentUser { get; set; }
-    }
+    ApplicationUser CurrentUser { get; set; }
 }

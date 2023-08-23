@@ -1,0 +1,30 @@
+<div class="table-responsive">
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0" *ngIf="isLoaded">
+        <thead>
+            <tr>
+                <th><b>Тег:</b></th>
+                <th><b>Пости:</b></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th><b>Тег:</b></th>
+                <th><b>Пости:</b></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        <tbody>
+            <tr *ngFor="let tag of tags">
+                <td><a [routerLink]="['/admin/posts/show', tag.id]">{{tag.title}}</a></td>
+                <td>10</td>
+                <td class="actions" data-th="">
+                    <a class="btn btn-primary" [routerLink]="['admin/tags/edit', tag.id]"><i class="fa fa-edit"></i></a>
+                    <button type="button" class="btn btn-sm text-white btn-danger" id="post.Post.Id" (click)="deleteAction(tag)" data-toggle="modal" data-target="#delete-post">
+                    <i class="fa fa-trash"></i>
+                </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

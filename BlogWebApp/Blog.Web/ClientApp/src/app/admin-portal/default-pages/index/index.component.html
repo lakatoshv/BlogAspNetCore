@@ -1,0 +1,81 @@
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="#">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">Overview</li>
+    </ol>
+
+    <app-icons-card></app-icons-card>
+
+    <app-posts-activity-chart></app-posts-activity-chart>
+
+    <!-- DataTables Example -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a [routerLink]="['posts']" class="navbar-brand">Нові пости</a>
+                </li>
+                <li class="nav-item">
+                    <a [routerLink]="['posts']" class="navbar-brand">Усі пости</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <app-admin-posts-table></app-admin-posts-table>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+
+    <app-comments-activity-chart></app-comments-activity-chart>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a [routerLink]="['comments']" class="navbar-brand">Нові коментарі</a>
+                </li>
+                <li class="nav-item">
+                    <a [routerLink]="['comments']" class="navbar-brand">Усі коментарі</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <app-admin-comments-table></app-admin-comments-table>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+
+    <app-users-activity-chart></app-users-activity-chart>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a [routerLink]="['posts']" class="navbar-brand">Користувачі</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+
+    <app-tags-activity-chart></app-tags-activity-chart>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a [routerLink]="['tags']" class="navbar-brand">Теги</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <app-admin-tags-table></app-admin-tags-table>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+</div>

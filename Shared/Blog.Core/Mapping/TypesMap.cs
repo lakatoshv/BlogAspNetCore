@@ -2,23 +2,22 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Core.Mapping
+namespace Blog.Core.Mapping;
+
+using System;
+
+/// <summary>
+/// Types map.
+/// </summary>
+internal class TypesMap
 {
-    using System;
+    /// <summary>
+    /// Gets or sets source.
+    /// </summary>
+    public Type Source { get; set; }
 
     /// <summary>
-    /// Types map.
+    /// Gets or sets destination.
     /// </summary>
-    internal class TypesMap
-    {
-        /// <summary>
-        /// Gets or sets source.
-        /// </summary>
-        public Type Source { get; set; }
-
-        /// <summary>
-        /// Gets or sets destination.
-        /// </summary>
-        public Type Destination { get; set; }
-    }
+    public Type Destination { get; set; }
 }

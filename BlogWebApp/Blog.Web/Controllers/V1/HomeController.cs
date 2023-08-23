@@ -1,10 +1,4 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
-using IdentityModel.Client;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-namespace Blog.Web.Controllers.V1
+﻿namespace Blog.Web.Controllers.V1
 {
     /*
     public class HomeController : BaseController

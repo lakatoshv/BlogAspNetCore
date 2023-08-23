@@ -1,31 +1,30 @@
-﻿namespace Blog.Web.StartupConfigureServicesInstallers
+﻿namespace Blog.Web.StartupConfigureServicesInstallers;
+
+using System;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Data;
+using HealthChecks;
+
+/// <summary>
+/// Health check installer.
+/// </summary>
+/// <seealso cref="IInstaller" />
+public class HealthCheckInstaller : IInstaller
 {
-    using System;
-    using Blog.Data;
-    using Blog.Web.HealthChecks;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Diagnostics.HealthChecks;
-
-    /// <summary>
-    /// Health check installer.
-    /// </summary>
-    /// <seealso cref="IInstaller" />
-    public class HealthCheckInstaller : IInstaller
+    public void InstallServices(IServiceCollection services, IConfiguration configuration)
     {
-        public void InstallServices(IServiceCollection services, IConfiguration configuration)
+        services.AddHealthChecks()
+            .AddDbContextCheck<ApplicationDbContext>();
+        // .AddCheck<RedisHealthCheck>("Redis");
+
+        services.Configure<HealthCheckPublisherOptions>(options =>
         {
-            services.AddHealthChecks()
-                .AddDbContextCheck<ApplicationDbContext>();
-                // .AddCheck<RedisHealthCheck>("Redis");
+            options.Delay = TimeSpan.FromSeconds(2);
+            options.Predicate = (check) => check.Tags.Contains("ready");
+        });
 
-            services.Configure<HealthCheckPublisherOptions>(options =>
-            {
-                options.Delay = TimeSpan.FromSeconds(2);
-                options.Predicate = (check) => check.Tags.Contains("ready");
-            });
-
-            services.AddSingleton<IHealthCheckPublisher, ReadinessPublisher>();
-        }
+        services.AddSingleton<IHealthCheckPublisher, ReadinessPublisher>();
     }
 }

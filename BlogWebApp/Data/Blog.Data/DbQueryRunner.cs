@@ -2,40 +2,39 @@
 // Copyright (c) Blog. All rights reserved.
 // </copyright>
 
-namespace Blog.Data
+namespace Blog.Data;
+
+using System;
+using Core;
+
+/// <summary>
+/// Database query runner.
+/// </summary>
+public class DbQueryRunner : IDbQueryRunner
 {
-    using System;
-    using Core;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DbQueryRunner"/> class.
+    /// </summary>
+    /// <param name="context">context.</param>
+    public DbQueryRunner(ApplicationDbContext context)
+    {
+        this.Context = context ?? throw new ArgumentNullException(nameof(context));
+    }
 
     /// <summary>
-    /// Database query runner.
+    /// Gets or sets context.
     /// </summary>
-    public class DbQueryRunner : IDbQueryRunner
+    public ApplicationDbContext Context { get; set; }
+
+    /// <inheritdoc cref="IDbQueryRunner"/>
+    public void RunQuery(string query, params object[] parameters)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DbQueryRunner"/> class.
-        /// </summary>
-        /// <param name="context">context.</param>
-        public DbQueryRunner(ApplicationDbContext context)
-        {
-            this.Context = context ?? throw new ArgumentNullException(nameof(context));
-        }
+        //this.Context.Database.ExecuteSqlCommand(query, parameters);
+    }
 
-        /// <summary>
-        /// Gets or sets context.
-        /// </summary>
-        public ApplicationDbContext Context { get; set; }
-
-        /// <inheritdoc cref="IDbQueryRunner"/>
-        public void RunQuery(string query, params object[] parameters)
-        {
-            //this.Context.Database.ExecuteSqlCommand(query, parameters);
-        }
-
-        /// <inheritdoc cref="IDisposable"/>
-        public void Dispose()
-        {
-            this.Context?.Dispose();
-        }
+    /// <inheritdoc cref="IDisposable"/>
+    public void Dispose()
+    {
+        this.Context?.Dispose();
     }
 }

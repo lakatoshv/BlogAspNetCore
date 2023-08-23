@@ -2,86 +2,85 @@
 // Copyright (c) BLog. All rights reserved.
 // </copyright>
 
-namespace Blog.Data
+namespace Blog.Data;
+
+using System;
+using System.Linq;
+using Blog.Core;
+using Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+
+/// <summary>
+/// Application database context seeder.
+/// </summary>
+public static class ApplicationDbContextSeeder
 {
-    using System;
-    using System.Linq;
-    using Blog.Core;
-    using Models;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.Extensions.DependencyInjection;
+    /// <summary>
+    /// Seed data.
+    /// </summary>
+    /// <param name="dbContext">dbContext.</param>
+    /// <param name="serviceProvider">serviceProvider.</param>
+    public static void Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
+    {
+        if (dbContext == null)
+        {
+            throw new ArgumentNullException(nameof(dbContext));
+        }
+
+        if (serviceProvider == null)
+        {
+            throw new ArgumentNullException(nameof(serviceProvider));
+        }
+
+        var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+        Seed(dbContext, roleManager);
+    }
 
     /// <summary>
-    /// Application database context seeder.
+    /// Seed data.
     /// </summary>
-    public static class ApplicationDbContextSeeder
+    /// <param name="dbContext">dbContext.</param>
+    /// <param name="roleManager">roleManager.</param>
+    public static void Seed(ApplicationDbContext dbContext, RoleManager<ApplicationRole> roleManager)
     {
-        /// <summary>
-        /// Seed data.
-        /// </summary>
-        /// <param name="dbContext">dbContext.</param>
-        /// <param name="serviceProvider">serviceProvider.</param>
-        public static void Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
+        if (dbContext == null)
         {
-            if (dbContext == null)
-            {
-                throw new ArgumentNullException(nameof(dbContext));
-            }
-
-            if (serviceProvider == null)
-            {
-                throw new ArgumentNullException(nameof(serviceProvider));
-            }
-
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-            Seed(dbContext, roleManager);
+            throw new ArgumentNullException(nameof(dbContext));
         }
 
-        /// <summary>
-        /// Seed data.
-        /// </summary>
-        /// <param name="dbContext">dbContext.</param>
-        /// <param name="roleManager">roleManager.</param>
-        public static void Seed(ApplicationDbContext dbContext, RoleManager<ApplicationRole> roleManager)
+        if (roleManager == null)
         {
-            if (dbContext == null)
-            {
-                throw new ArgumentNullException(nameof(dbContext));
-            }
-
-            if (roleManager == null)
-            {
-                throw new ArgumentNullException(nameof(roleManager));
-            }
-
-            SeedRoles(roleManager);
+            throw new ArgumentNullException(nameof(roleManager));
         }
 
-        /// <summary>
-        /// Seed roles.
-        /// </summary>
-        /// <param name="roleManager">roleManager.</param>
-        private static void SeedRoles(RoleManager<ApplicationRole> roleManager)
-        {
-            SeedRole(GlobalConstants.AdministratorRoleName, roleManager);
-        }
+        SeedRoles(roleManager);
+    }
 
-        /// <summary>
-        /// Seed role.
-        /// </summary>
-        /// <param name="roleName">roleName.</param>
-        /// <param name="roleManager">roleManager.</param>
-        private static void SeedRole(string roleName, RoleManager<ApplicationRole> roleManager)
+    /// <summary>
+    /// Seed roles.
+    /// </summary>
+    /// <param name="roleManager">roleManager.</param>
+    private static void SeedRoles(RoleManager<ApplicationRole> roleManager)
+    {
+        SeedRole(GlobalConstants.AdministratorRoleName, roleManager);
+    }
+
+    /// <summary>
+    /// Seed role.
+    /// </summary>
+    /// <param name="roleName">roleName.</param>
+    /// <param name="roleManager">roleManager.</param>
+    private static void SeedRole(string roleName, RoleManager<ApplicationRole> roleManager)
+    {
+        var role = roleManager.FindByNameAsync(roleName).GetAwaiter().GetResult();
+        if (role == null)
         {
-            var role = roleManager.FindByNameAsync(roleName).GetAwaiter().GetResult();
-            if (role == null)
+            var result = roleManager.CreateAsync(new ApplicationRole(roleName)).GetAwaiter().GetResult();
+
+            if (!result.Succeeded)
             {
-                var result = roleManager.CreateAsync(new ApplicationRole(roleName)).GetAwaiter().GetResult();
-
-                if (!result.Succeeded)
-                {
-                    throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
-                }
+                throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
             }
         }
     }

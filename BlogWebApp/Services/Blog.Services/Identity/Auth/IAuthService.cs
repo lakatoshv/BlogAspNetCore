@@ -2,69 +2,68 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Identity.Auth
+namespace Blog.Services.Identity.Auth;
+
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Data.Models;
+
+/// <summary>
+/// Auth service.
+/// </summary>
+public interface IAuthService
 {
-    using System.Security.Claims;
-    using System.Threading.Tasks;
-    using Blog.Data.Models;
-    using Microsoft.AspNetCore.Identity;
+    /// <summary>
+    /// Get jwt from database.
+    /// </summary>
+    /// <param name="username">username.</param>
+    /// <param name="password">password.</param>
+    /// <returns>string.</returns>
+    string GetJwt(string username, string password);
 
     /// <summary>
-    /// Auth service.
+    /// Async get jwt from database.
     /// </summary>
-    public interface IAuthService
-    {
-        /// <summary>
-        /// Get jwt from database.
-        /// </summary>
-        /// <param name="username">username.</param>
-        /// <param name="password">password.</param>
-        /// <returns>string.</returns>
-        string GetJwt(string username, string password);
+    /// <param name="username">username.</param>
+    /// <param name="password">password.</param>
+    /// <returns>Task.</returns>
+    Task<string> GetJwtAsync(string username, string password);
 
-        /// <summary>
-        /// Async get jwt from database.
-        /// </summary>
-        /// <param name="username">username.</param>
-        /// <param name="password">password.</param>
-        /// <returns>Task.</returns>
-        Task<string> GetJwtAsync(string username, string password);
+    /// <summary>
+    /// Async refresh token.
+    /// </summary>
+    /// <param name="username">username.</param>
+    /// <returns>Task.</returns>
+    Task<string> RefreshTokenAsync(string username);
 
-        /// <summary>
-        /// Async refresh token.
-        /// </summary>
-        /// <param name="username">username.</param>
-        /// <returns>Task.</returns>
-        Task<string> RefreshTokenAsync(string username);
+    /// <summary>
+    /// Get user by user name.
+    /// </summary>
+    /// <param name="username">username.</param>
+    /// <returns>Task.</returns>
+    Task<ApplicationUser> GetByUserNameAsync(string username);
 
-        /// <summary>
-        /// Get user by user name.
-        /// </summary>
-        /// <param name="username">username.</param>
-        /// <returns>Task.</returns>
-        Task<ApplicationUser> GetByUserNameAsync(string username);
+    /// <summary>
+    /// Async verify two factor token.
+    /// </summary>
+    /// <param name="username">username.</param>
+    /// <param name="authenticatorCode">authenticatorCode.</param>
+    /// <returns>Task.</returns>
+    Task<bool> VerifyTwoFactorTokenAsync(string username, string authenticatorCode);
 
-        /// <summary>
-        /// Async verify two factor token.
-        /// </summary>
-        /// <param name="username">username.</param>
-        /// <param name="authenticatorCode">authenticatorCode.</param>
-        /// <returns>Task.</returns>
-        Task<bool> VerifyTwoFactorTokenAsync(string username, string authenticatorCode);
+    /// <summary>
+    /// Async redeem two factor recovery code.
+    /// </summary>
+    /// <param name="username">username.</param>
+    /// <param name="code">code.</param>
+    /// <returns>Task.</returns>
+    Task<IdentityResult> RedeemTwoFactorRecoveryCodeAsync(string username, string code);
 
-        /// <summary>
-        /// Async redeem two factor recovery code.
-        /// </summary>
-        /// <param name="username">username.</param>
-        /// <param name="code">code.</param>
-        /// <returns>Task.</returns>
-        Task<IdentityResult> RedeemTwoFactorRecoveryCodeAsync(string username, string code);
-
-        /// <summary>
-        /// Get claims identity without password.
-        /// </summary>
-        /// <param name="userName">userName.</param>
-        /// <returns>Task.</returns>
-        Task<ClaimsIdentity> GetClaimsIdentityWithoutPassword(string userName);
-    }
+    /// <summary>
+    /// Get claims identity without password.
+    /// </summary>
+    /// <param name="userName">userName.</param>
+    /// <returns>Task.</returns>
+    Task<ClaimsIdentity> GetClaimsIdentityWithoutPassword(string userName);
 }
