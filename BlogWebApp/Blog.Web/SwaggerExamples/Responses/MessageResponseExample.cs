@@ -1,63 +1,60 @@
-﻿using Blog.Contracts.V1.Responses;
-using Blog.Contracts.V1.Responses.UsersResponses;
-using Blog.Core.Consts;
-using Blog.Core.Enums;
-using Microsoft.AspNetCore.Identity;
-using Swashbuckle.AspNetCore.Filters;
+﻿namespace Blog.Web.SwaggerExamples.Responses;
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Swashbuckle.AspNetCore.Filters;
+using Blog.Contracts.V1.Responses;
+using Blog.Contracts.V1.Responses.UsersResponses;
+using Blog.Core.Consts;
+using Core.Enums;
 
-namespace Blog.Web.SwaggerExamples.Responses
+/// <summary>
+/// Message response example.
+/// </summary>
+/// <seealso cref="IExamplesProvider{MessageResponse}" />
+public class MessageResponseExample : IExamplesProvider<MessageResponse>
 {
-    /// <summary>
-    /// Message response example.
-    /// </summary>
-    /// <seealso cref="IExamplesProvider{MessageResponse}" />
-    public class MessageResponseExample : IExamplesProvider<MessageResponse>
+    /// <inheritdoc cref="IExamplesProvider{T}"/>
+    public MessageResponse GetExamples()
     {
-        /// <inheritdoc cref="IExamplesProvider{T}"/>
-        public MessageResponse GetExamples()
+        return new MessageResponse
         {
-            return new MessageResponse
+            SenderId = Guid.NewGuid().ToString(),
+            Sender = new ApplicationUserResponse
             {
-                SenderId = Guid.NewGuid().ToString(),
-                Sender = new ApplicationUserResponse
+                FirstName = SwaggerExamplesConsts.AccountExample.FirstName,
+                LastName = SwaggerExamplesConsts.AccountExample.LastName,
+                Email = SwaggerExamplesConsts.AccountExample.Email,
+                EmailConfirmed = true,
+                Roles = new List<IdentityUserRole<string>>
                 {
-                    FirstName = SwaggerExamplesConsts.AccountExample.FirstName,
-                    LastName = SwaggerExamplesConsts.AccountExample.LastName,
-                    Email = SwaggerExamplesConsts.AccountExample.Email,
-                    EmailConfirmed = true,
-                    Roles = new List<IdentityUserRole<string>>
+                    new IdentityUserRole<string>
                     {
-                        new IdentityUserRole<string>
-                        {
-                            RoleId = Guid.NewGuid().ToString(),
-                        }
+                        RoleId = Guid.NewGuid().ToString(),
                     }
-                },
+                }
+            },
 
-                RecipientId = Guid.NewGuid().ToString(),
-                Recipient = new ApplicationUserResponse
+            RecipientId = Guid.NewGuid().ToString(),
+            Recipient = new ApplicationUserResponse
+            {
+                FirstName = SwaggerExamplesConsts.AccountExample.FirstName,
+                LastName = SwaggerExamplesConsts.AccountExample.LastName,
+                Email = SwaggerExamplesConsts.AccountExample.Email,
+                EmailConfirmed = true,
+                Roles = new List<IdentityUserRole<string>>
                 {
-                    FirstName = SwaggerExamplesConsts.AccountExample.FirstName,
-                    LastName = SwaggerExamplesConsts.AccountExample.LastName,
-                    Email = SwaggerExamplesConsts.AccountExample.Email,
-                    EmailConfirmed = true,
-                    Roles = new List<IdentityUserRole<string>>
+                    new IdentityUserRole<string>
                     {
-                        new IdentityUserRole<string>
-                        {
-                            RoleId = Guid.NewGuid().ToString(),
-                        }
+                        RoleId = Guid.NewGuid().ToString(),
                     }
-                },
+                }
+            },
 
-                Subject = SwaggerExamplesConsts.MessageResponseExample.Subject,
-                Body = SwaggerExamplesConsts.MessageResponseExample.Body,
-                MessageType = MessageType.MessageFoAdmins,
-            };
-        }
+            Subject = SwaggerExamplesConsts.MessageResponseExample.Subject,
+            Body = SwaggerExamplesConsts.MessageResponseExample.Body,
+            MessageType = MessageType.MessageFoAdmins,
+        };
     }
 }

@@ -1,18 +1,17 @@
-﻿namespace BLog.Web.ViewModels.Manage
+﻿namespace BLog.Web.ViewModels.Manage;
+
+/// <summary>
+/// Remove login view model.
+/// </summary>
+public class RemoveLoginViewModel
 {
     /// <summary>
-    /// Remove login view model.
+    /// Gets or sets loginProvider.
     /// </summary>
-    public class RemoveLoginViewModel
-    {
-        /// <summary>
-        /// Gets or sets loginProvider.
-        /// </summary>
-        public string LoginProvider { get; set; }
+    public string LoginProvider { get; set; }
 
-        /// <summary>
-        /// Gets or sets providerKey.
-        /// </summary>
-        public string ProviderKey { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets providerKey.
+    /// </summary>
+    public string ProviderKey { get; set; }
 }

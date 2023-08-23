@@ -1,24 +1,23 @@
-﻿using Blog.Data.Models;
-using Blog.Contracts.V1.Requests.MessagesRequests;
-using Blog.Contracts.V1.Responses;
-using Profile = AutoMapper.Profile;
+﻿namespace Blog.Web.Mappers;
 
-namespace Blog.Web.Mappers
+using Profile = AutoMapper.Profile;
+using Data.Models;
+using Contracts.V1.Requests.MessagesRequests;
+using Contracts.V1.Responses;
+
+/// <summary>
+/// View model to entity mapping message.
+/// </summary>
+/// <seealso cref="Profile" />
+public class ViewModelToEntityMappingMessage : Profile
 {
     /// <summary>
-    /// View model to entity mapping message.
+    /// Initializes a new instance of the <see cref="ViewModelToEntityMappingMessage"/> class.
     /// </summary>
-    /// <seealso cref="Profile" />
-    public class ViewModelToEntityMappingMessage : Profile
+    public ViewModelToEntityMappingMessage()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ViewModelToEntityMappingMessage"/> class.
-        /// </summary>
-        public ViewModelToEntityMappingMessage()
-        {
-            CreateMap<CreateMessageRequest, Message>();
-            CreateMap<UpdateMessageRequest, Message>();
-            CreateMap<Message, MessageResponse>();
-        }
+        CreateMap<CreateMessageRequest, Message>();
+        CreateMap<UpdateMessageRequest, Message>();
+        CreateMap<Message, MessageResponse>();
     }
 }

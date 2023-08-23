@@ -1,21 +1,20 @@
-﻿namespace BLog.Web.ViewModels.Manage
+﻿namespace BLog.Web.ViewModels.Manage;
+
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+/// <summary>
+/// Configure two factor view model.
+/// </summary>
+public class ConfigureTwoFactorViewModel
 {
-    using System.Collections.Generic;
-    using Microsoft.AspNetCore.Mvc.Rendering;
+    /// <summary>
+    /// Gets or sets selectedProvider.
+    /// </summary>
+    public string SelectedProvider { get; set; }
 
     /// <summary>
-    /// Configure two factor view model.
+    /// Gets or sets providers.
     /// </summary>
-    public class ConfigureTwoFactorViewModel
-    {
-        /// <summary>
-        /// Gets or sets selectedProvider.
-        /// </summary>
-        public string SelectedProvider { get; set; }
-
-        /// <summary>
-        /// Gets or sets providers.
-        /// </summary>
-        public ICollection<SelectListItem> Providers { get; set; }
-    }
+    public ICollection<SelectListItem> Providers { get; set; }
 }

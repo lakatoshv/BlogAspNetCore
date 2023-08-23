@@ -1,33 +1,32 @@
-﻿namespace Blog.Web.StartupConfigureServicesInstallers
+﻿namespace Blog.Web.StartupConfigureServicesInstallers;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Core.Configuration;
+
+/// <summary>
+/// Cache installer.
+/// </summary>
+/// <seealso cref="IInstaller" />
+public class CacheInstaller : IInstaller
 {
-    using Blog.Core.Configuration;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-
     /// <summary>
-    /// Cache installer.
+    /// Installs the services.
     /// </summary>
-    /// <seealso cref="IInstaller" />
-    public class CacheInstaller : IInstaller
+    /// <param name="services">The services.</param>
+    /// <param name="configuration">The configuration.</param>
+    public void InstallServices(IServiceCollection services, IConfiguration configuration)
     {
-        /// <summary>
-        /// Installs the services.
-        /// </summary>
-        /// <param name="services">The services.</param>
-        /// <param name="configuration">The configuration.</param>
-        public void InstallServices(IServiceCollection services, IConfiguration configuration)
+        var redisCacheSettings = new RedisCacheConfiguration();
+        configuration.GetSection(nameof(RedisCacheConfiguration)).Bind(redisCacheSettings);
+        services.AddSingleton(redisCacheSettings);
+
+        if (!redisCacheSettings.Enabled)
         {
-            var redisCacheSettings = new RedisCacheConfiguration();
-            configuration.GetSection(nameof(RedisCacheConfiguration)).Bind(redisCacheSettings);
-            services.AddSingleton(redisCacheSettings);
-
-            if (!redisCacheSettings.Enabled)
-            {
-                return;
-            }
-
-            // services.AddSingleton<StackExchange.Redis.IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(redisCacheSettings.ConnectionString));
-            services.AddStackExchangeRedisCache(options => options.Configuration = redisCacheSettings.ConnectionString);
+            return;
         }
+
+        // services.AddSingleton<StackExchange.Redis.IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(redisCacheSettings.ConnectionString));
+        services.AddStackExchangeRedisCache(options => options.Configuration = redisCacheSettings.ConnectionString);
     }
 }

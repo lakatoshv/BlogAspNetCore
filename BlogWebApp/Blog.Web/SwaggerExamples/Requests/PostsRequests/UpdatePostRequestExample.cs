@@ -1,39 +1,38 @@
-﻿using Blog.Contracts.V1.Requests.PostsRequests;
-using Blog.Contracts.V1.Requests.TagsRequests;
-using Blog.Core.Consts;
+﻿namespace Blog.Web.SwaggerExamples.Requests.PostsRequests;
+
 using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
+using Blog.Contracts.V1.Requests.PostsRequests;
+using Blog.Contracts.V1.Requests.TagsRequests;
+using Core.Consts;
 
-namespace Blog.Web.SwaggerExamples.Requests.PostsRequests
+/// <summary>
+/// Update post request example.
+/// </summary>
+/// <seealso cref="IExamplesProvider{UpdatePostRequest}" />
+public class UpdatePostRequestExample : IExamplesProvider<UpdatePostRequest>
 {
-    /// <summary>
-    /// Update post request example.
-    /// </summary>
-    /// <seealso cref="IExamplesProvider{UpdatePostRequest}" />
-    public class UpdatePostRequestExample : IExamplesProvider<UpdatePostRequest>
+    /// <inheritdoc cref="IExamplesProvider{T}"/>
+    public UpdatePostRequest GetExamples()
     {
-        /// <inheritdoc cref="IExamplesProvider{T}"/>
-        public UpdatePostRequest GetExamples()
+        return new UpdatePostRequest
         {
-            return new UpdatePostRequest
+            Id = 1,
+            Title = SwaggerExamplesConsts.UpdatePostRequestExample.Title,
+            Description = SwaggerExamplesConsts.UpdatePostRequestExample.Description,
+            Content = SwaggerExamplesConsts.UpdatePostRequestExample.Content,
+            ImageUrl = SwaggerExamplesConsts.UpdatePostRequestExample.ImageUrl,
+            AuthorId = Guid.NewGuid().ToString(),
+            Seen = 10,
+            Likes = 10,
+            Dislikes = 10,
+            Tags = new List<TagRequest>
             {
-                Id = 1,
-                Title = SwaggerExamplesConsts.UpdatePostRequestExample.Title,
-                Description = SwaggerExamplesConsts.UpdatePostRequestExample.Description,
-                Content = SwaggerExamplesConsts.UpdatePostRequestExample.Content,
-                ImageUrl = SwaggerExamplesConsts.UpdatePostRequestExample.ImageUrl,
-                AuthorId = Guid.NewGuid().ToString(),
-                Seen = 10,
-                Likes = 10,
-                Dislikes = 10,
-                Tags = new List<TagRequest>
-                {
-                    new TagRequest { Title = SwaggerExamplesConsts.UpdateTagRequestExample.Title + "1" },
-                    new TagRequest { Title = SwaggerExamplesConsts.UpdateTagRequestExample.Title + "2" },
-                    new TagRequest { Title = SwaggerExamplesConsts.UpdateTagRequestExample.Title + "3" },
-                },
-            };
-        }
+                new TagRequest { Title = SwaggerExamplesConsts.UpdateTagRequestExample.Title + "1" },
+                new TagRequest { Title = SwaggerExamplesConsts.UpdateTagRequestExample.Title + "2" },
+                new TagRequest { Title = SwaggerExamplesConsts.UpdateTagRequestExample.Title + "3" },
+            },
+        };
     }
 }

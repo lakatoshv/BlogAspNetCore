@@ -1,27 +1,25 @@
-﻿namespace Blog.Web.StartupConfigureServicesInstallers
+﻿namespace Blog.Web.StartupConfigureServicesInstallers;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System.Text;
+
+/// <summary>
+/// ApplicationBaseInstaller.
+/// </summary>
+/// <seealso cref="IInstaller" />
+public class ApplicationBaseInstaller : IInstaller
 {
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using System.Text;
-    using AutoMapper;
-
-    /// <summary>
-    /// ApplicationBaseInstaller.
-    /// </summary>
-    /// <seealso cref="IInstaller" />
-    public class ApplicationBaseInstaller : IInstaller
+    /// <inheritdoc cref="IInstaller"/>
+    public void InstallServices(IServiceCollection services, IConfiguration configuration)
     {
-        /// <inheritdoc cref="IInstaller"/>
-        public void InstallServices(IServiceCollection services, IConfiguration configuration)
-        {
-            // file upload dependency
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        // file upload dependency
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            services.AddAutoMapper(typeof(Program));
-            services.AddOptions();
-            services.AddLocalization();
-            services.AddMemoryCache();
-            services.AddResponseCaching();
-        }
+        services.AddAutoMapper(typeof(Program));
+        services.AddOptions();
+        services.AddLocalization();
+        services.AddMemoryCache();
+        services.AddResponseCaching();
     }
 }

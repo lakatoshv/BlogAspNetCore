@@ -1,56 +1,55 @@
-﻿namespace Blog.Web.HealthChecks
+﻿namespace Blog.Web.HealthChecks;
+
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Logging;
+
+/// <summary>
+/// Readiness publisher.
+/// </summary>
+/// <seealso cref="IHealthCheckPublisher" />
+public class ReadinessPublisher : IHealthCheckPublisher
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.Diagnostics.HealthChecks;
-    using Microsoft.Extensions.Logging;
+    /// <summary>
+    /// The logger.
+    /// </summary>
+    private readonly ILogger _logger;
 
     /// <summary>
-    /// Readiness publisher.
+    /// Initializes a new instance of the <see cref="ReadinessPublisher"/> class.
     /// </summary>
-    /// <seealso cref="IHealthCheckPublisher" />
-    public class ReadinessPublisher : IHealthCheckPublisher
+    /// <param name="logger">The logger.</param>
+    public ReadinessPublisher(ILogger<ReadinessPublisher> logger)
     {
-        /// <summary>
-        /// The logger.
-        /// </summary>
-        private readonly ILogger _logger;
+        _logger = logger;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ReadinessPublisher"/> class.
-        /// </summary>
-        /// <param name="logger">The logger.</param>
-        public ReadinessPublisher(ILogger<ReadinessPublisher> logger)
+    /// <summary>
+    /// Publishes the provided <paramref name="report" />.
+    /// </summary>
+    /// <param name="report">The <see cref="T:Microsoft.Extensions.Diagnostics.HealthChecks.HealthReport" />. The result of executing a set of health checks.</param>
+    /// <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken" />.</param>
+    /// <returns>
+    /// A <see cref="T:System.Threading.Tasks.Task" /> which will complete when publishing is complete.
+    /// </returns>
+    public Task PublishAsync(HealthReport report,
+        CancellationToken cancellationToken)
+    {
+        if (report.Status == HealthStatus.Healthy)
         {
-            _logger = logger;
+            _logger.LogInformation("{Timestamp} Readiness Probe Status: {Result}",
+                DateTime.UtcNow, report.Status);
+        }
+        else
+        {
+            _logger.LogError("{Timestamp} Readiness Probe Status: {Result}",
+                DateTime.UtcNow, report.Status);
         }
 
-        /// <summary>
-        /// Publishes the provided <paramref name="report" />.
-        /// </summary>
-        /// <param name="report">The <see cref="T:Microsoft.Extensions.Diagnostics.HealthChecks.HealthReport" />. The result of executing a set of health checks.</param>
-        /// <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken" />.</param>
-        /// <returns>
-        /// A <see cref="T:System.Threading.Tasks.Task" /> which will complete when publishing is complete.
-        /// </returns>
-        public Task PublishAsync(HealthReport report,
-            CancellationToken cancellationToken)
-        {
-            if (report.Status == HealthStatus.Healthy)
-            {
-                _logger.LogInformation("{Timestamp} Readiness Probe Status: {Result}",
-                    DateTime.UtcNow, report.Status);
-            }
-            else
-            {
-                _logger.LogError("{Timestamp} Readiness Probe Status: {Result}",
-                    DateTime.UtcNow, report.Status);
-            }
+        cancellationToken.ThrowIfCancellationRequested();
 
-            cancellationToken.ThrowIfCancellationRequested();
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

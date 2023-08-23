@@ -1,35 +1,34 @@
-﻿using Blog.Contracts.V1.Responses.UsersResponses;
-using Blog.Core.Consts;
-using Microsoft.AspNetCore.Identity;
-using Swashbuckle.AspNetCore.Filters;
+﻿namespace Blog.Web.SwaggerExamples.Responses.UsersResponses;
+
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Swashbuckle.AspNetCore.Filters;
+using Blog.Contracts.V1.Responses.UsersResponses;
+using Core.Consts;
 
-namespace Blog.Web.SwaggerExamples.Responses.UsersResponses
+/// <summary>
+/// Application user response example.
+/// </summary>
+/// <seealso cref="IExamplesProvider{ApplicationUserResponse}" />
+public class ApplicationUserResponseExample : IExamplesProvider<ApplicationUserResponse>
 {
-    /// <summary>
-    /// Application user response example.
-    /// </summary>
-    /// <seealso cref="IExamplesProvider{ApplicationUserResponse}" />
-    public class ApplicationUserResponseExample : IExamplesProvider<ApplicationUserResponse>
+    /// <inheritdoc cref="IExamplesProvider{T}"/>
+    public ApplicationUserResponse GetExamples()
     {
-        /// <inheritdoc cref="IExamplesProvider{T}"/>
-        public ApplicationUserResponse GetExamples()
+        return new ApplicationUserResponse
         {
-            return new ApplicationUserResponse
+            FirstName = SwaggerExamplesConsts.AccountExample.FirstName,
+            LastName = SwaggerExamplesConsts.AccountExample.LastName,
+            Email = SwaggerExamplesConsts.AccountExample.Email,
+            EmailConfirmed = true,
+            Roles = new List<IdentityUserRole<string>>
             {
-                FirstName = SwaggerExamplesConsts.AccountExample.FirstName,
-                LastName = SwaggerExamplesConsts.AccountExample.LastName,
-                Email = SwaggerExamplesConsts.AccountExample.Email,
-                EmailConfirmed = true,
-                Roles = new List<IdentityUserRole<string>>
+                new IdentityUserRole<string>
                 {
-                    new IdentityUserRole<string>
-                    {
-                        RoleId = Guid.NewGuid().ToString(),
-                    }
+                    RoleId = Guid.NewGuid().ToString(),
                 }
-            };
-        }
+            }
+        };
     }
 }

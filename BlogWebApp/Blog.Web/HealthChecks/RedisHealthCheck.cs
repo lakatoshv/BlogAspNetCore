@@ -1,10 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using StackExchange.Redis;
-
-namespace Blog.Web.HealthChecks
+﻿namespace Blog.Web.HealthChecks
 {
     /*
     public class RedisHealthCheck : IHealthCheck

@@ -1,16 +1,15 @@
-﻿namespace BLog.Web.ViewModels.Settings
-{
-    using Blog.Web.ViewModels.Settings;
-    using System.Collections.Generic;
+﻿namespace BLog.Web.ViewModels.Settings;
 
+using System.Collections.Generic;
+using Blog.Web.ViewModels.Settings;
+
+/// <summary>
+/// Settings list view model.
+/// </summary>
+public class SettingsListViewModel
+{
     /// <summary>
-    /// Settings list view model.
+    /// Gets or sets settings.
     /// </summary>
-    public class SettingsListViewModel
-    {
-        /// <summary>
-        /// Gets or sets settings.
-        /// </summary>
-        public IEnumerable<SettingViewModel> Settings { get; set; }
-    }
+    public IEnumerable<SettingViewModel> Settings { get; set; }
 }

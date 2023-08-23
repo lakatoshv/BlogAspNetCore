@@ -1,13 +1,12 @@
-﻿namespace BLog.Web.ViewModels.Manage
+﻿namespace BLog.Web.ViewModels.Manage;
+
+/// <summary>
+/// Factor view model.
+/// </summary>
+public class FactorViewModel
 {
     /// <summary>
-    /// Factor view model.
+    /// Gets or sets purpose.
     /// </summary>
-    public class FactorViewModel
-    {
-        /// <summary>
-        /// Gets or sets purpose.
-        /// </summary>
-        public string Purpose { get; set; }
-    }
+    public string Purpose { get; set; }
 }
