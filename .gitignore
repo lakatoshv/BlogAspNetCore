@@ -87,3 +87,6 @@
 /BlogWebApp/Tests/Blog.UnitTests/bin/Debug/net8.0
 /Clients/BlogRazor/bin/Debug/net8.0
 /Clients/BlogBlazor/Shared/Blazor.Core/bin/Debug/net8.0
+/Clients/BlogWpf/.vs
+/Clients/BlogWpf/BlogWpf/bin/Debug
+/Clients/BlogWpf/BlogWpf/obj
