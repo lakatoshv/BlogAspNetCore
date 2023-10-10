@@ -19,7 +19,7 @@ public abstract class BaseDeletableModel<TKey> : BaseModel<TKey>, IDeletableEnti
     /// </summary>
     public bool IsDeleted { get; set; }
 
-    /// <summary> 
+    /// <summary>
     /// Gets or sets deleted on.
     /// </summary>
     public DateTime? DeletedOn { get; set; }
@@ -36,7 +36,7 @@ public abstract class BaseDeletableModel<TKey> : BaseModel<TKey>, IDeletableEnti
     }
 
     /// <summary>
-    /// OVerride !=.
+    /// Override !=.
     /// </summary>
     /// <param name="x">x.</param>
     /// <param name="y">y.</param>
