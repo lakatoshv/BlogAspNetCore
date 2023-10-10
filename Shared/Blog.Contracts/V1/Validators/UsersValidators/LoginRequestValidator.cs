@@ -10,7 +10,7 @@ namespace Blog.Contracts.V1.Validators.UsersValidators;
 public class LoginRequestValidator : AbstractValidator<LoginRequest>
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="CreateTagRequestValidator"/> class.
+    /// Initializes a new instance of the <see cref="LoginRequestValidator"/> class.
     /// </summary>
     public LoginRequestValidator()
     {

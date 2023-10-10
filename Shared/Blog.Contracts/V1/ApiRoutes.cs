@@ -79,7 +79,7 @@ public static class ApiRoutes
         /// <summary>
         /// The get comments by post.
         /// </summary>
-        public const string GetCommentsByPost = "get-comments-by-post/{id}";
+        public const string GetCommentsByPost = "get-comments-by-post/{id:int}";
 
         /// <summary>
         /// The get comments by filter.
@@ -99,12 +99,12 @@ public static class ApiRoutes
         /// <summary>
         /// The edit comment.
         /// </summary>
-        public const string EditComment = "{id}";
+        public const string EditComment = "{id:int}";
 
         /// <summary>
         /// The delete comment.
         /// </summary>
-        public const string DeleteComment = "{id}";
+        public const string DeleteComment = "{id:int}";
 
         /// <summary>
         /// The comments activity.
@@ -135,7 +135,7 @@ public static class ApiRoutes
         /// <summary>
         /// The show.
         /// </summary>
-        public const string Show = "show/{id}";
+        public const string Show = "show/{id:int}";
     }
 
     /// <summary>
@@ -161,17 +161,17 @@ public static class ApiRoutes
         /// <summary>
         /// The show.
         /// </summary>
-        public const string Show = "show/{id}";
+        public const string Show = "show/{id:int}";
 
         /// <summary>
         /// The like post.
         /// </summary>
-        public const string LikePost = "like/{id}";
+        public const string LikePost = "like/{id:int}";
 
         /// <summary>
         /// The dislike post.
         /// </summary>
-        public const string DislikePost = "dislike/{id}";
+        public const string DislikePost = "dislike/{id:int}";
 
         /// <summary>
         /// The posts activity.
@@ -213,12 +213,12 @@ public static class ApiRoutes
         /// <summary>
         /// The get available tags.
         /// </summary>
-        public const string GetAvailableTags = "get-available-tags/{postId}";
+        public const string GetAvailableTags = "get-available-tags/{postId:int}";
 
         /// <summary>
         /// The get tag.
         /// </summary>
-        public const string GetTag = "get-tag/{id}";
+        public const string GetTag = "get-tag/{id:int}";
 
         /// <summary>
         /// The create tag.
