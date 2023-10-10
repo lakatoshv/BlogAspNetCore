@@ -43,7 +43,7 @@ public class OperationResult<T> : OperationResult
 
             var metadata = this.Metadata;
 
-            return metadata == null || metadata.Type != MetadataType.Error;
+            return metadata is not { Type: MetadataType.Error };
         }
     }
 }

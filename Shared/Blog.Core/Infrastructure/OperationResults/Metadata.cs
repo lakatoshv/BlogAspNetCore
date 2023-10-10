@@ -13,7 +13,7 @@ using Interfaces;
 /// <seealso cref="IMetadataMessage" />
 /// <seealso cref="IHaveDataObject" />
 [Serializable]
-public class Metadata : IMetadataMessage, IHaveDataObject
+public class Metadata : IMetadataMessage
 {
     /// <summary>
     /// The source.

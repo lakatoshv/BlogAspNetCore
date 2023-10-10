@@ -13,21 +13,16 @@ using Helpers;
 /// <summary>
 /// Custom error handler. It allows to view error messages on UI.
 /// </summary>
-public class ErrorHandlingMiddleware
+/// <remarks>
+/// Initializes a new instance of the <see cref="ErrorHandlingMiddleware"/> class.
+/// </remarks>
+/// <param name="next">The next.</param>
+public class ErrorHandlingMiddleware(RequestDelegate next)
 {
     /// <summary>
     /// The next.
     /// </summary>
-    private readonly RequestDelegate _next;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ErrorHandlingMiddleware"/> class.
-    /// </summary>
-    /// <param name="next">The next.</param>
-    public ErrorHandlingMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
+    private readonly RequestDelegate _next = next;
 
     /// <summary>
     /// Invokes the specified context.
@@ -58,8 +53,8 @@ public class ErrorHandlingMiddleware
         {
             var result = JsonConvert.SerializeObject(ExceptionHelper.GetMessages(exception), Formatting.Indented);
 
-            return context.Response.WriteAsync(result?.Length > 4000 
-                ? "Error message to long. Please use DEBUG in method HandleExceptionAsync to handle a whole of text of the exception" 
+            return context.Response.WriteAsync(result?.Length > 4000
+                ? "Error message to long. Please use DEBUG in method HandleExceptionAsync to handle a whole of text of the exception"
                 : result);
         }
         catch

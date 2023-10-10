@@ -59,7 +59,7 @@ public abstract class OperationResult
     /// <typeparam name="TResult">The type of the result.</typeparam>
     /// <param name="result">The result.</param>
     /// <param name="error">The error.</param>
-    /// <returns></returns>
+    /// <returns>The TResult.</returns>
     public static OperationResult<TResult> CreateResult<TResult>(
         TResult result,
         Exception error)

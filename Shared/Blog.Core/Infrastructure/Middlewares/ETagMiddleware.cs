@@ -15,21 +15,16 @@ using Microsoft.Net.Http.Headers;
 /// ETag middleware from Mads Kristensen.
 /// See https://madskristensen.net/blog/send-etag-headers-in-aspnet-core/
 /// </summary>
-public class ETagMiddleware
+/// <remarks>
+/// Initializes a new instance of the <see cref="ETagMiddleware"/> class.
+/// </remarks>
+/// <param name="next">The next.</param>
+public class ETagMiddleware(RequestDelegate next)
 {
     /// <summary>
     /// The next
     /// </summary>
-    private readonly RequestDelegate _next;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ETagMiddleware"/> class.
-    /// </summary>
-    /// <param name="next">The next.</param>
-    public ETagMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
+    private readonly RequestDelegate _next = next;
 
     /// <summary>
     /// Invokes the asynchronous.

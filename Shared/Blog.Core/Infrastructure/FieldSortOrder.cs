@@ -47,9 +47,10 @@ public class FieldSortOrder<T> : ISortCriteria<T>
     /// <inheritdoc cref="ISortCriteria{T}" />
     public IOrderedQueryable<T> ApplyOrdering(IQueryable<T> qry, bool useThenBy)
     {
-        IOrderedQueryable<T> result;
         var descending = this.Direction == OrderType.Descending;
-        result = !useThenBy ? qry.OrderBy(this.Name, descending) : qry.ThenBy(this.Name, descending);
+        var result = useThenBy
+            ? qry.ThenBy(this.Name, descending)
+            : qry.OrderBy(this.Name, descending);
         return result;
     }
 }

@@ -83,26 +83,6 @@ public static class EnumHelper<T>
             .Select(obj => GetDisplayValue(Parse(obj)))
             .ToList();
 
-    private static string LookupResource(Type resourceManagerProvider, string resourceKey)
-    {
-        foreach (var staticProperty in resourceManagerProvider.GetProperties(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public))
-        {
-            if (staticProperty.PropertyType != typeof(System.Resources.ResourceManager))
-            {
-                continue;
-            }
-
-            var resourceManager = (System.Resources.ResourceManager)staticProperty.GetValue(null, null);
-
-            if (resourceManager != null)
-            {
-                return resourceManager.GetString(resourceKey);
-            }
-        }
-
-        return resourceKey; // Fallback with the key name
-    }
-
     /// <summary>
     /// Gets the display value.
     /// </summary>
@@ -129,5 +109,25 @@ public static class EnumHelper<T>
         }
 
         return (descriptionAttributes.Length > 0) ? descriptionAttributes[0].Name : value.ToString();
+    }
+
+    private static string LookupResource(Type resourceManagerProvider, string resourceKey)
+    {
+        foreach (var staticProperty in resourceManagerProvider.GetProperties(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public))
+        {
+            if (staticProperty.PropertyType != typeof(System.Resources.ResourceManager))
+            {
+                continue;
+            }
+
+            var resourceManager = (System.Resources.ResourceManager)staticProperty.GetValue(null, null);
+
+            if (resourceManager != null)
+            {
+                return resourceManager.GetString(resourceKey);
+            }
+        }
+
+        return resourceKey; // Fallback with the key name
     }
 }

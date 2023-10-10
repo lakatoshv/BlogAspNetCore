@@ -129,10 +129,7 @@ public static class OperationResultExtensions
     /// <exception cref="ArgumentNullException">Exception.</exception>
     public static string GetMetadataMessages(this OperationResult source)
     {
-        if (source == null)
-        {
-            throw new ArgumentNullException();
-        }
+        ArgumentNullException.ThrowIfNull(source);
 
         var sb = new StringBuilder();
         if (source.Metadata != null)

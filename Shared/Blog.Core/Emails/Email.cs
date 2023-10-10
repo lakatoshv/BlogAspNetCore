@@ -16,7 +16,7 @@ public class Email
     /// </summary>
     public Email()
     {
-        this.Attachments = new List<byte[]>();
+        this.Attachments = [];
     }
 
     /// <summary>

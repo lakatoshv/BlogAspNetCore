@@ -6,20 +6,16 @@ using System;
 /// Swagger controller group attribute.
 /// </summary>
 /// <seealso cref="System.Attribute" />
+/// <inheritdoc cref="Attribute"/>
 [AttributeUsage(AttributeTargets.Class)]
-public class SwaggerGroupAttribute : Attribute
+public class SwaggerGroupAttribute(string groupName)
+    : Attribute
 {
-    /// <inheritdoc cref="Attribute"/>
-    public SwaggerGroupAttribute(string groupName)
-    {
-        GroupName = groupName;
-    }
-
     /// <summary>
     /// Gets the name of the group.
     /// </summary>
     /// <value>
     /// The name of the group.
     /// </value>
-    public string GroupName { get; }
+    public string GroupName { get; } = groupName;
 }

@@ -29,8 +29,5 @@ public class PageInfo
     /// <summary>
     /// Gets total pages count.
     /// </summary>
-    public int TotalPages
-    {
-        get { return (int)Math.Ceiling((decimal)this.TotalItems / this.PageSize); }
-    }
+    public int TotalPages => (int)Math.Ceiling((decimal)this.TotalItems / this.PageSize);
 }

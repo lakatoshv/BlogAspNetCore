@@ -96,7 +96,7 @@ public interface IWebHelper
     /// </summary>
     /// <typeparam name="T">Type.</typeparam>
     /// <param name="name">name.</param>
-    /// <returns>Type.</returns>
+    /// <returns>The T.</returns>
     T QueryString<T>(string name);
 
     /// <summary>

@@ -23,7 +23,17 @@ using Interfaces;
 /// <summary>
 /// Web helper.
 /// </summary>
-public class WebHelper : IWebHelper
+/// <remarks>
+/// Initializes a new instance of the <see cref="WebHelper"/> class.
+/// </remarks>
+/// <param name="hostingConfig">hostingConfig.</param>
+/// <param name="httpContextAccessor">httpContextAccessor.</param>
+/// <param name="fileProvider">fileProvider.</param>
+public class WebHelper(
+    HostingConfig hostingConfig,
+    IHttpContextAccessor httpContextAccessor,
+    IShareFileProvider fileProvider)
+    : IWebHelper
 {
     /// <summary>
     /// Null ip address.
@@ -33,17 +43,17 @@ public class WebHelper : IWebHelper
     /// <summary>
     /// Http context accessor.
     /// </summary>
-    private readonly IHttpContextAccessor httpContextAccessor;
+    private readonly IHttpContextAccessor httpContextAccessor = httpContextAccessor;
 
     /// <summary>
     /// Hosting config.
     /// </summary>
-    private readonly HostingConfig hostingConfig;
+    private readonly HostingConfig hostingConfig = hostingConfig;
 
     /// <summary>
     /// _File provider.
     /// </summary>
-    private readonly IShareFileProvider fileProvider;
+    private readonly IShareFileProvider fileProvider = fileProvider;
 
     /// <inheritdoc cref="IWebHelper"/>
     public virtual bool IsRequestBeingRedirected
@@ -53,7 +63,8 @@ public class WebHelper : IWebHelper
             var response = this.httpContextAccessor.HttpContext.Response;
 
             // ASP.NET 4 style - return response.IsRequestBeingRedirected;
-            int[] redirectionStatusCodes = { StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found };
+            int[] redirectionStatusCodes = [StatusCodes.Status301MovedPermanently, StatusCodes.Status302Found];
+
             return redirectionStatusCodes.Contains(response.StatusCode);
         }
     }
@@ -61,37 +72,15 @@ public class WebHelper : IWebHelper
     /// <inheritdoc cref="IWebHelper"/>
     public virtual bool IsPostBeingDone
     {
-        get
-        {
-            if (this.httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] == null)
-            {
-                return false;
-            }
-
-            return Convert.ToBoolean(this.httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"]);
-        }
+        get =>
+            this.httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] != null
+            && Convert.ToBoolean(this.httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"]);
 
         set => this.httpContextAccessor.HttpContext.Items["nop.IsPOSTBeingDone"] = value;
     }
 
     /// <inheritdoc cref="IWebHelper"/>
     public virtual string CurrentRequestProtocol => this.IsCurrentConnectionSecured() ? Uri.UriSchemeHttps : Uri.UriSchemeHttp;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="WebHelper"/> class.
-    /// </summary>
-    /// <param name="hostingConfig">hostingConfig.</param>
-    /// <param name="httpContextAccessor">httpContextAccessor.</param>
-    /// <param name="fileProvider">fileProvider.</param>
-    public WebHelper(
-        HostingConfig hostingConfig,
-        IHttpContextAccessor httpContextAccessor,
-        IShareFileProvider fileProvider)
-    {
-        this.hostingConfig = hostingConfig;
-        this.httpContextAccessor = httpContextAccessor;
-        this.fileProvider = fileProvider;
-    }
 
     /// <inheritdoc cref="IWebHelper"/>
     public virtual string GetUrlReferrer()

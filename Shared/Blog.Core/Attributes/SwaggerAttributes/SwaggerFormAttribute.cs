@@ -9,25 +9,23 @@ using System;
 /// <summary>
 /// Custom attribute for Swagger Upload Form.
 /// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="SwaggerFormAttribute"/> class.
+/// Custom attribute for Swagger Upload Form.
+/// </remarks>
 /// <seealso cref="Attribute" />
+/// <inheritdoc cref="Attribute"/>
 [AttributeUsage(AttributeTargets.Method)]
-public sealed class SwaggerFormAttribute : Attribute
+public sealed class SwaggerFormAttribute(string parameterName, string description, bool hasFileUpload = true)
+    : Attribute
 {
-    /// <inheritdoc cref="Attribute"/>
-    public SwaggerFormAttribute(string parameterName, string description, bool hasFileUpload = true)
-    {
-        ParameterName = parameterName;
-        Description = description;
-        HasFileUpload = hasFileUpload;
-    }
-
     /// <summary>
     /// Gets a value indicating whether this instance has file upload.
     /// </summary>
     /// <value>
     ///   <c>true</c> if this instance has file upload; otherwise, <c>false</c>.
     /// </value>
-    public bool HasFileUpload { get; }
+    public bool HasFileUpload { get; } = hasFileUpload;
 
     /// <summary>
     /// Gets the name of the parameter <see cref="T:IFormFile"/>.
@@ -35,7 +33,7 @@ public sealed class SwaggerFormAttribute : Attribute
     /// <value>
     /// The name of the parameter.
     /// </value>
-    public string ParameterName { get; }
+    public string ParameterName { get; } = parameterName;
 
     /// <summary>
     /// Gets the description.
@@ -43,5 +41,5 @@ public sealed class SwaggerFormAttribute : Attribute
     /// <value>
     /// The description.
     /// </value>
-    public string Description { get; }
+    public string Description { get; } = description;
 }
