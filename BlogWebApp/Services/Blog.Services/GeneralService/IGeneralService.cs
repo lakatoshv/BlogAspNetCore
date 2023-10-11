@@ -2,14 +2,14 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.GeneralService;
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blog.Core.Infrastructure.Pagination;
 using Blog.Core.TableFilters;
-using Data.Specifications.Base;
+using Blog.Data.Specifications.Base;
+
+namespace Blog.EntityServices.GeneralService;
 
 /// <summary>
 /// General service interface.

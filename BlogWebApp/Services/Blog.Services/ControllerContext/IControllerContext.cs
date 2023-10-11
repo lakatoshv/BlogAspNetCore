@@ -2,9 +2,9 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.ControllerContext;
+using Blog.Data.Models;
 
-using Data.Models;
+namespace Blog.EntityServices.ControllerContext;
 
 /// <summary>
 /// Controller context interface.
