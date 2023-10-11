@@ -36,7 +36,7 @@ public class SmtpEmailService : IEmailService
     /// <inheritdoc cref="IEmailService"/>
     public void Send(Blog.Core.Emails.Email email)
     {
-        var message = this.GetMailMessage(email.Body, email.Subject, email.From, email.To);
+        var message = GetMailMessage(email.Body, email.Subject, email.From, email.To);
         this.client.Send(message);
     }
 
@@ -44,7 +44,7 @@ public class SmtpEmailService : IEmailService
     public void Send(string body, string subject, string from, string to)
     {
         // TODO: Investigate how smtp client from argument works
-        var message = this.GetMailMessage(body, subject, from, to);
+        var message = GetMailMessage(body, subject, from, to);
         this.client.Send(message);
     }
 
@@ -54,14 +54,14 @@ public class SmtpEmailService : IEmailService
     /// <inheritdoc cref="IEmailService"/>
     public async Task SendAsync(Blog.Core.Emails.Email email)
     {
-        var message = this.GetMailMessage(email.Body, email.Subject, email.From, email.To);
+        var message = GetMailMessage(email.Body, email.Subject, email.From, email.To);
         await this.client.SendMailAsync(message);
     }
 
     /// <inheritdoc cref="IEmailService"/>
     public async Task SendAsync(string body, string subject, string from, string to)
     {
-        var message = this.GetMailMessage(body, subject, from, to);
+        var message = GetMailMessage(body, subject, from, to);
         await this.client.SendMailAsync(message);
     }
 
@@ -73,7 +73,7 @@ public class SmtpEmailService : IEmailService
     /// <param name="from">from.</param>
     /// <param name="to">to.</param>
     /// <returns>MailMessage.</returns>
-    private MailMessage GetMailMessage(string body, string subject, string from, string to)
+    private static MailMessage GetMailMessage(string body, string subject, string from, string to)
     {
         var message = new MailMessage(from, to)
         {
