@@ -89,7 +89,7 @@ public sealed class ApplicationUser : IdentityUser, IAuditInfo, IEntity<string>
     /// </summary>
     public ICollection<RefreshToken> RefreshTokens
     {
-        get => this._refreshTokens ?? (this._refreshTokens = new List<RefreshToken>());
+        get => this._refreshTokens ??= new List<RefreshToken>();
         set => this._refreshTokens = value;
     }
 
@@ -108,7 +108,6 @@ public sealed class ApplicationUser : IdentityUser, IAuditInfo, IEntity<string>
     /// The posts.
     /// </value>
     public ICollection<Post> Posts { get; set; }
-
 
     /// <summary>
     /// Gets or sets the comments.

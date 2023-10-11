@@ -29,10 +29,10 @@ public class Profile : Entity
     public virtual ApplicationUser User { get; set; }
 
     /// <summary>
-    /// Gets or sets the about.
+    /// Gets or sets the About.
     /// </summary>
     /// <value>
-    /// The about.
+    /// The About.
     /// </value>
     public string About { get; set; }
 
