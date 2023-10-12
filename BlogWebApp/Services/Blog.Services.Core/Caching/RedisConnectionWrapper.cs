@@ -31,7 +31,7 @@ public class RedisConnectionWrapper : IRedisConnectionWrapper, ILocker
     /// <summary>
     /// Lock object.
     /// </summary>
-    private readonly object @lock = new object();
+    private readonly object @lock = new ();
 
     /// <summary>
     /// RedLock factory.
@@ -109,19 +109,17 @@ public class RedisConnectionWrapper : IRedisConnectionWrapper, ILocker
     public bool PerformActionWithLock(string resource, TimeSpan expirationTime, Action action)
     {
         // use RedLock library
-        using (var redisLock = this.redisLockFactory.CreateLock(resource, expirationTime))
+        using var redisLock = this.redisLockFactory.CreateLock(resource, expirationTime);
+        // ensure that lock is acquired
+        if (!redisLock.IsAcquired)
         {
-            // ensure that lock is acquired
-            if (!redisLock.IsAcquired)
-            {
-                return false;
-            }
-
-            // perform action
-            action();
-
-            return true;
+            return false;
         }
+
+        // perform action
+        action();
+
+        return true;
     }
 
     /// <inheritdoc cref="IDisposable"/>
@@ -149,14 +147,14 @@ public class RedisConnectionWrapper : IRedisConnectionWrapper, ILocker
     /// <returns>ConnectionMultiplexer.</returns>
     protected ConnectionMultiplexer GetConnection()
     {
-        if (this.connection != null && this.connection.IsConnected)
+        if (this.connection is { IsConnected: true })
         {
             return this.connection;
         }
 
         lock (this.@lock)
         {
-            if (this.connection != null && this.connection.IsConnected)
+            if (this.connection is { IsConnected: true })
             {
                 return this.connection;
             }

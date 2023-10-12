@@ -9,5 +9,5 @@ public class ActiveDirectoryUserDto
     public string Email { get; set; }
     public string Identity { get; set; }
     public string DisplayName { get; set; }
-    public List<string> Groups { get; set; } = new ();
+    public List<string> Groups { get; set; } = [];
 }

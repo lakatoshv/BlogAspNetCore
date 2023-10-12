@@ -14,7 +14,7 @@ public class SimpleEmailTemplateProvider : IEmailTemplateProvider
     /// <summary>
     /// Dictionary.
     /// </summary>
-    private readonly Dictionary<TemplateTypes, string> templates = new Dictionary<TemplateTypes, string>
+    private readonly Dictionary<TemplateTypes, string> templates = new()
     {
         { TemplateTypes.EmailVerification, "Please confirm your account by clicking <a href='{{BaseUrl}}account/confirm-email?email={{email}}&token={{token}}'>this link</a>" },
         { TemplateTypes.PasswordRestore, "Please reset your password by clicking <a href='{{BaseUrl}}reset-password?email={{email}}&token={{token}}'>this link</a>" },

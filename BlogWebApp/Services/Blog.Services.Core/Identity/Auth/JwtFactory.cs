@@ -84,16 +84,17 @@ public class JwtFactory : IJwtFactory
         {
             // Find IdentityRole by name
             var role = await this.roleManager.FindByNameAsync(roleName);
-            if (role != null)
+            if (role == null)
             {
-                // Convert Identity to claim and add
-                var roleClaim = new Claim("roles", role.Name, ClaimValueTypes.String, this.jwtOptions.Issuer);
-                claims.Add(roleClaim);
-
-                // Add claims belonging to the role
-                var roleClaims = await this.roleManager.GetClaimsAsync(role);
-                claims.AddRange(roleClaims);
+                continue;
             }
+            // Convert Identity to claim and add
+            var roleClaim = new Claim("roles", role.Name, ClaimValueTypes.String, this.jwtOptions.Issuer);
+            claims.Add(roleClaim);
+
+            // Add claims belonging to the role
+            var roleClaims = await this.roleManager.GetClaimsAsync(role);
+            claims.AddRange(roleClaims);
         }
 
         // Create the JWT security token and encode it.
@@ -144,7 +145,7 @@ public class JwtFactory : IJwtFactory
             refreshToken = Convert.ToBase64String(randomNumber);
         }
 
-        user.RefreshTokens.Add(new RefreshToken { Token = refreshToken, User = user });
+        user?.RefreshTokens.Add(new RefreshToken { Token = refreshToken, User = user });
 
         await this.userManager.UpdateAsync(user);
         return refreshToken;
@@ -152,10 +153,7 @@ public class JwtFactory : IJwtFactory
 
     private static void ThrowIfInvalidOptions(JwtIssuerOptions options)
     {
-        if (options == null)
-        {
-            throw new ArgumentNullException(nameof(options));
-        }
+        ArgumentNullException.ThrowIfNull(options);
 
         if (options.ValidFor <= TimeSpan.Zero)
         {

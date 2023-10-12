@@ -19,7 +19,7 @@ internal static class Extensions
     /// <returns>string.</returns>
     public static string GetId(this ClaimsIdentity identity)
     {
-        var id = identity.Claims.Single(c => c.Type == JwtClaimTypes.Id)?.Value;
+        var id = identity.Claims.Single(c => c.Type == JwtClaimTypes.Id).Value;
 
         return id;
     }

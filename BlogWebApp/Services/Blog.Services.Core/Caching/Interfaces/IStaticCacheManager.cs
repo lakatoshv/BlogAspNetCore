@@ -7,6 +7,4 @@ namespace Blog.Services.Core.Caching.Interfaces;
 /// <summary>
 /// Static cache manager interface.
 /// </summary>
-public interface IStaticCacheManager : ICacheManager
-{
-}
+public interface IStaticCacheManager : ICacheManager;

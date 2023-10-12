@@ -24,7 +24,7 @@ public static class QueryableExtensions
     public static IQueryable<T> OrderBy<T>(this IQueryable<T> source, SortParametersDto sortParameters)
     {
         var expression = source.Expression;
-        int count = 0;
+        const int count = 0;
         var parameter = Expression.Parameter(typeof(T), "x");
         var selector = Expression.PropertyOrField(parameter, sortParameters.SortBy);
         var method = string.Equals(sortParameters.OrderBy, "desc", StringComparison.OrdinalIgnoreCase) ?
@@ -33,7 +33,7 @@ public static class QueryableExtensions
         expression = Expression.Call(
             typeof(Queryable),
             method,
-            new[] { source.ElementType, selector.Type },
+            [source.ElementType, selector.Type],
             expression,
             Expression.Quote(Expression.Lambda(selector, parameter)));
         return source.Provider.CreateQuery<T>(expression);

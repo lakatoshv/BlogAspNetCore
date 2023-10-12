@@ -61,14 +61,14 @@ public class MemoryCacheManager : ILocker, IStaticCacheManager
     {
         if (data != null)
         {
-            this.cache.Set(this.AddKey(key), data, this.GetMemoryCacheEntryOptions(TimeSpan.FromMinutes(cacheTime)));
+            this.cache.Set(AddKey(key), data, this.GetMemoryCacheEntryOptions(TimeSpan.FromMinutes(cacheTime)));
         }
     }
 
     /// <inheritdoc cref="ICacheManager"/>
     public virtual bool IsSet(string key)
     {
-        return this.cache.TryGetValue(key, out object _);
+        return this.cache.TryGetValue(key, out var _);
     }
 
     /// <inheritdoc cref="ILocker"/>
@@ -128,6 +128,31 @@ public class MemoryCacheManager : ILocker, IStaticCacheManager
     }
 
     /// <summary>
+    /// Add key.
+    /// </summary>
+    /// <param name="key">key.</param>
+    /// <returns>string.</returns>
+    protected static string AddKey(string key)
+    {
+        AllKeys.TryAdd(key, true);
+        return key;
+    }
+
+    /// <summary>
+    /// Try to remove key.
+    /// </summary>
+    /// <param name="key">key.</param>
+    protected static void TryRemoveKey(string key)
+    {
+        // try to remove key from dictionary
+        if (!AllKeys.TryRemove(key, out var _))
+        {
+            // if not possible to remove key from dictionary, then try to mark key as not existing in cache
+            AllKeys.TryUpdate(key, false, false);
+        }
+    }
+
+    /// <summary>
     /// Get memory cache entry option.
     /// </summary>
     /// <param name="cacheTime">cacheTime.</param>
@@ -149,39 +174,14 @@ public class MemoryCacheManager : ILocker, IStaticCacheManager
     }
 
     /// <summary>
-    /// Add key.
-    /// </summary>
-    /// <param name="key">key.</param>
-    /// <returns>string.</returns>
-    protected string AddKey(string key)
-    {
-        AllKeys.TryAdd(key, true);
-        return key;
-    }
-
-    /// <summary>
     /// Remove key.
     /// </summary>
     /// <param name="key">key.</param>
     /// <returns>string.</returns>
     protected string RemoveKey(string key)
     {
-        this.TryRemoveKey(key);
+        TryRemoveKey(key);
         return key;
-    }
-
-    /// <summary>
-    /// Try remove key.
-    /// </summary>
-    /// <param name="key">key.</param>
-    protected void TryRemoveKey(string key)
-    {
-        // try to remove key from dictionary
-        if (!AllKeys.TryRemove(key, out bool _))
-        {
-            // if not possible to remove key from dictionary, then try to mark key as not existing in cache
-            AllKeys.TryUpdate(key, false, false);
-        }
     }
 
     /// <summary>
@@ -214,6 +214,6 @@ public class MemoryCacheManager : ILocker, IStaticCacheManager
         this.ClearKeys();
 
         // try to remove this key from dictionary
-        this.TryRemoveKey(key.ToString());
+        TryRemoveKey(key.ToString());
     }
 }
