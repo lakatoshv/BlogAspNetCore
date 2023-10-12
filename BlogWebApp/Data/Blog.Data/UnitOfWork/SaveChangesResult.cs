@@ -11,7 +11,7 @@ public class SaveChangesResult
     /// <summary>
     /// Initializes a new instance of the <see cref="SaveChangesResult"/> class.
     /// </summary>
-    public SaveChangesResult() => this.Messages = new List<string>();
+    public SaveChangesResult() => this.Messages = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SaveChangesResult"/> class.

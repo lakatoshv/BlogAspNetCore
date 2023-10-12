@@ -24,9 +24,7 @@ using RepositoryFactory;
 /// <seealso cref="IDisposable" />
 public sealed class UnitOfWork<TContext> :
     IRepositoryFactory,
-    IUnitOfWork<TContext>,
-    IUnitOfWork,
-    IDisposable
+    IUnitOfWork<TContext>
     where TContext : DbContext
 {
     /// <summary>
@@ -100,7 +98,8 @@ public sealed class UnitOfWork<TContext> :
     /// Sets the automatic detect changes.
     /// </summary>
     /// <param name="value">if set to <c>true</c> [value].</param>
-    public void SetAutoDetectChanges(bool value) => this.DbContext.ChangeTracker.AutoDetectChangesEnabled = value;
+    public void SetAutoDetectChanges(bool value) 
+        => this.DbContext.ChangeTracker.AutoDetectChangesEnabled = value;
 
     /// <summary>
     /// Gets the last save changes result.
@@ -224,7 +223,8 @@ public sealed class UnitOfWork<TContext> :
     /// </summary>
     /// <param name="rootEntity">The root entity.</param>
     /// <param name="callback">The callback.</param>
-    public void TrackGraph(object rootEntity, Action<EntityEntryGraphNode> callback) => this.DbContext.ChangeTracker.TrackGraph(rootEntity, callback);
+    public void TrackGraph(object rootEntity, Action<EntityEntryGraphNode> callback)
+        => this.DbContext.ChangeTracker.TrackGraph(rootEntity, callback);
 
     /// <summary>
     /// Gets the repository.
@@ -236,7 +236,7 @@ public sealed class UnitOfWork<TContext> :
     /// </returns>
     public IRepository<TEntity> GetRepository<TEntity>(bool hasCustomRepository) where TEntity : IEntity
     {
-        this._repositories ??= new Dictionary<Type, object>();
+        this._repositories ??= [];
 
         if (hasCustomRepository)
         {
@@ -248,15 +248,15 @@ public sealed class UnitOfWork<TContext> :
         }
 
         var key = typeof(TEntity);
-        if (this._repositories.ContainsKey(key))
+        if (_repositories.ContainsKey(key))
         {
-            return (IRepository<TEntity>) this._repositories[key];
+            return (IRepository<TEntity>)_repositories[key];
         }
 
         var dbContext = this.DbContext;
         if (dbContext != null)
         {
-            this._repositories[key] = (object) new Repository<IEntity>((DbContext)dbContext);
+            this._repositories[key] = new Repository<IEntity>((DbContext)dbContext) as object;
         }
 
         return (IRepository<TEntity>)this._repositories[key];

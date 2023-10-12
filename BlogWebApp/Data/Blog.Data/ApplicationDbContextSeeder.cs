@@ -74,14 +74,16 @@ public static class ApplicationDbContextSeeder
     private static void SeedRole(string roleName, RoleManager<ApplicationRole> roleManager)
     {
         var role = roleManager.FindByNameAsync(roleName).GetAwaiter().GetResult();
-        if (role == null)
+        if (role != null)
         {
-            var result = roleManager.CreateAsync(new ApplicationRole(roleName)).GetAwaiter().GetResult();
+            return;
+        }
 
-            if (!result.Succeeded)
-            {
-                throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
-            }
+        var result = roleManager.CreateAsync(new ApplicationRole(roleName)).GetAwaiter().GetResult();
+
+        if (!result.Succeeded)
+        {
+            throw new Exception(string.Join(Environment.NewLine, result.Errors.Select(e => e.Description)));
         }
     }
 }

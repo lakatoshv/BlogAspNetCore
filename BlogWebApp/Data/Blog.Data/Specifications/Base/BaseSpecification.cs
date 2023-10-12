@@ -49,14 +49,14 @@ public class BaseSpecification<T> : ISpecification<T>
     public List<Expression<Func<T, object>>> Includes { get; } = new ();
 
     /// <summary>
-    /// Adds the include.
+    /// Adds the Include.
     /// </summary>
     /// <param name="expression">The expression.</param>
     protected void AddInclude(Expression<Func<T, object>> expression) =>
         this.Includes.Add(expression);
 
     /// <summary>
-    /// Adds the include.
+    /// Adds the Include.
     /// </summary>
     /// <param name="expressions">The expressions.</param>
     protected void AddInclude(List<Expression<Func<T, object>>> expressions) =>

@@ -34,7 +34,5 @@ public class DbQueryRunner : IDbQueryRunner
 
     /// <inheritdoc cref="IDisposable"/>
     public void Dispose()
-    {
-        this.Context?.Dispose();
-    }
+        => this.Context?.Dispose();
 }

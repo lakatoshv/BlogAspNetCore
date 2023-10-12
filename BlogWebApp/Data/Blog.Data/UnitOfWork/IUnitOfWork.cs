@@ -52,7 +52,8 @@ public interface IUnitOfWork : IDisposable
     /// <param name="sql">The SQL.</param>
     /// <param name="parameters">The parameters.</param>
     /// <returns>IQueryable.</returns>
-    IQueryable<TEntity> FromSqlRaw<TEntity>(string sql, params object[] parameters) where TEntity : class;
+    IQueryable<TEntity> FromSqlRaw<TEntity>(string sql, params object[] parameters)
+        where TEntity : class;
 
     /// <summary>
     /// Tracks the graph.
@@ -95,7 +96,7 @@ public interface IUnitOfWork : IDisposable
 /// </summary>
 /// <typeparam name="TContext">The type of the context.</typeparam>
 /// <seealso cref="IDisposable" />
-public interface IUnitOfWork<TContext> : IUnitOfWork, IDisposable
+public interface IUnitOfWork<TContext> : IUnitOfWork
     where TContext : Microsoft.EntityFrameworkCore.DbContext
 {
     /// <summary>

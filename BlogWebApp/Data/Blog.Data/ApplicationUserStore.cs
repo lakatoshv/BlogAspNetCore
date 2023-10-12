@@ -64,7 +64,7 @@ public class ApplicationUserStore : UserStore<
     /// <param name="login">login.</param>
     /// <returns>IdentityUserLogin.</returns>
     protected override IdentityUserLogin<string> CreateUserLogin(ApplicationUser user, UserLoginInfo login) =>
-        new IdentityUserLogin<string>
+        new ()
         {
             UserId = user.Id,
             ProviderKey = login.ProviderKey,

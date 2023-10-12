@@ -46,19 +46,14 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <summary>
     /// Gets entities.
     /// </summary>
-    protected virtual DbSet<TEntity> Entities
-    {
-        get => this._entities ?? (this._entities = this._context.Set<TEntity>());
-    }
+    protected virtual DbSet<TEntity> Entities => _entities ??= this._context.Set<TEntity>();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Repository{TEntity}"/> class.
     /// </summary>
     /// <param name="context">context.</param>
     public Repository(ApplicationDbContext context)
-    {
-        this._context = context;
-    }
+        => this._context = context;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Repository{TEntity}"/> class.
@@ -73,39 +68,27 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public IQueryable<TEntity> GetAll()
-    {
-        return this.Entities.AsQueryable();
-    }
+        => this.Entities.AsQueryable();
 
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public async Task<ICollection<TEntity>> GetAllAsync()
-    {
-        return await this.Entities.AsQueryable().ToListAsync();
-    }
+        => await this.Entities.AsQueryable().ToListAsync();
 
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public IQueryable<TEntity> GetAll(ISpecification<TEntity> specification)
-    {
-        return this.ApplySpecification(specification);
-    }
+        => this.ApplySpecification(specification);
 
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public async Task<ICollection<TEntity>> GetAllAsync(ISpecification<TEntity> specification)
-    {
-        return await this.ApplySpecification(specification).ToListAsync();
-    }
+        => await this.ApplySpecification(specification).ToListAsync();
 
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public virtual TEntity GetById(object id)
-    {
-        return this.Entities.Find(id);
-    }
+        => this.Entities.Find(id);
 
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public virtual async Task<TEntity> GetByIdAsync(object id)
-    {
-        return await this.Entities.FindAsync(id);
-    }
+        => await this.Entities.FindAsync(id);
 
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public virtual async Task<PagedListResult<TEntity>> SearchAsync(SearchQuery<TEntity> searchQuery)
@@ -163,10 +146,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public virtual void Insert(TEntity entity)
     {
-        if (entity == null)
-        {
-            throw new ArgumentNullException(nameof(entity));
-        }
+        ArgumentNullException.ThrowIfNull(entity);
 
         try
         {
@@ -183,10 +163,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public virtual void Insert(IEnumerable<TEntity> entities)
     {
-        if (entities == null)
-        {
-            throw new ArgumentNullException(nameof(entities));
-        }
+        ArgumentNullException.ThrowIfNull(entities);
 
         try
         {
@@ -203,10 +180,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public async Task InsertAsync(TEntity entity)
     {
-        if (entity == null)
-        {
-            throw new ArgumentNullException(nameof(entity));
-        }
+        ArgumentNullException.ThrowIfNull(entity);
 
         try
         {
@@ -223,10 +197,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public async Task InsertAsync(IEnumerable<TEntity> entities)
     {
-        if (entities == null)
-        {
-            throw new ArgumentNullException(nameof(entities));
-        }
+        ArgumentNullException.ThrowIfNull(entities);
 
         try
         {
@@ -243,10 +214,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public virtual void Update(TEntity entity)
     {
-        if (entity == null)
-        {
-            throw new ArgumentNullException(nameof(entity));
-        }
+        ArgumentNullException.ThrowIfNull(entity);
 
         try
         {
@@ -263,10 +231,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public virtual void Update(IEnumerable<TEntity> entities)
     {
-        if (entities == null)
-        {
-            throw new ArgumentNullException(nameof(entities));
-        }
+        ArgumentNullException.ThrowIfNull(entities);
 
         try
         {
@@ -283,10 +248,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public async Task UpdateAsync(TEntity entity)
     {
-        if (entity == null)
-        {
-            throw new ArgumentNullException(nameof(entity));
-        }
+        ArgumentNullException.ThrowIfNull(entity);
 
         try
         {
@@ -303,10 +265,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public async Task UpdateAsync(IEnumerable<TEntity> entities)
     {
-        if (entities == null)
-        {
-            throw new ArgumentNullException(nameof(entities));
-        }
+        ArgumentNullException.ThrowIfNull(entities);
 
         try
         {
@@ -323,10 +282,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public virtual void Delete(TEntity entity)
     {
-        if (entity == null)
-        {
-            throw new ArgumentNullException(nameof(entity));
-        }
+        ArgumentNullException.ThrowIfNull(entity);
 
         try
         {
@@ -343,10 +299,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public virtual void Delete(IEnumerable<TEntity> entities)
     {
-        if (entities == null)
-        {
-            throw new ArgumentNullException(nameof(entities));
-        }
+        ArgumentNullException.ThrowIfNull(entities);
 
         try
         {
@@ -363,10 +316,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public async Task DeleteAsync(TEntity entity)
     {
-        if (entity == null)
-        {
-            throw new ArgumentNullException(nameof(entity));
-        }
+        ArgumentNullException.ThrowIfNull(entity);
 
         try
         {
@@ -383,10 +333,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public async Task DeleteAsync(IEnumerable<TEntity> entities)
     {
-        if (entities == null)
-        {
-            throw new ArgumentNullException(nameof(entities));
-        }
+        ArgumentNullException.ThrowIfNull(entities);
 
         try
         {
@@ -411,38 +358,26 @@ public class Repository<TEntity> : IRepository<TEntity>
         return this.Entities.Any(specification.Filter);
     }
 
+    /// <exception cref="ArgumentNullException">The ArgumentNullException.</exception>
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public async Task<bool> AnyAsync(ISpecification<TEntity> specification)
-    {
-        if (specification == null)
-        {
-            throw new ArgumentNullException(nameof(specification.Filter));
-        }
+        => specification == null
+            ? throw new ArgumentNullException(nameof(specification.Filter))
+            : await this.Entities.AnyAsync(specification.Filter);
 
-        return await this.Entities.AnyAsync(specification.Filter);
-    }
-
+    /// <exception cref="ArgumentNullException">The ArgumentNullException.</exception>
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public TEntity FirstOrDefault(ISpecification<TEntity> specification)
-    {
-        if (specification.Filter == null)
-        {
-            throw new ArgumentNullException(nameof(specification.Filter));
-        }
+        => specification.Filter == null
+            ? throw new ArgumentNullException(nameof(specification.Filter))
+            : this.Entities.FirstOrDefault(specification.Filter);
 
-        return this.Entities.FirstOrDefault(specification.Filter);
-    }
-
+    /// <exception cref="ArgumentNullException">The ArgumentNullException.</exception>
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public TEntity LastOrDefault(ISpecification<TEntity> specification)
-    {
-        if (specification.Filter == null)
-        {
-            throw new ArgumentNullException(nameof(specification.Filter));
-        }
-
-        return this.Entities.LastOrDefault(specification.Filter);
-    }
+        => specification.Filter == null
+            ? throw new ArgumentNullException(nameof(specification.Filter))
+            : this.Entities.LastOrDefault(specification.Filter);
 
     /// <summary>
     /// Get full error text and rollback entity changes.
@@ -455,12 +390,13 @@ public class Repository<TEntity> : IRepository<TEntity>
         if (this._context is DbContext dbContext)
         {
             var entries = dbContext.ChangeTracker.Entries()
-                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified).ToList();
+                .Where(e => e.State is EntityState.Added or EntityState.Modified).ToList();
 
             entries.ForEach(entry => entry.State = EntityState.Unchanged);
         }
 
         this._context.SaveChanges();
+
         return exception.ToString();
     }
 
@@ -483,8 +419,9 @@ public class Repository<TEntity> : IRepository<TEntity>
         // Console.WriteLine(sequence.ToString());
 
         // Setting up the return object.
-        bool hasNext = (searchQuery.Skip > 0 || searchQuery.Take > 0) && (searchQuery.Skip + searchQuery.Take < resultCount);
-        return new PagedListResult<TEntity>()
+        var hasNext = (searchQuery.Skip > 0 || searchQuery.Take > 0) && (searchQuery.Skip + searchQuery.Take < resultCount);
+
+        return new PagedListResult<TEntity>
         {
             Entities = result,
             HasNext = hasNext,
@@ -501,7 +438,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <returns>IQueryable.</returns>
     protected virtual IQueryable<TEntity> ManageSortCriterias(SearchQuery<TEntity> searchQuery, IQueryable<TEntity> sequence)
     {
-        if (searchQuery.SortCriterias != null && searchQuery.SortCriterias.Count > 0)
+        if (searchQuery.SortCriterias is { Count: > 0 })
         {
             var sortCriteria = searchQuery.SortCriterias[0];
             var orderedSequence = sortCriteria.ApplyOrdering(sequence, false);
@@ -532,17 +469,9 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <param name="sequence">sequence.</param>
     /// <returns>IQueryable.</returns>
     protected virtual IQueryable<TEntity> ManageFilters(SearchQuery<TEntity> searchQuery, IQueryable<TEntity> sequence)
-    {
-        if (searchQuery.Filters != null && searchQuery.Filters.Count > 0)
-        {
-            foreach (var filterClause in searchQuery.Filters)
-            {
-                sequence = sequence.Where(filterClause);
-            }
-        }
-
-        return sequence;
-    }
+        => searchQuery.Filters is not { Count: > 0 }
+            ? sequence
+            : searchQuery.Filters.Aggregate(sequence, (current, filterClause) => current.Where(filterClause));
 
     /// <summary>
     /// Manage include properties.
@@ -557,7 +486,7 @@ public class Repository<TEntity> : IRepository<TEntity>
             return sequence;
         }
 
-        var properties = searchQuery.IncludeProperties.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+        var properties = searchQuery.IncludeProperties.Split([","], StringSplitOptions.RemoveEmptyEntries);
 
         return properties.Aggregate(sequence, (current, includeProperty) => current.Include(includeProperty));
     }
@@ -568,8 +497,6 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <param name="specification">The specification.</param>
     /// <returns>IQueryable.</returns>
     protected IQueryable<TEntity> ApplySpecification(ISpecification<TEntity> specification)
-    {
-        return SpecificationEvaluator<TEntity>
+        => SpecificationEvaluator<TEntity>
             .GetQuery(this._context.Set<TEntity>().AsQueryable(), specification);
-    }
 }

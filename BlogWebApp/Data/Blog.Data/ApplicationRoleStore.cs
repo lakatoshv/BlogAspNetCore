@@ -12,23 +12,19 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 /// <summary>
 /// Application role store.
 /// </summary>
-public class ApplicationRoleStore : RoleStore<
-    ApplicationRole,
-    ApplicationDbContext,
-    string,
-    IdentityUserRole<string>,
-    IdentityRoleClaim<string>>
+/// <remarks>
+/// Initializes a new instance of the <see cref="ApplicationRoleStore"/> class.
+/// </remarks>
+/// <param name="context">context.</param>
+/// <param name="describer">describer.</param>
+public class ApplicationRoleStore(ApplicationDbContext context, IdentityErrorDescriber describer = null)
+    : RoleStore<
+        ApplicationRole,
+        ApplicationDbContext,
+        string,
+        IdentityUserRole<string>,
+        IdentityRoleClaim<string>>(context, describer)
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ApplicationRoleStore"/> class.
-    /// </summary>
-    /// <param name="context">context.</param>
-    /// <param name="describer">describer.</param>
-    public ApplicationRoleStore(ApplicationDbContext context, IdentityErrorDescriber describer = null)
-        : base(context, describer)
-    {
-    }
-
     /// <summary>
     /// Create role claim.
     /// </summary>
@@ -36,7 +32,7 @@ public class ApplicationRoleStore : RoleStore<
     /// <param name="claim">claim.</param>
     /// <returns>IdentityRoleClaim.</returns>
     protected override IdentityRoleClaim<string> CreateRoleClaim(ApplicationRole role, Claim claim) =>
-        new IdentityRoleClaim<string>
+        new ()
         {
             RoleId = role.Id,
             ClaimType = claim.Type,
