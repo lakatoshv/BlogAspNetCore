@@ -2,7 +2,7 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Identity.RefreshToken;
+namespace Blog.EntityServices.Identity.RefreshToken;
 
 using System.Threading.Tasks;
 

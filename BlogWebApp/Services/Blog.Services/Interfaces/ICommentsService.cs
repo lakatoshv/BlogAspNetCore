@@ -2,13 +2,13 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Interfaces;
+namespace Blog.EntityServices.Interfaces;
 
 using System.Threading.Tasks;
 using Contracts.V1.Responses.Chart;
 using Data.Models;
-using Core.Dtos;
-using Core.Dtos.Posts;
+using Blog.Services.Core.Dtos;
+using Blog.Services.Core.Dtos.Posts;
 using GeneralService;
 
 /// <summary>
@@ -29,14 +29,14 @@ public interface ICommentsService : IGeneralService<Comment>
     /// Gets the comment asynchronous.
     /// </summary>
     /// <param name="id">The identifier.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    /// <returns>A <see cref="Task"/>The representing the asynchronous operation.</returns>
     Task<Comment> GetCommentAsync(int id);
 
     /// <summary>
     /// Gets the paged comments.
     /// </summary>
     /// <param name="sortParameters">The sort parameters.</param>
-    /// <returns></returns>
+    /// <returns>A <see cref="Task"/>The representing the asynchronous operation.</returns>
     Task<CommentsViewDto> GetPagedComments(SortParametersDto sortParameters);
 
     /// <summary>

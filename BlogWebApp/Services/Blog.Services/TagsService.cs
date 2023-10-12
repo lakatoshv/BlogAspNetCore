@@ -2,38 +2,33 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services;
+namespace Blog.EntityServices;
 
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Contracts.V1.Responses.Chart;
-using Blog.Core.Helpers;
+using Core.Helpers;
 using Data.Models;
 using Data.Repository;
-using Core;
-using Core.Dtos;
-using Core.Dtos.Posts;
+using Blog.Services.Core;
+using Blog.Services.Core.Dtos;
+using Blog.Services.Core.Dtos.Posts;
 using GeneralService;
 using Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 /// <summary>
 /// Tags service.
 /// </summary>
 /// <seealso cref="GeneralService{Tag}" />
 /// <seealso cref="ITagsService" />
-public class TagsService : GeneralService<Tag>, ITagsService
+/// <remarks>
+/// Initializes a new instance of the <see cref="TagsService"/> class.
+/// </remarks>
+/// <param name="repo">The repo.</param>
+public class TagsService(IRepository<Tag> repo)
+    : GeneralService<Tag>(repo), ITagsService
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TagsService"/> class.
-    /// </summary>
-    /// <param name="repo">The repo.</param>
-    public TagsService(
-        IRepository<Tag> repo)
-        : base(repo)
-    {
-    }
-
     /// <inheritdoc cref="ITagsService"/>
     public async Task<TagsViewDto> GetTagsAsync(SearchParametersDto searchParameters)
     {
@@ -76,7 +71,7 @@ public class TagsService : GeneralService<Tag>, ITagsService
 
     /// <inheritdoc cref="IPostsService"/>
     public async Task<ChartDataModel> GetTagsActivity()
-        => new()
+        => new ()
         {
             Name = "Posts",
             Series = await Repository.TableNoTracking

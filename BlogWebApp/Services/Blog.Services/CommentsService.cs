@@ -2,39 +2,33 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-using Blog.Data.Specifications;
-
-namespace Blog.Services;
+namespace Blog.EntityServices;
 
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Contracts.V1.Responses.Chart;
-using Blog.Core.Helpers;
+using Core.Helpers;
 using Data.Models;
 using Data.Repository;
-using Core.Dtos;
-using Core.Dtos.Posts;
+using Data.Specifications;
+using Services.Core.Dtos;
+using Blog.Services.Core.Dtos.Posts;
 using GeneralService;
 using Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 /// <summary>
 /// Comments service.
 /// </summary>
 /// <seealso cref="GeneralService{Comment}" />
 /// <seealso cref="ICommentsService" />
-public class CommentsService : GeneralService<Comment>, ICommentsService
+/// <remarks>
+/// Initializes a new instance of the <see cref="CommentsService"/> class.
+/// </remarks>
+/// <param name="repo">The repo.</param>
+public class CommentsService(IRepository<Comment> repo)
+    : GeneralService<Comment>(repo), ICommentsService
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CommentsService"/> class.
-    /// </summary>
-    /// <param name="repo">The repo.</param>
-    public CommentsService(
-        IRepository<Comment> repo)
-        : base(repo)
-    {
-    }
-
     /// <inheritdoc cref="ICommentsService"/>
     public async Task<CommentsViewDto> GetPagedComments(SortParametersDto sortParameters)
     {
@@ -149,10 +143,10 @@ public class CommentsService : GeneralService<Comment>, ICommentsService
 
     /// <inheritdoc cref="ICommentsService"/>
     public async Task<ChartDataModel> GetCommentsActivity()
-        => new()
+        => new ()
         {
             Name = "Comments",
-            Series = await Repository.TableNoTracking
+            Series = await this.Repository.TableNoTracking
                 .GroupBy(x => x.CreatedAt)
                 .Select(x => new ChartItem
                 {

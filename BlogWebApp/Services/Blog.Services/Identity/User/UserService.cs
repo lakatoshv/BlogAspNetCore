@@ -2,19 +2,19 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Identity.User;
+namespace Blog.EntityServices.Identity.User;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Contracts.V1.Responses.Chart;
-using Blog.Core.Infrastructure.Pagination;
-using Blog.Core.TableFilters;
+using Core.Infrastructure.Pagination;
+using Core.TableFilters;
 using Data.Models;
 using Data.Repository;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 /// <summary>
 /// User service.
@@ -56,6 +56,7 @@ public class UserService : IUserService
     public async Task<IdentityResult> CreateAsync(ApplicationUser user, string password)
     {
         var result = await this.userManager.CreateAsync(user, password);
+
         return result;
     }
 
@@ -63,23 +64,20 @@ public class UserService : IUserService
     public async Task<ApplicationUser> GetByIdAsync(string id)
     {
         var user = await this.userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+
         return user;
     }
 
     /// <inheritdoc cref="IUserService"/>
     public async Task<IList<ApplicationUser>> GetUsersAsync(IEnumerable<string> userIds)
-    {
-        return await this.userManager.Users
+        => await this.userManager.Users
             .Where(x => userIds.Contains(x.Id))
             .ToListAsync();
-    }
 
     /// <inheritdoc cref="IUserService"/>
     public async Task<ApplicationUser> GetByEmailAsync(string email)
-    {
-        return await this.userManager.Users
+        => await this.userManager.Users
             .FirstOrDefaultAsync(m => m.Email == email);
-    }
 
     /// <inheritdoc cref="IUserService"/>
     public async Task<IdentityResult> ChangePasswordAsync(string userName, string oldPassword, string newPassword)
@@ -107,31 +105,22 @@ public class UserService : IUserService
 
     /// <inheritdoc cref="IUserService"/>
     public Task<string> GetAuthenticatorKeyAsync(ApplicationUser user)
-    {
-        return this.userManager.GetAuthenticatorKeyAsync(user);
-    }
+        => this.userManager.GetAuthenticatorKeyAsync(user);
 
     /// <inheritdoc cref="IUserService"/>
     public async Task<IdentityResult> ResetAuthenticatorKeyAsync(ApplicationUser user)
-    {
-        return await this.userManager.ResetAuthenticatorKeyAsync(user);
-    }
+        => await this.userManager.ResetAuthenticatorKeyAsync(user);
 
     /// <inheritdoc cref="IUserService"/>
     public async Task<ApplicationUser> GetByUserNameAsync(string userName)
-    {
-        return await this.userManager.Users
+        => await this.userManager.Users
             .Include(u => u.RefreshTokens)
             .FirstOrDefaultAsync(u => u.UserName == userName);
-    }
 
     /// <inheritdoc cref="IUserService"/>
     public async Task<ApplicationUser> GetByProfileIdAsync(int profileId)
-    {
-        return
-            await this.userManager.Users
-                .FirstOrDefaultAsync();
-    }
+        => await this.userManager.Users
+            .FirstOrDefaultAsync();
 
     /// <inheritdoc cref="IUserService"/>
     public async Task DelByIdAsync(string id)
@@ -152,6 +141,7 @@ public class UserService : IUserService
         var user = await this.userManager.FindByNameAsync(userName);
         var token = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
         var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(token);
+
         return System.Convert.ToBase64String(plainTextBytes);
     }
 
@@ -160,6 +150,7 @@ public class UserService : IUserService
     {
         var user = await this.userManager.FindByNameAsync(userName);
         var token = await this.userManager.GeneratePasswordResetTokenAsync(user);
+
         return token;
     }
 
@@ -170,6 +161,7 @@ public class UserService : IUserService
         this.mapper.Map(applicationUser, user);
 
         var result = await this.userManager.UpdateAsync(user);
+
         return result;
     }
 
@@ -182,6 +174,7 @@ public class UserService : IUserService
         token = System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
 
         var result = await this.userManager.ConfirmEmailAsync(user, token);
+
         return result;
     }
 
@@ -193,33 +186,26 @@ public class UserService : IUserService
 
     /// <inheritdoc cref="IUserService"/>
     public Task<bool> VerifyTwoFactorTokenAsync(ApplicationUser user, string tokenProvider, string token)
-    {
-        return this.userManager.VerifyTwoFactorTokenAsync(user, tokenProvider, token);
-    }
+        => this.userManager.VerifyTwoFactorTokenAsync(user, tokenProvider, token);
 
     /// <inheritdoc cref="IUserService"/>
     public string GetAuthenticationProvider()
-    {
-        return this.userManager.Options.Tokens.AuthenticatorTokenProvider;
-    }
+        => this.userManager.Options.Tokens.AuthenticatorTokenProvider;
 
     /// <inheritdoc cref="IUserService"/>
     public Task<IdentityResult> SetTwoFactorEnabledAsync(ApplicationUser user, bool enabled)
-    {
-        return this.userManager.SetTwoFactorEnabledAsync(user, enabled);
-    }
+        => this.userManager.SetTwoFactorEnabledAsync(user, enabled);
 
     /// <inheritdoc cref="IUserService"/>
     public Task<IEnumerable<string>> GenerateNewTwoFactorRecoveryCodesAsync(ApplicationUser user, int number)
-    {
-        return this.userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, number);
-    }
+        => this.userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, number);
 
     /// <inheritdoc cref="IUserService"/>
     public async Task<IdentityResult> ResetPasswordAsync(string userName, string token, string newPassword)
     {
         var user = await this.GetByUserNameAsync(userName);
         var result = await this.userManager.ResetPasswordAsync(user, token, newPassword);
+
         return result;
     }
 
@@ -233,7 +219,7 @@ public class UserService : IUserService
 
     /// <inheritdoc cref="IUserService"/>
     public async Task<ChartDataModel> GetUsersActivity()
-        => new()
+        => new ()
         {
             Name = "Posts",
             Series = await applicationUserRepository.TableNoTracking

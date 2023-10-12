@@ -2,7 +2,7 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Security.Authorization;
+namespace Blog.EntityServices.Security.Authorization;
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -14,28 +14,23 @@ using Microsoft.AspNetCore.Mvc.Filters;
 /// Permissions handler.
 /// </summary>
 /// <seealso cref="AuthorizationHandler{PermissionsRequirement}" />
-public class PermissionsHandler : AuthorizationHandler<PermissionsRequirement>
+/// <remarks>
+/// Initializes a new instance of the <see cref="PermissionsHandler"/> class.
+/// </remarks>
+/// <param name="permissionService">The permission service.</param>
+/// <param name="httpContextAccessor">The HTTP context accessor.</param>
+public class PermissionsHandler(IPermissionService permissionService, IHttpContextAccessor httpContextAccessor)
+    : AuthorizationHandler<PermissionsRequirement>
 {
     /// <summary>
     /// The permission service.
     /// </summary>
-    private readonly IPermissionService permissionService;
+    private readonly IPermissionService permissionService = permissionService;
 
     /// <summary>
     /// The HTTP context accessor.
     /// </summary>
-    private readonly IHttpContextAccessor httpContextAccessor;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PermissionsHandler"/> class.
-    /// </summary>
-    /// <param name="permissionService">The permission service.</param>
-    /// <param name="httpContextAccessor">The HTTP context accessor.</param>
-    public PermissionsHandler(IPermissionService permissionService, IHttpContextAccessor httpContextAccessor)
-    {
-        this.permissionService = permissionService;
-        this.httpContextAccessor = httpContextAccessor;
-    }
+    private readonly IHttpContextAccessor httpContextAccessor = httpContextAccessor;
 
     /// <summary>
     /// Makes a decision if authorization is allowed based on a specific requirement.
@@ -52,11 +47,13 @@ public class PermissionsHandler : AuthorizationHandler<PermissionsRequirement>
         }
         else
         {
-            if (context.Resource is AuthorizationFilterContext mvcContext)
+            if (context.Resource is not AuthorizationFilterContext mvcContext)
             {
-                mvcContext.Result = new JsonResult("You do not have permission to do this action") { StatusCode = 403 };
-                context.Succeed(requirement);
+                return Task.CompletedTask;
             }
+
+            mvcContext.Result = new JsonResult("You do not have permission to do this action") { StatusCode = 403 };
+            context.Succeed(requirement);
         }
 
         return Task.CompletedTask;

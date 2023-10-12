@@ -2,7 +2,7 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Interfaces;
+namespace Blog.EntityServices.Interfaces;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;

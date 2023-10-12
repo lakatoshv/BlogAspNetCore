@@ -2,7 +2,7 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services;
+namespace Blog.EntityServices;
 
 using Data.Models;
 using Data.Repository;
@@ -14,15 +14,9 @@ using Interfaces;
 /// </summary>
 /// <seealso cref="GeneralService{Message}" />
 /// <seealso cref="IMessagesService" />
-public class MessagesService : GeneralService<Message>, IMessagesService
-{
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MessagesService"/> class.
-    /// </summary>
-    /// <param name="repo">The repo.</param>
-    public MessagesService(
-        IRepository<Message> repo)
-        : base(repo)
-    {
-    }
-}
+/// <remarks>
+/// Initializes a new instance of the <see cref="MessagesService"/> class.
+/// </remarks>
+/// <param name="repo">The repo.</param>
+public class MessagesService(IRepository<Message> repo)
+    : GeneralService<Message>(repo), IMessagesService;

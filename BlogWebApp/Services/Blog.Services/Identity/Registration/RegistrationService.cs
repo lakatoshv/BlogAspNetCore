@@ -2,14 +2,14 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Identity.Registration;
+namespace Blog.EntityServices.Identity.Registration;
 
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Data.Models;
 using User;
+using Microsoft.AspNetCore.Identity;
 
 /// <summary>
 /// Registration service.

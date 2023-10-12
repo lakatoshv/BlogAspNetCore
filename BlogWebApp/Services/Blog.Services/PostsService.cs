@@ -2,69 +2,72 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services;
+namespace Blog.EntityServices;
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+using Blog.CommonServices.Interfaces;
 using Contracts.V1.Responses.Chart;
-using Blog.Core.Helpers;
+using Core.Helpers;
 using Data.Models;
-using Data.Specifications;
 using Data.Repository;
-using Core;
-using Core.Dtos;
-using Core.Dtos.Posts;
-using Core.Dtos.User;
+using Data.Specifications;
+using Blog.Services.Core;
+using Blog.Services.Core.Dtos;
+using Blog.Services.Core.Dtos.Exports;
+using Blog.Services.Core.Dtos.Posts;
+using Blog.Services.Core.Dtos.User;
 using GeneralService;
 using Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 /// <summary>
 /// Posts service.
 /// </summary>
-public class PostsService : GeneralService<Post>, IPostsService
+/// <remarks>
+/// Initializes a new instance of the <see cref="PostsService"/> class.
+/// </remarks>
+/// <param name="repo">The repo.</param>
+/// <param name="commentsService">The comments service.</param>
+/// <param name="postsTagsRelationsService">The tags service.</param>
+/// <param name="mapper">The mapper.</param>
+/// <param name="exportsService">The exports service.</param>
+public class PostsService(
+    IRepository<Post> repo,
+    ICommentsService commentsService,
+    IMapper mapper,
+    IPostsTagsRelationsService postsTagsRelationsService,
+    IExportsService exportsService)
+    : GeneralService<Post>(repo), IPostsService
 {
     /// <summary>
     /// The comments service.
     /// </summary>
-    private readonly ICommentsService commentsService;
+    private readonly ICommentsService commentsService = commentsService;
 
     /// <summary>
     /// The mapper.
     /// </summary>
-    private readonly IMapper mapper;
+    private readonly IMapper mapper = mapper;
 
     /// <summary>
     /// The posts tags relations service.
     /// </summary>
-    private readonly IPostsTagsRelationsService postsTagsRelationsService;
+    private readonly IPostsTagsRelationsService postsTagsRelationsService = postsTagsRelationsService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PostsService"/> class.
+    /// The exports service.
     /// </summary>
-    /// <param name="repo">The repo.</param>
-    /// <param name="commentsService">The comments service.</param>
-    /// <param name="postsTagsRelationsService">The tags service.</param>
-    /// <param name="mapper">The mapper.</param>
-    public PostsService(
-        IRepository<Post> repo,
-        ICommentsService commentsService,
-        IMapper mapper,
-        IPostsTagsRelationsService postsTagsRelationsService)
-        : base(repo)
-    {
-        this.commentsService = commentsService;
-        this.postsTagsRelationsService = postsTagsRelationsService;
-        this.mapper = mapper;
-    }
+    private readonly IExportsService exportsService = exportsService;
 
     /// <inheritdoc cref="IPostsService"/>
     public async Task<Post> GetPostAsync(int id)
-    {
-        return await this.Repository.Table
+        => await this.Repository.Table
 
             // .Include(c => c.Comments)
             .Where(new PostSpecification(x => x.Id.Equals(id)).Filter)
@@ -73,7 +76,6 @@ public class PostsService : GeneralService<Post>, IPostsService
 
             // .OrderByDescending(d => d.) comments order by date descending
             .FirstOrDefaultAsync();
-    }
 
     /// <inheritdoc cref="IPostsService"/>
     public async Task<PostShowViewDto> GetPost(int postId, SortParametersDto sortParameters)
@@ -110,8 +112,7 @@ public class PostsService : GeneralService<Post>, IPostsService
     /// <param name="id">id.</param>
     /// <returns>Task.</returns>
     public async Task<Post> GetPostWithoutCommentsAsync(int id)
-    {
-        return await this.Repository.Table
+        => await this.Repository.Table
 
             // .Include(c => c.Comments)
             .Where(new PostSpecification(x => x.Id.Equals(id)).Filter)
@@ -120,7 +121,6 @@ public class PostsService : GeneralService<Post>, IPostsService
 
             // .OrderByDescending(d => d.) comments order by date descending
             .FirstOrDefaultAsync();
-    }
 
     /// <inheritdoc cref="IPostsService"/>
     public async Task<PostsViewDto> GetPostsAsync(PostsSearchParametersDto searchParameters)
@@ -278,7 +278,7 @@ public class PostsService : GeneralService<Post>, IPostsService
 
     /// <inheritdoc cref="IPostsService"/>
     public async Task<ChartDataModel> GetPostsActivity()
-        => new()
+        => new ()
         {
             Name = "Posts",
             Series = await Repository.TableNoTracking

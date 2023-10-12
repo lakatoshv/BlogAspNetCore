@@ -2,7 +2,7 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Security;
+namespace Blog.EntityServices.Security;
 
 /// <summary>
 /// Permission service interface.

@@ -2,19 +2,24 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Security.Authorization;
+namespace Blog.EntityServices.Security.Authorization;
 
 using System;
 using System.Threading.Tasks;
-using Blog.Core.Consts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
+using Core.Consts;
 
 /// <summary>
 /// Permissions policy provider.
 /// </summary>
 /// <seealso cref="IAuthorizationPolicyProvider" />
-public class PermissionsPolicyProvider : IAuthorizationPolicyProvider
+/// <remarks>
+/// Initializes a new instance of the <see cref="PermissionsPolicyProvider"/> class.
+/// </remarks>
+/// <param name="options">The options.</param>
+public class PermissionsPolicyProvider(IOptions<AuthorizationOptions> options)
+    : IAuthorizationPolicyProvider
 {
     /// <summary>
     /// The policy prefix.
@@ -27,16 +32,7 @@ public class PermissionsPolicyProvider : IAuthorizationPolicyProvider
     /// <value>
     /// The fallback policy provider.
     /// </value>
-    public DefaultAuthorizationPolicyProvider FallbackPolicyProvider { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PermissionsPolicyProvider"/> class.
-    /// </summary>
-    /// <param name="options">The options.</param>
-    public PermissionsPolicyProvider(IOptions<AuthorizationOptions> options)
-    {
-        this.FallbackPolicyProvider = new DefaultAuthorizationPolicyProvider(options);
-    }
+    public DefaultAuthorizationPolicyProvider FallbackPolicyProvider { get; } = new(options);
 
     /// <summary>
     /// Gets a <see cref="T:Microsoft.AspNetCore.Authorization.AuthorizationPolicy" /> from the given <paramref name="policyName" />
@@ -64,7 +60,8 @@ public class PermissionsPolicyProvider : IAuthorizationPolicyProvider
     /// <returns>
     /// The default authorization policy.
     /// </returns>
-    public Task<AuthorizationPolicy> GetDefaultPolicyAsync() => this.FallbackPolicyProvider.GetDefaultPolicyAsync();
+    public Task<AuthorizationPolicy> GetDefaultPolicyAsync()
+        => this.FallbackPolicyProvider.GetDefaultPolicyAsync();
 
     /// <summary>
     /// Gets the fallback authorization policy.
@@ -73,7 +70,5 @@ public class PermissionsPolicyProvider : IAuthorizationPolicyProvider
     /// The fallback authorization policy.
     /// </returns>
     public Task<AuthorizationPolicy> GetFallbackPolicyAsync()
-    {
-        return ((IAuthorizationPolicyProvider)this.FallbackPolicyProvider).GetFallbackPolicyAsync();
-    }
+        => ((IAuthorizationPolicyProvider)this.FallbackPolicyProvider).GetFallbackPolicyAsync();
 }

@@ -2,17 +2,17 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Identity.RefreshToken;
+namespace Blog.EntityServices.Identity.RefreshToken;
 
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Data.Models;
 using Data.Repository;
 using Blog.Services.Core.Identity.Auth;
 using Auth;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 /// <summary>
 /// Refresh token service.

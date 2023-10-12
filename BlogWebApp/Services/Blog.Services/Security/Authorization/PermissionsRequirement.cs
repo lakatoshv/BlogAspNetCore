@@ -2,15 +2,20 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Security.Authorization;
-
 using Microsoft.AspNetCore.Authorization;
+
+namespace Blog.EntityServices.Security.Authorization;
 
 /// <summary>
 /// Permissions requirement.
 /// </summary>
 /// <seealso cref="IAuthorizationRequirement" />
-public class PermissionsRequirement : IAuthorizationRequirement
+/// <remarks>
+/// Initializes a new instance of the <see cref="PermissionsRequirement"/> class.
+/// </remarks>
+/// <param name="permissionSystemName">Name of the permission system.</param>
+public class PermissionsRequirement(string permissionSystemName)
+    : IAuthorizationRequirement
 {
     /// <summary>
     /// Gets the name of the permission system.
@@ -18,11 +23,5 @@ public class PermissionsRequirement : IAuthorizationRequirement
     /// <value>
     /// The name of the permission system.
     /// </value>
-    public string PermissionSystemName { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PermissionsRequirement"/> class.
-    /// </summary>
-    /// <param name="permissionSystemName">Name of the permission system.</param>
-    public PermissionsRequirement(string permissionSystemName) => this.PermissionSystemName = permissionSystemName;
+    public string PermissionSystemName { get; } = permissionSystemName;
 }

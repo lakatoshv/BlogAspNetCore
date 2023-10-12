@@ -2,11 +2,11 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Interfaces;
+namespace Blog.EntityServices.Interfaces;
 
 using System.Threading.Tasks;
 using Data.Models;
-using Core.Dtos.User;
+using Blog.Services.Core.Dtos.User;
 using GeneralService;
 
 /// <summary>

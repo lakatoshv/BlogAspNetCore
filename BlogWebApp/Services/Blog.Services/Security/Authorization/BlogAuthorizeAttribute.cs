@@ -2,15 +2,15 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Security.Authorization;
+namespace Blog.EntityServices.Security.Authorization;
 
-using Blog.Core.Consts;
+using Core.Consts;
 using Microsoft.AspNetCore.Authorization;
 
 /// <summary>
 /// Blog authorize attribute.
 /// </summary>
-/// <seealso cref="Microsoft.AspNetCore.Authorization.AuthorizeAttribute" />
+/// <seealso cref="AuthorizeAttribute" />
 public class BlogAuthorizeAttribute : AuthorizeAttribute
 {
     /// <summary>
@@ -32,7 +32,7 @@ public class BlogAuthorizeAttribute : AuthorizeAttribute
     /// </value>
     public string PermissionSystemName
     {
-        get => this.Policy.Substring(this.policyPrefix.Length);
+        get => this.Policy[this.policyPrefix.Length..];
         set => this.Policy = $"{this.policyPrefix}{value}";
     }
 }

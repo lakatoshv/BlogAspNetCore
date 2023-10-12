@@ -2,13 +2,13 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Security;
+namespace Blog.EntityServices.Security;
 
-using Microsoft.AspNetCore.Identity;
 using Data.Models;
-using ControllerContext;
-using Core.Caching;
+using Blog.Services.Core.Caching;
 using Blog.Services.Core.Caching.Interfaces;
+using ControllerContext;
+using Microsoft.AspNetCore.Identity;
 
 /// <summary>
 /// Permission service.
@@ -64,7 +64,7 @@ public class PermissionService : IPermissionService
 
     private bool CheckIsUserAdmin(ApplicationUser user)
     {
-        string systemAdminKey = string.Format("Admin", user.Id);
+        var systemAdminKey = string.Format("Admin", user.Id);
         return this.cacheManager.Get(systemAdminKey, () => this.userManager.IsInRoleAsync(user, "Admin").Result);
     }
 }

@@ -2,15 +2,15 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blog.Services.Identity.User;
-
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Contracts.V1.Responses.Chart;
+using Blog.Contracts.V1.Responses.Chart;
 using Blog.Core.Infrastructure.Pagination;
 using Blog.Core.TableFilters;
-using Data.Models;
+using Blog.Data.Models;
+using Microsoft.AspNetCore.Identity;
+
+namespace Blog.EntityServices.Identity.User;
 
 /// <summary>
 /// User service interface.

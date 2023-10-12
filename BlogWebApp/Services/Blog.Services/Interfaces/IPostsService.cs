@@ -2,20 +2,18 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-
-
-namespace Blog.Services.Interfaces;
+namespace Blog.EntityServices.Interfaces;
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Contracts.V1.Responses.Chart;
 using Data.Models;
-using Core.Dtos;
-using Core.Dtos.Posts;
+using Blog.Services.Core.Dtos;
+using Blog.Services.Core.Dtos.Posts;
 using GeneralService;
 
 /// <summary>
-/// Posts service interfaces
+/// Posts service interfaces.
 /// </summary>
 public interface IPostsService : IGeneralService<Post>
 {
@@ -62,4 +60,6 @@ public interface IPostsService : IGeneralService<Post>
     /// </summary>
     /// <returns>Task.</returns>
     Task<ChartDataModel> GetPostsActivity();
+
+    Task<byte[]> ExportPostsToExcel(PostsSearchParametersDto searchParameters);
 }
