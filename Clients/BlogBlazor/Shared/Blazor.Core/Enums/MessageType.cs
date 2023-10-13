@@ -2,16 +2,15 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blazor.Core.Enums
+namespace Blazor.Core.Enums;
+
+/// <summary>
+/// Message type.
+/// </summary>
+public enum MessageType
 {
     /// <summary>
-    /// Message type.
+    /// The message fo admins
     /// </summary>
-    public enum MessageType
-    {
-        /// <summary>
-        /// The message fo admins
-        /// </summary>
-        MessageFoAdmins,
-    }
+    MessageFoAdmins,
 }

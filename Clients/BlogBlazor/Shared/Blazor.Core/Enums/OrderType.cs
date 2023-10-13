@@ -2,21 +2,20 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-namespace Blazor.Core.Enums
+namespace Blazor.Core.Enums;
+
+/// <summary>
+/// Order Type.
+/// </summary>
+public enum OrderType
 {
     /// <summary>
-    /// Order Type.
+    /// Ascending.
     /// </summary>
-    public enum OrderType
-    {
-        /// <summary>
-        /// Ascending.
-        /// </summary>
-        Ascending = 1,
+    Ascending = 1,
 
-        /// <summary>
-        /// Descending.
-        /// </summary>
-        Descending = 2,
-    }
+    /// <summary>
+    /// Descending.
+    /// </summary>
+    Descending = 2,
 }
