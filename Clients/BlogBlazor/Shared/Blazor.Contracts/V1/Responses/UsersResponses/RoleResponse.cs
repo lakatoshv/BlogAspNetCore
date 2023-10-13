@@ -1,24 +1,23 @@
-﻿namespace Blazor.Contracts.V1.Responses.UsersResponses
+﻿namespace Blazor.Contracts.V1.Responses.UsersResponses;
+
+/// <summary>
+/// Role response.
+/// </summary>
+public class RoleResponse
 {
     /// <summary>
-    /// Role response.
+    /// Gets or sets the identifier.
     /// </summary>
-    public class RoleResponse
-    {
-        /// <summary>
-        /// Gets or sets the identifier.
-        /// </summary>
-        /// <value>
-        /// The identifier.
-        /// </value>
-        public string Id { get; set; }
+    /// <value>
+    /// The identifier.
+    /// </value>
+    public string Id { get; set; }
 
-        /// <summary>
-        /// Gets or sets the name.
-        /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        public string Name { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the name.
+    /// </summary>
+    /// <value>
+    /// The name.
+    /// </value>
+    public string Name { get; set; }
 }
