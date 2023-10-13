@@ -29,9 +29,9 @@ public class MessageResponseExample : IExamplesProvider<MessageResponse>
                 EmailConfirmed = true,
                 Roles = new List<IdentityUserRole<string>>
                 {
-                    new IdentityUserRole<string>
+                    new ()
                     {
-                        RoleId = Guid.NewGuid().ToString(),
+                        RoleId = Guid.NewGuid().ToString()
                     }
                 }
             },
@@ -45,16 +45,16 @@ public class MessageResponseExample : IExamplesProvider<MessageResponse>
                 EmailConfirmed = true,
                 Roles = new List<IdentityUserRole<string>>
                 {
-                    new IdentityUserRole<string>
+                    new ()
                     {
-                        RoleId = Guid.NewGuid().ToString(),
+                        RoleId = Guid.NewGuid().ToString()
                     }
                 }
             },
 
             Subject = SwaggerExamplesConsts.MessageResponseExample.Subject,
             Body = SwaggerExamplesConsts.MessageResponseExample.Body,
-            MessageType = MessageType.MessageFoAdmins,
+            MessageType = MessageType.MessageFoAdmins
         };
     }
 }

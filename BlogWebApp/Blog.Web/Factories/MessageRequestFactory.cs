@@ -54,11 +54,8 @@ public class MessageRequestFactory : RequestFactory<int, Message, CreateMessageR
     /// <inheritdoc cref="RequestFactory{T,TEntity,TCreateRequest,TUpdateRequest}"/>
     public override UpdateMessageRequest GenerateForUpdate(int id)
     {
-        var message = _unitOfWork.GetRepository<Message>().FirstOrDefault(new MessageSpecification(x => x.Id == id));
-        if (message == null)
-        {
-            throw new MicroserviceArgumentNullException();
-        }
+        var message = _unitOfWork.GetRepository<Message>().FirstOrDefault(new MessageSpecification(x => x.Id == id))
+            ?? throw new MicroserviceArgumentNullException();
 
         var mapped = _mapper.Map<UpdateMessageRequest>(message);
 

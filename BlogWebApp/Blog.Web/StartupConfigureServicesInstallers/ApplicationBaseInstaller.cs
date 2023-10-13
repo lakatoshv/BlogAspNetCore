@@ -1,7 +1,7 @@
 ﻿namespace Blog.Web.StartupConfigureServicesInstallers;
 
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using System.Text;
 
 /// <summary>

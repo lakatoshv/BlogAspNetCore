@@ -40,7 +40,7 @@ public class CategoryRequestFactory : RequestFactory<int, Category, CreateCatego
 
     /// <inheritdoc cref="RequestFactory{T,TEntity,TCreateRequest,TUpdateRequest}"/>
     public override CreateCategoryRequest GenerateForCreate() =>
-        new()
+        new ()
         {
             Name = "Категорія за замовчуванням"
         };
@@ -48,11 +48,9 @@ public class CategoryRequestFactory : RequestFactory<int, Category, CreateCatego
     /// <inheritdoc cref="RequestFactory{T,TEntity,TCreateRequest,TUpdateRequest}"/>
     public override UpdateCategoryRequest GenerateForUpdate(int id)
     {
-        var category = _unitOfWork.GetRepository<Category>().FirstOrDefault(new CategorySpecification(x => x.Id == id));
-        if (category == null)
-        {
-            throw new MicroserviceArgumentNullException();
-        }
+        var category = _unitOfWork.GetRepository<Category>().FirstOrDefault(new CategorySpecification(x => x.Id == id))
+            ?? throw new MicroserviceArgumentNullException();;
+
 
         var mapped = _mapper.Map<UpdateCategoryRequest>(category);
 

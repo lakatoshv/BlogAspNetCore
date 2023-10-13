@@ -40,7 +40,7 @@ public class TagRequestFactory : RequestFactoryWithSample<int, Tag, TagRequest, 
 
     /// <inheritdoc cref="RequestFactoryWithSample{T,TEntity,TSampleRequest,TCreateRequest,TUpdateRequest}"/>
     public override CreateTagRequest GenerateForCreate() =>
-        new()
+        new ()
         {
             Title = "Create Tag from factory"
         };
@@ -48,11 +48,8 @@ public class TagRequestFactory : RequestFactoryWithSample<int, Tag, TagRequest, 
     /// <inheritdoc cref="RequestFactoryWithSample{T,TEntity,TSampleRequest,TCreateRequest,TUpdateRequest}"/>
     public override UpdateTagRequest GenerateForUpdate(int id)
     {
-        var tag = _unitOfWork.GetRepository<Tag>().FirstOrDefault(new TagSpecification(x => x.Id == id));
-        if (tag == null)
-        {
-            throw new MicroserviceArgumentNullException();
-        }
+        var tag = _unitOfWork.GetRepository<Tag>().FirstOrDefault(new TagSpecification(x => x.Id == id))
+            ?? throw new MicroserviceArgumentNullException();
 
         var mapped = _mapper.Map<UpdateTagRequest>(tag);
 
@@ -61,7 +58,7 @@ public class TagRequestFactory : RequestFactoryWithSample<int, Tag, TagRequest, 
 
     /// <inheritdoc cref="RequestFactoryWithSample{T,TEntity,TSampleRequest,TCreateRequest,TUpdateRequest}"/>
     public override TagRequest GenerateForSampleRequest() =>
-        new TagRequest()
+        new ()
         {
             Title = "Tag",
         };

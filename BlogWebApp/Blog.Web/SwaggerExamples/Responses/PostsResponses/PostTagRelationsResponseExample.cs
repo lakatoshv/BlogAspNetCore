@@ -24,13 +24,13 @@ public class PostTagRelationsResponseExample : IExamplesProvider<PostTagRelation
                 Description = SwaggerExamplesConsts.PostViewResponseExample.Description,
                 Content = SwaggerExamplesConsts.PostViewResponseExample.Content,
                 ImageUrl = SwaggerExamplesConsts.PostViewResponseExample.ImageUrl,
-                AuthorId = Guid.NewGuid().ToString(),
+                AuthorId = Guid.NewGuid().ToString()
             },
 
             TagId = 0,
             Tag = new TagResponse
             {
-                Title = SwaggerExamplesConsts.TagResponseExample.Title + "1",
+                Title = SwaggerExamplesConsts.TagResponseExample.Title + "1"
             }
         };
     }

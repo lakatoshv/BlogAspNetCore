@@ -29,9 +29,9 @@ public class UpdatePostRequestExample : IExamplesProvider<UpdatePostRequest>
             Dislikes = 10,
             Tags = new List<TagRequest>
             {
-                new TagRequest { Title = SwaggerExamplesConsts.UpdateTagRequestExample.Title + "1" },
-                new TagRequest { Title = SwaggerExamplesConsts.UpdateTagRequestExample.Title + "2" },
-                new TagRequest { Title = SwaggerExamplesConsts.UpdateTagRequestExample.Title + "3" },
+                new () { Title = SwaggerExamplesConsts.UpdateTagRequestExample.Title + "1" },
+                new () { Title = SwaggerExamplesConsts.UpdateTagRequestExample.Title + "2" },
+                new () { Title = SwaggerExamplesConsts.UpdateTagRequestExample.Title + "3" },
             },
         };
     }

@@ -24,9 +24,9 @@ public class ApplicationUserResponseExample : IExamplesProvider<ApplicationUserR
             EmailConfirmed = true,
             Roles = new List<IdentityUserRole<string>>
             {
-                new IdentityUserRole<string>
+                new ()
                 {
-                    RoleId = Guid.NewGuid().ToString(),
+                    RoleId = Guid.NewGuid().ToString()
                 }
             }
         };

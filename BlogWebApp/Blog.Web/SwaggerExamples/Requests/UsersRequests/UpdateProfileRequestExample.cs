@@ -20,7 +20,7 @@ public class UpdateProfileRequestExample : IExamplesProvider<UpdateProfileReques
             LastName = SwaggerExamplesConsts.UpdateProfileRequestExample.LastName,
             PhoneNumber = SwaggerExamplesConsts.UpdateProfileRequestExample.PhoneNumber,
             Password = SwaggerExamplesConsts.UpdateProfileRequestExample.Password,
-            About = SwaggerExamplesConsts.UpdateProfileRequestExample.About,
+            About = SwaggerExamplesConsts.UpdateProfileRequestExample.About
         };
     }
 }

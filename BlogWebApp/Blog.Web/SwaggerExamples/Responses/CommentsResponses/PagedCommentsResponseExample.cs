@@ -19,22 +19,22 @@ public class PagedCommentsResponseExample : IExamplesProvider<PagedCommentsRespo
         return new PagedCommentsResponse
         {
             Comments = new List<CommentResponse> {
-                new CommentResponse
+                new ()
                 {
                     Id = 0,
                     PostId = 0,
                     CommentBody = SwaggerExamplesConsts.CommentResponseExample.CommentBody + "1",
                     CreatedAt = DateTime.Now,
-                    UserId = Guid.NewGuid().ToString(),
+                    UserId = Guid.NewGuid().ToString()
                 },
 
-                new CommentResponse
+                new ()
                 {
                     Id = 0,
                     PostId = 0,
                     CommentBody = SwaggerExamplesConsts.CommentResponseExample.CommentBody + "2",
                     CreatedAt = DateTime.Now,
-                    UserId = Guid.NewGuid().ToString(),
+                    UserId = Guid.NewGuid().ToString()
                 },
             },
 
@@ -42,7 +42,7 @@ public class PagedCommentsResponseExample : IExamplesProvider<PagedCommentsRespo
             {
                 PageNumber = 1,
                 PageSize = 10,
-                TotalItems = 100,
+                TotalItems = 100
             },
         };
     }

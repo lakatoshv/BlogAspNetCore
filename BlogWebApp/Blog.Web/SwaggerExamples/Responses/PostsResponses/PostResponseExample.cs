@@ -27,42 +27,42 @@ public class PostResponseExample : IExamplesProvider<PostResponse>
 
             Comments = new List<CommentResponse>
             {
-                new CommentResponse
+                new ()
                 {
                     Id = 0,
                     PostId = 0,
                     CommentBody = SwaggerExamplesConsts.CommentResponseExample.CommentBody + "1",
                     CreatedAt = DateTime.Now,
-                    UserId = Guid.NewGuid().ToString(),
+                    UserId = Guid.NewGuid().ToString()
                 },
 
-                new CommentResponse
+                new ()
                 {
                     Id = 0,
                     PostId = 0,
                     CommentBody = SwaggerExamplesConsts.CommentResponseExample.CommentBody + "2",
                     CreatedAt = DateTime.Now,
-                    UserId = Guid.NewGuid().ToString(),
+                    UserId = Guid.NewGuid().ToString()
                 },
             },
 
             PostsTagsRelations = new List<PostTagRelationsResponse>
             {
-                new PostTagRelationsResponse
+                new ()
                 {
                     TagId = 0,
                     Tag = new TagResponse
                     {
-                        Title = SwaggerExamplesConsts.TagResponseExample.Title + "1",
+                        Title = SwaggerExamplesConsts.TagResponseExample.Title + "1"
                     }
                 },
 
-                new PostTagRelationsResponse
+                new ()
                 {
                     TagId = 0,
                     Tag = new TagResponse
                     {
-                        Title = SwaggerExamplesConsts.TagResponseExample.Title + "2",
+                        Title = SwaggerExamplesConsts.TagResponseExample.Title + "2"
                     }
                 }
             },

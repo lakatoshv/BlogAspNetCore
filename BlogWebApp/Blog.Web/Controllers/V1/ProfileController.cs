@@ -4,48 +4,42 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Cache;
 using Blog.Contracts.V1;
 using Blog.Contracts.V1.Requests.UsersRequests;
 using Blog.Contracts.V1.Responses.UsersResponses;
 using Core.Consts;
-using Services.ControllerContext;
-using Services.Interfaces;
-using Cache;
+using EntityServices.ControllerContext;
+using EntityServices.Interfaces;
 
 /// <summary>
 /// Profiles controller.
 /// </summary>
 /// <seealso cref="BaseController" />
+/// <remarks>
+/// Initializes a new instance of the <see cref="ProfileController"/> class.
+/// </remarks>
+/// <param name="controllerContext">The controller context.</param>
+/// <param name="profileService">The profile service.</param>
+/// <param name="mapper"></param>
 [Route(ApiRoutes.ProfileController.Profile)]
 [ApiController]
 [Produces(Consts.JsonType)]
-public class ProfileController : BaseController
+public class ProfileController(
+    IControllerContext controllerContext,
+    IProfileService profileService,
+    IMapper mapper)
+    : BaseController(controllerContext)
 {
     /// <summary>
     /// The profile service.
     /// </summary>
-    private readonly IProfileService _profileService;
+    private readonly IProfileService _profileService = profileService;
 
     /// <summary>
     /// The mapper.
     /// </summary>
-    private readonly IMapper _mapper;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ProfileController"/> class.
-    /// </summary>
-    /// <param name="controllerContext">The controller context.</param>
-    /// <param name="profileService">The profile service.</param>
-    /// <param name="mapper"></param>
-    public ProfileController(
-        IControllerContext controllerContext,
-        IProfileService profileService,
-        IMapper mapper) 
-        : base(controllerContext)
-    {
-        _profileService = profileService;
-        _mapper = mapper;
-    }
+    private readonly IMapper _mapper = mapper;
 
     // GET: Profile/5        
     /// <summary>
@@ -57,7 +51,7 @@ public class ProfileController : BaseController
     /// <response code="404">Unable to gets the user profile.</response>
     [ProducesResponseType(typeof(ApplicationUserResponse), 200)]
     [ProducesResponseType(404)]
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     [Cached(600)]
     public async Task<ActionResult> Show([FromRoute] int id)
     {
@@ -82,7 +76,7 @@ public class ProfileController : BaseController
     /// <response code="204">Edits the user profile.</response>
     /// <response code="400">Unable to edits the user profile, model is invalid.</response>
     /// <response code="404">Unable to edits the user profile, profile not found.</response>
-    [HttpPut("{profileId}")]
+    [HttpPut("{profileId:int}")]
     [Authorize]
     [ProducesResponseType(typeof(ApplicationUserResponse), 204)]
     [ProducesResponseType(typeof(object), 400)]
@@ -105,7 +99,7 @@ public class ProfileController : BaseController
         profile.Profile.User.LastName = model.LastName;
         profile.Profile.User.PhoneNumber = model.PhoneNumber;
         profile.Profile.About = model.About;
-        _profileService.Update(profile.Profile);
+        await _profileService.UpdateAsync(profile.Profile);
 
         var editedProfile = await _profileService.GetProfile(profileId);
 

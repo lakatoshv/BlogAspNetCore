@@ -23,6 +23,6 @@ public class LowercaseDocumentFilter : IDocumentFilter
     /// <returns>string.</returns>
     private static string LowercaseEverythingButParameters(string key)
     {
-        return string.Join('/', key.Split('/').Select(x => x.Contains("{") ? x : x.ToLower()));
+        return string.Join('/', key.Split('/').Select(x => x.Contains('{') ? x : x.ToLower()));
     }
 }

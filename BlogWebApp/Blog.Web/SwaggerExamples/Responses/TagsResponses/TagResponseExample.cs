@@ -16,7 +16,7 @@ public class TagResponseExample : IExamplesProvider<TagResponse>
         return new TagResponse
         {
             Id = 0,
-            Title = SwaggerExamplesConsts.TagResponseExample.Title + "1",
+            Title = SwaggerExamplesConsts.TagResponseExample.Title + "1"
         };
     }
 }

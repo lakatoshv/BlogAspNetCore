@@ -28,7 +28,7 @@ public class SwaggerGroupOperationFilter : IOperationFilter
         }
         else
         {
-            operation.Tags = new[] { new OpenApiTag { Name = controllerActionDescriptor?.RouteValues["controller"] } };
+            operation.Tags = new[] { new OpenApiTag { Name = controllerActionDescriptor.RouteValues["controller"] } };
         }
     }
 }

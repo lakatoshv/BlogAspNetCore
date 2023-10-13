@@ -25,7 +25,7 @@ public class RegistrationRequestExample : IExamplesProvider<RegistrationRequest>
             PhoneNumber = SwaggerExamplesConsts.AccountExample.PhoneNumber,
             Roles = new List<string>
             {
-                Consts.Roles.User,
+                Consts.Roles.User
             }
         };
     }

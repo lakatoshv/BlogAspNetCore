@@ -25,10 +25,10 @@ public class AccountResponseExample : IExamplesProvider<AccountResponse>
             PhoneNumber = SwaggerExamplesConsts.AccountExample.PhoneNumber,
             Roles = new List<RoleResponse>
             {
-                new RoleResponse
+                new ()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Name = Consts.Roles.User,
+                    Name = Consts.Roles.User
                 },
             }
         };

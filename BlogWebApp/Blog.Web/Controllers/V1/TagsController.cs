@@ -4,56 +4,51 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Data.Models;
-using Data.Specifications;
-using Services.ControllerContext;
-using Blog.Services.Core.Dtos;
-using Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Cache;
+using Core.Consts;
 using Blog.Contracts.V1;
 using Blog.Contracts.V1.Requests;
 using Blog.Contracts.V1.Requests.TagsRequests;
 using Blog.Contracts.V1.Responses;
 using Blog.Contracts.V1.Responses.Chart;
 using Blog.Contracts.V1.Responses.TagsResponses;
-using Core.Consts;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Cache;
+using Data.Models;
+using Data.Specifications;
+using Blog.Services.Core.Dtos;
+using EntityServices.Interfaces;
+using EntityServices.ControllerContext;
 
 /// <summary>
 /// Tags controller.
 /// </summary>
 /// <seealso cref="ControllerBase" />
+/// <remarks>
+/// Initializes a new instance of the <see cref="TagsController"/> class.
+/// </remarks>
+/// <param name="controllerContext"></param>
+/// <param name="tagsService"></param>
+/// <param name="mapper">The mapper.</param>
 [Route(ApiRoutes.TagsController.Tags)]
 [ApiController]
 [Produces(Consts.JsonType)]
-public class TagsController : BaseController
+public class TagsController(
+    IControllerContext controllerContext,
+    ITagsService tagsService,
+    IMapper mapper)
+    : BaseController(controllerContext)
 {
     /// <summary>
     /// The mapper.
     /// </summary>
-    private readonly IMapper _mapper;
+    private readonly IMapper _mapper = mapper;
 
     /// <summary>
     /// The tags service.
     /// </summary>
-    private readonly ITagsService _tagsService;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TagsController"/> class.
-    /// </summary>
-    /// <param name="controllerContext"></param>
-    /// <param name="tagsService"></param>
-    /// <param name="mapper">The mapper.</param>
-    public TagsController(
-        IControllerContext controllerContext,
-        ITagsService tagsService,
-        IMapper mapper) : base(controllerContext)
-    {
-        _tagsService = tagsService;
-        _mapper = mapper;
-    }
+    private readonly ITagsService _tagsService = tagsService;
 
     // GET: Tags               
     /// <summary>
@@ -228,7 +223,7 @@ public class TagsController : BaseController
         }
 
         var updatedTag = _mapper.Map(model, originTag);
-        _tagsService.Update(updatedTag);
+        await _tagsService.UpdateAsync(updatedTag);
 
         var tag = await _tagsService.FindAsync(id);
         var mappedTag = _mapper.Map<TagResponse>(tag);
@@ -244,7 +239,7 @@ public class TagsController : BaseController
     /// <returns>Task.</returns>
     /// <response code="200">Deletes the tag.</response>
     /// <response code="404">Unable to deletes the tag, tag not found.</response>
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     [ProducesResponseType(typeof(CreatedResponse<int>), 200)]
     [ProducesResponseType(404)]
     public async Task<IActionResult> DeleteAsync([FromRoute] int id)
@@ -255,7 +250,7 @@ public class TagsController : BaseController
             return NotFound();
         }
 
-        _tagsService.Delete(comment);
+        await _tagsService.DeleteAsync(comment);
         var response = new CreatedResponse<int> {Id = id};
 
         return Ok(response);

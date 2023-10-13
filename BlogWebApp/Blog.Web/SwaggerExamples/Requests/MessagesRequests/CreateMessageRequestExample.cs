@@ -13,7 +13,7 @@ public class CreateMessageRequestExample : IExamplesProvider<CreateMessageReques
 {
     /// <inheritdoc cref="IExamplesProvider{T}"/>
     public CreateMessageRequest GetExamples() =>
-        new CreateMessageRequest
+        new ()
         {
             SenderId = Guid.NewGuid().ToString(),
             RecipientId = Guid.NewGuid().ToString(),

@@ -1,4 +1,7 @@
-﻿namespace Blog.Web.Controllers.V1;
+﻿using Blog.EntityServices.ControllerContext;
+using Blog.EntityServices.Interfaces;
+
+namespace Blog.Web.Controllers.V1;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -6,51 +9,43 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Cache;
 using Data.Models;
-using Services.ControllerContext;
-using Services.Interfaces;
 using Blog.Contracts.V1;
 using Blog.Contracts.V1.Requests.MessagesRequests;
 using Blog.Contracts.V1.Responses;
 using Core.Consts;
 using Data.Specifications;
-using Cache;
 
 /// <summary>
 /// Messages controller.
 /// </summary>
 /// <seealso cref="BaseController" />
+/// <remarks>
+/// Initializes a new instance of the <see cref="MessagesController"/> class.
+/// </remarks>
+/// <param name="controllerContext">The controller context.</param>
+/// <param name="messagesService">The messages service.</param>
+/// <param name="mapper"></param>
 [Route(ApiRoutes.MessagesController.Messages)]
 [ApiController]
 [AllowAnonymous]
 [Produces(Consts.JsonType)]
-public class MessagesController : BaseController
+public class MessagesController(
+    IControllerContext controllerContext,
+    IMessagesService messagesService,
+    IMapper mapper)
+    : BaseController(controllerContext)
 {
     /// <summary>
     /// The messages service.
     /// </summary>
-    private readonly IMessagesService _messagesService;
+    private readonly IMessagesService _messagesService = messagesService;
 
     /// <summary>
     /// The mapper.
     /// </summary>
-    private readonly IMapper _mapper;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MessagesController"/> class.
-    /// </summary>
-    /// <param name="controllerContext">The controller context.</param>
-    /// <param name="messagesService">The messages service.</param>
-    /// <param name="mapper"></param>
-    public MessagesController(
-        IControllerContext controllerContext,
-        IMessagesService messagesService,
-        IMapper mapper)
-        : base(controllerContext)
-    {
-        _messagesService = messagesService;
-        _mapper = mapper;
-    }
+    private readonly IMapper _mapper = mapper;
 
     // GET: Messages        
     /// <summary>
@@ -177,7 +172,7 @@ public class MessagesController : BaseController
     /// <response code="204">Edit the message.</response>
     /// <response code="400">Unable to edit the message, model is invalid.</response>
     /// <response code="404">Unable to edit the message, message not found.</response>
-    [HttpPut("{id}")]
+    [HttpPut("{id:int}")]
     [Authorize]
     [ProducesResponseType(typeof(MessageResponse), 204)]
     [ProducesResponseType(typeof(object), 400)]
@@ -211,7 +206,7 @@ public class MessagesController : BaseController
     /// <returns>Task.</returns>
     /// <response code="200">Delete the message.</response>
     /// <response code="404">Unable to delete the message, message not found.</response>
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     [Authorize]
     [ProducesResponseType(typeof(CreatedResponse<int>), 200)]
     [ProducesResponseType(404)]

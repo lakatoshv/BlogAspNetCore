@@ -19,8 +19,7 @@ public static class InstallerExtensions
     {
         var installers = typeof(Program).Assembly.ExportedTypes.Where(x =>
                 typeof(IInstaller).IsAssignableFrom(x)
-                && !x.IsInterface
-                && !x.IsAbstract)
+                && x is { IsInterface: false, IsAbstract: false })
             .Select(Activator.CreateInstance)
             .Cast<IInstaller>().ToList();
 

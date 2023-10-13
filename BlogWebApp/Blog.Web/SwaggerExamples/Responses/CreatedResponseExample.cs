@@ -14,7 +14,7 @@ public class CreatedResponseExample : IExamplesProvider<CreatedResponse<int>>
     {
         return new CreatedResponse<int>
         {
-            Id = 0,
+            Id = 0
         };
     }
 }

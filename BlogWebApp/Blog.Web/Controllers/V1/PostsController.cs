@@ -2,72 +2,62 @@
 
 using System.Threading.Tasks;
 using AutoMapper;
-using Data.Models;
-using Blog.Services.Core.Dtos;
-using Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Linq;
-using Services.ControllerContext;
-using Blog.Services.Core.Dtos.Posts;
+using Cache;
 using Blog.Contracts.V1;
+using Blog.Contracts.V1.Requests;
 using Blog.Contracts.V1.Requests.PostsRequests;
 using Blog.Contracts.V1.Responses;
+using Blog.Contracts.V1.Responses.Chart;
 using Blog.Contracts.V1.Responses.PostsResponses;
 using Blog.Contracts.V1.Responses.UsersResponses;
 using Core.Consts;
-using Microsoft.AspNetCore.Authorization;
-using Blog.Contracts.V1.Requests;
-using Blog.Contracts.V1.Responses.Chart;
-using Cache;
+using Data.Models;
+using Blog.Services.Core.Dtos;
+using Blog.Services.Core.Dtos.Posts;
+using EntityServices.ControllerContext;
+using EntityServices.Interfaces;
 
 /// <summary>
 /// Posts controller.
 /// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="PostsController"/> class.
+/// </remarks>
+/// <param name="controllerContext">The controller context.</param>
+/// <param name="postsService">The posts service.</param>
+/// <param name="postsTagsRelationsService">The posts tags relations service.</param>
+/// <param name="mapper">The mapper.</param>
 [Route(ApiRoutes.PostsController.Posts)]
 [ApiController]
 [AllowAnonymous]
 [Produces(Consts.JsonType)]
-public class PostsController : BaseController
+public class PostsController(
+    IControllerContext controllerContext,
+    IPostsService postsService,
+    IPostsTagsRelationsService postsTagsRelationsService,
+
+    // ICommentService commentService,
+    IMapper mapper)
+    : BaseController(controllerContext)
 {
     /// <summary>
     /// Mapper.
     /// </summary>
-    private readonly IMapper _mapper;
+    private readonly IMapper _mapper = mapper;
 
     /// <summary>
     /// Posts service.
     /// </summary>
-    private readonly IPostsService _postsService;
+    private readonly IPostsService _postsService = postsService;
 
     /// <summary>
     /// The posts tags relations service.
     /// </summary>
-    private readonly IPostsTagsRelationsService _postsTagsRelationsService;
-
-    // private readonly ICommentService _commentsService;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PostsController"/> class.
-    /// </summary>
-    /// <param name="controllerContext">The controller context.</param>
-    /// <param name="postsService">The posts service.</param>
-    /// <param name="postsTagsRelationsService">The posts tags relations service.</param>
-    /// <param name="mapper">The mapper.</param>
-    public PostsController(
-        IControllerContext controllerContext,
-        IPostsService postsService,
-        IPostsTagsRelationsService postsTagsRelationsService,
-
-        // ICommentService commentService,
-        IMapper mapper) : base(controllerContext)
-    {
-        _postsService = postsService;
-        _postsTagsRelationsService = postsTagsRelationsService;
-
-        // _commentsService = commentService;
-        _mapper = mapper;
-    }
+    private readonly IPostsTagsRelationsService _postsTagsRelationsService = postsTagsRelationsService;
 
     // GET: Posts
     /// <summary>
@@ -266,7 +256,7 @@ public class PostsController : BaseController
         }
 
         model.Likes++;
-        _postsService.Update(model);
+        await _postsService.UpdateAsync(model);
 
         var post = await _postsService.GetPostAsync(id);
         var mappedPost = _mapper.Map<PostViewResponse>(post);
@@ -302,7 +292,7 @@ public class PostsController : BaseController
         }
 
         model.Dislikes++;
-        _postsService.Update(model);
+        await _postsService.UpdateAsync(model);
 
         var post = await _postsService.GetPostAsync(id);
         var mappedPost = _mapper.Map<PostViewResponse>(post);
@@ -321,7 +311,7 @@ public class PostsController : BaseController
     /// <response code="204">Edit post by id.</response>
     /// <response code="400">Unable to edit post by id, model is invalid.</response>
     /// <response code="404">Unable to edit post by id, post not found.</response>
-    [HttpPut("{id}")]
+    [HttpPut("{id:int}")]
     [Authorize]
     [ProducesResponseType(typeof(PostViewResponse), 204)]
     [ProducesResponseType(typeof(object), 400)]
@@ -344,7 +334,7 @@ public class PostsController : BaseController
         // TODO Fix if possible
         updatedModel.Author = CurrentUser;
         // - - -
-        _postsService.Update(updatedModel);
+        await _postsService.UpdateAsync(updatedModel);
         var tags = _mapper.Map<List<Tag>>(model.Tags);
         await _postsTagsRelationsService.AddTagsToExistingPost(post.Id, post.PostsTagsRelations.ToList(), tags);
 
@@ -363,7 +353,7 @@ public class PostsController : BaseController
     /// <returns>Task.</returns>
     /// <response code="200">Delete post by id.</response>
     /// <response code="404">Unable to delete post by id, post not found.</response>
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     [Authorize]
     [ProducesResponseType(typeof(CreatedResponse<int>), 200)]
     [ProducesResponseType(404)]
@@ -383,7 +373,7 @@ public class PostsController : BaseController
             return BadRequest(new { ErrorMessage = "You are not an author of the post." });
         }
 
-        _postsService.Delete(post);
+        await _postsService.DeleteAsync(post);
 
         var response = new CreatedResponse<int> {Id = id};
 

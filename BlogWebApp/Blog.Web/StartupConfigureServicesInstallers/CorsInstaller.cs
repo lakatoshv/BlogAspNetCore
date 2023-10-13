@@ -13,14 +13,14 @@ public class CorsInstaller : IInstaller
     /// <inheritdoc cref="IInstaller"/>
     public void InstallServices(IServiceCollection services, IConfiguration configuration)
     {
-        var origins = configuration.GetSection("Cors")?.GetSection("Origins")?.Value?.Split(',');
+        var origins = configuration.GetSection("Cors").GetSection("Origins").Value?.Split(',');
         services.AddCors(options =>
         {
             options.AddPolicy("CorsPolicy", builder =>
             {
                 builder.AllowAnyHeader();
                 builder.AllowAnyMethod();
-                if (origins == null || origins.Length <= 0)
+                if (origins is not { Length: > 0 })
                 {
                     return;
                 }

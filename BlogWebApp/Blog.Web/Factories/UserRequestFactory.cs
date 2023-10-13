@@ -18,7 +18,7 @@ public class UserRequestFactory : RequestFactoryForUserBase<ChangePasswordReques
         };
 
     public override LoginRequest GenerateLoginRequest() =>
-        new()
+        new ()
         {
             Email = "EmailFromFactory@gmail.com",
             Password = "PasswordFromFactory123",

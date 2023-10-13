@@ -26,22 +26,22 @@ public class PagedTagsResponseExample : IExamplesProvider<PagedTagsResponse>
 
             Tags = new List<TagResponse>
             {
-                new TagResponse
+                new ()
                 {
                     Id = 0,
-                    Title = SwaggerExamplesConsts.TagResponseExample.Title + "1",
+                    Title = SwaggerExamplesConsts.TagResponseExample.Title + "1"
                 },
 
-                new TagResponse
+                new ()
                 {
                     Id = 0,
-                    Title = SwaggerExamplesConsts.TagResponseExample.Title + "2",
+                    Title = SwaggerExamplesConsts.TagResponseExample.Title + "2"
                 },
                     
-                new TagResponse
+                new ()
                 {
                     Id = 0,
-                    Title = SwaggerExamplesConsts.TagResponseExample.Title + "3",
+                    Title = SwaggerExamplesConsts.TagResponseExample.Title + "3"
                 }
             },
         };

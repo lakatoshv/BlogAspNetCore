@@ -1,8 +1,6 @@
 ﻿namespace Blog.Web.Controllers.V1;
 
 using Data.Models;
-using Services.Identity.Auth;
-using Services.Identity.Registration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,92 +10,80 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using AutoMapper;
-using CommonServices.EmailServices.Interfaces;
-using Services.ControllerContext;
 using Blog.Services.Core.Utilities;
-using Services.Identity.User;
+using CommonServices.EmailServices.Interfaces;
+using EntityServices.ControllerContext;
+using EntityServices.Identity.Auth;
+using EntityServices.Identity.Registration;
+using EntityServices.Identity.User;
 using Blog.Contracts.V1;
 using Blog.Contracts.V1.Requests.UsersRequests;
 using Blog.Contracts.V1.Responses.UsersResponses;
-using Core.Consts;
 using Blog.Contracts.V1.Responses.Chart;
+using Core.Consts;
 using Cache;
 
 /// <summary>
 /// Accounts controller.
 /// Registration and login user.
 /// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="AccountsController"/> class.
+/// </remarks>
+/// <param name="controllerContext">The controller context.</param>
+/// <param name="registrationService">The registration service.</param>
+/// <param name="authService">The authentication service.</param>
+/// <param name="userManager">The user manager.</param>
+/// <param name="roleManager">The role manager.</param>
+/// <param name="userService">The user service.</param>
+/// <param name="emailService">The email service.</param>
+/// <param name="mapper">The mapper.</param>
 [Route(ApiRoutes.AccountsController.Accounts)]
 [ApiController]
 [Authorize]
 [Produces(Consts.JsonType)]
-public class AccountsController : BaseController
+public class AccountsController(
+    IControllerContext controllerContext,
+    IRegistrationService registrationService,
+    IAuthService authService,
+    UserManager<ApplicationUser> userManager,
+    RoleManager<ApplicationRole> roleManager,
+    IUserService userService,
+    IEmailExtensionService emailService,
+    IMapper mapper) : BaseController(controllerContext)
 {
     /// <summary>
     /// The user service.
     /// </summary>
-    private readonly IUserService _userService;
+    private readonly IUserService _userService = userService;
 
     /// <summary>
     /// The email extension service.
     /// </summary>
-    private readonly IEmailExtensionService _emailExtensionService;
+    private readonly IEmailExtensionService _emailExtensionService = emailService;
     // private readonly IMapper _mapper;
 
     /// <summary>
     /// The registration service.
     /// </summary>
-    private readonly IRegistrationService _registrationService;
+    private readonly IRegistrationService _registrationService = registrationService;
 
     /// <summary>
     /// The authentication service.
     /// </summary>
-    private readonly IAuthService _authService;
+    private readonly IAuthService _authService = authService;
 
     /// <summary>
     /// The user manager.
     /// </summary>
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
     /// <summary>
     /// The role manager.
     /// </summary>
-    private readonly RoleManager<ApplicationRole> _roleManager;
+    private readonly RoleManager<ApplicationRole> _roleManager = roleManager;
 
-    private readonly IMapper _mapper;
-    // private readonly IRefreshTokenService _refreshTokenService;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AccountsController"/> class.
-    /// </summary>
-    /// <param name="controllerContext">The controller context.</param>
-    /// <param name="registrationService">The registration service.</param>
-    /// <param name="authService">The authentication service.</param>
-    /// <param name="userManager">The user manager.</param>
-    /// <param name="roleManager">The role manager.</param>
-    /// <param name="userService">The user service.</param>
-    /// <param name="emailService">The email service.</param>
-    /// <param name="mapper">The mapper.</param>
-    public AccountsController(
-        IControllerContext controllerContext,
-        IRegistrationService registrationService,
-        IAuthService authService,
-        UserManager<ApplicationUser> userManager,
-        RoleManager<ApplicationRole> roleManager,
-        IUserService userService,
-        IEmailExtensionService emailService,
-        IMapper mapper)
-        : base(controllerContext)
-    {
-        _userManager = userManager;
-        _roleManager = roleManager;
-        _userService = userService;
-        _emailExtensionService = emailService;
-        _mapper = mapper;
-        _registrationService = registrationService;
-        _authService = authService;
-        // _refreshTokenService = refreshTokenService;
-    }
+    private readonly IMapper _mapper = mapper;
 
     /// <summary>
     /// Get user data by user id.
@@ -236,10 +222,7 @@ public class AccountsController : BaseController
             return Bad(result);
         }
 
-        if (model.Roles == null)
-        {
-            model.Roles = new[] {"User"};
-        }
+        model.Roles ??= new[] {"User"};
             
         foreach(var role in model.Roles)
         {

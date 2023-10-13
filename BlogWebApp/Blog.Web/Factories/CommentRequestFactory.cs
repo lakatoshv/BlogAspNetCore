@@ -43,7 +43,7 @@ public class CommentRequestFactory : RequestFactory<int, Comment, CreateCommentR
     {
         var post = _unitOfWork.GetRepository<Post>().FirstOrDefault(null);
 
-        return new CreateCommentRequest()
+        return new CreateCommentRequest
         {
             PostId = post.Id,
             CommentBody = "Коментар",
@@ -54,11 +54,8 @@ public class CommentRequestFactory : RequestFactory<int, Comment, CreateCommentR
     /// <inheritdoc cref="RequestFactory{T,TEntity,TCreateRequest,TUpdateRequest}"/>
     public override UpdateCommentRequest GenerateForUpdate(int id)
     {
-        var category = _unitOfWork.GetRepository<Comment>().FirstOrDefault(new CommentSpecification(x => x.Id == id));
-        if (category == null)
-        {
-            throw new MicroserviceArgumentNullException();
-        }
+        var category = _unitOfWork.GetRepository<Comment>().FirstOrDefault(new CommentSpecification(x => x.Id == id))
+            ?? throw new MicroserviceArgumentNullException();
 
         var mapped = _mapper.Map<UpdateCommentRequest>(category);
 

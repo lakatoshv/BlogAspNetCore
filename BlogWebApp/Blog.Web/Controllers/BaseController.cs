@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Data.Models;
 using Blog.Services.Core.Utilities;
-using Services.ControllerContext;
+using EntityServices.ControllerContext;
 
 /// <summary>
 /// Base controller.
@@ -39,9 +39,7 @@ public abstract class BaseController : Controller
     /// <param name="modelState">State of the model.</param>
     /// <returns></returns>
     protected BadRequestObjectResult Bad(ModelStateDictionary modelState)
-    {
-        return BadRequest(modelState);
-    }
+        => BadRequest(modelState);
 
     /// <summary>
     /// Bad model state.
@@ -52,6 +50,7 @@ public abstract class BaseController : Controller
     protected BadRequestObjectResult Bad(string name, string error)
     {
         ModelState.AddError(name, error);
+        
         return BadRequest(ModelState);
     }
 
@@ -63,6 +62,7 @@ public abstract class BaseController : Controller
     protected BadRequestObjectResult Bad(IdentityResult result)
     {
         ModelState.AddErrors(result);
+        
         return BadRequest(ModelState);
     }
 
@@ -72,9 +72,7 @@ public abstract class BaseController : Controller
     /// <param name="error">The error.</param>
     /// <returns></returns>
     protected BadRequestObjectResult Bad(string error)
-    {
-        return Bad("BadRequest", error);
-    }
+        => Bad("BadRequest", error);
 
     /// <summary>
     /// Gets the name of the user.

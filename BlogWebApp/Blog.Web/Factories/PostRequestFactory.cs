@@ -41,7 +41,7 @@ public class PostRequestFactory : RequestFactoryWithSearchParameters<int, Post, 
 
     /// <inheritdoc cref="RequestFactoryWithSearchParameters{T,TEntity,TSearchParametersRequest,TCreateRequest,TUpdateRequest}"/>
     public override CreatePostRequest GenerateForCreate() =>
-        new()
+        new ()
         {
             Title =  "Post from factory",
             Description = "Post from factory",
@@ -54,11 +54,8 @@ public class PostRequestFactory : RequestFactoryWithSearchParameters<int, Post, 
     /// <inheritdoc cref="RequestFactoryWithSearchParameters{T,TEntity,TSearchParametersRequest,TCreateRequest,TUpdateRequest}"/>
     public override UpdatePostRequest GenerateForUpdate(int id)
     {
-        var post = _unitOfWork.GetRepository<Post>().FirstOrDefault(new PostSpecification(x => x.Id == id));
-        if (post == null)
-        {
-            throw new MicroserviceArgumentNullException();
-        }
+        var post = _unitOfWork.GetRepository<Post>().FirstOrDefault(new PostSpecification(x => x.Id == id))
+            ?? throw new MicroserviceArgumentNullException();
 
         var mapped = _mapper.Map<UpdatePostRequest>(post);
 
@@ -68,11 +65,8 @@ public class PostRequestFactory : RequestFactoryWithSearchParameters<int, Post, 
     /// <inheritdoc cref="RequestFactoryWithSearchParameters{T,TEntity,TSearchParametersRequest,TCreateRequest,TUpdateRequest}"/>
     public override PostsSearchParametersRequest GenerateForSearchParametersRequest()
     {
-        var tag = _unitOfWork.GetRepository<Tag>().FirstOrDefault(null);
-        if (tag == null)
-        {
-            throw new MicroserviceArgumentNullException();
-        }
+        var tag = _unitOfWork.GetRepository<Tag>().FirstOrDefault(null)
+            ?? throw new MicroserviceArgumentNullException();
 
         return new PostsSearchParametersRequest
         {

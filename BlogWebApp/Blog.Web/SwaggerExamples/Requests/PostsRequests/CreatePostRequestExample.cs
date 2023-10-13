@@ -25,9 +25,9 @@ public class CreatePostRequestExample : IExamplesProvider<CreatePostRequest>
             AuthorId = Guid.NewGuid().ToString(),
             Tags = new List<TagRequest>
             {
-                new TagRequest { Title = SwaggerExamplesConsts.CreateTagRequestExample.Title + "1" },
-                new TagRequest { Title = SwaggerExamplesConsts.CreateTagRequestExample.Title + "2" },
-                new TagRequest { Title = SwaggerExamplesConsts.CreateTagRequestExample.Title + "3" },
+                new () { Title = SwaggerExamplesConsts.CreateTagRequestExample.Title + "1" },
+                new () { Title = SwaggerExamplesConsts.CreateTagRequestExample.Title + "2" },
+                new () { Title = SwaggerExamplesConsts.CreateTagRequestExample.Title + "3" },
             },
         };
     }

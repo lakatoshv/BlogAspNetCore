@@ -16,22 +16,18 @@ using Core.Configuration;
 /// </summary>
 /// <seealso cref="Attribute" />
 /// <seealso cref="IAsyncActionFilter" />
+/// <remarks>
+/// Initializes a new instance of the <see cref="CachedAttribute"/> class.
+/// </remarks>
+/// <param name="lifeTimeSeconds">The life time seconds.</param>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public class CachedAttribute : Attribute, IAsyncActionFilter
+public class CachedAttribute(int lifeTimeSeconds)
+    : Attribute, IAsyncActionFilter
 {
     /// <summary>
     /// The life time seconds.
     /// </summary>
-    private readonly int _lifeTimeSeconds;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CachedAttribute"/> class.
-    /// </summary>
-    /// <param name="lifeTimeSeconds">The life time seconds.</param>
-    public CachedAttribute(int lifeTimeSeconds)
-    {
-        _lifeTimeSeconds = lifeTimeSeconds;
-    }
+    private readonly int _lifeTimeSeconds = lifeTimeSeconds;
 
     /// <summary>
     /// Called asynchronously before the action, after model binding is complete.
@@ -61,6 +57,7 @@ public class CachedAttribute : Attribute, IAsyncActionFilter
             };
 
             context.Result = contentResult;
+
             return;
         }
 

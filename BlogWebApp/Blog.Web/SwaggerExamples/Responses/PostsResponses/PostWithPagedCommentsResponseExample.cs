@@ -28,28 +28,28 @@ public class PostWithPagedCommentsResponseExample : IExamplesProvider<PostWithPa
                 Content = SwaggerExamplesConsts.PostViewResponseExample.Content,
                 ImageUrl = SwaggerExamplesConsts.PostViewResponseExample.ImageUrl,
                 AuthorId = Guid.NewGuid().ToString(),
-                CommentsCount = 10,
+                CommentsCount = 10
             },
             Comments = new PagedCommentsResponse
             {
                 Comments = new List<CommentResponse> 
                 {
-                    new CommentResponse
+                    new ()
                     {
                         Id = 0,
                         PostId = 0,
                         CommentBody = SwaggerExamplesConsts.CommentResponseExample.CommentBody + "1",
                         CreatedAt = DateTime.Now,
-                        UserId = Guid.NewGuid().ToString(),
+                        UserId = Guid.NewGuid().ToString()
                     },
 
-                    new CommentResponse
+                    new ()
                     {
                         Id = 0,
                         PostId = 0,
                         CommentBody = SwaggerExamplesConsts.CommentResponseExample.CommentBody + "2",
                         CreatedAt = DateTime.Now,
-                        UserId = Guid.NewGuid().ToString(),
+                        UserId = Guid.NewGuid().ToString()
                     },
                 },
 
@@ -57,23 +57,23 @@ public class PostWithPagedCommentsResponseExample : IExamplesProvider<PostWithPa
                 {
                     PageNumber = 1,
                     PageSize = 10,
-                    TotalItems = 100,
+                    TotalItems = 100
                 },
             },
 
             Tags = new List<TagResponse>
             {
-                new TagResponse
+                new ()
                 {
                     Id = 0,
-                    Title = SwaggerExamplesConsts.TagResponseExample.Title + "1",
+                    Title = SwaggerExamplesConsts.TagResponseExample.Title + "1"
                 },
 
-                new TagResponse
+                new ()
                 {
                     Id = 0,
-                    Title = SwaggerExamplesConsts.TagResponseExample.Title + "2",
-                },
+                    Title = SwaggerExamplesConsts.TagResponseExample.Title + "2"
+                }
             },
         };
     }

@@ -13,7 +13,5 @@ public class MediatorInstaller : IInstaller
 {
     /// <inheritdoc cref="IInstaller"/>
     public void InstallServices(IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
-    }
+        => services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
 }

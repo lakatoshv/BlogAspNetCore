@@ -17,7 +17,7 @@ public class RoleResponseExample : IExamplesProvider<RoleResponse>
         return new RoleResponse
         {
             Id = Guid.NewGuid().ToString(),
-            Name = Consts.Roles.User,
+            Name = Consts.Roles.User
         };
     }
 }

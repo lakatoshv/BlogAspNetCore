@@ -16,7 +16,7 @@ public class PageInfoResponseExample : IExamplesProvider<PageInfoResponse>
         {
             PageNumber = 1,
             PageSize = 10,
-            TotalItems = 100,
+            TotalItems = 100
         };
     }
 }

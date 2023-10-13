@@ -1,4 +1,6 @@
-﻿namespace Blog.Web.Controllers.V1;
+﻿using Blog.EntityServices.ControllerContext;
+
+namespace Blog.Web.Controllers.V1;
 
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -10,29 +12,25 @@ using System;
 using Core.Consts;
 using Blog.Contracts.V1;
 using Blog.Contracts.V1.Responses.HealthChecks;
-using Services.ControllerContext;
 
 /// <summary>
 /// Health check controller.
 /// Analyze API on healthy.
 /// </summary>
-/// <seealso cref="Blog.Web.Controllers.BaseController" />
+/// <seealso cref="BaseController" />
 [Route(ApiRoutes.HealthController.Health)]
 [ApiController]
 [AllowAnonymous]
 [Produces(Consts.JsonType)]
-public class HealthCheckController : BaseController
+public class HealthCheckController(
+    IControllerContext workContext,
+    HealthCheckService healthCheckService)
+    : BaseController(workContext)
 {
     /// <summary>
     /// The health check service.
     /// </summary>
-    private readonly HealthCheckService healthCheckService;
-    public HealthCheckController(
-        IControllerContext workContext,
-        HealthCheckService healthCheckService) : base(workContext)
-    {
-        this.healthCheckService = healthCheckService;
-    }
+    private readonly HealthCheckService healthCheckService = healthCheckService;
 
     /// <summary>
     /// Get health check information.
@@ -63,7 +61,9 @@ public class HealthCheckController : BaseController
                 Duration = report.TotalDuration,
             };
 
-            return report.Status == HealthStatus.Healthy ? this.Ok(response) : this.StatusCode((int)HttpStatusCode.ServiceUnavailable, response);
+            return report.Status == HealthStatus.Healthy 
+                ? this.Ok(response) 
+                : this.StatusCode((int)HttpStatusCode.ServiceUnavailable, response);
         }
         catch (Exception e)
         {

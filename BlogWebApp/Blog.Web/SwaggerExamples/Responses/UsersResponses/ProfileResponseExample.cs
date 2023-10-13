@@ -28,15 +28,15 @@ public class ProfileResponseExample : IExamplesProvider<ProfileResponse>
                 EmailConfirmed = true,
                 Roles = new List<IdentityUserRole<string>>
                 {
-                    new IdentityUserRole<string>
+                    new ()
                     {
-                        RoleId = Guid.NewGuid().ToString(),
+                        RoleId = Guid.NewGuid().ToString()
                     }
                 }
             },
 
             About = SwaggerExamplesConsts.ProfileResponseExample.About,
-            ProfileImg = SwaggerExamplesConsts.ProfileResponseExample.ProfileImg,
+            ProfileImg = SwaggerExamplesConsts.ProfileResponseExample.ProfileImg
         };
     }
 }

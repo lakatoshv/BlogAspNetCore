@@ -8,52 +8,47 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using static System.DateTime;
-using Data.Models;
-using Services.ControllerContext;
-using Blog.Services.Core.Dtos;
-using Services.Interfaces;
 using Blog.Contracts.V1;
 using Blog.Contracts.V1.Requests;
 using Blog.Contracts.V1.Requests.CommentsRequests;
 using Blog.Contracts.V1.Responses;
 using Blog.Contracts.V1.Responses.CommentsResponses;
+using Blog.Contracts.V1.Responses.Chart;
+using Data.Models;
+using Blog.Services.Core.Dtos;
+using EntityServices.ControllerContext;
+using EntityServices.Interfaces;
 using Core.Consts;
 using Cache;
-using Blog.Contracts.V1.Responses.Chart;
 
 /// <summary>
 /// Comments controller.
 /// </summary>
 /// <seealso cref="ControllerBase" />
+/// <remarks>
+/// Initializes a new instance of the <see cref="CommentsController"/> class.
+/// </remarks>
+/// <param name="controllerContext"></param>
+/// <param name="commentsService">The comments service.</param>
+/// <param name="mapper">The mapper.</param>
 [Route(ApiRoutes.CommentsController.Comments)]
 [ApiController]
 [Produces(Consts.JsonType)]
-public class CommentsController : BaseController
+public class CommentsController(
+    IControllerContext controllerContext,
+    ICommentsService commentsService,
+    IMapper mapper)
+    : BaseController(controllerContext)
 {
     /// <summary>
     /// The mapper.
     /// </summary>
-    private readonly IMapper _mapper;
+    private readonly IMapper _mapper = mapper;
 
     /// <summary>
     /// The comment service.
     /// </summary>
-    private readonly ICommentsService _commentService;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CommentsController"/> class.
-    /// </summary>
-    /// <param name="controllerContext"></param>
-    /// <param name="commentsService">The comments service.</param>
-    /// <param name="mapper">The mapper.</param>
-    public CommentsController(
-        IControllerContext controllerContext,
-        ICommentsService commentsService,
-        IMapper mapper) : base(controllerContext)
-    {
-        _commentService = commentsService;
-        _mapper = mapper;
-    }
+    private readonly ICommentsService _commentService = commentsService;
 
     /// <summary>
     /// Gets all comments.
@@ -64,9 +59,7 @@ public class CommentsController : BaseController
     [HttpGet]
     [Cached(600)]
     public async Task<ActionResult> GetAllComments()
-    {
-        return Ok(_mapper.Map<List<CommentResponse>>(await _commentService.GetAllAsync().ConfigureAwait(false)));
-    }
+        => Ok(_mapper.Map<List<CommentResponse>>(await _commentService.GetAllAsync().ConfigureAwait(false)));
 
     // GET: Comments/comments-activity
     /// <summary>
@@ -154,7 +147,7 @@ public class CommentsController : BaseController
     /// <response code="404">Unable to gets the comment.</response>
     [ProducesResponseType(typeof(CommentResponse), 200)]
     [ProducesResponseType(404)]
-    [HttpGet("{id}", Name = ApiRoutes.CommentsController.GetComment)]
+    [HttpGet("{id:int}", Name = ApiRoutes.CommentsController.GetComment)]
     // GET: Posts/Show/5
     public async Task<ActionResult> GetComment([FromRoute] int id)
     {
@@ -193,7 +186,7 @@ public class CommentsController : BaseController
         var baseUrl = $@"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
         var locationUrl = baseUrl + "/" +
                           ApiRoutes.CommentsController.Comments + "/" +
-                          ApiRoutes.CommentsController.GetComment + "/" + comment.Id.ToString();
+                          ApiRoutes.CommentsController.GetComment + "/" + comment.Id;
 
         return CreatedAtRoute(locationUrl, response);
     }
