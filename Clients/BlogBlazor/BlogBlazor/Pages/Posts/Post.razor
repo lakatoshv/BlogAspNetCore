@@ -1,6 +1,6 @@
 ﻿@using Blazor.Contracts.V1.Responses.PostsResponses
 
-@inject BlogBlazor.Services.Interfaces.IPostsService _postsService
+@inject Services.Interfaces.IPostsService _postsService
 
 @page "/posts/{id}"
 
@@ -25,7 +25,7 @@
         Id = Id ?? "0";
         PostId = int.Parse(Id);
 
-        post = await _postsService.Show(PostId);
+        post = await _postsService.GetPost(PostId);
         IsLoaded = true;
     }
 }

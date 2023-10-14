@@ -1,8 +1,7 @@
 ﻿@using Blazor.Contracts.V1.Responses.PostsResponses
-@using Blazor.Contracts.V1.Responses.TagsResponses
 @using Blazor.Contracts.V1.Requests.PostsRequests
 
-@inject BlogBlazor.Services.Interfaces.IPostsService _postsService
+@inject Services.Interfaces.IPostsService _postsService
 
 @page "/"
 
@@ -19,7 +18,7 @@ Welcome to your new app.
 
 @code {
     public bool IsLoaded { get; set; }
-    public PagedPostsResponse response = new PagedPostsResponse();
+    public PagedPostsResponse response = new ();
 
     protected override async Task OnInitializedAsync()
     {

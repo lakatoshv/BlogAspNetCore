@@ -7,19 +7,18 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace BlogBlazor
+namespace BlogBlazor;
+
+public class Program
 {
-    public class Program
+    public static async Task Main(string[] args)
     {
-        public static async Task Main(string[] args)
-        {
-            var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("#app");
+        var builder = WebAssemblyHostBuilder.CreateDefault(args);
+        builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddScoped<IPostsService, PostsService>();
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(ApiUrls.BlogApiUrl) });
+        builder.Services.AddScoped<IPostsService, PostsService>();
+        builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(ApiUrls.BlogApiUrl) });
 
-            await builder.Build().RunAsync();
-        }
+        await builder.Build().RunAsync();
     }
 }
