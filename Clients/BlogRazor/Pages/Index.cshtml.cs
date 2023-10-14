@@ -13,12 +13,20 @@ using Services.Interfaces;
 /// Index model.
 /// </summary>
 /// <seealso cref="PageModel" />
-public class IndexModel : PageModel
+/// <remarks>
+/// Initializes a new instance of the <see cref="IndexModel"/> class.
+/// </remarks>
+/// <param name="logger">The logger.</param>
+/// <param name="postsService">The posts service.</param>
+public class IndexModel(
+    ILogger<IndexModel> logger,
+    IPostsService postsService)
+    : PageModel
 {
     /// <summary>
     /// The logger.
     /// </summary>
-    private readonly ILogger<IndexModel> _logger;
+    private readonly ILogger<IndexModel> _logger = logger;
 
     /// <summary>
     /// Gets or sets the posts.
@@ -27,7 +35,7 @@ public class IndexModel : PageModel
     /// The posts.
     /// </value>
     [BindProperty]
-    public PagedPostsResponse PagedPosts { get; set; } = new PagedPostsResponse();
+    public PagedPostsResponse PagedPosts { get; set; } = new ();
 
     /// <summary>
     /// Gets or sets a value indicating whether this instance is loaded.
@@ -36,22 +44,9 @@ public class IndexModel : PageModel
     ///   <c>true</c> if this instance is loaded; otherwise, <c>false</c>.
     /// </value>
     [BindProperty]
-    public bool IsLoaded { get; set; } = false;
+    public bool IsLoaded { get; set; }
 
-    private readonly IPostsService _postsService;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="IndexModel"/> class.
-    /// </summary>
-    /// <param name="logger">The logger.</param>
-    /// <param name="postsService">The posts service.</param>
-    public IndexModel(
-        ILogger<IndexModel> logger,
-        IPostsService postsService)
-    {
-        _logger = logger;
-        _postsService = postsService;
-    }
+    private readonly IPostsService _postsService = postsService;
 
     /// <summary>
     /// Called when [get].
@@ -68,8 +63,9 @@ public class IndexModel : PageModel
                 IsLoaded = true;
             }
         }
-        catch (Exception e)
+        catch (Exception)
         {
+            // ignored
         }
     }
 }

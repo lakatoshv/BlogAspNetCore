@@ -7,21 +7,17 @@ using Microsoft.Extensions.Logging;
 /// Privacy model.
 /// </summary>
 /// <seealso cref="PageModel" />
-public class PrivacyModel : PageModel
+/// <remarks>
+/// Initializes a new instance of the <see cref="PrivacyModel"/> class.
+/// </remarks>
+/// <param name="logger">The logger.</param>
+public class PrivacyModel(ILogger<PrivacyModel> logger)
+    : PageModel
 {
     /// <summary>
     /// The logger.
     /// </summary>
-    private readonly ILogger<PrivacyModel> _logger;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PrivacyModel"/> class.
-    /// </summary>
-    /// <param name="logger">The logger.</param>
-    public PrivacyModel(ILogger<PrivacyModel> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger<PrivacyModel> _logger = logger;
 
     /// <summary>
     /// Called when [get].

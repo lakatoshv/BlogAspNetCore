@@ -9,9 +9,14 @@ using System.Diagnostics;
 /// Error model.
 /// </summary>
 /// <seealso cref="PageModel" />
+/// <remarks>
+/// Initializes a new instance of the <see cref="ErrorModel"/> class.
+/// </remarks>
+/// <param name="logger">The logger.</param>
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 [IgnoreAntiforgeryToken]
-public class ErrorModel : PageModel
+public class ErrorModel(ILogger<ErrorModel> logger)
+    : PageModel
 {
     /// <summary>
     /// Gets or sets the request identifier.
@@ -32,16 +37,7 @@ public class ErrorModel : PageModel
     /// <summary>
     /// The logger.
     /// </summary>
-    private readonly ILogger<ErrorModel> _logger;
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ErrorModel"/> class.
-    /// </summary>
-    /// <param name="logger">The logger.</param>
-    public ErrorModel(ILogger<ErrorModel> logger)
-    {
-        _logger = logger;
-    }
+    private readonly ILogger<ErrorModel> _logger = logger;
 
     /// <summary>
     /// Called when [get].
