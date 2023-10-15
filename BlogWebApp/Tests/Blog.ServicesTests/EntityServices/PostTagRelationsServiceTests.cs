@@ -1,7 +1,5 @@
 ﻿using Blog.Data.Models;
 using Blog.Data.Repository;
-using Blog.Services;
-using Blog.Services.Interfaces;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -13,9 +11,13 @@ using Blog.Core.Infrastructure.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Blog.Core.Enums;
 using Blog.Core.Infrastructure;
+using AutoFixture;
+using AutoFixture.Dsl;
+using Blog.EntityServices;
+using Blog.EntityServices.Interfaces;
 
-namespace Blog.ServicesTests.EntityServices
-{
+namespace Blog.ServicesTests.EntityServices;
+
     /// <summary>
     /// Post tag relations service tests.
     /// </summary>
@@ -4238,4 +4240,3 @@ namespace Blog.ServicesTests.EntityServices
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion
     }
-}
