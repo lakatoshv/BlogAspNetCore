@@ -35,6 +35,11 @@ namespace Blog.ServicesTests.EntityServices;
         /// </summary>
         private readonly Mock<IRepository<Message>> _messagesRepositoryMock;
 
+    /// <summary>
+    /// The fixture.
+    /// </summary>
+    private readonly Fixture _fixture;
+
         #endregion
 
         #region Ctor
@@ -46,9 +51,56 @@ namespace Blog.ServicesTests.EntityServices;
         {
             _messagesRepositoryMock = new Mock<IRepository<Message>>();
             _messagesService = new MessagesService(_messagesRepositoryMock.Object);
+        _fixture = new Fixture();
+    }
+
+    #endregion
+
+    #region Uthilities
+
+    private IPostprocessComposer<Message> SetupMessageFixture(string messageBody = null)
+    {
+        var recipient =
+            _fixture.Build<ApplicationUser>()
+                .Without(x => x.Roles)
+                .Without(x => x.Claims)
+                .Without(x => x.Logins)
+                .Without(x => x.RefreshTokens)
+                .Without(x => x.Profile)
+                .Without(x => x.Posts)
+                .Without(x => x.Comments)
+                .Without(x => x.ReceivedMessages)
+                .Without(x => x.SentMessages)
+                .Create();
+
+        var sender =
+            _fixture.Build<ApplicationUser>()
+                .Without(x => x.Roles)
+                .Without(x => x.Claims)
+                .Without(x => x.Logins)
+                .Without(x => x.RefreshTokens)
+                .Without(x => x.Profile)
+                .Without(x => x.Posts)
+                .Without(x => x.Comments)
+                .Without(x => x.ReceivedMessages)
+                .Without(x => x.SentMessages)
+                .Create();
+
+        var messageSetup =
+            _fixture.Build<Message>()
+                .With(x => x.Recipient, recipient)
+                .With(x => x.Sender, sender);
+        if (!string.IsNullOrWhiteSpace(messageBody))
+        {
+            messageSetup.With(x => x.Body, messageBody);
+        }
+
+        return messageSetup;
         }
 
         #endregion
+
+    #region Tests
 
         #region Get All
 
@@ -62,7 +114,9 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var messagesList = new List<Message>();
+        var messagesList =
+            SetupMessageFixture()
+                .CreateMany(random.Next(100));
 
             var sender = new ApplicationUser
             {
@@ -116,7 +170,9 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var messagesList = new List<Message>();
+        var messagesList =
+            SetupMessageFixture()
+                .CreateMany(random.Next(100));
 
             var sender = new ApplicationUser
             {
@@ -151,7 +207,7 @@ namespace Blog.ServicesTests.EntityServices;
 
 
             _messagesRepositoryMock.Setup(x => x.GetAll())
-                .Returns(() => messagesList.AsQueryable());
+            .Returns(messagesList.AsQueryable());
 
             //Act
             var messages = _messagesService.GetAll();
@@ -4236,4 +4292,6 @@ namespace Blog.ServicesTests.EntityServices;
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion
+
+    #endregion
     }
