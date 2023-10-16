@@ -35,6 +35,11 @@ namespace Blog.ServicesTests.EntityServices;
         /// </summary>
         private readonly Mock<IRepository<Comment>> _commentsRepositoryMock;
 
+    /// <summary>
+    /// The fixture.
+    /// </summary>
+    private readonly Fixture _fixture;
+
         #endregion
 
         #region Ctor
@@ -46,9 +51,50 @@ namespace Blog.ServicesTests.EntityServices;
         {
             _commentsRepositoryMock = new Mock<IRepository<Comment>>();
             _commentsService = new CommentsService(_commentsRepositoryMock.Object);
+        _fixture = new Fixture();
         }
 
         #endregion
+
+    #region Uthilities
+
+    private IPostprocessComposer<Comment> SetupCommentFixture(string commentBody = null)
+    {
+        var applicationUser =
+            _fixture.Build<ApplicationUser>()
+                .Without(x => x.Roles)
+                .Without(x => x.Claims)
+                .Without(x => x.Logins)
+                .Without(x => x.RefreshTokens)
+                .Without(x => x.Profile)
+                .Without(x => x.Posts)
+                .Without(x => x.Comments)
+                .Without(x => x.ReceivedMessages)
+                .Without(x => x.SentMessages)
+                .Create();
+        var post =
+            _fixture.Build<Post>()
+                .With(x => x.Author, applicationUser)
+                .Without(x => x.Category)
+                .Without(x => x.Comments)
+                .Without(x => x.PostsTagsRelations)
+                .Create();
+
+        var commentSetup = 
+            _fixture.Build<Comment>()
+                .With(x => x.User, applicationUser)
+                .With(x => x.Post, post);
+        if (!string.IsNullOrWhiteSpace(commentBody))
+        {
+            commentSetup.With(x => x.CommentBody, commentBody);
+        }
+
+        return commentSetup;
+    }
+
+    #endregion
+
+    #region Tests
 
         #region Get All service tests
 
@@ -62,17 +108,9 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var commentsList = new List<Comment>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                commentsList.Add(new Comment
-                {
-                    Id = i,
-                    CommentBody = $"Comment {i}",
-                });
-            }
-
+        var commentsList = 
+            SetupCommentFixture()
+                .CreateMany(random.Next(100));
 
             _commentsRepositoryMock.Setup(x => x.GetAll())
                 .Returns(commentsList.AsQueryable());
@@ -95,18 +133,9 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var commentsList = new List<Comment>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var commentId = i;
-                commentsList.Add(new Comment
-                {
-                    Id = commentId,
-                    CommentBody = $"Comment {commentId}",
-                });
-            }
-
+        var commentsList =
+            SetupCommentFixture()
+                .CreateMany(random.Next(100));
 
             _commentsRepositoryMock.Setup(x => x.GetAll())
                 .Returns(() => commentsList.AsQueryable());
