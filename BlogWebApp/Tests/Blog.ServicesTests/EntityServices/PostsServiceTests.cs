@@ -50,10 +50,70 @@ namespace Blog.ServicesTests.EntityServices;
             var commentsServiceMock = new Mock<ICommentsService>();
             var mapper = new Mock<IMapper>();
             var postsTagsRelationsService = new Mock<IPostsTagsRelationsService>();
-            _postsService = new PostsService(_postsRepositoryMock.Object, commentsServiceMock.Object, mapper.Object, postsTagsRelationsService.Object);
+        _postsService = new PostsService(_postsRepositoryMock.Object, commentsServiceMock.Object, mapper.Object, postsTagsRelationsService.Object, exportsService.Object);
+        _fixture = new Fixture();
         }
 
         #endregion
+
+    #region Uthilities
+
+    private IPostprocessComposer<Post> SetupPostFixture(string postTitle = null, int tagsCount = 10, int commentsCount = 10)
+    {
+        var applicationUser =
+            _fixture.Build<ApplicationUser>()
+                .Without(x => x.Roles)
+                .Without(x => x.Claims)
+                .Without(x => x.Logins)
+                .Without(x => x.RefreshTokens)
+                .Without(x => x.Profile)
+                .Without(x => x.Posts)
+                .Without(x => x.Comments)
+                .Without(x => x.ReceivedMessages)
+                .Without(x => x.SentMessages)
+                .Create();
+
+        var comments =
+            _fixture.Build<Comment>()
+                .With(x => x.User, applicationUser)
+                .Without(x => x.Post)
+                .CreateMany(commentsCount).ToList();
+
+        var postsTagsRelations =
+            _fixture.Build<PostsTagsRelations>()
+                .With(x => x.Tag,
+                    _fixture.Build<Tag>()
+                        .Without(x => x.PostsTagsRelations)
+                        .Create())
+                .Without(x => x.Post)
+                .CreateMany(tagsCount).ToList();
+
+        var category =
+            _fixture.Build<Category>()
+                .Without(x => x.Posts)
+                .Without(x => x.ParentCategory)
+                .Without(x => x.Categories)
+                .Create();
+
+        var postSetup =
+            _fixture.Build<Post>()
+                .With(x => x.Author, applicationUser)
+                .With(x => x.Comments, comments)
+                .With(x => x.PostsTagsRelations, postsTagsRelations)
+                .With(x => x.Category, category);
+
+
+        if (!string.IsNullOrWhiteSpace(postTitle))
+        {
+            postSetup.With(x => x.Title, postTitle);
+        }
+
+        return postSetup;
+    }
+
+    #endregion
+
+    #region Tests
 
         #region Get All
 
@@ -67,20 +127,9 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postsList = new List<Post>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                postsList.Add(new Post
-                {
-                    Id = i,
-                    Title = $"Created from ServicesTests {i}",
-                    Description = $"Created from ServicesTests {i}",
-                    Content = $"Created from ServicesTests {i}",
-                    ImageUrl = $"Created from ServicesTests {i}",
-                });
-            }
-
+        var postsList =
+            SetupPostFixture()
+                .CreateMany(random.Next(100));
 
             _postsRepositoryMock.Setup(x => x.GetAll())
                 .Returns(postsList.AsQueryable());
@@ -103,20 +152,9 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postsList = new List<Post>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                postsList.Add(new Post
-                {
-                    Id = i,
-                    Title = $"Created from ServicesTests {i}",
-                    Description = $"Created from ServicesTests {i}",
-                    Content = $"Created from ServicesTests {i}",
-                    ImageUrl = $"Created from ServicesTests {i}",
-                });
-            }
-
+        var postsList =
+            SetupPostFixture()
+                .CreateMany(random.Next(100));
 
             _postsRepositoryMock.Setup(x => x.GetAll())
                 .Returns(() => postsList.AsQueryable());
