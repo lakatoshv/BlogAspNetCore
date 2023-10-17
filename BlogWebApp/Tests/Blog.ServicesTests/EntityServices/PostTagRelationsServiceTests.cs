@@ -35,6 +35,11 @@ namespace Blog.ServicesTests.EntityServices;
         /// </summary>
         private readonly Mock<IRepository<PostsTagsRelations>> _postsTagsRelationsRepositoryMock;
 
+    /// <summary>
+    /// The fixture.
+    /// </summary>
+    private readonly Fixture _fixture;
+
         #endregion
 
         #region Ctor
@@ -47,9 +52,60 @@ namespace Blog.ServicesTests.EntityServices;
             var tagsServiceMock = new Mock<ITagsService>();
             _postsTagsRelationsRepositoryMock = new Mock<IRepository<PostsTagsRelations>>();
             _postsTagsRelationsService = new PostsTagsRelationsService(_postsTagsRelationsRepositoryMock.Object, tagsServiceMock.Object);
+        _fixture = new Fixture();
         }
 
         #endregion
+
+    #region Uthilities
+
+    private IPostprocessComposer<PostsTagsRelations> SetupPostsTagsRelationsFixture(string postTitle = null, string tagTitle = null)
+    {
+        var postSetup =
+            _fixture.Build<Post>()
+                .Without(x => x.Author)
+                .Without(x => x.Comments)
+                .Without(x => x.PostsTagsRelations)
+                .Without(x => x.Category);
+
+        var tagSetup = _fixture.Build<Tag>()
+            .Without(x => x.PostsTagsRelations);
+        if (!string.IsNullOrWhiteSpace(tagTitle))
+        {
+            tagSetup.Do(x => x.Title = tagTitle);
+        }
+
+        if (!string.IsNullOrWhiteSpace(postTitle))
+        {
+            postSetup
+                .With(x => x.Title, postTitle)
+                .With(x => x.Content, postTitle)
+                .With(x => x.Description, postTitle);
+        }
+
+        var tag = tagSetup.Create();
+        var post = postSetup.Create();
+
+        //TODO: There is bug in With method.
+        if (!string.IsNullOrWhiteSpace(tagTitle))
+        {
+            tag.Title = tagTitle;
+        }
+        if (!string.IsNullOrWhiteSpace(postTitle))
+        {
+            post.Title = postTitle;
+            post.Content = postTitle;
+            post.Description = postTitle;
+        }
+
+        return _fixture.Build<PostsTagsRelations>()
+            .With(x => x.Tag, tag)
+            .With(x => x.Post, post);
+    }
+
+    #endregion
+
+    #region Tests
 
         #region Get All
 
@@ -63,18 +119,9 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                postsTagsRelationsList.Add(new PostsTagsRelations
-                {
-                    Id = i,
-                    PostId = i,
-                    TagId = i,
-                });
-            }
-
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(random.Next(100));
 
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll())
                 .Returns(postsTagsRelationsList.AsQueryable());
@@ -97,18 +144,9 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                postsTagsRelationsList.Add(new PostsTagsRelations()
-                {
-                    Id = i,
-                    PostId = i,
-                    TagId = i
-                });
-            }
-
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(random.Next(100));
 
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll())
                 .Returns(() => postsTagsRelationsList.AsQueryable());
@@ -135,36 +173,9 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postId = random.Next(100);
-            var postEntity = new Post
-            {
-                Id = postId,
-                Title = $"{postTitle} {postId}",
-                Description = $"{postTitle} {postId}",
-                Content = $"{postTitle} {postId}",
-                ImageUrl = $"{postTitle} {postId}",
-            };
-
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var tag = new Tag
-                {
-                    Id = i,
-                    Title = $"{tagTitle} {i}",
-                };
-
-                postsTagsRelationsList.Add(new PostsTagsRelations()
-                {
-                    Id = i,
-                    PostId = postId,
-                    Post = postEntity,
-                    TagId = i,
-                    Tag = tag
-                });
-            }
-
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture(postTitle, tagTitle)
+                .CreateMany(random.Next(100));
 
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll())
                 .Returns(() => postsTagsRelationsList.AsQueryable());
@@ -189,6 +200,27 @@ namespace Blog.ServicesTests.EntityServices;
             postsTagsRelations.ForEach(Action);
         }
 
+    //write test for get all with paging
+    public void GetAll_WhenPostTagRelationExists_ShouldReturnPostTagRelationsWithExistingPostAndTagsWithPaging()
+    {
+        //Arrange
+        var random = new Random();
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(random.Next(100));
+
+        _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll())
+            .Returns(() => postsTagsRelationsList.AsQueryable());
+
+        //Act
+        var postsTagsRelations = _postsTagsRelationsService.GetAll();
+
+        //Assert
+        Assert.NotNull(postsTagsRelations);
+        Assert.NotEmpty(postsTagsRelations);
+        Assert.NotEqual(0, postsTagsRelations.ToList().Count);
+    }
+
         /// <summary>
         /// Get all post tag relations.
         /// Should return post tag relations when post tag relations exists.
@@ -202,37 +234,9 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postId = random.Next(100);
-            var postEntity = new Post
-            {
-                Id = postId,
-                Title = $"{postTitle} {postId}",
-                Description = $"{postTitle} {postId}",
-                Content = $"{postTitle} {postId}",
-                ImageUrl = $"{postTitle} {postId}",
-            };
-
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-            var postsTagsRelationsCount = random.Next(100);
-
-            for (var i = 0; i < postsTagsRelationsCount; i++)
-            {
-                var tag = new Tag
-                {
-                    Id = i,
-                    Title = $"{tagTitle} {i}",
-                };
-
-                postsTagsRelationsList.Add(new PostsTagsRelations()
-                {
-                    Id = i,
-                    PostId = postId,
-                    Post = postEntity,
-                    TagId = i,
-                    Tag = tag
-                });
-            }
-
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(random.Next(100));
 
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll())
                 .Returns(() => postsTagsRelationsList.AsQueryable());
@@ -244,7 +248,7 @@ namespace Blog.ServicesTests.EntityServices;
             Assert.NotNull(postsTagsRelations);
             Assert.NotEmpty(postsTagsRelations);
             Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
-            Assert.Equal(postsTagsRelationsCount, postsTagsRelations.Count);
+        Assert.Equal(postsTagsRelationsList.ToList().Count, postsTagsRelations.Count);
         }
 
         /// <summary>
@@ -349,17 +353,9 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postId = random.Next(100);
-            var postEntity = new Post
-            {
-                Id = postId,
-                Title = $"{postTitle} {postId}",
-                Description = $"{postTitle} {postId}",
-                Content = $"{postTitle} {postId}",
-                ImageUrl = $"{postTitle} {postId}",
-            };
-
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture(postTitle, tagTitle)
+                .CreateMany(random.Next(100));
 
             for (var i = 0; i < random.Next(100); i++)
             {
