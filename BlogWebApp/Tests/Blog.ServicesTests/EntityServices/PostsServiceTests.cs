@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-﻿using AutoMapper;
+using AutoMapper;
 using Blog.Core.Enums;
 using Blog.Core.Infrastructure;
 using Blog.Core.Infrastructure.Pagination;
@@ -36,6 +36,11 @@ namespace Blog.ServicesTests.EntityServices;
         /// The posts repository mock.
         /// </summary>
         private readonly Mock<IRepository<Post>> _postsRepositoryMock;
+
+    /// <summary>
+    /// The fixture.
+    /// </summary>
+    private readonly Fixture _fixture;
 
         #endregion
 
@@ -198,20 +203,10 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postsList = new List<Post>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                postsList.Add(new Post
-                {
-                    Id = i,
-                    Title = $"Created from ServicesTests {i}",
-                    Description = $"Created from ServicesTests {i}",
-                    Content = $"Created from ServicesTests {i}",
-                    ImageUrl = $"Created from ServicesTests {i}",
-                });
-            }
-
+        var postsList =
+            SetupPostFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
             _postsRepositoryMock.Setup(x => x.GetAllAsync())
                 .ReturnsAsync(postsList);
@@ -234,20 +229,10 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postsList = new List<Post>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                postsList.Add(new Post
-                {
-                    Id = i,
-                    Title = $"Created from ServicesTests {i}",
-                    Description = $"Created from ServicesTests {i}",
-                    Content = $"Created from ServicesTests {i}",
-                    ImageUrl = $"Created from ServicesTests {i}",
-                });
-            }
-
+        var postsList =
+            SetupPostFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
             _postsRepositoryMock.Setup(x => x.GetAllAsync())
                 .ReturnsAsync(() => postsList);
