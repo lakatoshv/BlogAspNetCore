@@ -356,25 +356,7 @@ namespace Blog.ServicesTests.EntityServices;
         var postsTagsRelationsList =
             SetupPostsTagsRelationsFixture(postTitle, tagTitle)
                 .CreateMany(random.Next(100));
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var tag = new Tag
-                {
-                    Id = i,
-                    Title = $"{tagTitle} {i}",
-                };
-
-                postsTagsRelationsList.Add(new PostsTagsRelations()
-                {
-                    Id = i,
-                    PostId = postId,
-                    Post = postEntity,
-                    TagId = i,
-                    Tag = tag
-                });
-            }
-
+                .ToList();
 
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync())
                 .ReturnsAsync(() => postsTagsRelationsList);
@@ -412,37 +394,10 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postId = random.Next(100);
-            var postEntity = new Post
-            {
-                Id = postId,
-                Title = $"{postTitle} {postId}",
-                Description = $"{postTitle} {postId}",
-                Content = $"{postTitle} {postId}",
-                ImageUrl = $"{postTitle} {postId}",
-            };
-
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-            var postsTagsRelationsCount = random.Next(100);
-
-            for (var i = 0; i < postsTagsRelationsCount; i++)
-            {
-                var tag = new Tag
-                {
-                    Id = i,
-                    Title = $"{tagTitle} {i}",
-                };
-
-                postsTagsRelationsList.Add(new PostsTagsRelations()
-                {
-                    Id = i,
-                    PostId = postId,
-                    Post = postEntity,
-                    TagId = i,
-                    Tag = tag
-                });
-            }
-
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture(postTitle, tagTitle)
+                .CreateMany(random.Next(100))
+                .ToList();
 
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync())
                 .ReturnsAsync(() => postsTagsRelationsList);
@@ -454,7 +409,7 @@ namespace Blog.ServicesTests.EntityServices;
             Assert.NotNull(postsTagsRelations);
             Assert.NotEmpty(postsTagsRelations);
             Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
-            Assert.Equal(postsTagsRelationsCount, postsTagsRelations.Count);
+        Assert.Equal(postsTagsRelationsList.Count, postsTagsRelations.Count);
         }
 
         /// <summary>
@@ -466,7 +421,7 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => new List<PostsTagsRelations>());
+            .ReturnsAsync(() => []);
 
             //Act
             var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync();
