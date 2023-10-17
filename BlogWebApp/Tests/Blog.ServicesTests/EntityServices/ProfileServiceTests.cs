@@ -80,7 +80,7 @@ public class ProfileServiceTests
         var profileSetup = _fixture.Build<ProfileModel>()
             .With(x => x.User, applicationUser);
 
-        return profileSetup; ;
+        return profileSetup;
     }
 
     #endregion
@@ -168,27 +168,10 @@ public class ProfileServiceTests
     {
         //Arrange  
         var random = new Random();
-        var profilesList = new List<ProfileModel>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var userId = new Guid().ToString();
-            var user = new ApplicationUser
-            {
-                Id = userId,
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-            profilesList.Add(new ProfileModel
-            {
-                Id = i,
-                UserId = userId,
-                User = user,
-                ProfileImg = $"img{i}.jpg"
-            });
-        }
+        var profilesList =
+            SetupProfileFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
         _profileRepositoryMock.Setup(x => x.GetAllAsync())
             .ReturnsAsync(profilesList);
@@ -211,27 +194,10 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var profilesList = new List<ProfileModel>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var userId = new Guid().ToString();
-            var user = new ApplicationUser
-            {
-                Id = userId,
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-            profilesList.Add(new ProfileModel
-            {
-                Id = i,
-                UserId = userId,
-                User = user,
-                ProfileImg = $"img{i}.jpg"
-            });
-        }
+        var profilesList =
+            SetupProfileFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
         _profileRepositoryMock.Setup(x => x.GetAllAsync())
             .ReturnsAsync(profilesList);
@@ -254,7 +220,7 @@ public class ProfileServiceTests
     {
         //Arrange
         _profileRepositoryMock.Setup(x => x.GetAllAsync())
-            .ReturnsAsync(() => new List<ProfileModel>());
+            .ReturnsAsync(() => []);
 
         //Act
         var profiles = await _profileService.GetAllAsync();

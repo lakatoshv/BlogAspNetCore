@@ -355,7 +355,7 @@ namespace Blog.ServicesTests.EntityServices;
             var random = new Random();
         var postsTagsRelationsList =
             SetupPostsTagsRelationsFixture(postTitle, tagTitle)
-                .CreateMany(random.Next(100));
+                .CreateMany(random.Next(100))
                 .ToList();
 
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync())
