@@ -260,38 +260,10 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var messagesList = new List<Message>();
-
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var recipient = new ApplicationUser
-                {
-                    Id = new Guid().ToString(),
-                    FirstName = $"Test fn{i}",
-                    LastName = $"Test ln{i}",
-                    Email = $"test{i}@test.test",
-                    UserName = $"test{i}@test.test"
-                };
-                messagesList.Add(new Message
-                {
-                    Id = i,
-                    SenderId = sender.Id,
-                    Sender = sender,
-                    RecipientId = recipient.Id,
-                    Recipient = recipient,
-                    Subject = $"Test subject{i}",
-                    Body = $"Test body{i}"
-                });
-            }
+        var messagesList =
+            SetupMessageFixture()
+                .With(x => x.Body, bodySearch)
+                .CreateMany(random.Next(100));
 
             var specification = new MessageSpecification(x => x.Body.Contains(bodySearch));
             _messagesRepositoryMock.Setup(x => x.GetAll(specification))
@@ -317,38 +289,10 @@ namespace Blog.ServicesTests.EntityServices;
             //Test failed
             //Arrange
             var random = new Random();
-            var messagesList = new List<Message>();
-
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var recipient = new ApplicationUser
-                {
-                    Id = new Guid().ToString(),
-                    FirstName = $"Test fn{i}",
-                    LastName = $"Test ln{i}",
-                    Email = $"test{i}@test.test",
-                    UserName = $"test{i}@test.test"
-                };
-                messagesList.Add(new Message
-                {
-                    Id = i,
-                    SenderId = sender.Id,
-                    Sender = sender,
-                    RecipientId = recipient.Id,
-                    Recipient = recipient,
-                    Subject = $"Test subject{i}",
-                    Body = $"Test body{i}"
-                });
-            }
+        var messagesList =
+            SetupMessageFixture()
+                .With(x => x.Body, bodySearch)
+                .CreateMany(random.Next(100));
 
             var specification = new MessageSpecification(x => x.Body.Contains(bodySearch));
             _messagesRepositoryMock.Setup(x => x.GetAll(specification))
@@ -363,7 +307,6 @@ namespace Blog.ServicesTests.EntityServices;
             Assert.NotEqual(notEqualCount, messages.ToList().Count);
         }
 
-
         /// <summary>
         /// Get all messages with specification.
         /// Should return message with equal specification when messages exists.
@@ -375,40 +318,13 @@ namespace Blog.ServicesTests.EntityServices;
         public void GetAll_WithEqualsSpecification_WhenMessagesExists_ShouldReturnMessage(int equalCount, string bodySearch)
         {
             //Arrange
-            var random = new Random();
-            var messagesList = new List<Message>();
+        var messagesList =
+            SetupMessageFixture()
+                .With(x => x.Body, bodySearch)
+                .CreateMany(1);
 
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
 
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var recipient = new ApplicationUser
-                {
-                    Id = new Guid().ToString(),
-                    FirstName = $"Test fn{i}",
-                    LastName = $"Test ln{i}",
-                    Email = $"test{i}@test.test",
-                    UserName = $"test{i}@test.test"
-                };
-                messagesList.Add(new Message
-                {
-                    Id = i,
-                    SenderId = sender.Id,
-                    Sender = sender,
-                    RecipientId = recipient.Id,
-                    Recipient = recipient,
-                    Subject = $"Test subject{i}",
-                    Body = $"Test body{i}"
-                });
-            }
-
+        
             var specification = new MessageSpecification(x => x.Body.Contains(bodySearch));
             _messagesRepositoryMock.Setup(x => x.GetAll(specification))
                 .Returns(() => messagesList.Where(x => x.Body.Contains(bodySearch)).AsQueryable());
@@ -434,38 +350,9 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var messagesList = new List<Message>();
-
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var recipient = new ApplicationUser
-                {
-                    Id = new Guid().ToString(),
-                    FirstName = $"Test fn{i}",
-                    LastName = $"Test ln{i}",
-                    Email = $"test{i}@test.test",
-                    UserName = $"test{i}@test.test"
-                };
-                messagesList.Add(new Message
-                {
-                    Id = i,
-                    SenderId = sender.Id,
-                    Sender = sender,
-                    RecipientId = recipient.Id,
-                    Recipient = recipient,
-                    Subject = $"Test subject{i}",
-                    Body = $"Test body{i}"
-                });
-            }
+        var messagesList =
+            SetupMessageFixture()
+                .CreateMany(random.Next(100));
 
             var specification = new MessageSpecification(x => x.Body.Contains(bodySearch));
             _messagesRepositoryMock.Setup(x => x.GetAll(specification))
