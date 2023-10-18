@@ -252,19 +252,12 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var commentsList = new List<Comment>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                commentsList.Add(new Comment
-                {
-                    Id = i,
-                    CommentBody = $"Comment {i}",
-                });
-            }
+        var commentsList =
+            SetupCommentFixture(commentBodySearch)
+                .CreateMany(random.Next(100));
 
             var specification = new CommentSpecification(x => x.CommentBody.Contains(commentBodySearch));
-            _commentsRepositoryMock.Setup(x => x.GetAll(specification))
+        _commentsRepositoryMock.Setup(x => x.GetAll(It.IsAny<CommentSpecification>()))
                 .Returns(() => commentsList.Where(x => x.CommentBody.Contains(commentBodySearch)).AsQueryable());
 
             //Act
@@ -284,23 +277,15 @@ namespace Blog.ServicesTests.EntityServices;
         [InlineData(0, "Comment ")]
         public void GetAll_WithContainsSpecification_WhenCommentsExists_ShouldReturnComments(int notEqualCount, string commentBodySearch)
         {
-            //Test failed
             //Arrange
             var random = new Random();
-            var commentsList = new List<Comment>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                commentsList.Add(new Comment
-                {
-                    Id = i,
-                    CommentBody = $"Comment {i}",
-                });
-            }
-
+        var commentsList =
+            SetupCommentFixture(commentBodySearch)
+                .With(x => x.CommentBody, commentBodySearch)
+                .CreateMany(random.Next(100));
 
             var specification = new CommentSpecification(x => x.CommentBody.Contains(commentBodySearch));
-            _commentsRepositoryMock.Setup(x => x.GetAll(specification))
+        _commentsRepositoryMock.Setup(x => x.GetAll(It.IsAny<CommentSpecification>()))
                 .Returns(() => commentsList.Where(x => x.CommentBody.Contains(commentBodySearch)).AsQueryable());
 
             //Act
@@ -323,21 +308,13 @@ namespace Blog.ServicesTests.EntityServices;
         public void GetAll_WithEqualsSpecification_WhenCommentsExists_ShouldReturnComment(int equalCount, string commentBodySearch)
         {
             //Arrange
-            var random = new Random();
-            var commentsList = new List<Comment>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                commentsList.Add(new Comment
-                {
-                    Id = i,
-                    CommentBody = $"Comment {i}",
-                });
-            }
-
+        var commentsList =
+            SetupCommentFixture(commentBodySearch)
+                .With(x => x.CommentBody, commentBodySearch)
+                .CreateMany(1);
 
             var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
-            _commentsRepositoryMock.Setup(x => x.GetAll(specification))
+        _commentsRepositoryMock.Setup(x => x.GetAll(It.IsAny<CommentSpecification>()))
                 .Returns(() => commentsList.Where(x => x.CommentBody.Contains(commentBodySearch)).AsQueryable());
 
             //Act
@@ -361,20 +338,13 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var commentsList = new List<Comment>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                commentsList.Add(new Comment
-                {
-                    Id = i,
-                    CommentBody = $"Comment {i}",
-                });
-            }
-
+        var commentsList =
+            SetupCommentFixture("Comment 1")
+                .With(x => x.CommentBody, "Comment 1")
+                .CreateMany(random.Next(100));
 
             var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
-            _commentsRepositoryMock.Setup(x => x.GetAll(specification))
+        _commentsRepositoryMock.Setup(x => x.GetAll(It.IsAny<CommentSpecification>()))
                 .Returns(() => commentsList.Where(x => x.CommentBody.Contains(commentBodySearch)).AsQueryable());
 
             //Act
@@ -397,11 +367,11 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
-            _commentsRepositoryMock.Setup(x => x.GetAll(specification))
+        _commentsRepositoryMock.Setup(x => x.GetAll(It.IsAny<CommentSpecification>()))
                 .Returns(() => new List<Comment>().AsQueryable());
 
             //Act
-            var comments = _commentsService.GetAll();
+        var comments = _commentsService.GetAll(specification);
 
             //Assert
             Assert.Empty(comments);
