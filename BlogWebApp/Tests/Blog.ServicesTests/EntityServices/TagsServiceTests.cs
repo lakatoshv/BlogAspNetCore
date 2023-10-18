@@ -157,17 +157,10 @@ public class TagsServiceTests
     {
         //Arrange
         var random = new Random();
-        var tagsList = new List<Tag>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            tagsList.Add(new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}",
-            });
-        }
-
+        var tagsList =
+            SetupTagFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
         _tagsRepositoryMock.Setup(x => x.GetAllAsync())
             .ReturnsAsync(tagsList);
@@ -190,17 +183,10 @@ public class TagsServiceTests
     {
         //Arrange
         var random = new Random();
-        var tagsList = new List<Tag>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            tagsList.Add(new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}",
-            });
-        }
-
+        var tagsList =
+            SetupTagFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
         _tagsRepositoryMock.Setup(x => x.GetAllAsync())
             .ReturnsAsync(() => tagsList);
@@ -223,7 +209,7 @@ public class TagsServiceTests
     {
         //Arrange
         _tagsRepositoryMock.Setup(x => x.GetAllAsync())
-            .ReturnsAsync(() => new List<Tag>());
+            .ReturnsAsync(() => []);
 
         //Act
         var tags = await _tagsService.GetAllAsync();
