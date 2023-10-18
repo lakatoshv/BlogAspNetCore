@@ -179,19 +179,12 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var commentsList = new List<Comment>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                commentsList.Add(new Comment
-                {
-                    Id = i,
-                    CommentBody = $"Comment {i}",
-                });
-            }
+        var commentsList =
+            SetupCommentFixture()
+                .CreateMany(random.Next(100));
 
             _commentsRepositoryMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(commentsList);
+            .ReturnsAsync(() => commentsList.ToList());
 
             //Act
             await _commentsService.GetAllAsync();
@@ -211,21 +204,12 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var commentsList = new List<Comment>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var commentId = i;
-                commentsList.Add(new Comment
-                {
-                    Id = commentId,
-                    CommentBody = $"Comment {commentId}",
-                });
-            }
-
+        var commentsList =
+            SetupCommentFixture()
+                .CreateMany(random.Next(100));
 
             _commentsRepositoryMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => commentsList);
+            .ReturnsAsync(() => commentsList.ToList());
 
             //Act
             var comments = await _commentsService.GetAllAsync();
@@ -245,7 +229,7 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             _commentsRepositoryMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => new List<Comment>());
+            .ReturnsAsync(() => []);
 
             //Act
             var comments = await _commentsService.GetAllAsync();
