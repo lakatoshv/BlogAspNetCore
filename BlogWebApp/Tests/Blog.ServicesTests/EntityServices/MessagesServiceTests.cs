@@ -118,37 +118,6 @@ namespace Blog.ServicesTests.EntityServices;
             SetupMessageFixture()
                 .CreateMany(random.Next(100));
 
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var recipient = new ApplicationUser
-                {
-                    Id = new Guid().ToString(),
-                    FirstName = $"Test fn{i}",
-                    LastName = $"Test ln{i}",
-                    Email = $"test{i}@test.test",
-                    UserName = $"test{i}@test.test"
-                };
-                messagesList.Add(new Message
-                {
-                    Id = i,
-                    SenderId = sender.Id,
-                    Sender = sender,
-                    RecipientId = recipient.Id,
-                    Recipient = recipient,
-                    Subject = $"Test subject{i}",
-                    Body = $"Test body{i}"
-                });
-            }
-
             _messagesRepositoryMock.Setup(x => x.GetAll())
                 .Returns(messagesList.AsQueryable());
 
@@ -173,38 +142,6 @@ namespace Blog.ServicesTests.EntityServices;
         var messagesList =
             SetupMessageFixture()
                 .CreateMany(random.Next(100));
-
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var recipient = new ApplicationUser
-                {
-                    Id = new Guid().ToString(),
-                    FirstName = $"Test fn{i}",
-                    LastName = $"Test ln{i}",
-                    Email = $"test{i}@test.test",
-                    UserName = $"test{i}@test.test"
-                };
-                messagesList.Add(new Message
-                {
-                    Id = i,
-                    SenderId = sender.Id,
-                    Sender = sender,
-                    RecipientId = recipient.Id,
-                    Recipient = recipient,
-                    Subject = $"Test subject{i}",
-                    Body = $"Test body{i}"
-                });
-            }
-
 
             _messagesRepositoryMock.Setup(x => x.GetAll())
             .Returns(messagesList.AsQueryable());
@@ -248,38 +185,10 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var messagesList = new List<Message>();
-
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var recipient = new ApplicationUser
-                {
-                    Id = new Guid().ToString(),
-                    FirstName = $"Test fn{i}",
-                    LastName = $"Test ln{i}",
-                    Email = $"test{i}@test.test",
-                    UserName = $"test{i}@test.test"
-                };
-                messagesList.Add(new Message
-                {
-                    Id = i,
-                    SenderId = sender.Id,
-                    Sender = sender,
-                    RecipientId = recipient.Id,
-                    Recipient = recipient,
-                    Subject = $"Test subject{i}",
-                    Body = $"Test body{i}"
-                });
-            }
+        var messagesList =
+            SetupMessageFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
             _messagesRepositoryMock.Setup(x => x.GetAllAsync())
                 .ReturnsAsync(messagesList);
@@ -302,39 +211,10 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var messagesList = new List<Message>();
-
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var recipient = new ApplicationUser
-                {
-                    Id = new Guid().ToString(),
-                    FirstName = $"Test fn{i}",
-                    LastName = $"Test ln{i}",
-                    Email = $"test{i}@test.test",
-                    UserName = $"test{i}@test.test"
-                };
-                messagesList.Add(new Message
-                {
-                    Id = i,
-                    SenderId = sender.Id,
-                    Sender = sender,
-                    RecipientId = recipient.Id,
-                    Recipient = recipient,
-                    Subject = $"Test subject{i}",
-                    Body = $"Test body{i}"
-                });
-            }
-
+        var messagesList =
+            SetupMessageFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
             _messagesRepositoryMock.Setup(x => x.GetAllAsync())
                 .ReturnsAsync(() => messagesList);
@@ -357,7 +237,7 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             _messagesRepositoryMock.Setup(x => x.GetAllAsync())
-                .ReturnsAsync(() => new List<Message>());
+            .ReturnsAsync(() => []);
 
             //Act
             var messages = _messagesService.GetAll();
