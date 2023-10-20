@@ -652,23 +652,10 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var tag = new Tag
-                {
-                    Id = i,
-                    Title = $"{titleSearch} {i}"
-                };
-                postsTagsRelationsList.Add(new PostsTagsRelations
-                {
-                    Id = i,
-                    PostId = i,
-                    TagId = i,
-                    Tag = tag
-                });
-            }
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture(_fixture.Create<string>(), titleSearch)
+                .CreateMany(random.Next(100))
+                .ToList();
 
             var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(titleSearch));
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
@@ -694,24 +681,10 @@ namespace Blog.ServicesTests.EntityServices;
             //Test failed
             //Arrange
             var random = new Random();
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var tag = new Tag
-                {
-                    Id = i,
-                    Title = $"{titleSearch} {i}"
-                };
-                postsTagsRelationsList.Add(new PostsTagsRelations
-                {
-                    Id = i,
-                    PostId = i,
-                    TagId = i,
-                    Tag = tag
-                });
-            }
-
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture(_fixture.Create<string>(), titleSearch)
+                .CreateMany(random.Next(100))
+                .ToList();
 
             var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(titleSearch));
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
@@ -738,24 +711,10 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var tag = new Tag
-                {
-                    Id = i,
-                    Title = $"Tag {i}"
-                };
-                postsTagsRelationsList.Add(new PostsTagsRelations
-                {
-                    Id = i,
-                    PostId = i,
-                    TagId = i,
-                    Tag = tag
-                });
-            }
-
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture(_fixture.Create<string>(), titleSearch)
+                .CreateMany(random.Next(100))
+                .ToList();
 
             var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
@@ -783,35 +742,10 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postId = random.Next(100);
-            var postEntity = new Post
-            {
-                Id = postId,
-                Title = $"{postTitle} {postId}",
-                Description = $"{postTitle} {postId}",
-                Content = $"{postTitle} {postId}",
-                ImageUrl = $"{postTitle} {postId}",
-            };
-
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var tag = new Tag
-                {
-                    Id = i,
-                    Title = $"{tagTitle} {i}",
-                };
-
-                postsTagsRelationsList.Add(new PostsTagsRelations()
-                {
-                    Id = i,
-                    PostId = postId,
-                    Post = postEntity,
-                    TagId = i,
-                    Tag = tag
-                });
-            }
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
             var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(tagTitle));
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
@@ -850,36 +784,10 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postId = random.Next(100);
-            var postEntity = new Post
-            {
-                Id = postId,
-                Title = $"{postTitle} {postId}",
-                Description = $"{postTitle} {postId}",
-                Content = $"{postTitle} {postId}",
-                ImageUrl = $"{postTitle} {postId}",
-            };
-
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-            var postsTagsRelationsCount = random.Next(100);
-
-            for (var i = 0; i < postsTagsRelationsCount; i++)
-            {
-                var tag = new Tag
-                {
-                    Id = i,
-                    Title = $"{tagTitle} {i}",
-                };
-
-                postsTagsRelationsList.Add(new PostsTagsRelations()
-                {
-                    Id = i,
-                    PostId = postId,
-                    Post = postEntity,
-                    TagId = i,
-                    Tag = tag
-                });
-            }
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture(_fixture.Create<string>(), titleSearch)
+                .CreateMany(random.Next(100))
+                .ToList();
 
             var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(tagTitle));
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
@@ -892,7 +800,7 @@ namespace Blog.ServicesTests.EntityServices;
             Assert.NotNull(postsTagsRelations);
             Assert.NotEmpty(postsTagsRelations);
             Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
-            Assert.Equal(postsTagsRelationsCount, postsTagsRelations.Count);
+        Assert.Equal(postsTagsRelations.Count, postsTagsRelations.Count);
         }
 
         /// <summary>
@@ -907,24 +815,10 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                var tag = new Tag
-                {
-                    Id = i,
-                    Title = $"Tag {i}"
-                };
-                postsTagsRelationsList.Add(new PostsTagsRelations
-                {
-                    Id = i,
-                    PostId = i,
-                    TagId = i,
-                    Tag = tag
-                });
-            }
-
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
             var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
@@ -951,7 +845,7 @@ namespace Blog.ServicesTests.EntityServices;
             //Arrange
             var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(specification))
-                .ReturnsAsync(() => new List<PostsTagsRelations>().ToList());
+            .ReturnsAsync(() => []);
 
             //Act
             var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync();
