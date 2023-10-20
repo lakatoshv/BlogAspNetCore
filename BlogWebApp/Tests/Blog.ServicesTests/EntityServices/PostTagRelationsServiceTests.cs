@@ -281,10 +281,10 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
                 postsTagsRelationsList.Add(new PostsTagsRelations
                 {
                     Id = i,
@@ -315,18 +315,10 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                postsTagsRelationsList.Add(new PostsTagsRelations()
-                {
-                    Id = i,
-                    PostId = i,
-                    TagId = i
-                });
-            }
-
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync())
                 .ReturnsAsync(() => postsTagsRelationsList);
@@ -4190,4 +4182,6 @@ namespace Blog.ServicesTests.EntityServices;
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion
+
+    #endregion
     }
