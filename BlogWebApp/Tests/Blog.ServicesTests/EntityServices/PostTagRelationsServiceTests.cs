@@ -341,7 +341,7 @@ namespace Blog.ServicesTests.EntityServices;
         /// <param name="tagTitle">The tag title.</param>
         [Theory]
         [InlineData(0, "Post", "Tag")]
-        public async void GetAllAsync_WhenPostTagRelationExists_ShouldReturnPostTagRelationsWithExistingPostAndTags(int notEqualCount, string postTitle, string tagTitle)
+    public async Task GetAllAsync_WhenPostTagRelationExists_ShouldReturnPostTagRelationsWithExistingPostAndTags(int notEqualCount, string postTitle, string tagTitle)
         {
             //Arrange
             var random = new Random();
@@ -676,7 +676,7 @@ namespace Blog.ServicesTests.EntityServices;
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData(0, "Created from ServicesTests ")]
-        public async void GetAllAsync_WithContainsSpecification_WhenPostTagRelationsExists_ShouldReturnPostTagRelations(int notEqualCount, string titleSearch)
+    public async Task GetAllAsync_WithContainsSpecification_WhenPostTagRelationsExists_ShouldReturnPostTagRelations(int notEqualCount, string titleSearch)
         {
             //Test failed
             //Arrange
@@ -707,7 +707,7 @@ namespace Blog.ServicesTests.EntityServices;
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData(1, "Tag 0")]
-        public async void GetAllAsync_WithEqualsSpecification_WhenPostsExists_ShouldReturnPost(int equalCount, string titleSearch)
+    public async Task GetAllAsync_WithEqualsSpecification_WhenPostsExists_ShouldReturnPost(int equalCount, string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -738,7 +738,7 @@ namespace Blog.ServicesTests.EntityServices;
         /// <param name="tagTitle">The tag title.</param>
         [Theory]
         [InlineData(0, "Post", "Tag")]
-        public async void GetAllAsync_WithContainsSpecification_WhenPostTagRelationExists_ShouldReturnPostTagRelationsWithExistingPostAndTags(int notEqualCount, string postTitle, string tagTitle)
+    public async Task GetAllAsync_WithContainsSpecification_WhenPostTagRelationExists_ShouldReturnPostTagRelationsWithExistingPostAndTags(int notEqualCount, string postTitle, string tagTitle)
         {
             //Arrange
             var random = new Random();
@@ -785,7 +785,7 @@ namespace Blog.ServicesTests.EntityServices;
             //Arrange
             var random = new Random();
         var postsTagsRelationsList =
-            SetupPostsTagsRelationsFixture(_fixture.Create<string>(), titleSearch)
+            SetupPostsTagsRelationsFixture(_fixture.Create<string>(), postTitle)
                 .CreateMany(random.Next(100))
                 .ToList();
 
@@ -811,7 +811,7 @@ namespace Blog.ServicesTests.EntityServices;
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData(0, "Tag -1")]
-        public async void GetAllAsync_WithEqualSpecification_WhenPostTagRelationsExists_ShouldReturnNothing(int equalCount, string titleSearch)
+    public async Task GetAllAsync_WithEqualSpecification_WhenPostTagRelationsExists_ShouldReturnNothing(int equalCount, string titleSearch)
         {
             //Arrange
             var random = new Random();

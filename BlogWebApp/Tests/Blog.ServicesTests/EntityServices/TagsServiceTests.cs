@@ -444,7 +444,7 @@ public class TagsServiceTests
     /// <param name="tagSearch">The tag search.</param>
     [Theory]
     [InlineData(1, "Tag 0")]
-    public async void GetAllAsync_WithEqualsSpecification_WhenTagsExists_ShouldReturnTag(int equalCount, string tagSearch)
+    public async Task GetAllAsync_WithEqualsSpecification_WhenTagsExists_ShouldReturnTag(int equalCount, string tagSearch)
     {
         //Arrange
         var random = new Random();
@@ -481,7 +481,7 @@ public class TagsServiceTests
     /// <param name="tagSearch">The tag search.</param>
     [Theory]
     [InlineData(0, "Tag -1")]
-    public async void GetAllAsync_WithEqualSpecification_WhenTagsExists_ShouldReturnNothing(int equalCount, string tagSearch)
+    public async Task GetAllAsync_WithEqualSpecification_WhenTagsExists_ShouldReturnNothing(int equalCount, string tagSearch)
     {
         //Arrange
         var random = new Random();
@@ -517,7 +517,7 @@ public class TagsServiceTests
     /// <param name="tagSearch">The tag search.</param>
     [Theory]
     [InlineData("Tag 0")]
-    public async void GetAllAsync_WithEqualSpecification_WhenTagsDoesNotExists_ShouldReturnNothing(string tagSearch)
+    public async Task GetAllAsync_WithEqualSpecification_WhenTagsDoesNotExists_ShouldReturnNothing(string tagSearch)
     {
         //Arrange
         var specification = new TagSpecification(x => x.Title.Equals(tagSearch));

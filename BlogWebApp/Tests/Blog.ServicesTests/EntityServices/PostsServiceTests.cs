@@ -476,7 +476,7 @@ namespace Blog.ServicesTests.EntityServices;
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData(1, "Created from ServicesTests 0")]
-        public async void GetAllAsync_WithEqualsSpecification_WhenPostsExists_ShouldReturnPost(int equalCount, string titleSearch)
+    public async Task GetAllAsync_WithEqualsSpecification_WhenPostsExists_ShouldReturnPost(int equalCount, string titleSearch)
         {
             //Arrange
             var random = new Random();
@@ -507,7 +507,7 @@ namespace Blog.ServicesTests.EntityServices;
         /// <param name="titleSearch">The title search.</param>
         [Theory]
         [InlineData(0, "Created from ServicesTests -1")]
-        public async void GetAllAsync_WithEqualSpecification_WhenPostsExists_ShouldReturnNothing(int equalCount, string titleSearch)
+    public async Task GetAllAsync_WithEqualSpecification_WhenPostsExists_ShouldReturnNothing(int equalCount, string titleSearch)
         {
             //Arrange
             var random = new Random();

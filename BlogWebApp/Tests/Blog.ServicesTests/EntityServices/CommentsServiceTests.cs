@@ -225,7 +225,7 @@ namespace Blog.ServicesTests.EntityServices;
         /// Should return nothing when comments does not exists.
         /// </summary>
         [Fact]
-        public async void GetAllAsync_WhenCommentsDoesNotExists_ShouldReturnNothing()
+    public async Task GetAllAsync_WhenCommentsDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
             _commentsRepositoryMock.Setup(x => x.GetAllAsync())
@@ -387,7 +387,7 @@ namespace Blog.ServicesTests.EntityServices;
         /// <param name="commentBodySearch">The CommentBody search.</param>
         [Theory]
         [InlineData("Comment ")]
-        public async void Verify_FunctionGetAllAsync_WithSpecification_HasBeenCalled(string commentBodySearch)
+    public async Task Verify_FunctionGetAllAsync_WithSpecification_HasBeenCalled(string commentBodySearch)
         {
             //Arrange
             var random = new Random();

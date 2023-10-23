@@ -416,7 +416,7 @@ public class ProfileServiceTests
     /// <param name="equalCount">The equal count.</param>
     [Theory]
     [InlineData(0)]
-    public async void GetAllAsync_WithEqualSpecification_WhenProfilesExists_ShouldReturnNothing(int equalCount)
+    public async Task GetAllAsync_WithEqualSpecification_WhenProfilesExists_ShouldReturnNothing(int equalCount)
     {
         //Arrange
         var random = new Random();

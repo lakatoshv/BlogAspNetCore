@@ -404,6 +404,7 @@ namespace Blog.ServicesTests.EntityServices;
             SetupMessageFixture()
                 .With(x => x.Body, bodySearch)
                 .CreateMany(random.Next(100));
+
             var specification = new MessageSpecification(x => x.Body.Contains(bodySearch));
             _messagesRepositoryMock.Setup(x => x.GetAllAsync(specification))
                 .ReturnsAsync(() => messagesList.Where(x => x.Body.Contains(bodySearch)).ToList());
@@ -1704,7 +1705,7 @@ namespace Blog.ServicesTests.EntityServices;
         /// <returns>Task.</returns>
         [Theory]
         [InlineData("New subject")]
-        public async void UpdateAsyncEnumerable_WhenMessageExists_ShouldReturnMessage(string newMessageSubject)
+    public async Task UpdateAsyncEnumerable_WhenMessageExists_ShouldReturnMessage(string newMessageSubject)
         {
             //Arrange
             var random = new Random();

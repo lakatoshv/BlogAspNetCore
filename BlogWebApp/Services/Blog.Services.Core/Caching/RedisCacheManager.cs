@@ -73,7 +73,7 @@ public class RedisCacheManager
     /// <param name="key">key.</param>
     /// <param name="data">data.</param>
     /// <param name="cacheTime">cacheTime.</param>
-    public virtual async void Set(string key, object data, int cacheTime)
+    public virtual async Task Set(string key, object data, int cacheTime)
     {
         await this.SetAsync(key, data, cacheTime);
     }
@@ -92,7 +92,7 @@ public class RedisCacheManager
     /// Remove data from redis cache.
     /// </summary>
     /// <param name="key">key.</param>
-    public virtual async void Remove(string key)
+    public virtual async Task Remove(string key)
     {
         await this.RemoveAsync(key);
     }
@@ -101,7 +101,7 @@ public class RedisCacheManager
     /// Remove data from redis cache by pattern.
     /// </summary>
     /// <param name="pattern">pattern.</param>
-    public virtual async void RemoveByPattern(string pattern)
+    public virtual async Task RemoveByPattern(string pattern)
     {
         await this.RemoveByPatternAsync(pattern);
     }
@@ -109,7 +109,7 @@ public class RedisCacheManager
     /// <summary>
     /// Clear redis cache.
     /// </summary>
-    public virtual async void Clear()
+    public virtual async Task Clear()
     {
         await this.ClearAsync();
     }
