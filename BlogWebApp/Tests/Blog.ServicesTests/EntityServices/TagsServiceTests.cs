@@ -232,16 +232,11 @@ public class TagsServiceTests
     {
         //Arrange
         var random = new Random();
-        var tagsList = new List<Tag>();
 
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            tagsList.Add(new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}",
-            });
-        }
+        var tagsList =
+            SetupTagFixture()
+                .With(x => x.Title, tagSearch)
+                .CreateMany(random.Next(100));
 
         var specification = new TagSpecification(x => x.Title.Contains(tagSearch));
         _tagsRepositoryMock.Setup(x => x.GetAll(specification))
@@ -267,17 +262,11 @@ public class TagsServiceTests
         //Test failed
         //Arrange
         var random = new Random();
-        var tagsList = new List<Tag>();
 
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            tagsList.Add(new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}",
-            });
-        }
-
+        var tagsList =
+            SetupTagFixture()
+                .With(x => x.Title, tagSearch)
+                .CreateMany(random.Next(100));
 
         var specification = new TagSpecification(x => x.Title.Contains(tagSearch));
         _tagsRepositoryMock.Setup(x => x.GetAll(specification))
@@ -304,18 +293,10 @@ public class TagsServiceTests
     public void GetAll_WithEqualsSpecification_WhenTagsExists_ShouldReturnTag(int equalCount, string tagSearch)
     {
         //Arrange
-        var random = new Random();
-        var tagsList = new List<Tag>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            tagsList.Add(new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}",
-            });
-        }
-
+        var tagsList =
+            SetupTagFixture()
+                .With(x => x.Title, tagSearch)
+                .CreateMany(1);
 
         var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
         _tagsRepositoryMock.Setup(x => x.GetAll(specification))
@@ -338,21 +319,14 @@ public class TagsServiceTests
     /// <param name="tagSearch">The tag search.</param>
     [Theory]
     [InlineData(0, "Tag -1")]
-    public void GetAll_WithEqualsSpecification_WhenTagsExists_ShouldReturnNothingx(int equalCount, string tagSearch)
+    public void GetAll_WithEqualsSpecification_WhenTagsExists_ShouldReturnNothing(int equalCount, string tagSearch)
     {
         //Arrange
         var random = new Random();
-        var tagsList = new List<Tag>();
 
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            tagsList.Add(new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}",
-            });
-        }
-
+        var tagsList =
+            SetupTagFixture()
+                .CreateMany(random.Next(100));
 
         var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
         _tagsRepositoryMock.Setup(x => x.GetAll(specification))
