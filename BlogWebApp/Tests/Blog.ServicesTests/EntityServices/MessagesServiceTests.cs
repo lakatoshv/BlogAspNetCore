@@ -541,44 +541,17 @@ namespace Blog.ServicesTests.EntityServices;
         public void Verify_FunctionFind_HasBeenCalled()
         {
             //Arrange
-            var random = new Random();
-            var messageId = random.Next(52);
-
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            var recipient = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = $"Test fn{messageId}",
-                LastName = $"Test ln{messageId}",
-                Email = $"test{messageId}@test.test",
-                UserName = $"test{messageId}@test.test"
-            };
-            var newMessage = new Message
-            {
-                Id = messageId,
-                SenderId = sender.Id,
-                Sender = sender,
-                RecipientId = recipient.Id,
-                Recipient = recipient,
-                Subject = $"Test subject{messageId}",
-                Body = $"Test body{messageId}"
-            };
-            _messagesRepositoryMock.Setup(x => x.GetById(messageId))
+        var newMessage =
+            SetupMessageFixture()
+                .Create();
+        _messagesRepositoryMock.Setup(x => x.GetById(newMessage.Id))
                 .Returns(() => newMessage);
 
             //Act
-            _messagesService.Find(messageId);
+        _messagesService.Find(newMessage.Id);
 
             //Assert
-            _messagesRepositoryMock.Verify(x => x.GetById(messageId), Times.Once);
+        _messagesRepositoryMock.Verify(x => x.GetById(newMessage.Id), Times.Once);
         }
 
         /// <summary>
@@ -589,44 +562,17 @@ namespace Blog.ServicesTests.EntityServices;
         public void Find_WhenMessageExists_ShouldReturnMessage()
         {
             //Arrange
-            var random = new Random();
-            var messageId = random.Next(52);
-
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            var recipient = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = $"Test fn{messageId}",
-                LastName = $"Test ln{messageId}",
-                Email = $"test{messageId}@test.test",
-                UserName = $"test{messageId}@test.test"
-            };
-            var newMessage = new Message
-            {
-                Id = messageId,
-                SenderId = sender.Id,
-                Sender = sender,
-                RecipientId = recipient.Id,
-                Recipient = recipient,
-                Subject = $"Test subject{messageId}",
-                Body = $"Test body{messageId}"
-            };
-            _messagesRepositoryMock.Setup(x => x.GetById(messageId))
+        var newMessage =
+            SetupMessageFixture()
+                .Create();
+        _messagesRepositoryMock.Setup(x => x.GetById(newMessage.Id))
                 .Returns(() => newMessage);
 
             //Act
-            var message = _messagesService.Find(messageId);
+        var message = _messagesService.Find(newMessage.Id);
 
             //Assert
-            Assert.Equal(messageId, message.Id);
+        Assert.Equal(newMessage.Id, message.Id);
         }
 
         /// <summary>
@@ -637,8 +583,7 @@ namespace Blog.ServicesTests.EntityServices;
         public void Find_WhenMessageDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
-            var random = new Random();
-            var messageId = random.Next(52);
+        var messageId = _fixture.Create<int>();
             _messagesRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
                 .Returns(() => null);
 
