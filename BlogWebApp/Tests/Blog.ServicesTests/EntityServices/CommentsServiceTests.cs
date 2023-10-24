@@ -534,15 +534,10 @@ namespace Blog.ServicesTests.EntityServices;
         public void Verify_FunctionFind_HasBeenCalled()
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
-            var commentsList = new Comment
-            {
-                Id = commentId,
-                CommentBody = $"Comment {commentId}",
-            };
-            _commentsRepositoryMock.Setup(x => x.GetById(commentId))
-                .Returns(() => commentsList);
+        var commentId = _fixture.Create<int>();
+        var newComment = SetupCommentFixture().Create();
+        _commentsRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
+            .Returns(() => newComment);
 
             //Act
             _commentsService.Find(commentId);
@@ -559,21 +554,15 @@ namespace Blog.ServicesTests.EntityServices;
         public void Find_WhenCommentExists_ShouldReturnComment()
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
-            var newComment = new Comment
-            {
-                Id = commentId,
-                CommentBody = $"Comment {commentId}",
-            };
-            _commentsRepositoryMock.Setup(x => x.GetById(commentId))
+        var newComment = SetupCommentFixture().Create();
+        _commentsRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
                 .Returns(() => newComment);
 
             //Act
-            var comment = _commentsService.Find(commentId);
+        var comment = _commentsService.Find(newComment.Id);
 
             //Assert
-            Assert.Equal(commentId, comment.Id);
+        Assert.Equal(newComment.Id, comment.Id);
         }
 
         /// <summary>
@@ -584,8 +573,7 @@ namespace Blog.ServicesTests.EntityServices;
         public void Find_WhenCommentDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
+        var commentId = _fixture.Create<int>();
             _commentsRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
                 .Returns(() => null);
 
