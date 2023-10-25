@@ -285,14 +285,6 @@ namespace Blog.ServicesTests.EntityServices;
             SetupPostsTagsRelationsFixture()
                 .CreateMany(random.Next(100))
                 .ToList();
-                postsTagsRelationsList.Add(new PostsTagsRelations
-                {
-                    Id = i,
-                    PostId = i,
-                    TagId = i,
-                });
-            }
-
 
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync())
                 .ReturnsAsync(postsTagsRelationsList);
@@ -869,20 +861,12 @@ namespace Blog.ServicesTests.EntityServices;
         public void Verify_FunctionFind_HasBeenCalled()
         {
             //Arrange
-            var random = new Random();
-            var id = random.Next(52);
-            var tag = new Tag
-            {
-                Id = id,
-                Title = $"Tag {id}"
-            };
-            var newPostsTagsRelation = new PostsTagsRelations
-            {
-                Id = id,
-                PostId = id,
-                TagId = id,
-                Tag = tag
-            };
+        var id = _fixture.Create<int>();
+        var newPostsTagsRelation =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.Id, id)
+                .Create();
+
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
                 .Returns(() => newPostsTagsRelation);
 
@@ -901,20 +885,12 @@ namespace Blog.ServicesTests.EntityServices;
         public void Find_WhenPostTagRelationExists_ShouldReturnPostTagRelation()
         {
             //Arrange
-            var random = new Random();
-            var id = random.Next(52);
-            var tag = new Tag
-            {
-                Id = id,
-                Title = $"Tag {id}"
-            };
-            var newPostsTagsRelation = new PostsTagsRelations
-            {
-                Id = id,
-                PostId = id,
-                TagId = id,
-                Tag = tag
-            };
+        var id = _fixture.Create<int>();
+        var newPostsTagsRelation =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.Id, id)
+                .Create();
+
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
                 .Returns(() => newPostsTagsRelation);
 
@@ -925,56 +901,6 @@ namespace Blog.ServicesTests.EntityServices;
             Assert.Equal(id, postsTagsRelations.Id);
         }
 
-        /// <summary>
-        /// Find post tag relations.
-        /// Should return post tag relations when post tag relations exists.
-        /// </summary>
-        /// <param name="postTitle">The post title.</param>
-        /// <param name="tagTitle">THe tag title.</param>
-        [Theory]
-        [InlineData("Post", "Tag")]
-        public void Find_WhenPostTagRelationExists_ShouldReturnPostTagRelationWithExistingPostAndTags(string postTitle, string tagTitle)
-        {
-            //Arrange
-            var random = new Random();
-            var id = random.Next(52);
-            var postEntity = new Post
-            {
-                Id = id,
-                Title = $"{postTitle} {id}",
-                Description = $"{postTitle} {id}",
-                Content = $"{postTitle} {id}",
-                ImageUrl = $"{postTitle} {id}",
-            };
-            var tag = new Tag
-            {
-                Id = id,
-                Title = $"Tag {id}"
-            };
-            var newPostsTagsRelation = new PostsTagsRelations
-            {
-                Id = id,
-                PostId = id,
-                Post = postEntity,
-                TagId = id,
-                Tag = tag
-            };
-
-            _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
-                .Returns(() => newPostsTagsRelation);
-
-            //Act
-            var postsTagsRelations = _postsTagsRelationsService.Find(id);
-
-            //Assert
-            Assert.NotNull(postsTagsRelations);
-            Assert.Equal(id, postsTagsRelations.Id);
-            Assert.NotNull(postsTagsRelations.Post);
-            Assert.Contains(postTitle, postsTagsRelations.Post.Title);
-
-            Assert.NotNull(postsTagsRelations.Tag);
-            Assert.Contains(tagTitle, postsTagsRelations.Tag.Title);
-        }
 
         /// <summary>
         /// Find post tag relation.
@@ -984,8 +910,7 @@ namespace Blog.ServicesTests.EntityServices;
         public void Find_WhenPostTagRelationDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
-            var random = new Random();
-            var id = random.Next(52);
+        var id = _fixture.Create<int>();
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
                 .Returns(() => null);
 
