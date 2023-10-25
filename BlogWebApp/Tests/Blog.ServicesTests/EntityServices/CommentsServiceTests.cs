@@ -596,14 +596,10 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task Verify_FunctionFindAsync_HasBeenCalled()
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
-            var newComment = new Comment
-            {
-                Id = commentId,
-                CommentBody = $"Comment {commentId}",
-            };
-            _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
+        var commentId = _fixture.Create<int>();
+        var newComment = SetupCommentFixture().Create();
+
+        _commentsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(() => newComment);
 
             //Act
@@ -622,21 +618,15 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task FindAsync_WhenCommentExists_ShouldReturnComment()
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
-            var newComment = new Comment
-            {
-                Id = commentId,
-                CommentBody = $"Comment {commentId}",
-            };
-            _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
+        var newComment = SetupCommentFixture().Create();
+        _commentsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(() => newComment);
 
             //Act
-            var comment = await _commentsService.FindAsync(commentId);
+        var comment = await _commentsService.FindAsync(newComment.Id);
 
             //Assert
-            Assert.Equal(commentId, comment.Id);
+        Assert.Equal(newComment.Id, comment.Id);
         }
 
         /// <summary>
@@ -648,8 +638,8 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task FindAsync_WhenCommentDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
+        var commentId = _fixture.Create<int>();
+
             _commentsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(() => null);
 
