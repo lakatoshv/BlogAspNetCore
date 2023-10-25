@@ -476,25 +476,8 @@ public class ProfileServiceTests
     public void Verify_FunctionFind_HasBeenCalled()
     {
         //Arrange
-        var random = new Random();
-        var profileId = random.Next(52);
-
-        var userId = new Guid().ToString();
-        var user = new ApplicationUser
-        {
-            Id = userId,
-            FirstName = "Test fn",
-            LastName = "Test ln",
-            Email = "test@test.test",
-            UserName = "test@test.test"
-        };
-        var newProfile = new ProfileModel
-        {
-            Id = profileId,
-            UserId = userId,
-            User = user,
-            ProfileImg = $"img{profileId}.jpg"
-        };
+        var profileId = _fixture.Create<int>();
+        var newProfile = SetupProfileFixture().Create();
 
         _profileRepositoryMock.Setup(x => x.GetById(profileId))
             .Returns(() => newProfile);
@@ -514,25 +497,8 @@ public class ProfileServiceTests
     public void Find_WhenProfilesExists_ShouldReturnProfile()
     {
         //Arrange
-        var random = new Random();
-        var profileId = random.Next(52);
-
-        var userId = new Guid().ToString();
-        var user = new ApplicationUser
-        {
-            Id = userId,
-            FirstName = "Test fn",
-            LastName = "Test ln",
-            Email = "test@test.test",
-            UserName = "test@test.test"
-        };
-        var newProfile = new ProfileModel
-        {
-            Id = profileId,
-            UserId = userId,
-            User = user,
-            ProfileImg = $"img{profileId}.jpg"
-        };
+        var profileId = _fixture.Create<int>();
+        var newProfile = SetupProfileFixture().Create();
 
         _profileRepositoryMock.Setup(x => x.GetById(profileId))
             .Returns(() => newProfile);
@@ -552,8 +518,8 @@ public class ProfileServiceTests
     public void Find_WhenProfilesDoesNotExists_ShouldReturnNothing()
     {
         //Arrange
-        var random = new Random();
-        var profileId = random.Next(52);
+        var profileId = _fixture.Create<int>();
+
         _profileRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
             .Returns(() => null);
 
