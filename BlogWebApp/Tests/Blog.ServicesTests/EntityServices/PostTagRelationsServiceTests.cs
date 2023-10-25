@@ -901,7 +901,6 @@ namespace Blog.ServicesTests.EntityServices;
             Assert.Equal(id, postsTagsRelations.Id);
         }
 
-
         /// <summary>
         /// Find post tag relation.
         /// Should return nothing when post does not exists.
