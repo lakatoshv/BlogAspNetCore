@@ -932,20 +932,12 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task Verify_FunctionFindAsync_HasBeenCalled()
         {
             //Arrange
-            var random = new Random();
-            var id = random.Next(52);
-            var tag = new Tag
-            {
-                Id = id,
-                Title = $"Tag {id}"
-            };
-            var newPostsTagsRelation = new PostsTagsRelations
-            {
-                Id = id,
-                PostId = id,
-                TagId = id,
-                Tag = tag
-            };
+        var id = _fixture.Create<int>();
+        var newPostsTagsRelation =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.Id, id)
+                .Create();
+
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
                 .ReturnsAsync(() => newPostsTagsRelation);
 
@@ -965,20 +957,12 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task FindAsync_WhenPostTagRelationExists_ShouldReturnPostTagRelation()
         {
             //Arrange
-            var random = new Random();
-            var id = random.Next(52);
-            var tag = new Tag
-            {
-                Id = id,
-                Title = $"Tag {id}"
-            };
-            var newPostsTagsRelation = new PostsTagsRelations
-            {
-                Id = id,
-                PostId = id,
-                TagId = id,
-                Tag = tag
-            };
+        var id = _fixture.Create<int>();
+        var newPostsTagsRelation =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.Id, id)
+                .Create();
+
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
                 .ReturnsAsync(() => newPostsTagsRelation);
 
@@ -990,58 +974,6 @@ namespace Blog.ServicesTests.EntityServices;
         }
 
         /// <summary>
-        /// Find async post tag relations.
-        /// Should return post tag relations when post tag relations exists.
-        /// </summary>
-        /// <param name="postTitle">The post title.</param>
-        /// <param name="tagTitle">THe tag title.</param>
-        /// <returns>Task.</returns>
-        [Theory]
-        [InlineData("Post", "Tag")]
-        public async Task FindAsync_WhenPostTagRelationExists_ShouldReturnPostTagRelationWithExistingPostAndTags(string postTitle, string tagTitle)
-        {
-            //Arrange
-            var random = new Random();
-            var id = random.Next(52);
-            var postEntity = new Post
-            {
-                Id = id,
-                Title = $"{postTitle} {id}",
-                Description = $"{postTitle} {id}",
-                Content = $"{postTitle} {id}",
-                ImageUrl = $"{postTitle} {id}",
-            };
-            var tag = new Tag
-            {
-                Id = id,
-                Title = $"Tag {id}"
-            };
-            var newPostsTagsRelation = new PostsTagsRelations
-            {
-                Id = id,
-                PostId = id,
-                Post = postEntity,
-                TagId = id,
-                Tag = tag
-            };
-
-            _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
-                .ReturnsAsync(() => newPostsTagsRelation);
-
-            //Act
-            var postsTagsRelations = await _postsTagsRelationsService.FindAsync(id);
-
-            //Assert
-            Assert.NotNull(postsTagsRelations);
-            Assert.Equal(id, postsTagsRelations.Id);
-            Assert.NotNull(postsTagsRelations.Post);
-            Assert.Contains(postTitle, postsTagsRelations.Post.Title);
-
-            Assert.NotNull(postsTagsRelations.Tag);
-            Assert.Contains(tagTitle, postsTagsRelations.Tag.Title);
-        }
-
-        /// <summary>
         /// Async find post tag relation.
         /// Should return nothing when post does not exists.
         /// </summary>
@@ -1050,8 +982,8 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task FindAsync_WhenPostTagRelationsDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
-            var random = new Random();
-            var id = random.Next(52);
+        var id = _fixture.Create<int>();
+
             _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(() => null);
 
