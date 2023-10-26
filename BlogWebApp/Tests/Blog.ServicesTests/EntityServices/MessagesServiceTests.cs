@@ -606,44 +606,18 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task Verify_FunctionFindAsync_HasBeenCalled()
         {
             //Arrange
-            var random = new Random();
-            var messageId = random.Next(52);
+        var newMessage =
+            SetupMessageFixture()
+                .Create();
 
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            var recipient = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = $"Test fn{messageId}",
-                LastName = $"Test ln{messageId}",
-                Email = $"test{messageId}@test.test",
-                UserName = $"test{messageId}@test.test"
-            };
-            var newMessage = new Message
-            {
-                Id = messageId,
-                SenderId = sender.Id,
-                Sender = sender,
-                RecipientId = recipient.Id,
-                Recipient = recipient,
-                Subject = $"Test subject{messageId}",
-                Body = $"Test body{messageId}"
-            };
-            _messagesRepositoryMock.Setup(x => x.GetByIdAsync(messageId))
+        _messagesRepositoryMock.Setup(x => x.GetByIdAsync(newMessage.Id))
                 .ReturnsAsync(() => newMessage);
 
             //Act
-            await _messagesService.FindAsync(messageId);
+        await _messagesService.FindAsync(newMessage.Id);
 
             //Assert
-            _messagesRepositoryMock.Verify(x => x.GetByIdAsync(messageId), Times.Once);
+        _messagesRepositoryMock.Verify(x => x.GetByIdAsync(newMessage.Id), Times.Once);
         }
 
         /// <summary>
@@ -655,44 +629,18 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task FindAsync_WhenMessageExists_ShouldReturnMessage()
         {
             //Arrange
-            var random = new Random();
-            var messageId = random.Next(52);
+        var newMessage =
+            SetupMessageFixture()
+                .Create();
 
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            var recipient = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = $"Test fn{messageId}",
-                LastName = $"Test ln{messageId}",
-                Email = $"test{messageId}@test.test",
-                UserName = $"test{messageId}@test.test"
-            };
-            var newMessage = new Message
-            {
-                Id = messageId,
-                SenderId = sender.Id,
-                Sender = sender,
-                RecipientId = recipient.Id,
-                Recipient = recipient,
-                Subject = $"Test subject{messageId}",
-                Body = $"Test body{messageId}"
-            };
-            _messagesRepositoryMock.Setup(x => x.GetByIdAsync(messageId))
+        _messagesRepositoryMock.Setup(x => x.GetByIdAsync(newMessage.Id))
                 .ReturnsAsync(() => newMessage);
 
             //Act
-            var tag = await _messagesService.FindAsync(messageId);
+        var tag = await _messagesService.FindAsync(newMessage.Id);
 
             //Assert
-            Assert.Equal(messageId, tag.Id);
+        Assert.Equal(newMessage.Id, tag.Id);
         }
 
         /// <summary>
@@ -704,8 +652,8 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task FindAsync_WhenMessageDoesNotExists_ShouldReturnNothing()
         {
             //Arrange
-            var random = new Random();
-            var messageId = random.Next(52);
+        var messageId = _fixture.Create<int>();
+
             _messagesRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(() => null);
 
