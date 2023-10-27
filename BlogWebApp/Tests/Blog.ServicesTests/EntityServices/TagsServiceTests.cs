@@ -441,7 +441,6 @@ public class TagsServiceTests
                 .With(x => x.Title, tagSearch)
                 .CreateMany(1);
 
-
         var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
         _tagsRepositoryMock.Setup(x => x.GetAllAsync(specification))
             .ReturnsAsync(() => tagsList.Where(x => x.Title.Contains(tagSearch)).ToList());
@@ -592,13 +591,12 @@ public class TagsServiceTests
     public async Task Verify_FunctionFindAsync_HasBeenCalled()
     {
         //Arrange
-        var random = new Random();
-        var tagId = random.Next(52);
-        var newTag = new Tag
-        {
-            Id = tagId,
-            Title = $"Tag {tagId}",
-        };
+        var tagId = _fixture.Create<int>();
+        var newTag =
+            SetupTagFixture()
+                .With(x => x.Id, tagId)
+                .Create();
+
         _tagsRepositoryMock.Setup(x => x.GetByIdAsync(tagId))
             .ReturnsAsync(() => newTag);
 
@@ -618,13 +616,12 @@ public class TagsServiceTests
     public async Task FindAsync_WhenTagExists_ShouldReturnTag()
     {
         //Arrange
-        var random = new Random();
-        var tagId = random.Next(52);
-        var newTag = new Tag
-        {
-            Id = tagId,
-            Title = $"Tag {tagId}",
-        };
+        var tagId = _fixture.Create<int>();
+        var newTag =
+            SetupTagFixture()
+                .With(x => x.Id, tagId)
+                .Create();
+
         _tagsRepositoryMock.Setup(x => x.GetByIdAsync(tagId))
             .ReturnsAsync(() => newTag);
 
@@ -644,8 +641,8 @@ public class TagsServiceTests
     public async Task FindAsync_WhenTagDoesNotExists_ShouldReturnNothing()
     {
         //Arrange
-        var random = new Random();
-        var tagId = random.Next(52);
+        var tagId = _fixture.Create<int>();
+
         _tagsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
             .ReturnsAsync(() => null);
 
