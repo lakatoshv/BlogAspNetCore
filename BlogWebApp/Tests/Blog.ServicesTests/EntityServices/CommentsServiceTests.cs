@@ -665,14 +665,10 @@ namespace Blog.ServicesTests.EntityServices;
         public void Verify_FunctionInsert_HasBeenCalled()
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
-            var newComment = new Comment
-            {
-                CommentBody = $"Comment {commentId}",
-            };
+        var commentId = _fixture.Create<int>();
+        var newComment = SetupCommentFixture().Create();
 
-            _commentsRepositoryMock.Setup(x => x.Insert(newComment))
+        _commentsRepositoryMock.Setup(x => x.Insert(It.IsAny<Comment>()))
                 .Callback(() =>
                 {
                     newComment.Id = commentId;
@@ -693,14 +689,10 @@ namespace Blog.ServicesTests.EntityServices;
         public void Insert_WhenCommentExists_ShouldReturnComment()
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
-            var newComment = new Comment
-            {
-                CommentBody = $"Comment {commentId}",
-            };
+        var commentId = _fixture.Create<int>();
+        var newComment = SetupCommentFixture().Create();
 
-            _commentsRepositoryMock.Setup(x => x.Insert(newComment))
+        _commentsRepositoryMock.Setup(x => x.Insert(It.IsAny<Comment>()))
                 .Callback(() =>
                 {
                     newComment.Id = commentId;
