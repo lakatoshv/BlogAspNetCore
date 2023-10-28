@@ -702,15 +702,8 @@ namespace Blog.ServicesTests.EntityServices;
         public void Verify_FunctionInsert_HasBeenCalled()
         {
             //Arrange
-            var random = new Random();
-            var postId = random.Next(52);
-            var newPost = new Post
-            {
-                Title = $"Created from ServicesTests {postId}",
-                Description = $"Created from ServicesTests {postId}",
-                Content = $"Created from ServicesTests {postId}",
-                ImageUrl = $"Created from ServicesTests {postId}",
-            };
+        var postId = _fixture.Create<int>();
+        var newPost = SetupPostFixture().Create();
 
             _postsRepositoryMock.Setup(x => x.Insert(newPost))
                 .Callback(() =>
@@ -733,15 +726,8 @@ namespace Blog.ServicesTests.EntityServices;
         public void Insert_WhenPostExists_ShouldReturnPost()
         {
             //Arrange
-            var random = new Random();
-            var postId = random.Next(52);
-            var newPost = new Post
-            {
-                Title = $"Created from ServicesTests {postId}",
-                Description = $"Created from ServicesTests {postId}",
-                Content = $"Created from ServicesTests {postId}",
-                ImageUrl = $"Created from ServicesTests {postId}",
-            };
+        var postId = _fixture.Create<int>();
+        var newPost = SetupPostFixture().Create();
 
             _postsRepositoryMock.Setup(x => x.Insert(newPost))
                 .Callback(() =>
