@@ -517,7 +517,7 @@ namespace Blog.ServicesTests.EntityServices;
             //Arrange
             var specification = new MessageSpecification(x => x.Body.Equals(bodySearch));
             _messagesRepositoryMock.Setup(x => x.GetAllAsync(specification))
-                .ReturnsAsync(() => new List<Message>());
+            .ReturnsAsync(() => []);
 
             //Act
             var messages = await _messagesService.GetAllAsync();
@@ -735,40 +735,12 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var messageId = random.Next(52);
-            var itemsCount = random.Next(10);
-            var newMessages = new List<Message>();
-
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            var recipient = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = $"Test fn{messageId}",
-                LastName = $"Test ln{messageId}",
-                Email = $"test{messageId}@test.test",
-                UserName = $"test{messageId}@test.test"
-            };
-
-            for (int i = 0; i < itemsCount; i++)
-            {
-                newMessages.Add(new Message
-                {
-                    SenderId = sender.Id,
-                    Sender = sender,
-                    RecipientId = recipient.Id,
-                    Recipient = recipient,
-                    Subject = $"Test subject{messageId}",
-                    Body = $"Test body{messageId}"
-                });
-            }
+        var messageId = _fixture.Create<int>();
+        var itemsCount = random.Next(10);
+        var newMessages =
+            SetupMessageFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
             _messagesRepositoryMock.Setup(x => x.Insert(newMessages))
                 .Callback(() =>
@@ -795,40 +767,12 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var messageId = random.Next(52);
+        var messageId = _fixture.Create<int>();
             var itemsCount = random.Next(10);
-            var newMessages = new List<Message>();
-
-            var sender = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-
-            var recipient = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = $"Test fn{messageId}",
-                LastName = $"Test ln{messageId}",
-                Email = $"test{messageId}@test.test",
-                UserName = $"test{messageId}@test.test"
-            };
-
-            for (int i = 0; i < itemsCount; i++)
-            {
-                newMessages.Add(new Message
-                {
-                    SenderId = sender.Id,
-                    Sender = sender,
-                    RecipientId = recipient.Id,
-                    Recipient = recipient,
-                    Subject = $"Test subject{messageId}",
-                    Body = $"Test body{messageId}"
-                });
-            }
+        var newMessages =
+            SetupMessageFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
             _messagesRepositoryMock.Setup(x => x.Insert(newMessages))
                 .Callback(() =>
