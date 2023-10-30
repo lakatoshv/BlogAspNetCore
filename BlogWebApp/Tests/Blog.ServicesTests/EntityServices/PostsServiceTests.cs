@@ -754,20 +754,12 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postId = random.Next(52);
-            var itemsCount = random.Next(10);
-            var newPosts = new List<Post>();
-
-            for (int i = 0; i < itemsCount; i++)
-            {
-                newPosts.Add(new Post
-                {
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
-                });
-            }
+        var postId = _fixture.Create<int>();
+        var itemsCount = random.Next(100);
+        var newPosts =
+            SetupPostFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
             _postsRepositoryMock.Setup(x => x.Insert(newPosts))
                 .Callback(() =>
@@ -794,20 +786,12 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var postId = random.Next(52);
-            var itemsCount = random.Next(10);
-            var newPosts = new List<Post>();
-
-            for (int i = 0; i < itemsCount; i++)
-            {
-                newPosts.Add(new Post
-                {
-                    Title = $"Created from ServicesTests {postId}",
-                    Description = $"Created from ServicesTests {postId}",
-                    Content = $"Created from ServicesTests {postId}",
-                    ImageUrl = $"Created from ServicesTests {postId}",
-                });
-            }
+        var postId = _fixture.Create<int>();
+        var itemsCount = random.Next(100);
+        var newPosts =
+            SetupPostFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
             _postsRepositoryMock.Setup(x => x.Insert(newPosts))
                 .Callback(() =>
