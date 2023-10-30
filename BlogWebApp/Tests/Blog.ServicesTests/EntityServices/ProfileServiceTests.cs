@@ -699,28 +699,12 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var profileId = random.Next(52);
+        var profileId = _fixture.Create<int>();
         var itemsCount = random.Next(10);
-        var newProfiles = new List<ProfileModel>();
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            var userId = new Guid().ToString();
-            var user = new ApplicationUser
-            {
-                Id = userId,
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-            newProfiles.Add(new ProfileModel
-            {
-                UserId = userId,
-                User = user,
-                ProfileImg = $"img{i}.jpg"
-            });
-        }
+        var newProfiles =
+            SetupProfileFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
         _profileRepositoryMock.Setup(x => x.Insert(newProfiles))
             .Callback(() =>
@@ -747,28 +731,12 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var profileId = random.Next(52);
+        var profileId = _fixture.Create<int>();
         var itemsCount = random.Next(10);
-        var newProfiles = new List<ProfileModel>();
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            var userId = new Guid().ToString();
-            var user = new ApplicationUser
-            {
-                Id = userId,
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-            newProfiles.Add(new ProfileModel
-            {
-                UserId = userId,
-                User = user,
-                ProfileImg = $"img{i}.jpg"
-            });
-        }
+        var newProfiles =
+            SetupProfileFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
         _profileRepositoryMock.Setup(x => x.Insert(newProfiles))
             .Callback(() =>
