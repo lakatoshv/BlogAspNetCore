@@ -842,19 +842,15 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var commentId = random.Next(52);
+        var commentId = _fixture.Create<int>();
             var itemsCount = random.Next(10);
-            var newComments = new List<Comment>();
+        var newComments =
+            SetupCommentFixture()
+                .With(x => x.Id, 1)
+                .CreateMany(itemsCount)
+                .ToList();
 
-            for (int i = 0; i < itemsCount; i++)
-            {
-                newComments.Add(new Comment
-                {
-                    CommentBody = $"Comment {itemsCount}",
-                });
-            }
-
-            _commentsRepositoryMock.Setup(x => x.InsertAsync(newComments))
+        _commentsRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<Comment>()))
                 .Callback(() =>
                 {
                     for (var i = 0; i < itemsCount; i++)
@@ -880,19 +876,15 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var commentId = random.Next(52);
+        var commentId = _fixture.Create<int>();
             var itemsCount = random.Next(10);
-            var newComments = new List<Comment>();
+        var newComments =
+            SetupCommentFixture()
+                .With(x => x.Id, 1)
+                .CreateMany(itemsCount)
+                .ToList();
 
-            for (int i = 0; i < itemsCount; i++)
-            {
-                newComments.Add(new Comment
-                {
-                    CommentBody = $"Comment {itemsCount}",
-                });
-            }
-
-            _commentsRepositoryMock.Setup(x => x.InsertAsync(newComments))
+        _commentsRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<Comment>()))
                 .Callback(() =>
                 {
                     for (var i = 0; i < itemsCount; i++)
