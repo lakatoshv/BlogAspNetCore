@@ -878,12 +878,11 @@ public class TagsServiceTests
     public async Task Verify_FunctionInsertAsync_HasBeenCalled()
     {
         //Arrange
-        var random = new Random();
-        var tagId = random.Next(52);
-        var newTag = new Tag
-        {
-            Title = $"Tag {tagId}",
-        };
+        var tagId = _fixture.Create<int>();
+        var newTag =
+            SetupTagFixture()
+                .With(x => x.Id, tagId)
+                .Create();
 
         _tagsRepositoryMock.Setup(x => x.InsertAsync(newTag))
             .Callback(() =>
@@ -907,12 +906,11 @@ public class TagsServiceTests
     public async Task InsertAsync_ShouldReturnTag_WhenTagExists()
     {
         //Arrange
-        var random = new Random();
-        var tagId = random.Next(52);
-        var newTag = new Tag
-        {
-            Title = $"Tag {tagId}",
-        };
+        var tagId = _fixture.Create<int>();
+        var newTag =
+            SetupTagFixture()
+                .With(x => x.Id, tagId)
+                .Create();
 
         _tagsRepositoryMock.Setup(x => x.InsertAsync(newTag))
             .Callback(() =>
