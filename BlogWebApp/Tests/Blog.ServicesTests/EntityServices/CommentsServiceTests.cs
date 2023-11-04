@@ -920,12 +920,8 @@ namespace Blog.ServicesTests.EntityServices;
         public void Verify_FunctionUpdate_HasBeenCalled(string newCommentBody)
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
-            var newComment = new Comment
-            {
-                CommentBody = $"Comment {commentId}",
-            };
+        var commentId = _fixture.Create<int>();
+        var newComment = SetupCommentFixture().Create();
 
             _commentsRepositoryMock.Setup(x => x.Insert(newComment))
                 .Callback(() =>
@@ -955,12 +951,8 @@ namespace Blog.ServicesTests.EntityServices;
         public void Update_WhenCommentExists_ShouldReturnComment(string newCommentBody)
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
-            var newComment = new Comment
-            {
-                CommentBody = $"Comment {commentId}",
-            };
+        var commentId = _fixture.Create<int>();
+        var newComment = SetupCommentFixture().Create();
 
             _commentsRepositoryMock.Setup(x => x.Insert(newComment))
                 .Callback(() =>
