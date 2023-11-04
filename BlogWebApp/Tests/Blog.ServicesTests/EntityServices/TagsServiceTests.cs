@@ -797,17 +797,12 @@ public class TagsServiceTests
     {
         //Arrange
         var random = new Random();
-        var tagId = random.Next(52);
+        var tagId = _fixture.Create<int>();
         var itemsCount = random.Next(10);
-        var newTags = new List<Tag>();
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            newTags.Add(new Tag
-            {
-                Title = $"Tag {i}",
-            });
-        }
+        var newTags =
+            SetupTagFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
         _tagsRepositoryMock.Setup(x => x.InsertAsync(newTags))
             .Callback(() =>
@@ -835,17 +830,12 @@ public class TagsServiceTests
     {
         //Arrange
         var random = new Random();
-        var tagId = random.Next(52);
+        var tagId = _fixture.Create<int>();
         var itemsCount = random.Next(10);
-        var newTags = new List<Tag>();
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            newTags.Add(new Tag
-            {
-                Title = $"Tag {i}",
-            });
-        }
+        var newTags =
+            SetupTagFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
         _tagsRepositoryMock.Setup(x => x.InsertAsync(newTags))
             .Callback(() =>
