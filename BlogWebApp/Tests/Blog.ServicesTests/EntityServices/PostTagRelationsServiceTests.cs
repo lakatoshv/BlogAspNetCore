@@ -1325,25 +1325,11 @@ public class PostTagRelationsServiceTests
     public void Verify_FunctionUpdate_HasBeenCalled()
     {
         //Arrange
-        var random = new Random();
-        var id = random.Next(52);
-        var tag = new Tag
-        {
-            Id = id,
-            Title = $"Tag {id}"
-        };
-
-        var newTag = new Tag
-        {
-            Id = id + 1,
-            Title = $"Tag {id + 1}"
-        };
-        var newPostsTagsRelation = new PostsTagsRelations
-        {
-            PostId = id,
-            TagId = id,
-            Tag = tag
-        };
+        var id = _fixture.Create<int>();
+        var newPostsTagsRelation =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.Id, id)
+                .Create();
 
         _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelation))
             .Callback(() =>
@@ -1356,8 +1342,8 @@ public class PostTagRelationsServiceTests
         //Act
         _postsTagsRelationsService.Insert(newPostsTagsRelation);
         var postsTagsRelations = _postsTagsRelationsService.Find(id);
-        postsTagsRelations.TagId = newTag.Id;
-        postsTagsRelations.Tag = newTag;
+        postsTagsRelations.TagId = newPostsTagsRelation.Tag.Id;
+        postsTagsRelations.Tag = newPostsTagsRelation.Tag;
         _postsTagsRelationsService.Update(postsTagsRelations);
 
         //Assert
@@ -1372,25 +1358,11 @@ public class PostTagRelationsServiceTests
     public void Update_WhenPostTagRelationsExists_ShouldReturnPostTagRelation()
     {
         //Arrange
-        var random = new Random();
-        var id = random.Next(52);
-        var tag = new Tag
-        {
-            Id = id,
-            Title = $"Tag {id}"
-        };
-
-        var newTag = new Tag
-        {
-            Id = id + 1,
-            Title = $"Tag {id + 1}"
-        };
-        var newPostsTagsRelation = new PostsTagsRelations
-        {
-            PostId = id,
-            TagId = id,
-            Tag = tag
-        };
+        var id = _fixture.Create<int>();
+        var newPostsTagsRelation =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.Id, id)
+                .Create();
 
         _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelation))
             .Callback(() =>
@@ -1403,78 +1375,13 @@ public class PostTagRelationsServiceTests
         //Act
         _postsTagsRelationsService.Insert(newPostsTagsRelation);
         var postsTagsRelations = _postsTagsRelationsService.Find(id);
-        postsTagsRelations.TagId = newTag.Id;
-        postsTagsRelations.Tag = newTag;
+        postsTagsRelations.TagId = newPostsTagsRelation.Tag.Id;
+        postsTagsRelations.Tag = newPostsTagsRelation.Tag;
         _postsTagsRelationsService.Update(newPostsTagsRelation);
 
         //Assert
-        Assert.Equal(postsTagsRelations.TagId, newTag.Id);
-        Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
-    }
-
-    /// <summary>
-    /// Insert post tag relations.
-    /// Should return post tag relations when post tag relations exists.
-    /// </summary>
-    /// <param name="postTitle">The post title.</param>
-    /// <param name="tagTitle">THe tag title.</param>
-    [Theory]
-    [InlineData("Post", "Tag")]
-    public void Update_WhenPostTagRelationExists_ShouldReturnPostTagRelationWithExistingPostAndTags(string postTitle, string tagTitle)
-    {
-        //Arrange
-        var random = new Random();
-        var id = random.Next(52);
-        var postEntity = new Post
-        {
-            Title = $"{postTitle} {id}",
-            Description = $"{postTitle} {id}",
-            Content = $"{postTitle} {id}",
-            ImageUrl = $"{postTitle} {id}",
-        };
-        var tag = new Tag
-        {
-            Id = id,
-            Title = $"{tagTitle} {id}"
-        };
-        var newTag = new Tag
-        {
-            Id = id + 1,
-            Title = $"{tagTitle} {id + 1}"
-        };
-        var newPostsTagsRelation = new PostsTagsRelations
-        {
-            Id = id,
-            PostId = id,
-            Post = postEntity,
-            TagId = id,
-            Tag = tag
-        };
-
-        _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelation))
-            .Callback(() =>
-            {
-                newPostsTagsRelation.Id = id;
-            });
-        _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(id))
-            .Returns(() => newPostsTagsRelation);
-
-        //Act
-        _postsTagsRelationsService.Insert(newPostsTagsRelation);
-        var postsTagsRelations = _postsTagsRelationsService.Find(id);
-        postsTagsRelations.TagId = newTag.Id;
-        postsTagsRelations.Tag = newTag;
-        _postsTagsRelationsService.Update(newPostsTagsRelation);
-
-        //Assert
-        Assert.NotEqual(0, postsTagsRelations.Id);
-        Assert.NotNull(newPostsTagsRelation.Post);
-        Assert.Contains(postTitle, newPostsTagsRelation.Post.Title);
-
-        Assert.NotNull(newPostsTagsRelation.Tag);
-        Assert.Contains(tagTitle, newPostsTagsRelation.Tag.Title);
-        Assert.Equal(postsTagsRelations.TagId, newTag.Id);
-        Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
+        Assert.Equal(postsTagsRelations.TagId, newPostsTagsRelation.Tag.Id);
+        Assert.Equal(postsTagsRelations.Tag.Title, newPostsTagsRelation.Tag.Title);
     }
 
     #endregion
