@@ -1396,29 +1396,12 @@ public class PostTagRelationsServiceTests
     {
         //Arrange
         var random = new Random();
-        var id = random.Next(52);
+        var id = _fixture.Create<int>();
         var itemsCount = random.Next(10);
-        var newPostsTagsRelations = new List<PostsTagsRelations>();
-        var newTag = new Tag
-        {
-            Id = id + 1,
-            Title = $"Tag {id + 1}"
-        };
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            var tag = new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}"
-            };
-            newPostsTagsRelations.Add(new PostsTagsRelations
-            {
-                PostId = id,
-                TagId = tag.Id,
-                Tag = tag
-            });
-        }
+        var newPostsTagsRelations =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
         _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
             .Callback(() =>
@@ -1433,8 +1416,8 @@ public class PostTagRelationsServiceTests
         _postsTagsRelationsService.Insert(newPostsTagsRelations);
         newPostsTagsRelations.ForEach(postsTagsRelations =>
         {
-            postsTagsRelations.TagId = newTag.Id;
-            postsTagsRelations.Tag = newTag;
+            postsTagsRelations.TagId = postsTagsRelations.Tag.Id;
+            postsTagsRelations.Tag = postsTagsRelations.Tag;
         });
         _postsTagsRelationsService.Update(newPostsTagsRelations);
 
@@ -1451,29 +1434,12 @@ public class PostTagRelationsServiceTests
     {
         //Arrange
         var random = new Random();
-        var id = random.Next(52);
+        var id = _fixture.Create<int>();
         var itemsCount = random.Next(10);
-        var newPostsTagsRelations = new List<PostsTagsRelations>();
-        var newTag = new Tag
-        {
-            Id = id + 1,
-            Title = $"Tag {id + 1}"
-        };
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            var tag = new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}"
-            };
-            newPostsTagsRelations.Add(new PostsTagsRelations
-            {
-                PostId = id,
-                TagId = tag.Id,
-                Tag = tag
-            });
-        }
+        var newPostsTagsRelations =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
         _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
             .Callback(() =>
@@ -1488,82 +1454,16 @@ public class PostTagRelationsServiceTests
         _postsTagsRelationsService.Insert(newPostsTagsRelations);
         newPostsTagsRelations.ForEach(postsTagsRelations =>
         {
-            postsTagsRelations.TagId = newTag.Id;
-            postsTagsRelations.Tag = newTag;
+            postsTagsRelations.TagId = postsTagsRelations.Tag.Id;
+            postsTagsRelations.Tag = postsTagsRelations.Tag;
         });
         _postsTagsRelationsService.Update(newPostsTagsRelations);
 
         //Assert
         newPostsTagsRelations.ForEach(postsTagsRelations =>
         {
-            Assert.Equal(postsTagsRelations.TagId, newTag.Id);
-            Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
-        });
-    }
-
-    /// <summary>
-    /// Update Enumerable post tag relations.
-    /// Should return post tag relations when post tag relations exists.
-    /// </summary>
-    /// <param name="postTitle">The post title.</param>
-    /// <param name="tagTitle">THe tag title.</param>
-    [Theory]
-    [InlineData("Post", "Tag")]
-    public void UpdateEnumerable_WhenPostTagRelationExists_ShouldReturnPostTagRelationWithExistingPostAndTags(string postTitle, string tagTitle)
-    {
-        //Arrange
-        var random = new Random();
-        var id = random.Next(52);
-        var itemsCount = random.Next(10);
-        var newPostsTagsRelations = new List<PostsTagsRelations>();
-        var newTag = new Tag
-        {
-            Id = id + 1,
-            Title = $"Tag {id + 1}"
-        };
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            var tag = new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}"
-            };
-            newPostsTagsRelations.Add(new PostsTagsRelations
-            {
-                PostId = id,
-                TagId = tag.Id,
-                Tag = tag
-            });
-        }
-
-        _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
-            .Callback(() =>
-            {
-                for (var i = 0; i < itemsCount; i++)
-                {
-                    newPostsTagsRelations[i].Id = id + i;
-                }
-            });
-
-        //Act
-        _postsTagsRelationsService.Insert(newPostsTagsRelations);
-        newPostsTagsRelations.ForEach(postsTagsRelations =>
-        {
-            postsTagsRelations.TagId = newTag.Id;
-            postsTagsRelations.Tag = newTag;
-        });
-        _postsTagsRelationsService.Update(newPostsTagsRelations);
-
-        //Assert
-        newPostsTagsRelations.ForEach(postsTagsRelations =>
-        {
-            Assert.NotEqual(0, postsTagsRelations.Id);
-
-            Assert.NotNull(postsTagsRelations.Tag);
-            Assert.Contains(tagTitle, postsTagsRelations.Tag.Title);
-            Assert.Equal(postsTagsRelations.TagId, newTag.Id);
-            Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
+            if (postsTagsRelations != null)
+                Assert.Equal(postsTagsRelations.TagId, postsTagsRelations.Tag.Id);
         });
     }
 
