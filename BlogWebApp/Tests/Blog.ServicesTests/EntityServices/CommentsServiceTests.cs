@@ -1070,12 +1070,9 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task Verify_FunctionUpdateAsync_HasBeenCalled(string newCommentBody)
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
-            var newComment = new Comment
-            {
-                CommentBody = $"Comment {commentId}",
-            };
+        var commentId = _fixture.Create<int>();
+        var newComment = SetupCommentFixture()
+            .Create();
 
             _commentsRepositoryMock.Setup(x => x.InsertAsync(newComment))
                 .Callback(() =>
@@ -1106,12 +1103,8 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task UpdateAsync_WhenCommentExists_ShouldReturnComment(string newCommentBody)
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
-            var newComment = new Comment
-            {
-                CommentBody = $"Comment {commentId}",
-            };
+        var commentId = _fixture.Create<int>();
+        var newComment = SetupCommentFixture().Create();
 
             _commentsRepositoryMock.Setup(x => x.InsertAsync(newComment))
                 .Callback(() =>
