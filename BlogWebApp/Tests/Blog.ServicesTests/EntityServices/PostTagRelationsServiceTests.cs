@@ -1480,25 +1480,11 @@ public class PostTagRelationsServiceTests
     public async Task Verify_FunctionUpdateAsync_HasBeenCalled()
     {
         //Arrange
-        var random = new Random();
-        var id = random.Next(52);
-        var tag = new Tag
-        {
-            Id = id,
-            Title = $"Tag {id}"
-        };
-
-        var newTag = new Tag
-        {
-            Id = id + 1,
-            Title = $"Tag {id + 1}"
-        };
-        var newPostsTagsRelation = new PostsTagsRelations
-        {
-            PostId = id,
-            TagId = id,
-            Tag = tag
-        };
+        var id = _fixture.Create<int>();
+        var newPostsTagsRelation =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.Id, id)
+                .Create();
 
         _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelation))
             .Callback(() =>
@@ -1511,8 +1497,8 @@ public class PostTagRelationsServiceTests
         //Act
         await _postsTagsRelationsService.InsertAsync(newPostsTagsRelation);
         var postsTagsRelations = await _postsTagsRelationsService.FindAsync(id);
-        postsTagsRelations.TagId = newTag.Id;
-        postsTagsRelations.Tag = newTag;
+        postsTagsRelations.TagId = newPostsTagsRelation.Tag.Id;
+        postsTagsRelations.Tag = newPostsTagsRelation.Tag;
         await _postsTagsRelationsService.UpdateAsync(postsTagsRelations);
 
         //Assert
@@ -1528,25 +1514,11 @@ public class PostTagRelationsServiceTests
     public async Task UpdateAsync_WhenPostTagRelationExists_ShouldReturnPostTagRelation()
     {
         //Arrange
-        var random = new Random();
-        var id = random.Next(52);
-        var tag = new Tag
-        {
-            Id = id,
-            Title = $"Tag {id}"
-        };
-
-        var newTag = new Tag
-        {
-            Id = id + 1,
-            Title = $"Tag {id + 1}"
-        };
-        var newPostsTagsRelation = new PostsTagsRelations
-        {
-            PostId = id,
-            TagId = id,
-            Tag = tag
-        };
+        var id = _fixture.Create<int>();
+        var newPostsTagsRelation =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.Id, id)
+                .Create();
 
         _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelation))
             .Callback(() =>
@@ -1559,13 +1531,13 @@ public class PostTagRelationsServiceTests
         //Act
         await _postsTagsRelationsService.InsertAsync(newPostsTagsRelation);
         var postsTagsRelations = await _postsTagsRelationsService.FindAsync(id);
-        postsTagsRelations.TagId = newTag.Id;
-        postsTagsRelations.Tag = newTag;
+        postsTagsRelations.TagId = newPostsTagsRelation.Tag.Id;
+        postsTagsRelations.Tag = newPostsTagsRelation.Tag;
         await _postsTagsRelationsService.UpdateAsync(newPostsTagsRelation);
 
         //Assert
-        Assert.Equal(postsTagsRelations.TagId, newTag.Id);
-        Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
+        Assert.Equal(postsTagsRelations.TagId, newPostsTagsRelation.Tag.Id);
+        Assert.Equal(postsTagsRelations.Tag.Title, newPostsTagsRelation.Tag.Title);
     }
 
     /// <summary>
