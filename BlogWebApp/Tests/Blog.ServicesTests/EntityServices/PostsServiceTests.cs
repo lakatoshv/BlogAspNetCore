@@ -1108,15 +1108,8 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task Verify_FunctionUpdateAsync_HasBeenCalled(string newTitle)
         {
             //Arrange
-            var random = new Random();
-            var postId = random.Next(52);
-            var newPost = new Post
-            {
-                Title = $"Created from ServicesTests {postId}",
-                Description = $"Created from ServicesTests {postId}",
-                Content = $"Created from ServicesTests {postId}",
-                ImageUrl = $"Created from ServicesTests {postId}",
-            };
+        var postId = _fixture.Create<int>();
+        var newPost = SetupPostFixture().Create();
 
             _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
                 .Callback(() =>
@@ -1147,15 +1140,8 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task UpdateAsync_WhenPostExists_ShouldReturnPost(string newTitle)
         {
             //Arrange
-            var random = new Random();
-            var postId = random.Next(52);
-            var newPost = new Post
-            {
-                Title = $"Created from ServicesTests {postId}",
-                Description = $"Created from ServicesTests {postId}",
-                Content = $"Created from ServicesTests {postId}",
-                ImageUrl = $"Created from ServicesTests {postId}",
-            };
+        var postId = _fixture.Create<int>();
+        var newPost = SetupPostFixture().Create();
 
             _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
                 .Callback(() =>
