@@ -1222,40 +1222,12 @@ public class MessagesServiceTests
     {
         //Arrange
         var random = new Random();
-        var messageId = random.Next(52);
+        var messageId = _fixture.Create<int>();
         var itemsCount = random.Next(10);
-        var newMessages = new List<Message>();
-
-        var sender = new ApplicationUser
-        {
-            Id = new Guid().ToString(),
-            FirstName = "Test fn",
-            LastName = "Test ln",
-            Email = "test@test.test",
-            UserName = "test@test.test"
-        };
-
-        var recipient = new ApplicationUser
-        {
-            Id = new Guid().ToString(),
-            FirstName = $"Test fn{messageId}",
-            LastName = $"Test ln{messageId}",
-            Email = $"test{messageId}@test.test",
-            UserName = $"test{messageId}@test.test"
-        };
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            newMessages.Add(new Message
-            {
-                SenderId = sender.Id,
-                Sender = sender,
-                RecipientId = recipient.Id,
-                Recipient = recipient,
-                Subject = $"Test subject{messageId}",
-                Body = $"Test body{messageId}"
-            });
-        }
+        var newMessages =
+            SetupMessageFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
         _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessages))
             .Callback(() =>
@@ -1290,40 +1262,12 @@ public class MessagesServiceTests
     {
         //Arrange
         var random = new Random();
-        var messageId = random.Next(52);
+        var messageId = _fixture.Create<int>();
         var itemsCount = random.Next(10);
-        var newMessages = new List<Message>();
-
-        var sender = new ApplicationUser
-        {
-            Id = new Guid().ToString(),
-            FirstName = "Test fn",
-            LastName = "Test ln",
-            Email = "test@test.test",
-            UserName = "test@test.test"
-        };
-
-        var recipient = new ApplicationUser
-        {
-            Id = new Guid().ToString(),
-            FirstName = $"Test fn{messageId}",
-            LastName = $"Test ln{messageId}",
-            Email = $"test{messageId}@test.test",
-            UserName = $"test{messageId}@test.test"
-        };
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            newMessages.Add(new Message
-            {
-                SenderId = sender.Id,
-                Sender = sender,
-                RecipientId = recipient.Id,
-                Recipient = recipient,
-                Subject = $"Test subject{messageId}",
-                Body = $"Test body{messageId}"
-            });
-        }
+        var newMessages =
+            SetupMessageFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
         _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessages))
             .Callback(() =>
