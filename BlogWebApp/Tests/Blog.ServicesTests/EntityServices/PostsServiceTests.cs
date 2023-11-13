@@ -1266,16 +1266,11 @@ namespace Blog.ServicesTests.EntityServices;
         public void Verify_FunctionDeleteById_HasBeenCalled()
         {
             //Arrange
-            var random = new Random();
-            var postId = random.Next(52);
-            var newPost = new Post
-            {
-                Id = postId,
-                Title = $"Created from ServicesTests {postId}",
-                Description = $"Created from ServicesTests {postId}",
-                Content = $"Created from ServicesTests {postId}",
-                ImageUrl = $"Created from ServicesTests {postId}",
-            };
+        var postId = _fixture.Create<int>();
+        var newPost =
+            SetupPostFixture()
+                .Create();
+
             _postsRepositoryMock.Setup(x => x.GetById(postId))
                 .Returns(() => newPost);
 
@@ -1299,15 +1294,10 @@ namespace Blog.ServicesTests.EntityServices;
         public void DeleteById_WhenPostIsDeleted_ShouldReturnNothing()
         {
             //Arrange
-            var random = new Random();
-            var postId = random.Next(52);
-            var newPost = new Post
-            {
-                Title = $"Created from ServicesTests {postId}",
-                Description = $"Created from ServicesTests {postId}",
-                Content = $"Created from ServicesTests {postId}",
-                ImageUrl = $"Created from ServicesTests {postId}",
-            };
+        var postId = _fixture.Create<int>();
+        var newPost =
+            SetupPostFixture()
+                .Create();
 
             _postsRepositoryMock.Setup(x => x.Insert(newPost))
                 .Callback(() =>
