@@ -1201,24 +1201,8 @@ public class ProfileServiceTests
     public void Verify_FunctionDeleteById_HasBeenCalled()
     {
         //Arrange
-        var random = new Random();
-        var profileId = random.Next(52);
-
-        var userId = new Guid().ToString();
-        var user = new ApplicationUser
-        {
-            Id = userId,
-            FirstName = "Test fn",
-            LastName = "Test ln",
-            Email = "test@test.test",
-            UserName = "test@test.test"
-        };
-        var newProfile = new ProfileModel
-        {
-            UserId = userId,
-            User = user,
-            ProfileImg = $"img{profileId}.jpg"
-        };
+        var profileId = _fixture.Create<int>();
+        var newProfile = SetupProfileFixture().Create();
 
         _profileRepositoryMock.Setup(x => x.Insert(newProfile))
             .Callback(() =>
@@ -1248,24 +1232,8 @@ public class ProfileServiceTests
     public void DeleteById_WhenProfileDeleted_ShouldReturnNothing()
     {
         //Arrange
-        var random = new Random();
-        var profileId = random.Next(52);
-
-        var userId = new Guid().ToString();
-        var user = new ApplicationUser
-        {
-            Id = userId,
-            FirstName = "Test fn",
-            LastName = "Test ln",
-            Email = "test@test.test",
-            UserName = "test@test.test"
-        };
-        var newProfile = new ProfileModel
-        {
-            UserId = userId,
-            User = user,
-            ProfileImg = $"img{profileId}.jpg"
-        };
+        var profileId = _fixture.Create<int>();
+        var newProfile = SetupProfileFixture().Create();
 
         _profileRepositoryMock.Setup(x => x.Insert(newProfile))
             .Callback(() =>
