@@ -1283,13 +1283,9 @@ namespace Blog.ServicesTests.EntityServices;
         public void Verify_FunctionDeleteByObject_HasBeenCalled()
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
-            var newComment = new Comment
-            {
-                Id = commentId,
-                CommentBody = $"Comment {commentId}",
-            };
+        var newComment = SetupCommentFixture().Create();
+        var commentId = newComment.Id;
+
             _commentsRepositoryMock.Setup(x => x.GetById(commentId))
                 .Returns(() => newComment);
 
@@ -1313,12 +1309,8 @@ namespace Blog.ServicesTests.EntityServices;
         public void DeleteByObject_WhenCommentIsDeleted_ShouldReturnNothing()
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
-            var newComment = new Comment
-            {
-                CommentBody = $"Comment {commentId}",
-            };
+        var newComment = SetupCommentFixture().Create();
+        var commentId = newComment.Id;
 
             _commentsRepositoryMock.Setup(x => x.Insert(newComment))
                 .Callback(() =>
