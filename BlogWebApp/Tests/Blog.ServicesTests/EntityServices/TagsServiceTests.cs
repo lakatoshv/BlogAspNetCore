@@ -1253,13 +1253,11 @@ public class TagsServiceTests
     public void Verify_FunctionDeleteById_HasBeenCalled()
     {
         //Arrange
-        var random = new Random();
-        var tagId = random.Next(52);
-        var newTag = new Tag
-        {
-            Id = tagId,
-            Title = $"Tag {tagId}",
-        };
+        var tagId = _fixture.Create<int>();
+        var newTag =
+            SetupTagFixture()
+                .Create();
+
         _tagsRepositoryMock.Setup(x => x.GetById(tagId))
             .Returns(() => newTag);
 
@@ -1283,12 +1281,10 @@ public class TagsServiceTests
     public void DeleteById_WhenTagsDeleted_ShouldReturnNothing()
     {
         //Arrange
-        var random = new Random();
-        var tagId = random.Next(52);
-        var newTag = new Tag
-        {
-            Title = $"Tag {tagId}",
-        };
+        var tagId = _fixture.Create<int>();
+        var newTag =
+            SetupTagFixture()
+                .Create();
 
         _tagsRepositoryMock.Setup(x => x.Insert(newTag))
             .Callback(() =>
