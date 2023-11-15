@@ -55,8 +55,7 @@ public class PostsServiceTests
         var commentsServiceMock = new Mock<ICommentsService>();
         var mapper = new Mock<IMapper>();
         var postsTagsRelationsService = new Mock<IPostsTagsRelationsService>();
-        var exportsService = new Mock<IExportsService>();
-        _postsService = new PostsService(_postsRepositoryMock.Object, commentsServiceMock.Object, mapper.Object, postsTagsRelationsService.Object, exportsService.Object);
+        _postsService = new PostsService(_postsRepositoryMock.Object, commentsServiceMock.Object, mapper.Object, postsTagsRelationsService.Object);
         _fixture = new Fixture();
     }
 
