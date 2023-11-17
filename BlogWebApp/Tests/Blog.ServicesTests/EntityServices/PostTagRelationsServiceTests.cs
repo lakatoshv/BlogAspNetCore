@@ -1,20 +1,20 @@
-﻿using Blog.Data.Models;
+﻿using AutoFixture;
+using AutoFixture.Dsl;
+using Blog.Core.Enums;
+using Blog.Core.Infrastructure;
+using Blog.Core.Infrastructure.Pagination;
+using Blog.Data.Models;
 using Blog.Data.Repository;
+using Blog.Data.Specifications.Base;
+using Blog.EntityServices;
+using Blog.EntityServices.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Blog.Data.Specifications.Base;
 using Xunit;
-using Blog.Core.Infrastructure.Pagination;
-using Microsoft.EntityFrameworkCore;
-using Blog.Core.Enums;
-using Blog.Core.Infrastructure;
-using AutoFixture;
-using AutoFixture.Dsl;
-using Blog.EntityServices;
-using Blog.EntityServices.Interfaces;
 
 namespace Blog.ServicesTests.EntityServices;
 
@@ -1639,7 +1639,7 @@ public class PostTagRelationsServiceTests
         await _postsTagsRelationsService.InsertAsync(newPostsTagsRelations);
         newPostsTagsRelations.ForEach(postsTagsRelations =>
         {
-            if(postsTagsRelations != null)
+            if (postsTagsRelations != null)
                 postsTagsRelations.TagId = postsTagsRelations.Tag.Id;
         });
         await _postsTagsRelationsService.UpdateAsync(newPostsTagsRelations);
@@ -1678,7 +1678,7 @@ public class PostTagRelationsServiceTests
         await _postsTagsRelationsService.InsertAsync(newPostsTagsRelations);
         newPostsTagsRelations.ForEach(postsTagsRelations =>
         {
-            if(postsTagsRelations != null) 
+            if (postsTagsRelations != null)
                 postsTagsRelations.TagId = postsTagsRelations.Tag.Id;
         });
         await _postsTagsRelationsService.UpdateAsync(newPostsTagsRelations);
@@ -1686,7 +1686,7 @@ public class PostTagRelationsServiceTests
         //Assert
         newPostsTagsRelations.ForEach(postsTagsRelations =>
         {
-            if(postsTagsRelations != null)
+            if (postsTagsRelations != null)
                 Assert.Equal(postsTagsRelations.TagId, postsTagsRelations.Tag.Id);
         });
     }
@@ -1851,23 +1851,10 @@ public class PostTagRelationsServiceTests
         var random = new Random();
         var id = random.Next(52);
         var itemsCount = random.Next(10);
-        var newPostsTagsRelations = new List<PostsTagsRelations>();
-
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            var tag = new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}"
-            };
-            newPostsTagsRelations.Add(new PostsTagsRelations
-            {
-                PostId = id,
-                TagId = tag.Id,
-                Tag = tag
-            });
-        }
+        var newPostsTagsRelations =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
         _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
             .Callback(() =>
@@ -1897,23 +1884,19 @@ public class PostTagRelationsServiceTests
         var random = new Random();
         var id = random.Next(52);
         var itemsCount = random.Next(10);
-        var newPostsTagsRelations = new List<PostsTagsRelations>();
+        var newPostsTagsRelations =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            var tag = new Tag
+        _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
+            .Callback(() =>
             {
-                Id = i,
-                Title = $"Tag {i}"
-            };
-            newPostsTagsRelations.Add(new PostsTagsRelations
-            {
-                PostId = id,
-                TagId = tag.Id,
-                Tag = tag
+                for (var i = 0; i < itemsCount; i++)
+                {
+                    newPostsTagsRelations[i].Id = id + i;
+                }
             });
-        }
 
         _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(newPostsTagsRelations))
             .Callback(() =>
