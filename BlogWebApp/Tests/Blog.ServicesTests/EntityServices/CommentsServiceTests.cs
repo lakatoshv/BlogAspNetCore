@@ -1416,13 +1416,8 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task Verify_FunctionDeleteAsyncById_HasBeenCalled()
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
-            var newComment = new Comment
-            {
-                Id = commentId,
-                CommentBody = $"Comment {commentId}",
-            };
+        var newComment = SetupCommentFixture().Create();
+        var commentId = newComment.Id;
             _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
                 .ReturnsAsync(() => newComment);
 
@@ -1432,7 +1427,7 @@ namespace Blog.ServicesTests.EntityServices;
             await _commentsService.DeleteAsync(commentId);
 
             //Assert
-            _commentsRepositoryMock.Verify(x => x.DeleteAsync(newComment), Times.Once);
+        _commentsRepositoryMock.Verify(x => x.DeleteAsync(comment), Times.Once);
         }
 
         /// <summary>
@@ -1444,12 +1439,8 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task DeleteAsyncById_WhenCommentIsDeleted_ShouldReturnNothing()
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
-            var newComment = new Comment
-            {
-                CommentBody = $"Comment {commentId}",
-            };
+        var newComment = SetupCommentFixture().Create();
+        var commentId = newComment.Id;
 
             _commentsRepositoryMock.Setup(x => x.InsertAsync(newComment))
                 .Callback(() =>
@@ -1462,10 +1453,10 @@ namespace Blog.ServicesTests.EntityServices;
             //Act
             await _commentsService.InsertAsync(newComment);
             var comment = await _commentsService.FindAsync(commentId);
-            await _commentsService.DeleteAsync(commentId);
-            _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
+        await _commentsService.DeleteAsync(comment.Id);
+        _commentsRepositoryMock.Setup(x => x.GetByIdAsync(comment.Id))
                 .ReturnsAsync(() => null);
-            var deletedComment = await _commentsService.FindAsync(commentId);
+        var deletedComment = await _commentsService.FindAsync(comment.Id);
 
             //Assert
             Assert.Null(deletedComment);
