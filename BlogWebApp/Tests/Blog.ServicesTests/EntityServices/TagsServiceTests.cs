@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using AutoFixture.Dsl;
 using Blog.Core.Enums;
 using Blog.Core.Infrastructure;
 using Blog.Core.Infrastructure.Pagination;
@@ -13,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoFixture.Dsl;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -1382,17 +1382,12 @@ public class TagsServiceTests
     {
         //Arrange
         var random = new Random();
-        var tagId = random.Next(52);
+        var tagId = _fixture.Create<int>();
         var itemsCount = random.Next(10);
-        var newTags = new List<Tag>();
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            newTags.Add(new Tag
-            {
-                Title = $"Tag {i}",
-            });
-        }
+        var newTags =
+            SetupTagFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
         _tagsRepositoryMock.Setup(x => x.Insert(newTags))
             .Callback(() =>
@@ -1420,17 +1415,12 @@ public class TagsServiceTests
     {
         //Arrange
         var random = new Random();
-        var tagId = random.Next(52);
+        var tagId = _fixture.Create<int>();
         var itemsCount = random.Next(10);
-        var newTags = new List<Tag>();
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            newTags.Add(new Tag
-            {
-                Title = $"Tag {i}",
-            });
-        }
+        var newTags =
+            SetupTagFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
         _tagsRepositoryMock.Setup(x => x.Insert(newTags))
             .Callback(() =>
