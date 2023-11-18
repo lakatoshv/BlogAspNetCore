@@ -1,4 +1,5 @@
 ﻿using AutoFixture;
+using AutoFixture.Dsl;
 using AutoMapper;
 using Blog.Core.Enums;
 using Blog.Core.Infrastructure;
@@ -6,6 +7,7 @@ using Blog.Core.Infrastructure.Pagination;
 using Blog.Data.Models;
 using Blog.Data.Repository;
 using Blog.Data.Specifications;
+using Blog.EntityServices;
 using Blog.EntityServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -13,10 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoFixture.Dsl;
-using Blog.EntityServices;
 using Xunit;
-
 using ProfileModel = Blog.Data.Models.Profile;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -97,7 +96,7 @@ public class ProfileServiceTests
     {
         //Arrange  
         var random = new Random();
-        var profilesList = 
+        var profilesList =
             SetupProfileFixture()
                 .CreateMany(random.Next(100));
 
@@ -960,7 +959,7 @@ public class ProfileServiceTests
         //Arrange
         var random = new Random();
         var profileId = _fixture.Create<int>();
-        var profileIds = new List<string>(); 
+        var profileIds = new List<string>();
         var itemsCount = random.Next(10);
         var newProfiles =
             SetupProfileFixture()
@@ -1332,28 +1331,13 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var profileId = random.Next(52);
+        var profileId = _fixture.Create<int>();
+        var profileIds = new List<string>();
         var itemsCount = random.Next(10);
-        var newProfiles = new List<ProfileModel>();
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            var userId = new Guid().ToString();
-            var user = new ApplicationUser
-            {
-                Id = userId,
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-            newProfiles.Add(new ProfileModel
-            {
-                UserId = userId,
-                User = user,
-                ProfileImg = $"img{i}.jpg"
-            });
-        }
+        var newProfiles =
+            SetupProfileFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
         _profileRepositoryMock.Setup(x => x.Insert(newProfiles))
             .Callback(() =>
@@ -1361,6 +1345,7 @@ public class ProfileServiceTests
                 for (var i = 0; i < itemsCount; i++)
                 {
                     newProfiles[i].Id = profileId + i;
+                    profileIds.Add(newProfiles[i].UserId);
                 }
             });
 
@@ -1381,28 +1366,13 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var profileId = random.Next(52);
+        var profileId = _fixture.Create<int>();
+        var profileIds = new List<string>();
         var itemsCount = random.Next(10);
-        var newProfiles = new List<ProfileModel>();
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            var userId = new Guid().ToString();
-            var user = new ApplicationUser
-            {
-                Id = userId,
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-            newProfiles.Add(new ProfileModel
-            {
-                UserId = userId,
-                User = user,
-                ProfileImg = $"img{i}.jpg"
-            });
-        }
+        var newProfiles =
+            SetupProfileFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
         _profileRepositoryMock.Setup(x => x.Insert(newProfiles))
             .Callback(() =>
@@ -1410,6 +1380,7 @@ public class ProfileServiceTests
                 for (var i = 0; i < itemsCount; i++)
                 {
                     newProfiles[i].Id = profileId + i;
+                    profileIds.Add(newProfiles[i].UserId);
                 }
             });
         _profileRepositoryMock.Setup(x => x.Delete(newProfiles))
