@@ -6,14 +6,14 @@ using Blog.Core.Infrastructure.Pagination;
 using Blog.Data.Models;
 using Blog.Data.Repository;
 using Blog.Data.Specifications;
+using Blog.EntityServices;
+using Blog.EntityServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Blog.EntityServices;
-using Blog.EntityServices.Interfaces;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -306,7 +306,7 @@ public class MessagesServiceTests
         Assert.NotEmpty(messages);
         Assert.NotEqual(notEqualCount, messages.ToList().Count);
     }
-    
+
     /// <summary>
     /// Get all messages with specification.
     /// Should return message with equal specification when messages exists.
@@ -322,7 +322,7 @@ public class MessagesServiceTests
             SetupMessageFixture()
                 .With(x => x.Body, bodySearch)
                 .CreateMany(1);
-        
+
         var specification = new MessageSpecification(x => x.Body.Contains(bodySearch));
         _messagesRepositoryMock.Setup(x => x.GetAll(specification))
             .Returns(() => messagesList.Where(x => x.Body.Contains(bodySearch)).AsQueryable());
@@ -1447,40 +1447,12 @@ public class MessagesServiceTests
     {
         //Arrange
         var random = new Random();
-        var messageId = random.Next(52);
+        var messageId = _fixture.Create<int>();
         var itemsCount = random.Next(10);
-        var newMessages = new List<Message>();
-
-        var sender = new ApplicationUser
-        {
-            Id = new Guid().ToString(),
-            FirstName = "Test fn",
-            LastName = "Test ln",
-            Email = "test@test.test",
-            UserName = "test@test.test"
-        };
-
-        var recipient = new ApplicationUser
-        {
-            Id = new Guid().ToString(),
-            FirstName = $"Test fn{messageId}",
-            LastName = $"Test ln{messageId}",
-            Email = $"test{messageId}@test.test",
-            UserName = $"test{messageId}@test.test"
-        };
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            newMessages.Add(new Message
-            {
-                SenderId = sender.Id,
-                Sender = sender,
-                RecipientId = recipient.Id,
-                Recipient = recipient,
-                Subject = $"Test subject{messageId}",
-                Body = $"Test body{messageId}"
-            });
-        }
+        var newMessages =
+            SetupMessageFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
         _messagesRepositoryMock.Setup(x => x.Insert(newMessages))
             .Callback(() =>
@@ -1508,40 +1480,12 @@ public class MessagesServiceTests
     {
         //Arrange
         var random = new Random();
-        var messageId = random.Next(52);
+        var messageId = _fixture.Create<int>();
         var itemsCount = random.Next(10);
-        var newMessages = new List<Message>();
-
-        var sender = new ApplicationUser
-        {
-            Id = new Guid().ToString(),
-            FirstName = "Test fn",
-            LastName = "Test ln",
-            Email = "test@test.test",
-            UserName = "test@test.test"
-        };
-
-        var recipient = new ApplicationUser
-        {
-            Id = new Guid().ToString(),
-            FirstName = $"Test fn{messageId}",
-            LastName = $"Test ln{messageId}",
-            Email = $"test{messageId}@test.test",
-            UserName = $"test{messageId}@test.test"
-        };
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            newMessages.Add(new Message
-            {
-                SenderId = sender.Id,
-                Sender = sender,
-                RecipientId = recipient.Id,
-                Recipient = recipient,
-                Subject = $"Test subject{messageId}",
-                Body = $"Test body{messageId}"
-            });
-        }
+        var newMessages =
+            SetupMessageFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
         _messagesRepositoryMock.Setup(x => x.Insert(newMessages))
             .Callback(() =>
