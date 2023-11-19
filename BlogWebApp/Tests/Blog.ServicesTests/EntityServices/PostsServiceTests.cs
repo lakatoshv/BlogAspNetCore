@@ -1,21 +1,21 @@
 ﻿using AutoFixture;
+using AutoFixture.Dsl;
 using AutoMapper;
+using Blog.CommonServices.Interfaces;
 using Blog.Core.Enums;
 using Blog.Core.Infrastructure;
 using Blog.Core.Infrastructure.Pagination;
 using Blog.Data.Models;
 using Blog.Data.Repository;
 using Blog.Data.Specifications;
+using Blog.EntityServices;
+using Blog.EntityServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoFixture.Dsl;
-using Blog.CommonServices.Interfaces;
-using Blog.EntityServices;
-using Blog.EntityServices.Interfaces;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -340,7 +340,7 @@ public class PostsServiceTests
         var postsList =
             SetupPostFixture()
                 .With(x => x.Title, titleSearch)
-                .CreateMany(random.Next(1));
+                .CreateMany(1);
 
         var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
         _postsRepositoryMock.Setup(x => x.GetAll(specification))
@@ -483,7 +483,7 @@ public class PostsServiceTests
         var postsList =
             SetupPostFixture()
                 .With(x => x.Title, titleSearch)
-                .CreateMany(random.Next(100))
+                .CreateMany(1)
                 .ToList();
 
         var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
@@ -1468,16 +1468,9 @@ public class PostsServiceTests
     public async Task Verify_FunctionDeleteAsyncById_HasBeenCalled()
     {
         //Arrange
-        var random = new Random();
-        var postId = random.Next(52);
-        var newPost = new Post
-        {
-            Id = postId,
-            Title = $"Created from ServicesTests {postId}",
-            Description = $"Created from ServicesTests {postId}",
-            Content = $"Created from ServicesTests {postId}",
-            ImageUrl = $"Created from ServicesTests {postId}",
-        };
+        var postId = _fixture.Create<int>();
+        var newPost = SetupPostFixture().Create();
+
         _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
             .ReturnsAsync(() => newPost);
 
@@ -1499,15 +1492,8 @@ public class PostsServiceTests
     public async Task DeleteAsyncById_WhenPostIsDeleted_ShouldReturnNothing()
     {
         //Arrange
-        var random = new Random();
-        var postId = random.Next(52);
-        var newPost = new Post
-        {
-            Title = $"Created from ServicesTests {postId}",
-            Description = $"Created from ServicesTests {postId}",
-            Content = $"Created from ServicesTests {postId}",
-            ImageUrl = $"Created from ServicesTests {postId}",
-        };
+        var postId = _fixture.Create<int>();
+        var newPost = SetupPostFixture().Create();
 
         _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
             .Callback(() =>
