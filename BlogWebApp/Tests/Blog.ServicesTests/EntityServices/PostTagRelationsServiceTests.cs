@@ -1935,19 +1935,12 @@ public class PostTagRelationsServiceTests
     public async Task Verify_FunctionDeleteAsyncById_HasBeenCalled()
     {
         //Arrange
-        var random = new Random();
-        var id = random.Next(52);
-        var tag = new Tag
-        {
-            Id = id,
-            Title = $"Tag {id}"
-        };
-        var newPostsTagsRelation = new PostsTagsRelations
-        {
-            PostId = id,
-            TagId = id,
-            Tag = tag
-        };
+        var id = _fixture.Create<int>();
+        var newPostsTagsRelation =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.Id, id)
+                .Create();
+
         _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelation))
             .Callback(() =>
             {
@@ -1977,19 +1970,12 @@ public class PostTagRelationsServiceTests
     public async Task DeleteAsyncById_WhenPostTagRelationIsDeleted_ShouldReturnNothing()
     {
         //Arrange
-        var random = new Random();
-        var id = random.Next(52);
-        var tag = new Tag
-        {
-            Id = id,
-            Title = $"Tag {id}"
-        };
-        var newPostsTagsRelation = new PostsTagsRelations
-        {
-            PostId = id,
-            TagId = id,
-            Tag = tag
-        };
+        var id = _fixture.Create<int>();
+        var newPostsTagsRelation =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.Id, id)
+                .Create();
+
         _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelation))
             .Callback(() =>
             {
