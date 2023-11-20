@@ -1456,19 +1456,16 @@ public class TagsServiceTests
     public async Task Verify_FunctionDeleteAsyncById_HasBeenCalled()
     {
         //Arrange
-        var random = new Random();
-        var tagId = random.Next(52);
-        var newTag = new Tag
-        {
-            Id = tagId,
-            Title = $"Tag {tagId}",
-        };
+        var tagId = _fixture.Create<int>();
+        var newTag =
+            SetupTagFixture()
+                .Create();
+
         _tagsRepositoryMock.Setup(x => x.GetByIdAsync(tagId))
             .ReturnsAsync(() => newTag);
 
         //Act
         await _tagsService.InsertAsync(newTag);
-        var comment = await _tagsService.FindAsync(tagId);
         await _tagsService.DeleteAsync(tagId);
 
         //Assert
@@ -1476,7 +1473,7 @@ public class TagsServiceTests
     }
 
     /// <summary>
-    /// Async delete by id comment.
+    /// Async delete by id tag.
     /// Should return nothing when tag is deleted.
     /// </summary>
     /// <returns>Task.</returns>
@@ -1484,12 +1481,10 @@ public class TagsServiceTests
     public async Task DeleteAsyncById_WhenTagIsDeleted_ShouldReturnNothing()
     {
         //Arrange
-        var random = new Random();
-        var tagId = random.Next(52);
-        var newTag = new Tag
-        {
-            Title = $"Tag {tagId}",
-        };
+        var tagId = _fixture.Create<int>();
+        var newTag =
+            SetupTagFixture()
+                .Create();
 
         _tagsRepositoryMock.Setup(x => x.InsertAsync(newTag))
             .Callback(() =>
@@ -1501,7 +1496,6 @@ public class TagsServiceTests
 
         //Act
         await _tagsService.InsertAsync(newTag);
-        var tag = await _tagsService.FindAsync(tagId);
         await _tagsService.DeleteAsync(tagId);
         _tagsRepositoryMock.Setup(x => x.GetByIdAsync(tagId))
             .ReturnsAsync(() => null);
