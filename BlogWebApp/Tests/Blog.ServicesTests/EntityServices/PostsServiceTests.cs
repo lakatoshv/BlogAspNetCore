@@ -1331,6 +1331,7 @@ public class PostsServiceTests
     {
         //Arrange
         var postId = _fixture.Create<int>();
+
         var newPost = SetupPostFixture().Create();
 
         _postsRepositoryMock.Setup(x => x.GetById(postId))
@@ -1357,6 +1358,7 @@ public class PostsServiceTests
     {
         //Arrange
         var postId = _fixture.Create<int>();
+
         var newPost = SetupPostFixture().Create();
 
         _postsRepositoryMock.Setup(x => x.Insert(newPost))
