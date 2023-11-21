@@ -1536,7 +1536,6 @@ public class MessagesServiceTests
 
         //Act
         await _messagesService.InsertAsync(newMessage);
-        var message = await _messagesService.FindAsync(messageId);
         await _messagesService.DeleteAsync(messageId);
 
         //Assert
@@ -1567,7 +1566,6 @@ public class MessagesServiceTests
 
         //Act
         await _messagesService.InsertAsync(newMessage);
-        var message = await _messagesService.FindAsync(messageId);
         await _messagesService.DeleteAsync(messageId);
         _messagesRepositoryMock.Setup(x => x.GetByIdAsync(messageId))
             .ReturnsAsync(() => null);
@@ -1589,35 +1587,10 @@ public class MessagesServiceTests
     public async Task Verify_FunctionDeleteAsyncByObject_HasBeenCalled()
     {
         //Arrange
-        var random = new Random();
-        var messageId = random.Next(52);
-
-        var sender = new ApplicationUser
-        {
-            Id = new Guid().ToString(),
-            FirstName = "Test fn",
-            LastName = "Test ln",
-            Email = "test@test.test",
-            UserName = "test@test.test"
-        };
-
-        var recipient = new ApplicationUser
-        {
-            Id = new Guid().ToString(),
-            FirstName = $"Test fn{messageId}",
-            LastName = $"Test ln{messageId}",
-            Email = $"test{messageId}@test.test",
-            UserName = $"test{messageId}@test.test"
-        };
-        var newMessage = new Message
-        {
-            SenderId = sender.Id,
-            Sender = sender,
-            RecipientId = recipient.Id,
-            Recipient = recipient,
-            Subject = $"Test subject{messageId}",
-            Body = $"Test body{messageId}"
-        };
+        var messageId = _fixture.Create<int>();
+        var newMessage =
+            SetupMessageFixture()
+                .Create();
 
         _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessage))
             .Callback(() =>
@@ -1645,35 +1618,10 @@ public class MessagesServiceTests
     public async Task DeleteAsyncByObject_WhenMessageIsDeleted_ShouldReturnNothing()
     {
         //Arrange
-        var random = new Random();
-        var messageId = random.Next(52);
-
-        var sender = new ApplicationUser
-        {
-            Id = new Guid().ToString(),
-            FirstName = "Test fn",
-            LastName = "Test ln",
-            Email = "test@test.test",
-            UserName = "test@test.test"
-        };
-
-        var recipient = new ApplicationUser
-        {
-            Id = new Guid().ToString(),
-            FirstName = $"Test fn{messageId}",
-            LastName = $"Test ln{messageId}",
-            Email = $"test{messageId}@test.test",
-            UserName = $"test{messageId}@test.test"
-        };
-        var newMessage = new Message
-        {
-            SenderId = sender.Id,
-            Sender = sender,
-            RecipientId = recipient.Id,
-            Recipient = recipient,
-            Subject = $"Test subject{messageId}",
-            Body = $"Test body{messageId}"
-        };
+        var messageId = _fixture.Create<int>();
+        var newMessage =
+            SetupMessageFixture()
+                .Create();
 
         _messagesRepositoryMock.Setup(x => x.InsertAsync(newMessage))
             .Callback(() =>
