@@ -1,19 +1,19 @@
-﻿using Blog.Core.Enums;
+﻿using AutoFixture;
+using AutoFixture.Dsl;
+using Blog.Core.Enums;
 using Blog.Core.Infrastructure;
 using Blog.Core.Infrastructure.Pagination;
 using Blog.Data.Models;
 using Blog.Data.Repository;
 using Blog.Data.Specifications;
+using Blog.EntityServices;
+using Blog.EntityServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoFixture;
-using AutoFixture.Dsl;
-using Blog.EntityServices;
-using Blog.EntityServices.Interfaces;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -1474,13 +1474,8 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task Verify_FunctionDeleteAsyncByObject_HasBeenCalled()
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
-            var newComment = new Comment
-            {
-                Id = commentId,
-                CommentBody = $"Comment {commentId}",
-            };
+        var newComment = SetupCommentFixture().Create();
+        var commentId = newComment.Id;
             _commentsRepositoryMock.Setup(x => x.GetByIdAsync(commentId))
                 .ReturnsAsync(() => newComment);
 
@@ -1502,12 +1497,8 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task DeleteAsyncByObject_WhenCommentIsDeleted_ShouldReturnNothing()
         {
             //Arrange
-            var random = new Random();
-            var commentId = random.Next(52);
-            var newComment = new Comment
-            {
-                CommentBody = $"Comment {commentId}",
-            };
+        var newComment = SetupCommentFixture().Create();
+        var commentId = newComment.Id;
 
             _commentsRepositoryMock.Setup(x => x.InsertAsync(newComment))
                 .Callback(() =>
