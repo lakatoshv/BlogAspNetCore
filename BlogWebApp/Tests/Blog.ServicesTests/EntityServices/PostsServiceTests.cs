@@ -1331,7 +1331,6 @@ public class PostsServiceTests
     {
         //Arrange
         var postId = _fixture.Create<int>();
-
         var newPost = SetupPostFixture().Create();
 
         _postsRepositoryMock.Setup(x => x.GetById(postId))
@@ -1358,7 +1357,6 @@ public class PostsServiceTests
     {
         //Arrange
         var postId = _fixture.Create<int>();
-
         var newPost = SetupPostFixture().Create();
 
         _postsRepositoryMock.Setup(x => x.Insert(newPost))
@@ -1478,7 +1476,6 @@ public class PostsServiceTests
 
         //Act
         await _postsService.InsertAsync(newPost);
-        var post = await _postsService.FindAsync(postId);
         await _postsService.DeleteAsync(postId);
 
         //Assert
@@ -1507,7 +1504,6 @@ public class PostsServiceTests
 
         //Act
         await _postsService.InsertAsync(newPost);
-        var post = await _postsService.FindAsync(postId);
         await _postsService.DeleteAsync(postId);
         _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
             .ReturnsAsync(() => null);
@@ -1529,16 +1525,9 @@ public class PostsServiceTests
     public async Task Verify_FunctionDeleteAsyncByObject_HasBeenCalled()
     {
         //Arrange
-        var random = new Random();
-        var postId = random.Next(52);
-        var newPost = new Post
-        {
-            Id = postId,
-            Title = $"Created from ServicesTests {postId}",
-            Description = $"Created from ServicesTests {postId}",
-            Content = $"Created from ServicesTests {postId}",
-            ImageUrl = $"Created from ServicesTests {postId}",
-        };
+        var postId = _fixture.Create<int>();
+        var newPost = SetupPostFixture().Create();
+
         _postsRepositoryMock.Setup(x => x.GetByIdAsync(postId))
             .ReturnsAsync(() => newPost);
 
@@ -1560,15 +1549,8 @@ public class PostsServiceTests
     public async Task DeleteAsyncByObject_WhenPostIsDeleted_ShouldReturnNothing()
     {
         //Arrange
-        var random = new Random();
-        var postId = random.Next(52);
-        var newPost = new Post
-        {
-            Title = $"Created from ServicesTests {postId}",
-            Description = $"Created from ServicesTests {postId}",
-            Content = $"Created from ServicesTests {postId}",
-            ImageUrl = $"Created from ServicesTests {postId}",
-        };
+        var postId = _fixture.Create<int>();
+        var newPost = SetupPostFixture().Create();
 
         _postsRepositoryMock.Setup(x => x.InsertAsync(newPost))
             .Callback(() =>
