@@ -2083,23 +2083,10 @@ public class PostTagRelationsServiceTests
         var random = new Random();
         var id = random.Next(52);
         var itemsCount = random.Next(10);
-        var newPostsTagsRelations = new List<PostsTagsRelations>();
-
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            var tag = new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}"
-            };
-            newPostsTagsRelations.Add(new PostsTagsRelations
-            {
-                PostId = id,
-                TagId = tag.Id,
-                Tag = tag
-            });
-        }
+        var newPostsTagsRelations =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
         _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelations))
             .Callback(() =>
@@ -2129,23 +2116,10 @@ public class PostTagRelationsServiceTests
         var random = new Random();
         var id = random.Next(52);
         var itemsCount = random.Next(10);
-        var newPostsTagsRelations = new List<PostsTagsRelations>();
-
-
-        for (int i = 0; i < itemsCount; i++)
-        {
-            var tag = new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}"
-            };
-            newPostsTagsRelations.Add(new PostsTagsRelations
-            {
-                PostId = id,
-                TagId = tag.Id,
-                Tag = tag
-            });
-        }
+        var newPostsTagsRelations =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(itemsCount)
+                .ToList();
 
         _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(newPostsTagsRelations))
             .Callback(() =>
