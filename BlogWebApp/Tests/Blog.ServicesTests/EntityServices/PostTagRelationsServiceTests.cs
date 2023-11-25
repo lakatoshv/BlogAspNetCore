@@ -2244,7 +2244,7 @@ public class PostTagRelationsServiceTests
         //Arrange
         var random = new Random();
         var postsTagsRelationsList =
-            SetupPostsTagsRelationsFixture(_fixture.Create<string>(), titleSearch)
+            SetupPostsTagsRelationsFixture(_fixture.Create<string>())
                 .CreateMany(random.Next(100))
                 .ToList();
 
