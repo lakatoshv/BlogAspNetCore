@@ -1744,16 +1744,10 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var commentsList = new List<Comment>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                commentsList.Add(new Comment
-                {
-                    Id = i,
-                    CommentBody = $"Comment {i}",
-                });
-            }
+        var commentsList = SetupCommentFixture()
+            .With(x => x.CommentBody, commentBodySearch)
+            .CreateMany(random.Next(100))
+            .ToList();
 
             var specification = new CommentSpecification(x => x.CommentBody.Contains(commentBodySearch));
             _commentsRepositoryMock.Setup(x => x.AnyAsync(specification))
@@ -1779,17 +1773,10 @@ namespace Blog.ServicesTests.EntityServices;
             //Test failed
             //Arrange
             var random = new Random();
-            var commentsList = new List<Comment>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                commentsList.Add(new Comment
-                {
-                    Id = i,
-                    CommentBody = $"Comment {i}",
-                });
-            }
-
+        var commentsList = SetupCommentFixture()
+            .With(x => x.CommentBody, commentBodySearch)
+            .CreateMany(random.Next(100))
+            .ToList();
 
             var specification = new CommentSpecification(x => x.CommentBody.Contains(commentBodySearch));
             _commentsRepositoryMock.Setup(x => x.AnyAsync(specification))
@@ -1813,18 +1800,11 @@ namespace Blog.ServicesTests.EntityServices;
         public async Task AnyAsync_WithEqualsSpecification_WhenCommentsExists_ShouldReturnTrue(string commentBodySearch)
         {
             //Arrange
-            var random = new Random();
-            var commentsList = new List<Comment>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                commentsList.Add(new Comment
-                {
-                    Id = i,
-                    CommentBody = $"Comment {i}",
-                });
-            }
-
+        var commentsList = SetupCommentFixture()
+            .With(x => x.CommentBody, commentBodySearch)
+            .With(x => x.CommentBody, commentBodySearch)
+            .CreateMany(1)
+            .ToList();
 
             var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
             _commentsRepositoryMock.Setup(x => x.AnyAsync(specification))
@@ -1849,17 +1829,9 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var commentsList = new List<Comment>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                commentsList.Add(new Comment
-                {
-                    Id = i,
-                    CommentBody = $"Comment {i}",
-                });
-            }
-
+        var commentsList = SetupCommentFixture()
+            .CreateMany(random.Next(100))
+            .ToList();
 
             var specification = new CommentSpecification(x => x.CommentBody.Equals(commentBodySearch));
             _commentsRepositoryMock.Setup(x => x.AnyAsync(specification))
