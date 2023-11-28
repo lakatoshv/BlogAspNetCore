@@ -1799,19 +1799,10 @@ public class PostsServiceTests
     {
         //Arrange
         var random = new Random();
-        var postsList = new List<Post>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            postsList.Add(new Post
-            {
-                Id = i,
-                Title = $"Created from ServicesTests {i}",
-                Description = $"Created from ServicesTests {i}",
-                Content = $"Created from ServicesTests {i}",
-                ImageUrl = $"Created from ServicesTests {i}",
-            });
-        }
+        var postsList =
+            SetupPostFixture()
+                .With(x => x.Title, titleSearch)
+                .CreateMany(random.Next(100));
 
         var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
         _postsRepositoryMock.Setup(x => x.AnyAsync(specification))
@@ -1837,20 +1828,10 @@ public class PostsServiceTests
         //Test failed
         //Arrange
         var random = new Random();
-        var postsList = new List<Post>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            postsList.Add(new Post
-            {
-                Id = i,
-                Title = $"Created from ServicesTests {i}",
-                Description = $"Created from ServicesTests {i}",
-                Content = $"Created from ServicesTests {i}",
-                ImageUrl = $"Created from ServicesTests {i}",
-            });
-        }
-
+        var postsList =
+            SetupPostFixture()
+                .With(x => x.Title, titleSearch)
+                .CreateMany(random.Next(100));
 
         var specification = new PostSpecification(x => x.Title.Contains(titleSearch));
         _postsRepositoryMock.Setup(x => x.AnyAsync(specification))
@@ -1875,20 +1856,10 @@ public class PostsServiceTests
     {
         //Arrange
         var random = new Random();
-        var postsList = new List<Post>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            postsList.Add(new Post
-            {
-                Id = i,
-                Title = $"Created from ServicesTests {i}",
-                Description = $"Created from ServicesTests {i}",
-                Content = $"Created from ServicesTests {i}",
-                ImageUrl = $"Created from ServicesTests {i}",
-            });
-        }
-
+        var postsList =
+            SetupPostFixture()
+                .With(x => x.Title, titleSearch)
+                .CreateMany(random.Next(100));
 
         var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
         _postsRepositoryMock.Setup(x => x.AnyAsync(specification))
@@ -1913,20 +1884,9 @@ public class PostsServiceTests
     {
         //Arrange
         var random = new Random();
-        var postsList = new List<Post>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            postsList.Add(new Post
-            {
-                Id = i,
-                Title = $"Created from ServicesTests {i}",
-                Description = $"Created from ServicesTests {i}",
-                Content = $"Created from ServicesTests {i}",
-                ImageUrl = $"Created from ServicesTests {i}",
-            });
-        }
-
+        var postsList =
+            SetupPostFixture()
+                .CreateMany(random.Next(100));
 
         var specification = new PostSpecification(x => x.Title.Equals(titleSearch));
         _postsRepositoryMock.Setup(x => x.AnyAsync(specification))
