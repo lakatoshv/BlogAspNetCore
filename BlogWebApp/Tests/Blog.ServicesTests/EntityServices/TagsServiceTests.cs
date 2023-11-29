@@ -1888,7 +1888,6 @@ public class TagsServiceTests
 
         var tagsList =
             SetupTagFixture()
-                .With(x => x.Title, tagSearch)
                 .CreateMany(random.Next(100));
 
         var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
