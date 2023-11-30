@@ -1901,7 +1901,7 @@ public class MessagesServiceTests
         var random = new Random();
         var messagesList =
             SetupMessageFixture()
-                .With(x => x.Body, subjectSearch)
+                .With(x => x.Subject, subjectSearch)
                 .CreateMany(random.Next(100));
 
         var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
@@ -1929,7 +1929,7 @@ public class MessagesServiceTests
         var random = new Random();
         var messagesList =
             SetupMessageFixture()
-                .With(x => x.Body, subjectSearch)
+                .With(x => x.Subject, subjectSearch)
                 .CreateMany(random.Next(100));
 
         var specification = new MessageSpecification(x => x.Subject.Equals(subjectSearch));
