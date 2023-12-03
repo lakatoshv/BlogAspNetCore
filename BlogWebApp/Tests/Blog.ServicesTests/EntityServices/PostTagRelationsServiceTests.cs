@@ -2569,23 +2569,10 @@ public class PostTagRelationsServiceTests
     {
         //Arrange
         var random = new Random();
-        var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var tag = new Tag
-            {
-                Id = i,
-                Title = $"{titleSearch} {i}"
-            };
-            postsTagsRelationsList.Add(new PostsTagsRelations
-            {
-                Id = i,
-                PostId = i,
-                TagId = i,
-                Tag = tag
-            });
-        }
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture(_fixture.Create<string>(), titleSearch)
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(titleSearch));
         _postsTagsRelationsRepositoryMock.Setup(x => x.LastOrDefault(specification))
@@ -2610,24 +2597,10 @@ public class PostTagRelationsServiceTests
         //Test failed
         //Arrange
         var random = new Random();
-        var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var tag = new Tag
-            {
-                Id = i,
-                Title = $"{titleSearch} {i}"
-            };
-            postsTagsRelationsList.Add(new PostsTagsRelations
-            {
-                Id = i,
-                PostId = i,
-                TagId = i,
-                Tag = tag
-            });
-        }
-
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture(_fixture.Create<string>(), titleSearch)
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(titleSearch));
         _postsTagsRelationsRepositoryMock.Setup(x => x.LastOrDefault(specification))
@@ -2652,24 +2625,10 @@ public class PostTagRelationsServiceTests
     {
         //Arrange
         var random = new Random();
-        var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var tag = new Tag
-            {
-                Id = i,
-                Title = $"{titleSearch} {i}"
-            };
-            postsTagsRelationsList.Add(new PostsTagsRelations
-            {
-                Id = i,
-                PostId = i,
-                TagId = i,
-                Tag = tag
-            });
-        }
-
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture(_fixture.Create<string>(), titleSearch)
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
         _postsTagsRelationsRepositoryMock.Setup(x => x.LastOrDefault(specification))
@@ -2694,24 +2653,10 @@ public class PostTagRelationsServiceTests
     {
         //Arrange
         var random = new Random();
-        var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var tag = new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}"
-            };
-            postsTagsRelationsList.Add(new PostsTagsRelations
-            {
-                Id = i,
-                PostId = i,
-                TagId = i,
-                Tag = tag
-            });
-        }
-
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
         _postsTagsRelationsRepositoryMock.Setup(x => x.LastOrDefault(specification))
