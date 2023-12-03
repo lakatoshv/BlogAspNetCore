@@ -1784,7 +1784,6 @@ public class ProfileServiceTests
 
         var profilesList =
             SetupProfileFixture()
-                .With(x => x.UserId, searchUserId)
                 .CreateMany(random.Next(100))
                 .ToList();
 
@@ -1834,7 +1833,6 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var profilesList = new List<ProfileModel>();
         var searchUserId = new Guid().ToString();
 
         var profilesList =
@@ -1864,7 +1862,6 @@ public class ProfileServiceTests
         //Test failed
         //Arrange
         var random = new Random();
-        var profilesList = new List<ProfileModel>();
         var searchUserId = new Guid().ToString();
 
         var profilesList =
@@ -1944,30 +1941,13 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var profilesList = new List<ProfileModel>();
         var searchUserId = new Guid().ToString();
 
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var userId = i == 0
-                ? searchUserId
-                : new Guid().ToString();
-            var user = new ApplicationUser
-            {
-                Id = userId,
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-            profilesList.Add(new ProfileModel
-            {
-                Id = i,
-                UserId = userId,
-                User = user,
-                ProfileImg = $"img{i}.jpg"
-            });
-        }
+        var profilesList =
+            SetupProfileFixture()
+                .With(x => x.UserId, searchUserId)
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
         _profileRepositoryMock.Setup(x => x.LastOrDefault(specification))
@@ -1990,30 +1970,13 @@ public class ProfileServiceTests
         //Test failed
         //Arrange
         var random = new Random();
-        var profilesList = new List<ProfileModel>();
         var searchUserId = new Guid().ToString();
 
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var userId = i == 0
-                ? searchUserId
-                : new Guid().ToString();
-            var user = new ApplicationUser
-            {
-                Id = userId,
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-            profilesList.Add(new ProfileModel
-            {
-                Id = i,
-                UserId = userId,
-                User = user,
-                ProfileImg = $"img{i}.jpg"
-            });
-        }
+        var profilesList =
+            SetupProfileFixture()
+                .With(x => x.UserId, searchUserId)
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
         _profileRepositoryMock.Setup(x => x.LastOrDefault(specification))
@@ -2036,28 +1999,12 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var profilesList = new List<ProfileModel>();
-        var searchUserId = $"{new Guid().ToString()}1";
+        var searchUserId = new Guid().ToString();
 
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var userId = new Guid().ToString();
-            var user = new ApplicationUser
-            {
-                Id = userId,
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-            profilesList.Add(new ProfileModel
-            {
-                Id = i,
-                UserId = userId,
-                User = user,
-                ProfileImg = $"img{i}.jpg"
-            });
-        }
+        var profilesList =
+            SetupProfileFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
         _profileRepositoryMock.Setup(x => x.LastOrDefault(specification))
