@@ -2073,16 +2073,10 @@ public class TagsServiceTests
     {
         //Arrange
         var random = new Random();
-        var tagsList = new List<Tag>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            tagsList.Add(new Tag
-            {
-                Id = i,
-                Title = $"Comment {i}",
-            });
-        }
+        var tagsList =
+            SetupTagFixture()
+                .With(x => x.Title, tagSearch)
+                .CreateMany(random.Next(100));
 
         var specification = new TagSpecification(x => x.Title.Contains(tagSearch));
         _tagsRepositoryMock.Setup(x => x.LastOrDefault(specification))
@@ -2107,17 +2101,10 @@ public class TagsServiceTests
         //Test failed
         //Arrange
         var random = new Random();
-        var tagsList = new List<Tag>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            tagsList.Add(new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}",
-            });
-        }
-
+        var tagsList =
+            SetupTagFixture()
+                .With(x => x.Title, tagSearch)
+                .CreateMany(random.Next(100));
 
         var specification = new TagSpecification(x => x.Title.Contains(tagSearch));
         _tagsRepositoryMock.Setup(x => x.LastOrDefault(specification))
@@ -2142,17 +2129,10 @@ public class TagsServiceTests
     {
         //Arrange
         var random = new Random();
-        var tagsList = new List<Tag>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            tagsList.Add(new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}",
-            });
-        }
-
+        var tagsList =
+            SetupTagFixture()
+                .With(x => x.Title, tagSearch)
+                .CreateMany(random.Next(100));
 
         var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
         _tagsRepositoryMock.Setup(x => x.LastOrDefault(specification))
@@ -2177,17 +2157,9 @@ public class TagsServiceTests
     {
         //Arrange
         var random = new Random();
-        var tagsList = new List<Tag>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            tagsList.Add(new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}",
-            });
-        }
-
+        var tagsList =
+            SetupTagFixture()
+                .CreateMany(random.Next(100));
 
         var specification = new TagSpecification(x => x.Title.Equals(tagSearch));
         _tagsRepositoryMock.Setup(x => x.LastOrDefault(specification))
