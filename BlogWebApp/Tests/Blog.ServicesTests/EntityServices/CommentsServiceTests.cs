@@ -2146,32 +2146,28 @@ namespace Blog.ServicesTests.EntityServices;
         /// <param name="query">The query.</param>
         /// <param name="commentsList">The comments list.</param>
         /// <returns>PagedListResult.</returns>
-        protected PagedListResult<Comment> Search(SearchQuery<Comment> query, List<Comment> commentsList)
+    protected static PagedListResult<Comment> Search(SearchQuery<Comment> query, List<Comment> commentsList)
         {
             var sequence = commentsList.AsQueryable();
 
             // Applying filters
-            if (query.Filters != null && query.Filters.Count > 0)
+        if (query.Filters is { Count: > 0 })
             {
-                foreach (var filterClause in query.Filters)
-                {
-                    sequence = sequence.Where(filterClause);
-                    var a = sequence.Select(x => x).ToList();
+            sequence = query.Filters
+                .Aggregate(sequence, (current, filterClause) => current.Where(filterClause));
                 }
-            }
 
             // Include Properties
             if (!string.IsNullOrWhiteSpace(query.IncludeProperties))
             {
-                var properties = query.IncludeProperties.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            var properties = query.IncludeProperties.Split([","], StringSplitOptions.RemoveEmptyEntries);
 
                 sequence = properties.Aggregate(sequence, (current, includeProperty) => current.Include(includeProperty));
             }
-            var b = sequence.ToList();
 
             // Resolving Sort Criteria
             // This code applies the sorting criterias sent as the parameter
-            if (query.SortCriterias != null && query.SortCriterias.Count > 0)
+        if (query.SortCriterias is { Count: > 0 })
             {
                 var sortCriteria = query.SortCriterias[0];
                 var orderedSequence = sortCriteria.ApplyOrdering(sequence, false);
@@ -2192,8 +2188,6 @@ namespace Blog.ServicesTests.EntityServices;
                 sequence = ((IOrderedQueryable<Comment>)sequence).OrderBy(x => true);
             }
 
-            var c = sequence.ToList();
-
             // Counting the total number of object.
             var resultCount = sequence.Count();
 
@@ -2205,8 +2199,9 @@ namespace Blog.ServicesTests.EntityServices;
             // Console.WriteLine(sequence.ToString());
 
             // Setting up the return object.
-            bool hasNext = (query.Skip > 0 || query.Take > 0) && (query.Skip + query.Take < resultCount);
-            return new PagedListResult<Comment>()
+        var hasNext = (query.Skip > 0 || query.Take > 0) && (query.Skip + query.Take < resultCount);
+
+        return new PagedListResult<Comment>
             {
                 Entities = result,
                 HasNext = hasNext,
