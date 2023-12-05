@@ -2047,12 +2047,12 @@ public class ProfileServiceTests
     /// <param name="query">The query.</param>
     /// <param name="postsList">The posts list.</param>
     /// <returns>PagedListResult.</returns>
-    protected PagedListResult<ProfileModel> Search(SearchQuery<ProfileModel> query, List<ProfileModel> postsList)
+    protected static PagedListResult<ProfileModel> Search(SearchQuery<ProfileModel> query, List<ProfileModel> postsList)
     {
         var sequence = postsList.AsQueryable();
 
         // Applying filters
-        if (query.Filters != null && query.Filters.Count > 0)
+        if (query.Filters is { Count: > 0 })
         {
             foreach (var filterClause in query.Filters)
             {
@@ -2064,15 +2064,14 @@ public class ProfileServiceTests
         // Include Properties
         if (!string.IsNullOrWhiteSpace(query.IncludeProperties))
         {
-            var properties = query.IncludeProperties.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            var properties = query.IncludeProperties.Split([","], StringSplitOptions.RemoveEmptyEntries);
 
             sequence = properties.Aggregate(sequence, (current, includeProperty) => current.Include(includeProperty));
         }
-        var b = sequence.ToList();
 
         // Resolving Sort Criteria
         // This code applies the sorting criterias sent as the parameter
-        if (query.SortCriterias != null && query.SortCriterias.Count > 0)
+        if (query.SortCriterias is { Count: > 0 })
         {
             var sortCriteria = query.SortCriterias[0];
             var orderedSequence = sortCriteria.ApplyOrdering(sequence, false);
@@ -2093,8 +2092,6 @@ public class ProfileServiceTests
             sequence = ((IOrderedQueryable<ProfileModel>)sequence).OrderBy(x => true);
         }
 
-        var c = sequence.ToList();
-
         // Counting the total number of object.
         var resultCount = sequence.Count();
 
@@ -2106,8 +2103,8 @@ public class ProfileServiceTests
         // Console.WriteLine(sequence.ToString());
 
         // Setting up the return object.
-        bool hasNext = (query.Skip > 0 || query.Take > 0) && (query.Skip + query.Take < resultCount);
-        return new PagedListResult<ProfileModel>()
+        var hasNext = (query.Skip > 0 || query.Take > 0) && (query.Skip + query.Take < resultCount);
+        return new PagedListResult<ProfileModel>
         {
             Entities = result,
             HasNext = hasNext,
