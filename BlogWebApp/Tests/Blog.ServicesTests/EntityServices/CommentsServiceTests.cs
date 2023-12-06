@@ -2227,16 +2227,10 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var commentsList = new List<Comment>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                commentsList.Add(new Comment
-                {
-                    Id = i,
-                    CommentBody = $"Comment {i}",
-                });
-            }
+        var commentsList = SetupCommentFixture()
+            .With(x => x.CommentBody, search)
+            .CreateMany(random.Next(100))
+            .ToList();
 
             var query = new SearchQuery<Comment>
             {
@@ -2249,10 +2243,7 @@ namespace Blog.ServicesTests.EntityServices;
             query.AddFilter(x => x.CommentBody.ToUpper().Contains($"{search}".ToUpper()));
 
             _commentsRepositoryMock.Setup(x => x.SearchAsync(query))
-                .ReturnsAsync(() =>
-                {
-                    return Search(query, commentsList);
-                });
+            .ReturnsAsync(() => Search(query, commentsList));
 
             //Act
             await _commentsService.SearchAsync(query);
@@ -2279,16 +2270,10 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var commentsList = new List<Comment>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                commentsList.Add(new Comment
-                {
-                    Id = i,
-                    CommentBody = $"Comment {i}",
-                });
-            }
+        var commentsList = SetupCommentFixture()
+            .With(x => x.CommentBody, search)
+            .CreateMany(random.Next(100))
+            .ToList();
 
             var query = new SearchQuery<Comment>
             {
@@ -2301,10 +2286,7 @@ namespace Blog.ServicesTests.EntityServices;
             query.AddFilter(x => x.CommentBody.ToUpper().Contains($"{search}".ToUpper()));
 
             _commentsRepositoryMock.Setup(x => x.SearchAsync(query))
-                .ReturnsAsync(() =>
-                {
-                    return Search(query, commentsList);
-                });
+            .ReturnsAsync(() => Search(query, commentsList));
 
             //Act
             var comments = await _commentsService.SearchAsync(query);
@@ -2324,24 +2306,17 @@ namespace Blog.ServicesTests.EntityServices;
         /// <param name="fieldName">The field name.</param>
         /// <param name="orderType">The order type.</param>
         [Theory]
-        [InlineData("Comment 0", 0, 10, "CommentBody", OrderType.Ascending)]
-        [InlineData("Comment 11", 10, 10, "CommentBody", OrderType.Ascending)]
-        [InlineData("Comment 11", 10, 20, "CommentBody", OrderType.Ascending)]
-        [InlineData("Comment 11", 0, 100, "CommentBody", OrderType.Ascending)]
+    [InlineData("Search", 0, 10, "CommentBody", OrderType.Ascending)]
+    [InlineData("Search", 10, 10, "CommentBody", OrderType.Ascending)]
+    [InlineData("Search", 10, 20, "CommentBody", OrderType.Ascending)]
+    [InlineData("Search", 0, 100, "CommentBody", OrderType.Ascending)]
         public async Task SearchAsync_WithEqualsSpecification_WhenCommentsExists_ShouldReturnComment(string search, int start, int take, string fieldName, OrderType orderType)
         {
             //Arrange
-            var random = new Random();
-            var commentsList = new List<Comment>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                commentsList.Add(new Comment
-                {
-                    Id = i,
-                    CommentBody = $"Comment {i}",
-                });
-            }
+        var commentsList = SetupCommentFixture()
+            .With(x => x.CommentBody, search)
+            .CreateMany(start + 1)
+            .ToList();
 
             var query = new SearchQuery<Comment>
             {
@@ -2351,13 +2326,10 @@ namespace Blog.ServicesTests.EntityServices;
 
             query.AddSortCriteria(new FieldSortOrder<Comment>(fieldName, orderType));
 
-            query.AddFilter(x => x.CommentBody.ToUpper().Equals($"{search}".ToUpper()));
+        query.AddFilter(x => x.CommentBody.ToUpper().Contains($"{search}".ToUpper()));
 
             _commentsRepositoryMock.Setup(x => x.SearchAsync(query))
-                .ReturnsAsync(() =>
-                {
-                    return Search(query, commentsList);
-                });
+            .ReturnsAsync(() => Search(query, commentsList));
 
             //Act
             var comments = await _commentsService.SearchAsync(query);
@@ -2386,16 +2358,9 @@ namespace Blog.ServicesTests.EntityServices;
         {
             //Arrange
             var random = new Random();
-            var commentsList = new List<Comment>();
-
-            for (var i = 0; i < random.Next(100); i++)
-            {
-                commentsList.Add(new Comment
-                {
-                    Id = i,
-                    CommentBody = $"Comment {i}",
-                });
-            }
+        var commentsList = SetupCommentFixture()
+            .CreateMany(random.Next(100))
+            .ToList();
 
             var query = new SearchQuery<Comment>
             {
@@ -2408,10 +2373,7 @@ namespace Blog.ServicesTests.EntityServices;
             query.AddFilter(x => x.CommentBody.ToUpper().Equals($"{search}".ToUpper()));
 
             _commentsRepositoryMock.Setup(x => x.SearchAsync(query))
-                .ReturnsAsync(() =>
-                {
-                    return Search(query, commentsList);
-                });
+            .ReturnsAsync(() => Search(query, commentsList));
 
             //Act
             var comments = await _commentsService.SearchAsync(query);
@@ -2455,7 +2417,7 @@ namespace Blog.ServicesTests.EntityServices;
             var comments = await _commentsService.SearchAsync(query);
 
             //Assert
-            Assert.Empty(comments.Entities);
+        Assert.Null(comments.Entities);
         }
 
         #endregion
@@ -2464,4 +2426,6 @@ namespace Blog.ServicesTests.EntityServices;
         //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
         //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
         #endregion
+
+    #endregion
     }
