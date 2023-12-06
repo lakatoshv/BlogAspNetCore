@@ -2293,7 +2293,6 @@ public class MessagesServiceTests
 
             sequence = properties.Aggregate(sequence, (current, includeProperty) => current.Include(includeProperty));
         }
-        var b = sequence.ToList();
 
         // Resolving Sort Criteria
         // This code applies the sorting criterias sent as the parameter
@@ -2357,38 +2356,11 @@ public class MessagesServiceTests
     {
         //Arrange
         var random = new Random();
-        var messagesList = new List<Message>();
-
-        var sender = new ApplicationUser
-        {
-            Id = new Guid().ToString(),
-            FirstName = "Test fn",
-            LastName = "Test ln",
-            Email = "test@test.test",
-            UserName = "test@test.test"
-        };
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var recipient = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = $"Test fn{i}",
-                LastName = $"Test ln{i}",
-                Email = $"test{i}@test.test",
-                UserName = $"test{i}@test.test"
-            };
-            messagesList.Add(new Message
-            {
-                Id = i,
-                SenderId = sender.Id,
-                Sender = sender,
-                RecipientId = recipient.Id,
-                Recipient = recipient,
-                Subject = $"Test subject {i}",
-                Body = $"Test body{i}"
-            });
-        }
+        var messagesList =
+            SetupMessageFixture()
+                .With(x => x.Body, search)
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var query = new SearchQuery<Message>
         {
@@ -2401,10 +2373,7 @@ public class MessagesServiceTests
         query.AddFilter(x => x.Body.ToUpper().Contains($"{search}".ToUpper()));
 
         _messagesRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, messagesList);
-            });
+            .ReturnsAsync(() => Search(query, messagesList));
 
         //Act
         await _messagesService.SearchAsync(query);
@@ -2431,38 +2400,11 @@ public class MessagesServiceTests
     {
         //Arrange
         var random = new Random();
-        var messagesList = new List<Message>();
-
-        var sender = new ApplicationUser
-        {
-            Id = new Guid().ToString(),
-            FirstName = "Test fn",
-            LastName = "Test ln",
-            Email = "test@test.test",
-            UserName = "test@test.test"
-        };
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var recipient = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = $"Test fn{i}",
-                LastName = $"Test ln{i}",
-                Email = $"test{i}@test.test",
-                UserName = $"test{i}@test.test"
-            };
-            messagesList.Add(new Message
-            {
-                Id = i,
-                SenderId = sender.Id,
-                Sender = sender,
-                RecipientId = recipient.Id,
-                Recipient = recipient,
-                Subject = $"Test subject {i}",
-                Body = $"Test body{i}"
-            });
-        }
+        var messagesList =
+            SetupMessageFixture()
+                .With(x => x.Body, search)
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var query = new SearchQuery<Message>
         {
@@ -2475,10 +2417,7 @@ public class MessagesServiceTests
         query.AddFilter(x => x.Body.ToUpper().Contains($"{search}".ToUpper()));
 
         _messagesRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, messagesList);
-            });
+            .ReturnsAsync(() => Search(query, messagesList));
 
         //Act
         await _messagesService.SearchAsync(query);
@@ -2508,39 +2447,11 @@ public class MessagesServiceTests
     public async Task SearchAsync_WithEqualsSpecification_WhenCMessagesExists_ShouldReturnMessage(string search, int start, int take, string fieldName, OrderType orderType)
     {
         //Arrange
-        var random = new Random();
-        var messagesList = new List<Message>();
-
-        var sender = new ApplicationUser
-        {
-            Id = new Guid().ToString(),
-            FirstName = "Test fn",
-            LastName = "Test ln",
-            Email = "test@test.test",
-            UserName = "test@test.test"
-        };
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var recipient = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = $"Test fn{i}",
-                LastName = $"Test ln{i}",
-                Email = $"test{i}@test.test",
-                UserName = $"test{i}@test.test"
-            };
-            messagesList.Add(new Message
-            {
-                Id = i,
-                SenderId = sender.Id,
-                Sender = sender,
-                RecipientId = recipient.Id,
-                Recipient = recipient,
-                Subject = $"Test subject {i}",
-                Body = $"Test body{i}"
-            });
-        }
+        var messagesList =
+            SetupMessageFixture()
+                .With(x => x.Body, search)
+                .CreateMany(start + 1)
+                .ToList();
 
         var query = new SearchQuery<Message>
         {
@@ -2550,13 +2461,10 @@ public class MessagesServiceTests
 
         query.AddSortCriteria(new FieldSortOrder<Message>(fieldName, orderType));
 
-        query.AddFilter(x => x.Body.ToUpper().Contains($"{search}".ToUpper()));
+        query.AddFilter(x => x.Body.ToUpper().Equals($"{search}".ToUpper()));
 
         _messagesRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, messagesList);
-            });
+            .ReturnsAsync(() => Search(query, messagesList));
 
         //Act
         await _messagesService.SearchAsync(query);
@@ -2588,38 +2496,10 @@ public class MessagesServiceTests
     {
         //Arrange
         var random = new Random();
-        var messagesList = new List<Message>();
-
-        var sender = new ApplicationUser
-        {
-            Id = new Guid().ToString(),
-            FirstName = "Test fn",
-            LastName = "Test ln",
-            Email = "test@test.test",
-            UserName = "test@test.test"
-        };
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var recipient = new ApplicationUser
-            {
-                Id = new Guid().ToString(),
-                FirstName = $"Test fn{i}",
-                LastName = $"Test ln{i}",
-                Email = $"test{i}@test.test",
-                UserName = $"test{i}@test.test"
-            };
-            messagesList.Add(new Message
-            {
-                Id = i,
-                SenderId = sender.Id,
-                Sender = sender,
-                RecipientId = recipient.Id,
-                Recipient = recipient,
-                Subject = $"Test subject {i}",
-                Body = $"Test body{i}"
-            });
-        }
+        var messagesList =
+            SetupMessageFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var query = new SearchQuery<Message>
         {
@@ -2629,13 +2509,10 @@ public class MessagesServiceTests
 
         query.AddSortCriteria(new FieldSortOrder<Message>(fieldName, orderType));
 
-        query.AddFilter(x => x.Body.ToUpper().Contains($"{search}".ToUpper()));
+        query.AddFilter(x => x.Subject.ToUpper().Contains($"{search}".ToUpper()));
 
         _messagesRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, messagesList);
-            });
+            .ReturnsAsync(() => Search(query, messagesList));
 
         //Act
         await _messagesService.SearchAsync(query);
@@ -2682,7 +2559,7 @@ public class MessagesServiceTests
         var comments = await _messagesService.SearchAsync(query);
 
         //Assert
-        Assert.Empty(comments.Entities);
+        Assert.Null(comments.Entities);
     }
 
     #endregion
