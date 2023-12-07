@@ -2285,19 +2285,11 @@ public class PostsServiceTests
     {
         //Arrange
         var random = new Random();
-        var postsList = new List<Post>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            postsList.Add(new Post
-            {
-                Id = i,
-                Title = $"Created from ServicesTests {i}",
-                Description = $"Created from ServicesTests {i}",
-                Content = $"Created from ServicesTests {i}",
-                ImageUrl = $"Created from ServicesTests {i}",
-            });
-        }
+        var postsList =
+            SetupPostFixture()
+                .With(x => x.Title, search)
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var query = new SearchQuery<Post>
         {
@@ -2310,10 +2302,7 @@ public class PostsServiceTests
         query.AddFilter(x => x.Title.ToUpper().Contains($"{search}".ToUpper()));
 
         _postsRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, postsList);
-            });
+            .ReturnsAsync(() => Search(query, postsList));
 
         //Act
         await _postsService.SearchAsync(query);
@@ -2340,19 +2329,11 @@ public class PostsServiceTests
     {
         //Arrange
         var random = new Random();
-        var postsList = new List<Post>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            postsList.Add(new Post
-            {
-                Id = i,
-                Title = $"Created from ServicesTests {i}",
-                Description = $"Created from ServicesTests {i}",
-                Content = $"Created from ServicesTests {i}",
-                ImageUrl = $"Created from ServicesTests {i}",
-            });
-        }
+        var postsList =
+            SetupPostFixture()
+                .With(x => x.Title, search)
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var query = new SearchQuery<Post>
         {
@@ -2365,10 +2346,7 @@ public class PostsServiceTests
         query.AddFilter(x => x.Title.ToUpper().Contains($"{search}".ToUpper()));
 
         _postsRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, postsList);
-            });
+            .ReturnsAsync(() => Search(query, postsList));
 
         //Act
         var posts = await _postsService.SearchAsync(query);
@@ -2395,20 +2373,11 @@ public class PostsServiceTests
     public async Task SearchAsync_WithEqualsSpecification_WhenPostsExists_ShouldReturnPost(string search, int start, int take, string fieldName, OrderType orderType)
     {
         //Arrange
-        var random = new Random();
-        var postsList = new List<Post>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            postsList.Add(new Post
-            {
-                Id = i,
-                Title = $"Created from ServicesTests {i}",
-                Description = $"Created from ServicesTests {i}",
-                Content = $"Created from ServicesTests {i}",
-                ImageUrl = $"Created from ServicesTests {i}",
-            });
-        }
+        var postsList =
+            SetupPostFixture()
+                .With(x => x.Title, search)
+                .CreateMany(start + 1)
+                .ToList();
 
         var query = new SearchQuery<Post>
         {
@@ -2421,10 +2390,7 @@ public class PostsServiceTests
         query.AddFilter(x => x.Title.ToUpper().Contains($"{search}".ToUpper()));
 
         _postsRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, postsList);
-            });
+            .ReturnsAsync(() => Search(query, postsList));
 
         //Act
         var posts = await _postsService.SearchAsync(query);
@@ -2453,19 +2419,10 @@ public class PostsServiceTests
     {
         //Arrange
         var random = new Random();
-        var postsList = new List<Post>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            postsList.Add(new Post
-            {
-                Id = i,
-                Title = $"Created from ServicesTests {i}",
-                Description = $"Created from ServicesTests {i}",
-                Content = $"Created from ServicesTests {i}",
-                ImageUrl = $"Created from ServicesTests {i}",
-            });
-        }
+        var postsList =
+            SetupPostFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var query = new SearchQuery<Post>
         {
@@ -2478,10 +2435,7 @@ public class PostsServiceTests
         query.AddFilter(x => x.Title.ToUpper().Contains($"{search}".ToUpper()));
 
         _postsRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, postsList);
-            });
+            .ReturnsAsync(() => Search(query, postsList));
 
         //Act
         var posts = await _postsService.SearchAsync(query);
@@ -2525,7 +2479,7 @@ public class PostsServiceTests
         var posts = await _postsService.SearchAsync(query);
 
         //Assert
-        Assert.Empty(posts.Entities);
+        Assert.Null(posts.Entities);
     }
 
     #endregion
