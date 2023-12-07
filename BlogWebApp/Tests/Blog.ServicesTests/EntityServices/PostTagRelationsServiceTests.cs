@@ -2774,31 +2774,19 @@ public class PostTagRelationsServiceTests
     /// <param name="fieldName">The field name.</param>
     /// <param name="orderType">The order type.</param>
     [Theory]
-    [InlineData("Created from ServicesTests ", 0, 10, "Post.Title", OrderType.Ascending)]
-    [InlineData("Created from ServicesTests ", 10, 10, "Post.Title", OrderType.Ascending)]
-    [InlineData("Created from ServicesTests ", 10, 20, "Post.Title", OrderType.Ascending)]
-    [InlineData("Created from ServicesTests ", 0, 100, "Post.Title", OrderType.Ascending)]
-    public async Task Verify_FunctionSearchAsync_HasBeenCalled(string search, int start, int take, string fieldName, OrderType orderType)
+    [InlineData(1, 0, 10, "TagId", OrderType.Ascending)]
+    [InlineData(1, 10, 10, "TagId", OrderType.Ascending)]
+    [InlineData(1, 10, 20, "TagId", OrderType.Ascending)]
+    [InlineData(1, 0, 100, "TagId", OrderType.Ascending)]
+    public async Task Verify_FunctionSearchAsync_HasBeenCalled(int search, int start, int take, string fieldName, OrderType orderType)
     {
         //Arrange
         var random = new Random();
-        var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var tag = new Tag
-            {
-                Id = i,
-                Title = $"{search} {i}"
-            };
-            postsTagsRelationsList.Add(new PostsTagsRelations
-            {
-                Id = i,
-                PostId = i,
-                TagId = i,
-                Tag = tag
-            });
-        }
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.TagId, search)
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var query = new SearchQuery<PostsTagsRelations>
         {
@@ -2808,13 +2796,10 @@ public class PostTagRelationsServiceTests
 
         query.AddSortCriteria(new FieldSortOrder<PostsTagsRelations>(fieldName, orderType));
 
-        query.AddFilter(x => x.Post.Title.ToUpper().Contains($"{search}".ToUpper()));
+        query.AddFilter(x => x.TagId == search);
 
         _postsTagsRelationsRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, postsTagsRelationsList);
-            });
+            .ReturnsAsync(() => Search(query, postsTagsRelationsList));
 
         //Act
         await _postsTagsRelationsService.SearchAsync(query);
@@ -2833,31 +2818,19 @@ public class PostTagRelationsServiceTests
     /// <param name="fieldName">The field name.</param>
     /// <param name="orderType">The order type.</param>
     [Theory]
-    [InlineData("Created from ServicesTests ", 0, 10, "Post.Title", OrderType.Ascending)]
-    [InlineData("Created from ServicesTests ", 10, 10, "Post.Title", OrderType.Ascending)]
-    [InlineData("Created from ServicesTests ", 10, 20, "Post.Title", OrderType.Ascending)]
-    [InlineData("Created from ServicesTests ", 0, 100, "Post.Title", OrderType.Ascending)]
-    public async Task SearchAsync_WhenPostsTagsRelationsExists_ShouldReturnPostsTagsRelations(string search, int start, int take, string fieldName, OrderType orderType)
+    [InlineData(1, 0, 10, "TagId", OrderType.Ascending)]
+    [InlineData(1, 10, 10, "TagId", OrderType.Ascending)]
+    [InlineData(1, 10, 20, "TagId", OrderType.Ascending)]
+    [InlineData(1, 0, 100, "TagId", OrderType.Ascending)]
+    public async Task SearchAsync_WhenPostsTagsRelationsExists_ShouldReturnPostsTagsRelations(int search, int start, int take, string fieldName, OrderType orderType)
     {
         //Arrange
         var random = new Random();
-        var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var tag = new Tag
-            {
-                Id = i,
-                Title = $"{search} {i}"
-            };
-            postsTagsRelationsList.Add(new PostsTagsRelations
-            {
-                Id = i,
-                PostId = i,
-                TagId = i,
-                Tag = tag
-            });
-        }
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.TagId, search)
+                .CreateMany(start + 1)
+                .ToList();
 
         var query = new SearchQuery<PostsTagsRelations>
         {
@@ -2867,13 +2840,10 @@ public class PostTagRelationsServiceTests
 
         query.AddSortCriteria(new FieldSortOrder<PostsTagsRelations>(fieldName, orderType));
 
-        query.AddFilter(x => x.Post.Title.ToUpper().Contains($"{search}".ToUpper()));
+        query.AddFilter(x => x.TagId == search);
 
         _postsTagsRelationsRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, postsTagsRelationsList);
-            });
+            .ReturnsAsync(() => Search(query, postsTagsRelationsList));
 
         //Act
         var postsTagsRelations = await _postsTagsRelationsService.SearchAsync(query);
@@ -2893,31 +2863,18 @@ public class PostTagRelationsServiceTests
     /// <param name="fieldName">The field name.</param>
     /// <param name="orderType">The order type.</param>
     [Theory]
-    [InlineData("Created from ServicesTests 0", 0, 10, "Post.Title ", OrderType.Ascending)]
-    [InlineData("Created from ServicesTests 11", 10, 10, "Post.Title", OrderType.Ascending)]
-    [InlineData("Created from ServicesTests 11", 10, 20, "Post.Title", OrderType.Ascending)]
-    [InlineData("Created from ServicesTests 11", 0, 100, "Post.Title", OrderType.Ascending)]
-    public async Task SearchAsync_WithEqualsSpecification_WhenPostsTagsRelationsExists_ShouldReturnPostsTagsRelation(string search, int start, int take, string fieldName, OrderType orderType)
+    [InlineData(1, 0, 10, "TagId", OrderType.Ascending)]
+    [InlineData(1, 10, 10, "TagId", OrderType.Ascending)]
+    [InlineData(1, 10, 20, "TagId", OrderType.Ascending)]
+    [InlineData(1, 0, 100, "TagId", OrderType.Ascending)]
+    public async Task SearchAsync_WithEqualsSpecification_WhenPostsTagsRelationsExists_ShouldReturnPostsTagsRelation(int search, int start, int take, string fieldName, OrderType orderType)
     {
         //Arrange
-        var random = new Random();
-        var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var tag = new Tag
-            {
-                Id = i,
-                Title = $"{search} {i}"
-            };
-            postsTagsRelationsList.Add(new PostsTagsRelations
-            {
-                Id = i,
-                PostId = i,
-                TagId = i,
-                Tag = tag
-            });
-        }
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.TagId, search)
+                .CreateMany(start + 1)
+                .ToList();
 
         var query = new SearchQuery<PostsTagsRelations>
         {
@@ -2927,13 +2884,10 @@ public class PostTagRelationsServiceTests
 
         query.AddSortCriteria(new FieldSortOrder<PostsTagsRelations>(fieldName, orderType));
 
-        query.AddFilter(x => x.Post.Title.ToUpper().Contains($"{search}".ToUpper()));
+        query.AddFilter(x => x.TagId == search);
 
         _postsTagsRelationsRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, postsTagsRelationsList);
-            });
+            .ReturnsAsync(() => Search(query, postsTagsRelationsList));
 
         //Act
         var postsTagsRelations = await _postsTagsRelationsService.SearchAsync(query);
@@ -2954,31 +2908,18 @@ public class PostTagRelationsServiceTests
     /// <param name="fieldName">The field name.</param>
     /// <param name="orderType">The order type.</param>
     [Theory]
-    [InlineData("Created from ServicesTests -0", 0, 10, "Post.Title", OrderType.Ascending)]
-    [InlineData("Created from ServicesTests -11", 10, 10, "Post.Title", OrderType.Ascending)]
-    [InlineData("Created from ServicesTests -11", 10, 20, "Post.Title", OrderType.Ascending)]
-    [InlineData("Created from ServicesTests -11", 0, 100, "Post.Title", OrderType.Ascending)]
-    public async Task SearchAsync_WithEqualSpecification_WhenPostsTagsRelationsExists_ShouldReturnNothing(string search, int start, int take, string fieldName, OrderType orderType)
+    [InlineData(-1, 0, 10, "TagId", OrderType.Ascending)]
+    [InlineData(-1, 10, 10, "TagId", OrderType.Ascending)]
+    [InlineData(-1, 10, 20, "TagId", OrderType.Ascending)]
+    [InlineData(-1, 0, 100, "TagId", OrderType.Ascending)]
+    public async Task SearchAsync_WithEqualSpecification_WhenPostsTagsRelationsExists_ShouldReturnNothing(int search, int start, int take, string fieldName, OrderType orderType)
     {
         //Arrange
         var random = new Random();
-        var postsTagsRelationsList = new List<PostsTagsRelations>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var tag = new Tag
-            {
-                Id = i,
-                Title = $"{search} {i}"
-            };
-            postsTagsRelationsList.Add(new PostsTagsRelations
-            {
-                Id = i,
-                PostId = i,
-                TagId = i,
-                Tag = tag
-            });
-        }
+        var postsTagsRelationsList =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var query = new SearchQuery<PostsTagsRelations>
         {
@@ -2988,13 +2929,10 @@ public class PostTagRelationsServiceTests
 
         query.AddSortCriteria(new FieldSortOrder<PostsTagsRelations>(fieldName, orderType));
 
-        query.AddFilter(x => x.Post.Title.ToUpper().Contains($"{search}".ToUpper()));
+        query.AddFilter(x => x.TagId == search);
 
         _postsTagsRelationsRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, postsTagsRelationsList);
-            });
+            .ReturnsAsync(() => Search(query, postsTagsRelationsList));
 
         //Act
         var postsTagsRelations = await _postsTagsRelationsService.SearchAsync(query);
@@ -3014,11 +2952,11 @@ public class PostTagRelationsServiceTests
     /// <param name="fieldName">The field name.</param>
     /// <param name="orderType">The order type.</param>
     [Theory]
-    [InlineData("Created from ServicesTests 0", 0, 10, "Post.Title", OrderType.Ascending)]
-    [InlineData("Created from ServicesTests 11", 10, 10, "Post.Title", OrderType.Ascending)]
-    [InlineData("Created from ServicesTests 11", 10, 20, "Post.Title", OrderType.Ascending)]
-    [InlineData("Created from ServicesTests 11", 0, 100, "Post.Title", OrderType.Ascending)]
-    public async Task SearchAsync_WhenPostsTagsRelationsDoesNotExists_ShouldReturnNothing(string search, int start, int take, string fieldName, OrderType orderType)
+    [InlineData(1, 0, 10, "TagId", OrderType.Ascending)]
+    [InlineData(1, 10, 10, "TagId", OrderType.Ascending)]
+    [InlineData(1, 10, 20, "TagId", OrderType.Ascending)]
+    [InlineData(1, 0, 100, "TagId", OrderType.Ascending)]
+    public async Task SearchAsync_WhenPostsTagsRelationsDoesNotExists_ShouldReturnNothing(int search, int start, int take, string fieldName, OrderType orderType)
     {
         //Arrange
         var query = new SearchQuery<PostsTagsRelations>
@@ -3029,7 +2967,7 @@ public class PostTagRelationsServiceTests
 
         query.AddSortCriteria(new FieldSortOrder<PostsTagsRelations>(fieldName, orderType));
 
-        query.AddFilter(x => x.Post.Title.ToUpper().Contains($"{search}".ToUpper()));
+        query.AddFilter(x => x.TagId == search);
 
         _postsTagsRelationsRepositoryMock.Setup(x => x.SearchAsync(query))
             .ReturnsAsync(() => new PagedListResult<PostsTagsRelations>());
@@ -3038,7 +2976,7 @@ public class PostTagRelationsServiceTests
         var postsTagsRelations = await _postsTagsRelationsService.SearchAsync(query);
 
         //Assert
-        Assert.Empty(postsTagsRelations.Entities);
+        Assert.Null(postsTagsRelations.Entities);
     }
 
     #endregion
