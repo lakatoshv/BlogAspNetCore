@@ -2122,38 +2122,19 @@ public class ProfileServiceTests
     /// <param name="fieldName">The field name.</param>
     /// <param name="orderType">The order type.</param>
     [Theory]
-    [InlineData("test", 0, 10, "User.Email", OrderType.Ascending)]
-    [InlineData("test", 10, 10, "User.Email", OrderType.Ascending)]
-    [InlineData("test", 10, 20, "User.Email", OrderType.Ascending)]
-    [InlineData("test", 0, 100, "User.Email", OrderType.Ascending)]
+    [InlineData("test", 0, 10, "UserId", OrderType.Ascending)]
+    [InlineData("test", 10, 10, "UserId", OrderType.Ascending)]
+    [InlineData("test", 10, 20, "UserId", OrderType.Ascending)]
+    [InlineData("test", 0, 100, "UserId", OrderType.Ascending)]
     public async Task Verify_FunctionSearchAsync_HasBeenCalled(string search, int start, int take, string fieldName, OrderType orderType)
     {
         //Arrange
         var random = new Random();
-        var profilesList = new List<ProfileModel>();
-        var searchUserId = new Guid().ToString();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var userId = i == 0
-                ? searchUserId
-                : new Guid().ToString();
-            var user = new ApplicationUser
-            {
-                Id = userId,
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-            profilesList.Add(new ProfileModel
-            {
-                Id = i,
-                UserId = userId,
-                User = user,
-                ProfileImg = $"img{i}.jpg"
-            });
-        }
+        var profilesList =
+            SetupProfileFixture()
+                .With(x => x.UserId, search)
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var query = new SearchQuery<ProfileModel>
         {
@@ -2163,13 +2144,10 @@ public class ProfileServiceTests
 
         query.AddSortCriteria(new FieldSortOrder<ProfileModel>(fieldName, orderType));
 
-        query.AddFilter(x => x.User.Email.ToUpper().Contains($"{search}".ToUpper()));
+        query.AddFilter(x => x.UserId.ToUpper().Contains($"{search}".ToUpper()));
 
         _profileRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, profilesList);
-            });
+            .ReturnsAsync(() => Search(query, profilesList));
 
         //Act
         await _profileService.SearchAsync(query);
@@ -2188,38 +2166,19 @@ public class ProfileServiceTests
     /// <param name="fieldName">The field name.</param>
     /// <param name="orderType">The order type.</param>
     [Theory]
-    [InlineData("test", 0, 10, "User.Email", OrderType.Ascending)]
-    [InlineData("test", 10, 10, "User.Email", OrderType.Ascending)]
-    [InlineData("test", 10, 20, "User.Email", OrderType.Ascending)]
-    [InlineData("test", 0, 100, "User.Email", OrderType.Ascending)]
+    [InlineData("test", 0, 10, "UserId", OrderType.Ascending)]
+    [InlineData("test", 10, 10, "UserId", OrderType.Ascending)]
+    [InlineData("test", 10, 20, "UserId", OrderType.Ascending)]
+    [InlineData("test", 0, 100, "UserId", OrderType.Ascending)]
     public async Task SearchAsync_WhenProfilesExists_ShouldReturnProfiles(string search, int start, int take, string fieldName, OrderType orderType)
     {
         //Arrange
         var random = new Random();
-        var profilesList = new List<ProfileModel>();
-        var searchUserId = new Guid().ToString();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var userId = i == 0
-                ? searchUserId
-                : new Guid().ToString();
-            var user = new ApplicationUser
-            {
-                Id = userId,
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-            profilesList.Add(new ProfileModel
-            {
-                Id = i,
-                UserId = userId,
-                User = user,
-                ProfileImg = $"img{i}.jpg"
-            });
-        }
+        var profilesList =
+            SetupProfileFixture()
+                .With(x => x.UserId, search)
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var query = new SearchQuery<ProfileModel>
         {
@@ -2232,10 +2191,7 @@ public class ProfileServiceTests
         query.AddFilter(x => x.User.Email.ToUpper().Contains($"{search}".ToUpper()));
 
         _profileRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, profilesList);
-            });
+            .ReturnsAsync(() => Search(query, profilesList));
 
         //Act
         var posts = await _profileService.SearchAsync(query);
@@ -2255,38 +2211,19 @@ public class ProfileServiceTests
     /// <param name="fieldName">The field name.</param>
     /// <param name="orderType">The order type.</param>
     [Theory]
-    [InlineData("test1", 0, 10, "User.Email", OrderType.Ascending)]
-    [InlineData("test11", 10, 10, "User.Email", OrderType.Ascending)]
-    [InlineData("test11", 10, 20, "User.Email", OrderType.Ascending)]
-    [InlineData("test11", 0, 100, "User.Email", OrderType.Ascending)]
+    [InlineData("test1", 0, 10, "UserId", OrderType.Ascending)]
+    [InlineData("test11", 10, 10, "UserId", OrderType.Ascending)]
+    [InlineData("test11", 10, 20, "UserId", OrderType.Ascending)]
+    [InlineData("test11", 0, 100, "UserId", OrderType.Ascending)]
     public async Task SearchAsync_WithEqualsSpecification_WhenProfilesExists_ShouldReturnProfile(string search, int start, int take, string fieldName, OrderType orderType)
     {
         //Arrange
         var random = new Random();
-        var profilesList = new List<ProfileModel>();
-        var searchUserId = new Guid().ToString();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var userId = i == 0
-                ? searchUserId
-                : new Guid().ToString();
-            var user = new ApplicationUser
-            {
-                Id = userId,
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-            profilesList.Add(new ProfileModel
-            {
-                Id = i,
-                UserId = userId,
-                User = user,
-                ProfileImg = $"img{i}.jpg"
-            });
-        }
+        var profilesList =
+            SetupProfileFixture()
+                .With(x => x.UserId, search)
+                .CreateMany(start + 1)
+                .ToList();
 
         var query = new SearchQuery<ProfileModel>
         {
@@ -2296,13 +2233,10 @@ public class ProfileServiceTests
 
         query.AddSortCriteria(new FieldSortOrder<ProfileModel>(fieldName, orderType));
 
-        query.AddFilter(x => x.User.Email.ToUpper().Contains($"{search}".ToUpper()));
+        query.AddFilter(x => x.UserId.ToUpper().Contains($"{search}".ToUpper()));
 
         _profileRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, profilesList);
-            });
+            .ReturnsAsync(() => Search(query, profilesList));
 
         //Act
         var posts = await _profileService.SearchAsync(query);
@@ -2323,38 +2257,18 @@ public class ProfileServiceTests
     /// <param name="fieldName">The field name.</param>
     /// <param name="orderType">The order type.</param>
     [Theory]
-    [InlineData("test-1", 0, 10, "User.Email", OrderType.Ascending)]
-    [InlineData("test-2", 10, 10, "User.Email", OrderType.Ascending)]
-    [InlineData("test-11", 10, 20, "User.Email", OrderType.Ascending)]
-    [InlineData("test-1", 0, 100, "User.Email", OrderType.Ascending)]
+    [InlineData("test-1", 0, 10, "UserId", OrderType.Ascending)]
+    [InlineData("test-2", 10, 10, "UserId", OrderType.Ascending)]
+    [InlineData("test-11", 10, 20, "UserId", OrderType.Ascending)]
+    [InlineData("test-1", 0, 100, "UserId", OrderType.Ascending)]
     public async Task SearchAsync_WithEqualSpecification_WhenProfilesExists_ShouldReturnNothing(string search, int start, int take, string fieldName, OrderType orderType)
     {
         //Arrange
         var random = new Random();
-        var profilesList = new List<ProfileModel>();
-        var searchUserId = new Guid().ToString();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            var userId = i == 0
-                ? searchUserId
-                : new Guid().ToString();
-            var user = new ApplicationUser
-            {
-                Id = userId,
-                FirstName = "Test fn",
-                LastName = "Test ln",
-                Email = "test@test.test",
-                UserName = "test@test.test"
-            };
-            profilesList.Add(new ProfileModel
-            {
-                Id = i,
-                UserId = userId,
-                User = user,
-                ProfileImg = $"img{i}.jpg"
-            });
-        }
+        var profilesList =
+            SetupProfileFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var query = new SearchQuery<ProfileModel>
         {
@@ -2367,10 +2281,7 @@ public class ProfileServiceTests
         query.AddFilter(x => x.User.Email.ToUpper().Contains($"{search}".ToUpper()));
 
         _profileRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, profilesList);
-            });
+            .ReturnsAsync(() => Search(query, profilesList));
 
         //Act
         var posts = await _profileService.SearchAsync(query);
@@ -2414,7 +2325,7 @@ public class ProfileServiceTests
         var posts = await _profileService.SearchAsync(query);
 
         //Assert
-        Assert.Empty(posts.Entities);
+        Assert.Null(posts.Entities);
     }
 
     #endregion
