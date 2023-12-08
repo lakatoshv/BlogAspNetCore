@@ -2395,8 +2395,6 @@ public class TagsServiceTests
     /// Search async tags with specification.
     /// Should return nothing with  when tags does not exists.
     /// </summary>
-    /// <param name="equalCount">The equal count.</param>
-    /// <param name="commentBodySearch">The CommentBody search.</param>
     [Theory]
     [InlineData("Tag -0", 0, 10, "Title", OrderType.Ascending)]
     [InlineData("Tag -1", 10, 10, "Title", OrderType.Ascending)]

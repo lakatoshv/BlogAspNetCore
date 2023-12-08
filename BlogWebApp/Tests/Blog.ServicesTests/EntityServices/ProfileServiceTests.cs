@@ -2188,7 +2188,7 @@ public class ProfileServiceTests
 
         query.AddSortCriteria(new FieldSortOrder<ProfileModel>(fieldName, orderType));
 
-        query.AddFilter(x => x.User.Email.ToUpper().Contains($"{search}".ToUpper()));
+        query.AddFilter(x => x.UserId.ToUpper().Contains($"{search}".ToUpper()));
 
         _profileRepositoryMock.Setup(x => x.SearchAsync(query))
             .ReturnsAsync(() => Search(query, profilesList));

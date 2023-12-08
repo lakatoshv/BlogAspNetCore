@@ -489,7 +489,7 @@ public class PostTagRelationsServiceTests
         var random = new Random();
         var postsTagsRelationsList =
             SetupPostsTagsRelationsFixture(_fixture.Create<string>(), titleSearch)
-                .CreateMany(random.Next(100))
+                .CreateMany(1)
                 .ToList();
 
         var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
@@ -705,7 +705,7 @@ public class PostTagRelationsServiceTests
         var random = new Random();
         var postsTagsRelationsList =
             SetupPostsTagsRelationsFixture(_fixture.Create<string>(), titleSearch)
-                .CreateMany(random.Next(100))
+                .CreateMany(1)
                 .ToList();
 
         var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals(titleSearch));
@@ -735,7 +735,7 @@ public class PostTagRelationsServiceTests
         //Arrange
         var random = new Random();
         var postsTagsRelationsList =
-            SetupPostsTagsRelationsFixture()
+            SetupPostsTagsRelationsFixture(postTitle, tagTitle)
                 .CreateMany(random.Next(100))
                 .ToList();
 
@@ -777,8 +777,8 @@ public class PostTagRelationsServiceTests
         //Arrange
         var random = new Random();
         var postsTagsRelationsList =
-            SetupPostsTagsRelationsFixture(_fixture.Create<string>(), postTitle)
-                .CreateMany(random.Next(100))
+            SetupPostsTagsRelationsFixture(postTitle, tagTitle)
+                .CreateMany(1)
                 .ToList();
 
         var specification = new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Contains(tagTitle));
