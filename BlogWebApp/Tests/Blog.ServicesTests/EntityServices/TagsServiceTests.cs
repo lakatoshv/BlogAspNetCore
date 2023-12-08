@@ -2282,16 +2282,11 @@ public class TagsServiceTests
     {
         //Arrange
         var random = new Random();
-        var tagsList = new List<Tag>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            tagsList.Add(new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}",
-            });
-        }
+        var tagsList =
+            SetupTagFixture()
+                .With(x => x.Title, search)
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var query = new SearchQuery<Tag>
         {
@@ -2304,10 +2299,7 @@ public class TagsServiceTests
         query.AddFilter(x => x.Title.ToUpper().Contains($"{search}".ToUpper()));
 
         _tagsRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, tagsList);
-            });
+            .ReturnsAsync(() => Search(query, tagsList));
 
         //Act
         await _tagsService.SearchAsync(query);
@@ -2320,7 +2312,6 @@ public class TagsServiceTests
     /// Search async tags.
     /// Should return tags when tags exists.
     /// </summary>
-    /// <param name="notEqualCount">The not equal count.</param>
     [Theory]
     [InlineData("Tag ", 0, 10, "Title", OrderType.Ascending)]
     [InlineData("Tag ", 10, 10, "Title", OrderType.Ascending)]
@@ -2330,16 +2321,12 @@ public class TagsServiceTests
     {
         //Arrange
         var random = new Random();
-        var tagsList = new List<Tag>();
+        var tagsList =
+            SetupTagFixture()
+                .With(x => x.Title, search)
+                .CreateMany(random.Next(100))
+                .ToList();
 
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            tagsList.Add(new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}",
-            });
-        }
 
         var query = new SearchQuery<Tag>
         {
@@ -2352,10 +2339,7 @@ public class TagsServiceTests
         query.AddFilter(x => x.Title.ToUpper().Contains($"{search}".ToUpper()));
 
         _tagsRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, tagsList);
-            });
+            .ReturnsAsync(() => Search(query, tagsList));
 
         //Act
         var tags = await _tagsService.SearchAsync(query);
@@ -2369,8 +2353,6 @@ public class TagsServiceTests
     /// Search async tags with specification.
     /// Should return tag with equal specification when tags exists.
     /// </summary>
-    /// <param name="equalCount">The equal count.</param>
-    /// <param name="commentBodySearch">The CommentBody search.</param>
     [Theory]
     [InlineData("Tag 0", 0, 10, "Title", OrderType.Ascending)]
     [InlineData("Tag 11", 10, 10, "Title", OrderType.Ascending)]
@@ -2380,16 +2362,12 @@ public class TagsServiceTests
     {
         //Arrange
         var random = new Random();
-        var tagsList = new List<Tag>();
+        var tagsList =
+            SetupTagFixture()
+                .With(x => x.Title, search)
+                .CreateMany(start + 1)
+                .ToArray();
 
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            tagsList.Add(new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}",
-            });
-        }
 
         var query = new SearchQuery<Tag>
         {
@@ -2402,10 +2380,7 @@ public class TagsServiceTests
         query.AddFilter(x => x.Title.ToUpper().Contains($"{search}".ToUpper()));
 
         _tagsRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, tagsList);
-            });
+            .ReturnsAsync(() => Search(query, tagsList.ToList()));
 
         //Act
         var tags = await _tagsService.SearchAsync(query);
@@ -2431,16 +2406,10 @@ public class TagsServiceTests
     {
         //Arrange
         var random = new Random();
-        var tagsList = new List<Tag>();
-
-        for (var i = 0; i < random.Next(100); i++)
-        {
-            tagsList.Add(new Tag
-            {
-                Id = i,
-                Title = $"Tag {i}",
-            });
-        }
+        var tagsList =
+            SetupTagFixture()
+                .CreateMany(random.Next(100))
+                .ToList();
 
         var query = new SearchQuery<Tag>
         {
@@ -2453,10 +2422,7 @@ public class TagsServiceTests
         query.AddFilter(x => x.Title.ToUpper().Contains($"{search}".ToUpper()));
 
         _tagsRepositoryMock.Setup(x => x.SearchAsync(query))
-            .ReturnsAsync(() =>
-            {
-                return Search(query, tagsList);
-            });
+            .ReturnsAsync(() => Search(query, tagsList));
 
         //Act
         var tags = await _tagsService.SearchAsync(query);
@@ -2495,7 +2461,7 @@ public class TagsServiceTests
         var tags = await _tagsService.SearchAsync(query);
 
         //Assert
-        Assert.Empty(tags.Entities);
+        Assert.Null(tags.Entities);
     }
 
     #endregion
