@@ -1,4 +1,8 @@
-﻿using AutoFixture;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoFixture;
 using AutoFixture.Dsl;
 using Blog.Core.Enums;
 using Blog.Core.Infrastructure;
@@ -10,10 +14,6 @@ using Blog.EntityServices;
 using Blog.EntityServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -2981,9 +2981,63 @@ public class PostTagRelationsServiceTests
 
     #endregion
 
-    #region NotTestedYet
-    //GenerateQuery(TableFilter tableFilter, string includeProperties = null)
-    //GetMemberName<T, TValue>(Expression<Func<T, TValue>> memberAccess)
+    #region SearchBySequenceAsync function
+
+    /// <summary>
+    /// Search by sequence async.
+    /// When no entities exist should return empty result.
+    /// </summary>
+    [Fact]
+    public async Task SearchBySequenceAsync_WhenNoEntitiesExist_ShouldReturnEmpty()
+    {
+        var data = new List<PostsTagsRelations>().AsQueryable();
+        var query = new SearchQuery<PostsTagsRelations> { Skip = 0, Take = 5 };
+        var expected = new PagedListResult<PostsTagsRelations> { Entities = new List<PostsTagsRelations>(), Count = 0 };
+
+        _postsTagsRelationsRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, data)).ReturnsAsync(expected);
+
+        var result = await _postsTagsRelationsService.SearchBySequenceAsync(query, data);
+
+        Assert.NotNull(result);
+        Assert.Empty(result.Entities);
+    }
+
+    /// <summary>
+    /// Search by sequence async.
+    /// When entities exist and query is null should return paged list.
+    /// </summary>
+    [Fact]
+    public async Task SearchBySequenceAsync_WhenEntitiesExistAndQueryIsNull_ShouldReturnPagedList()
+    {
+        var data = SetupPostsTagsRelationsFixture().CreateMany(5).AsQueryable();
+        var expected = new PagedListResult<PostsTagsRelations> { Entities = data.ToList(), Count = 5 };
+
+        _postsTagsRelationsRepositoryMock.Setup(r => r.SearchBySquenceAsync(null, data)).ReturnsAsync(expected);
+
+        var result = await _postsTagsRelationsService.SearchBySequenceAsync(null, data);
+
+        Assert.NotNull(result);
+        Assert.Equal(5, result.Entities.Count());
+    }
+
+    /// <summary>
+    /// Search by sequence async.
+    /// When entities exist and sequence is null should return paged list.
+    /// </summary>
+    [Fact]
+    public async Task SearchBySequenceAsync_WhenEntitiesExistAndSequenceIsNullIsNull_ShouldReturnPagedList()
+    {
+        var query = new SearchQuery<PostsTagsRelations> { Skip = 0, Take = 5 };
+        var expected = new PagedListResult<PostsTagsRelations> { Entities = null, Count = 5 };
+
+        _postsTagsRelationsRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, null)).ReturnsAsync(expected);
+
+        var result = await _postsTagsRelationsService.SearchBySequenceAsync(query, null);
+
+        Assert.NotNull(result);
+        Assert.Null(result.Entities);
+    }
+
     #endregion
 
     #endregion
