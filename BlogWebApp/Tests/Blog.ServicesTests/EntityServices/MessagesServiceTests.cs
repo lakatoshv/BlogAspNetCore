@@ -7,6 +7,7 @@ using AutoFixture.Dsl;
 using Blog.Core.Enums;
 using Blog.Core.Infrastructure;
 using Blog.Core.Infrastructure.Pagination;
+using Blog.Core.TableFilters;
 using Blog.Data.Models;
 using Blog.Data.Repository;
 using Blog.Data.Specifications;
@@ -2563,6 +2564,63 @@ public class MessagesServiceTests
 
         Assert.NotNull(result);
         Assert.Null(result.Entities);
+    }
+
+    #endregion
+
+    #region GenerateQuery
+
+    /// <summary>
+    /// GenerateQuery.
+    /// When called should return search query.
+    /// </summary>
+    [Fact]
+    public void GenerateQuery_WhenCalled_ShouldReturnSearchQuery()
+    {
+        var tableFilter = new TableFilter();
+        var expected = new SearchQuery<Message>();
+
+        _messagesRepositoryMock.Setup(r => r.GenerateQuery(tableFilter, null)).Returns(expected);
+
+        var result = _messagesService.GenerateQuery(tableFilter);
+
+        Assert.NotNull(result);
+        Assert.Equal(expected, result);
+    }
+
+    /// <summary>
+    /// GenerateQuery.
+    /// When include properties provided should return search query.
+    /// </summary>
+    [Fact]
+    public void GenerateQuery_WhenIncludePropertiesProvided_ShouldReturnSearchQuery()
+    {
+        var tableFilter = new TableFilter();
+        var expected = new SearchQuery<Message>();
+
+        _messagesRepositoryMock.Setup(r => r.GenerateQuery(tableFilter, "SenderId")).Returns(expected);
+
+        var result = _messagesService.GenerateQuery(tableFilter, "SenderId");
+
+        Assert.NotNull(result);
+        Assert.Equal(expected, result);
+    }
+
+    /// <summary>
+    /// GenerateQuery.
+    /// When called and table filter is null should return null result.
+    /// </summary>
+    [Fact]
+    public void GenerateQuery_WhenCalledAndTableFilterIsNull_ShouldReturnNullResult()
+    {
+        var tableFilter = new TableFilter();
+        var expected = new SearchQuery<Message>();
+
+        _messagesRepositoryMock.Setup(r => r.GenerateQuery(tableFilter, null)).Returns(expected);
+
+        var result = _messagesService.GenerateQuery(null);
+
+        Assert.Null(result);
     }
 
     #endregion
