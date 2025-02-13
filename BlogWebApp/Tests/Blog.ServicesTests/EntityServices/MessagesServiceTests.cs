@@ -174,6 +174,21 @@ public class MessagesServiceTests
         Assert.Empty(messages);
     }
 
+    /// <summary>
+    /// Get all messages.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void GetAll_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        _messagesRepositoryMock.Setup(x => x.GetAll())
+            .Throws(() => new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _messagesService.GetAll());
+    }
+
     #endregion
 
     #region Get All Async function
