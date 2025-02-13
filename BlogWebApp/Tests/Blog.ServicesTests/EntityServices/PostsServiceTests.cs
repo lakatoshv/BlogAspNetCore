@@ -192,6 +192,21 @@ public class PostsServiceTests
         Assert.Empty(posts);
     }
 
+    /// <summary>
+    /// Get all posts.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void GetAll_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        _postsRepositoryMock.Setup(x => x.GetAll())
+            .Throws(() => new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsService.GetAll());
+    }
+
     #endregion
 
     #region Get All Async function
