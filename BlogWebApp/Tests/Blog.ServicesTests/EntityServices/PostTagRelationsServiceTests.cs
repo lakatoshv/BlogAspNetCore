@@ -270,6 +270,21 @@ public class PostTagRelationsServiceTests
         Assert.Empty(postsTagsRelations);
     }
 
+    /// <summary>
+    /// Get all post tag relations.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void GetAll_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll())
+            .Throws(() => new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsTagsRelationsService.GetAll());
+    }
+
     #endregion
 
     #region Get All Async function
