@@ -156,6 +156,21 @@ public class ProfileServiceTests
         Assert.Empty(profiles);
     }
 
+    /// <summary>
+    /// Get all profiles.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void GetAll_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        _profileRepositoryMock.Setup(x => x.GetAll())
+            .Throws(() => new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _profileService.GetAll());
+    }
+
     #endregion
 
     #region Get All Async function
