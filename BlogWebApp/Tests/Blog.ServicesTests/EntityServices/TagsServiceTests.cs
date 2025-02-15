@@ -146,6 +146,7 @@ public class TagsServiceTests
         Assert.Empty(tags);
     }
 
+    /// <summary>
     #endregion
 
     #region Get All Async function
