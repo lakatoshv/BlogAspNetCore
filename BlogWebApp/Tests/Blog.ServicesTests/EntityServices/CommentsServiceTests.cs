@@ -254,6 +254,21 @@ public class CommentsServiceTests
         Assert.Empty(comments);
     }
 
+    /// <summary>
+    /// Get all async comments.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task GetAllAsync_WhenRepositoryExceptionIsThrown_ShouldThrowException()
+    {
+        //Arrange
+        _commentsRepositoryMock.Setup(x => x.GetAllAsync())
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _commentsService.GetAllAsync());
+    }
+
     #endregion
 
     #region Get all function With Specification
