@@ -262,6 +262,21 @@ public class MessagesServiceTests
         Assert.Empty(messages);
     }
 
+    /// <summary>
+    /// Get all async messages.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task GetAllAsync_WhenRepositoryExceptionIsThrown_ShouldThrowException()
+    {
+        //Arrange
+        _messagesRepositoryMock.Setup(x => x.GetAllAsync())
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _messagesService.GetAllAsync());
+    }
+
     #endregion
 
     #region Get all function With Specification
