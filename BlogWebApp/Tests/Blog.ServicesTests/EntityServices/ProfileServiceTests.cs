@@ -244,6 +244,21 @@ public class ProfileServiceTests
         Assert.Empty(profiles);
     }
 
+    /// <summary>
+    /// Get all async profiles.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task GetAllAsync_WhenRepositoryExceptionIsThrown_ShouldThrowException()
+    {
+        //Arrange
+        _profileRepositoryMock.Setup(x => x.GetAllAsync())
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _profileService.GetAllAsync());
+    }
+
     #endregion
 
     #region Get all function With Specification
