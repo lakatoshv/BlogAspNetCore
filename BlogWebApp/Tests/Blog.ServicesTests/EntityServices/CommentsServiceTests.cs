@@ -408,6 +408,79 @@ public class CommentsServiceTests
         Assert.Empty(comments);
     }
 
+    /// <summary>
+    /// Get all comments with specification.
+    /// Should return comments when specification is empty.
+    /// </summary>
+    [Theory]
+    [InlineData(0, "Comment ")]
+    public void GetAll_WithContainsSpecification_WhenSpecificationIsEmpty_ShouldReturnComments(int notEqualCount, string commentBodySearch)
+    {
+        //Arrange
+        var random = new Random();
+        var commentsList =
+            SetupCommentFixture(commentBodySearch)
+                .With(x => x.CommentBody, commentBodySearch)
+                .CreateMany(random.Next(100));
+
+        var specification = new CommentSpecification();
+        _commentsRepositoryMock.Setup(x => x.GetAll(It.IsAny<CommentSpecification>()))
+            .Returns(() => commentsList.Where(x => x.CommentBody.Contains(commentBodySearch)).AsQueryable());
+
+        //Act
+        var comments = _commentsService.GetAll(specification);
+
+        //Assert
+        Assert.NotNull(comments);
+        Assert.NotEmpty(comments);
+        Assert.NotEqual(notEqualCount, comments.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all comments with specification.
+    /// Should return comments when specification is null.
+    /// </summary>
+    [Theory]
+    [InlineData(0, "Comment ")]
+    public void GetAll_WithContainsSpecification_WhenSpecificationIsNull_ShouldReturnComments(int notEqualCount, string commentBodySearch)
+    {
+        //Arrange
+        var random = new Random();
+        var commentsList =
+            SetupCommentFixture(commentBodySearch)
+                .With(x => x.CommentBody, commentBodySearch)
+                .CreateMany(random.Next(100));
+
+        CommentSpecification specification = null;
+        _commentsRepositoryMock.Setup(x => x.GetAll(It.IsAny<CommentSpecification>()))
+            .Returns(() => commentsList.Where(x => x.CommentBody.Contains(commentBodySearch)).AsQueryable());
+
+        //Act
+        var comments = _commentsService.GetAll(specification);
+
+        //Assert
+        Assert.NotNull(comments);
+        Assert.NotEmpty(comments);
+        Assert.NotEqual(notEqualCount, comments.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all comments with specification.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Theory]
+    [InlineData("Comment 0")]
+    public void GetAll_WithEqualsSpecification_WhenRepositoryThrowsException_ShouldThrowException(string search)
+    {
+        //Arrange
+        var specification = new CommentSpecification(x => x.CommentBody.Equals(search));
+        _commentsRepositoryMock.Setup(x => x.GetAll(It.IsAny<CommentSpecification>()))
+            .Throws(() => new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _commentsService.GetAll(specification));
+    }
+
     #endregion
 
     #region Get all async function With Specification
