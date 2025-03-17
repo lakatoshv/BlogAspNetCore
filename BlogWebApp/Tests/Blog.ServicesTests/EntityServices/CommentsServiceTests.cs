@@ -623,6 +623,79 @@ public class CommentsServiceTests
         Assert.Equal(0, comments.ToList().Count);
     }
 
+    /// <summary>
+    /// Get all comments Async with specification.
+    /// Should return comments when specification is empty.
+    /// </summary>
+    [Theory]
+    [InlineData(0, "Comment ")]
+    public async Task GetAllAsync_WithContainsSpecification_WhenSpecificationIsEmpty_ShouldReturnComments(int notEqualCount, string commentBodySearch)
+    {
+        //Arrange
+        var random = new Random();
+        var commentsList =
+            SetupCommentFixture(commentBodySearch)
+                .With(x => x.CommentBody, commentBodySearch)
+                .CreateMany(random.Next(100));
+
+        var specification = new CommentSpecification();
+        _commentsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<CommentSpecification>()))
+            .ReturnsAsync(() => commentsList.Where(x => x.CommentBody.Contains(commentBodySearch)).ToList());
+
+        //Act
+        var comments = await _commentsService.GetAllAsync(specification);
+
+        //Assert
+        Assert.NotNull(comments);
+        Assert.NotEmpty(comments);
+        Assert.NotEqual(notEqualCount, comments.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all comments Async with specification.
+    /// Should return comments when specification is null.
+    /// </summary>
+    [Theory]
+    [InlineData(0, "Comment ")]
+    public async Task GetAllAsync_WithContainsSpecification_WhenSpecificationIsNull_ShouldReturnComments(int notEqualCount, string commentBodySearch)
+    {
+        //Arrange
+        var random = new Random();
+        var commentsList =
+            SetupCommentFixture(commentBodySearch)
+                .With(x => x.CommentBody, commentBodySearch)
+                .CreateMany(random.Next(100));
+
+        CommentSpecification specification = null;
+        _commentsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<CommentSpecification>()))
+            .ReturnsAsync(() => commentsList.Where(x => x.CommentBody.Contains(commentBodySearch)).ToList());
+
+        //Act
+        var comments = await _commentsService.GetAllAsync(specification);
+
+        //Assert
+        Assert.NotNull(comments);
+        Assert.NotEmpty(comments);
+        Assert.NotEqual(notEqualCount, comments.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all comments Async with specification.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Theory]
+    [InlineData("Comment 0")]
+    public async Task GetAllAsync_WhenRepositoryThrowsException_ShouldThrowException(string search)
+    {
+        //Arrange
+        var specification = new CommentSpecification(x => x.CommentBody.Equals(search));
+        _commentsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<CommentSpecification>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _commentsService.GetAllAsync(specification));
+    }
+
     #endregion
 
     #endregion
