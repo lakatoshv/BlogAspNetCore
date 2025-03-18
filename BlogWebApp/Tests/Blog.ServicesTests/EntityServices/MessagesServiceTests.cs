@@ -630,6 +630,79 @@ public class MessagesServiceTests
         Assert.Null(messages);
     }
 
+    /// <summary>
+    /// Get all Async messages with specification.
+    /// Should return messages when specification is empty.
+    /// </summary>
+    [Theory]
+    [InlineData(0, "message ")]
+    public async Task GetAllAsync_WithContainsSpecification_WhenSpecificationIsEmpty_ShouldReturnMessages(int notEqualCount, string messageBodySearch)
+    {
+        //Arrange
+        var random = new Random();
+        var messagesList =
+            SetupMessageFixture()
+                .With(x => x.Body, messageBodySearch)
+                .CreateMany(random.Next(100));
+
+        var specification = new MessageSpecification();
+        _messagesRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<MessageSpecification>()))
+            .ReturnsAsync(() => messagesList.Where(x => x.Body.Contains(messageBodySearch)).ToList());
+
+        //Act
+        var messages = await _messagesService.GetAllAsync(specification);
+
+        //Assert
+        Assert.NotNull(messages);
+        Assert.NotEmpty(messages);
+        Assert.NotEqual(notEqualCount, messages.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all async messages with specification.
+    /// Should return messages when specification is null.
+    /// </summary>
+    [Theory]
+    [InlineData(0, "message ")]
+    public async Task GetAllAsync_WithContainsSpecification_WhenSpecificationIsNull_ShouldReturnMessages(int notEqualCount, string messageBodySearch)
+    {
+        //Arrange
+        var random = new Random();
+        var messagesList =
+            SetupMessageFixture(messageBodySearch)
+                .With(x => x.Body, messageBodySearch)
+                .CreateMany(random.Next(100));
+
+        MessageSpecification specification = null;
+        _messagesRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<MessageSpecification>()))
+            .ReturnsAsync(() => messagesList.Where(x => x.Body.Contains(messageBodySearch)).ToList());
+
+        //Act
+        var messages = await _messagesService.GetAllAsync(specification);
+
+        //Assert
+        Assert.NotNull(messages);
+        Assert.NotEmpty(messages);
+        Assert.NotEqual(notEqualCount, messages.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all Async messages with specification.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Theory]
+    [InlineData("message 0")]
+    public async Task GetAllAsync_WithEqualsSpecification_WhenRepositoryThrowsException_ShouldThrowException(string search)
+    {
+        //Arrange
+        var specification = new MessageSpecification(x => x.Body.Equals(search));
+        _messagesRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<MessageSpecification>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _messagesService.GetAllAsync(specification));
+    }
+
     #endregion
 
     #endregion
