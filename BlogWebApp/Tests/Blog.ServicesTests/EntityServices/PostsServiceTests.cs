@@ -436,6 +436,79 @@ public class PostsServiceTests
         Assert.Empty(posts);
     }
 
+    /// <summary>
+    /// Get all posts with specification.
+    /// Should return messages when specification is empty.
+    /// </summary>
+    [Theory]
+    [InlineData(0, "title ")]
+    public void GetAll_WithContainsSpecification_WhenSpecificationIsEmpty_ShouldReturnPosts(int notEqualCount, string postTitleSearch)
+    {
+        //Arrange
+        var random = new Random();
+        var postsList =
+            SetupPostFixture(postTitleSearch)
+                .With(x => x.Title, postTitleSearch)
+                .CreateMany(random.Next(100));
+
+        var specification = new PostSpecification();
+        _postsRepositoryMock.Setup(x => x.GetAll(It.IsAny<PostSpecification>()))
+            .Returns(() => postsList.Where(x => x.Title.Contains(postTitleSearch)).AsQueryable());
+
+        //Act
+        var posts = _postsService.GetAll(specification);
+
+        //Assert
+        Assert.NotNull(posts);
+        Assert.NotEmpty(posts);
+        Assert.NotEqual(notEqualCount, posts.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all posts with specification.
+    /// Should return posts when specification is null.
+    /// </summary>
+    [Theory]
+    [InlineData(0, "title ")]
+    public void GetAll_WithContainsSpecification_WhenSpecificationIsNull_ShouldReturnPosts(int notEqualCount, string postTitleSearch)
+    {
+        //Arrange
+        var random = new Random();
+        var postsList =
+            SetupPostFixture(postTitleSearch)
+                .With(x => x.Title, postTitleSearch)
+                .CreateMany(random.Next(100));
+
+        PostSpecification specification = null;
+        _postsRepositoryMock.Setup(x => x.GetAll(It.IsAny<PostSpecification>()))
+            .Returns(() => postsList.Where(x => x.Title.Contains(postTitleSearch)).AsQueryable());
+
+        //Act
+        var posts = _postsService.GetAll(specification);
+
+        //Assert
+        Assert.NotNull(posts);
+        Assert.NotEmpty(posts);
+        Assert.NotEqual(notEqualCount, posts.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all posts with specification.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Theory]
+    [InlineData("message 0")]
+    public void GetAll_WithEqualsSpecification_WhenRepositoryThrowsException_ShouldThrowException(string search)
+    {
+        //Arrange
+        var specification = new PostSpecification(x => x.Title.Equals(search));
+        _postsRepositoryMock.Setup(x => x.GetAll(It.IsAny<PostSpecification>()))
+            .Throws(() => new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsService.GetAll(specification));
+    }
+
     #endregion
 
     #region Get all async function With Specification
