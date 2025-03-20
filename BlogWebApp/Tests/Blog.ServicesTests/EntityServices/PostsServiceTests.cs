@@ -654,6 +654,79 @@ public class PostsServiceTests
         Assert.Null(posts);
     }
 
+    /// <summary>
+    /// Get all Async posts with specification.
+    /// Should return messages when specification is empty.
+    /// </summary>
+    [Theory]
+    [InlineData(0, "title ")]
+    public async Task GetAllAsync_WithContainsSpecification_WhenSpecificationIsEmpty_ShouldReturnPosts(int notEqualCount, string postTitleSearch)
+    {
+        //Arrange
+        var random = new Random();
+        var postsList =
+            SetupPostFixture(postTitleSearch)
+                .With(x => x.Title, postTitleSearch)
+                .CreateMany(random.Next(100));
+
+        var specification = new PostSpecification();
+        _postsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<PostSpecification>()))
+            .Returns(() => postsList.Where(x => x.Title.Contains(postTitleSearch)).AsQueryable());
+
+        //Act
+        var posts = await _postsService.GetAllAsync(specification);
+
+        //Assert
+        Assert.NotNull(posts);
+        Assert.NotEmpty(posts);
+        Assert.NotEqual(notEqualCount, posts.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all Async posts with specification.
+    /// Should return posts when specification is null.
+    /// </summary>
+    [Theory]
+    [InlineData(0, "title ")]
+    public async Task GetAllAsync_WithContainsSpecification_WhenSpecificationIsNull_ShouldReturnPosts(int notEqualCount, string postTitleSearch)
+    {
+        //Arrange
+        var random = new Random();
+        var postsList =
+            SetupPostFixture(postTitleSearch)
+                .With(x => x.Title, postTitleSearch)
+                .CreateMany(random.Next(100));
+
+        PostSpecification specification = null;
+        _postsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<PostSpecification>()))
+            .ReturnsAsync(() => postsList.Where(x => x.Title.Contains(postTitleSearch)).ToList());
+
+        //Act
+        var posts = await _postsService.GetAllAsync(specification);
+
+        //Assert
+        Assert.NotNull(posts);
+        Assert.NotEmpty(posts);
+        Assert.NotEqual(notEqualCount, posts.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all Async posts with specification.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Theory]
+    [InlineData("message 0")]
+    public async Task GetAllAsync_WithEqualsSpecification_WhenRepositoryThrowsException_ShouldThrowException(string search)
+    {
+        //Arrange
+        var specification = new PostSpecification(x => x.Title.Equals(search));
+        _postsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<PostSpecification>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsService.GetAllAsync(specification));
+    }
+
     #endregion
 
     #endregion
