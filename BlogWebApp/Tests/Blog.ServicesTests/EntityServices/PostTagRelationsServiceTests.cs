@@ -662,6 +662,78 @@ public class PostTagRelationsServiceTests
     }
 
     /// <summary>
+    /// Get all post tag relations with specification.
+    /// Should return post tag relations when specification is empty.
+    /// </summary>
+    [Theory]
+    [InlineData(0, 1)]
+    public void GetAll_WithContainsSpecification_WhenSpecificationIsEmpty_ShouldReturnPostTagRelations(int notEqualCount, int postIdSearch)
+    {
+        //Arrange
+        var random = new Random();
+        var postTagsRelationsList =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.PostId, postIdSearch)
+                .CreateMany(random.Next(100));
+
+        var specification = new BaseSpecification<PostsTagsRelations>();
+        _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll(It.IsAny<BaseSpecification<PostsTagsRelations>>()))
+            .Returns(() => postTagsRelationsList.Where(x => x.PostId == postIdSearch).AsQueryable());
+
+        //Act
+        var postsTagsRelations = _postsTagsRelationsService.GetAll(specification);
+
+        //Assert
+        Assert.NotNull(postsTagsRelations);
+        Assert.NotEmpty(postsTagsRelations);
+        Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all post tag relations with specification.
+    /// Should return post tag relations when specification is null.
+    /// </summary>
+    [Theory]
+    [InlineData(0, 1)]
+    public void GetAll_WithContainsSpecification_WhenSpecificationIsNull_ShouldReturnPostTagRelations(int notEqualCount, int postIdSearch)
+    {
+        //Arrange
+        var random = new Random();
+        var postTagRelationsList =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.PostId, postIdSearch)
+                .CreateMany(random.Next(100));
+
+        BaseSpecification<PostsTagsRelations> specification = null;
+        _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll(It.IsAny<BaseSpecification<PostsTagsRelations>>()))
+            .Returns(() => postTagRelationsList.Where(x => x.PostId == postIdSearch).AsQueryable());
+
+        //Act
+        var postTagRelations = _postsTagsRelationsService.GetAll(specification);
+
+        //Assert
+        Assert.NotNull(postTagRelations);
+        Assert.NotEmpty(postTagRelations);
+        Assert.NotEqual(notEqualCount, postTagRelations.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all post tag relations with specification.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Theory]
+    [InlineData(1)]
+    public void GetAll_WithEqualsSpecification_WhenRepositoryThrowsException_ShouldThrowException(int search)
+    {
+        //Arrange
+        var specification = new BaseSpecification<PostsTagsRelations>(x => x.PostId == search);
+        _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll(It.IsAny<BaseSpecification<PostsTagsRelations>>()))
+            .Throws(() => new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsTagsRelationsService.GetAll(specification));
+    }
+
     #endregion
 
     #region Get all async function With Specification
@@ -876,6 +948,79 @@ public class PostTagRelationsServiceTests
 
         //Assert
         Assert.Null(postsTagsRelations);
+    }
+
+    /// <summary>
+    /// Get all Async post tag relations with specification.
+    /// Should return post tag relations when specification is empty.
+    /// </summary>
+    [Theory]
+    [InlineData(0, 1)]
+    public async Task GetAllAsync_WithContainsSpecification_WhenSpecificationIsEmpty_ShouldReturnPostTagRelations(int notEqualCount, int postIdSearch)
+    {
+        //Arrange
+        var random = new Random();
+        var postTagsRelationsList =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.PostId, postIdSearch)
+                .CreateMany(random.Next(100));
+
+        var specification = new BaseSpecification<PostsTagsRelations>();
+        _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<BaseSpecification<PostsTagsRelations>>()))
+            .ReturnsAsync(() => postTagsRelationsList.Where(x => x.PostId == postIdSearch).ToList());
+
+        //Act
+        var postsTagsRelations = await _postsTagsRelationsService.GetAllAsync(specification);
+
+        //Assert
+        Assert.NotNull(postsTagsRelations);
+        Assert.NotEmpty(postsTagsRelations);
+        Assert.NotEqual(notEqualCount, postsTagsRelations.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all Async post tag relations with specification.
+    /// Should return post tag relations when specification is null.
+    /// </summary>
+    [Theory]
+    [InlineData(0, 1)]
+    public async Task GetAllAsync_WithContainsSpecification_WhenSpecificationIsNull_ShouldReturnPostTagRelations(int notEqualCount, int postIdSearch)
+    {
+        //Arrange
+        var random = new Random();
+        var messagesList =
+            SetupPostsTagsRelationsFixture()
+                .With(x => x.PostId, postIdSearch)
+                .CreateMany(random.Next(100));
+
+        BaseSpecification<PostsTagsRelations> specification = null;
+        _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<BaseSpecification<PostsTagsRelations>>()))
+            .ReturnsAsync(() => messagesList.Where(x => x.PostId == postIdSearch).ToList());
+
+        //Act
+        var messages = await _postsTagsRelationsService.GetAllAsync(specification);
+
+        //Assert
+        Assert.NotNull(messages);
+        Assert.NotEmpty(messages);
+        Assert.NotEqual(notEqualCount, messages.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all Async post tag relations with specification.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Theory]
+    [InlineData(1)]
+    public async Task GetAllAsync_WithEqualsSpecification_WhenRepositoryThrowsException_ShouldThrowException(int search)
+    {
+        //Arrange
+        var specification = new BaseSpecification<PostsTagsRelations>(x => x.PostId == search);
+        _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<BaseSpecification<PostsTagsRelations>>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsTagsRelationsService.GetAllAsync(specification));
     }
 
     #endregion
