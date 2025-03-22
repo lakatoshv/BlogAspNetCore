@@ -563,6 +563,80 @@ public class ProfileServiceTests
         Assert.Null(messages);
     }
 
+    /// <summary>
+    /// Get all Async profiles with specification.
+    /// Should return profiles when specification is empty.
+    /// </summary>
+    [Theory]
+    [InlineData(0)]
+    public async Task GetAllAsync_WithContainsSpecification_WhenSpecificationIsEmpty_ShouldReturnProfiles(int notEqualCount)
+    {
+        //Arrange
+        var random = new Random();
+        var searchUserId = string.Empty;
+        var profilesList =
+            SetupProfileFixture()
+                .With(x => x.UserId, searchUserId)
+                .CreateMany(random.Next(100));
+
+        var specification = new ProfileSpecification();
+        _profileRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<ProfileSpecification>()))
+            .ReturnsAsync(() => profilesList.Where(x => x.UserId.Contains(searchUserId)).ToList());
+
+        //Act
+        var profiles = await _profileService.GetAllAsync(specification);
+
+        //Assert
+        Assert.NotNull(profiles);
+        Assert.NotEmpty(profiles);
+        Assert.NotEqual(notEqualCount, profiles.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all Async profiles with specification.
+    /// Should return profiles when specification is null.
+    /// </summary>
+    [Theory]
+    [InlineData(0)]
+    public async Task GetAllAsync_WithContainsSpecification_WhenSpecificationIsNull_ShouldReturnProfiles(int notEqualCount)
+    {
+        //Arrange
+        var random = new Random();
+        string searchUserId = null;
+        var profilesList =
+            SetupProfileFixture()
+                .CreateMany(random.Next(100));
+
+        ProfileSpecification specification = null;
+        _profileRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<ProfileSpecification>()))
+            .Returns(() => profilesList.Where(x => x.UserId.Contains(searchUserId)).ToList());
+
+        //Act
+        var profiles = await _profileService.GetAllAsync(specification);
+
+        //Assert
+        Assert.NotNull(profiles);
+        Assert.NotEmpty(profiles);
+        Assert.NotEqual(notEqualCount, profiles.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all Async profiles with specification.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Theory]
+    [InlineData()]
+    public async Task GetAllAsync_WithEqualsSpecification_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var specification = new ProfileSpecification(x => x.UserId.Equals(_fixture.Create<string>()));
+        _profileRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<ProfileSpecification>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _profileService.GetAllAsync(specification));
+    }
+
     #endregion
 
     #endregion
