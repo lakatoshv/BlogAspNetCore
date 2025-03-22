@@ -234,6 +234,21 @@ public class TagsServiceTests
         Assert.Empty(tags);
     }
 
+    /// <summary>
+    /// Get all async tags.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task GetAllAsync_WhenRepositoryExceptionIsThrown_ShouldThrowException()
+    {
+        //Arrange
+        _tagsRepositoryMock.Setup(x => x.GetAllAsync())
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _tagsService.GetAllAsync());
+    }
+
     #endregion
 
     #region Get all function With Specification
