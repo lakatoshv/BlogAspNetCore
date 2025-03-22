@@ -374,6 +374,80 @@ public class ProfileServiceTests
         Assert.Empty(messages);
     }
 
+    /// <summary>
+    /// Get all profiles with specification.
+    /// Should return profiles when specification is empty.
+    /// </summary>
+    [Theory]
+    [InlineData(0)]
+    public void GetAll_WithContainsSpecification_WhenSpecificationIsEmpty_ShouldReturnProfiles(int notEqualCount)
+    {
+        //Arrange
+        var random = new Random();
+        var searchUserId = string.Empty;
+        var profilesList =
+            SetupProfileFixture()
+                .With(x => x.UserId, searchUserId)
+                .CreateMany(random.Next(100));
+
+        var specification = new ProfileSpecification();
+        _profileRepositoryMock.Setup(x => x.GetAll(It.IsAny<ProfileSpecification>()))
+            .Returns(() => profilesList.Where(x => x.UserId.Contains(searchUserId)).AsQueryable());
+
+        //Act
+        var profiles = _profileService.GetAll(specification);
+
+        //Assert
+        Assert.NotNull(profiles);
+        Assert.NotEmpty(profiles);
+        Assert.NotEqual(notEqualCount, profiles.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all profiles with specification.
+    /// Should return profiles when specification is null.
+    /// </summary>
+    [Theory]
+    [InlineData(0)]
+    public void GetAll_WithContainsSpecification_WhenSpecificationIsNull_ShouldReturnProfiles(int notEqualCount)
+    {
+        //Arrange
+        var random = new Random();
+        string searchUserId = null;
+        var profilesList =
+            SetupProfileFixture()
+                .CreateMany(random.Next(100));
+
+        ProfileSpecification specification = null;
+        _profileRepositoryMock.Setup(x => x.GetAll(It.IsAny<ProfileSpecification>()))
+            .Returns(() => profilesList.Where(x => x.UserId.Contains(searchUserId)).AsQueryable());
+
+        //Act
+        var profiles = _profileService.GetAll(specification);
+
+        //Assert
+        Assert.NotNull(profiles);
+        Assert.NotEmpty(profiles);
+        Assert.NotEqual(notEqualCount, profiles.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all profiles with specification.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Theory]
+    [InlineData()]
+    public void GetAll_WithEqualsSpecification_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var specification = new ProfileSpecification(x => x.UserId.Equals(_fixture.Create<string>()));
+        _profileRepositoryMock.Setup(x => x.GetAll(It.IsAny<ProfileSpecification>()))
+            .Throws(() => new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _profileService.GetAll(specification));
+    }
+
     #endregion
 
     #region Get all async function With Specification
