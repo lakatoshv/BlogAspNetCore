@@ -608,6 +608,7 @@ public class TagsServiceTests
         Assert.Null(tags);
     }
 
+    /// <summary>
     #endregion
 
     #endregion
