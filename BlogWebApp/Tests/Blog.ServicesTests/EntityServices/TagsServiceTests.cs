@@ -393,6 +393,79 @@ public class TagsServiceTests
         Assert.Empty(tags);
     }
 
+    /// <summary>
+    /// Get all tags with specification.
+    /// Should return tags when specification is empty.
+    /// </summary>
+    [Theory]
+    [InlineData(0, "Tag ")]
+    public void GetAll_WithContainsSpecification_WhenSpecificationIsEmpty_ShouldReturnTags(int notEqualCount, string tagTitleSearch)
+    {
+        //Arrange
+        var random = new Random();
+        var tagsList =
+            SetupTagFixture(tagTitleSearch)
+                .With(x => x.Title, tagTitleSearch)
+                .CreateMany(random.Next(100));
+
+        var specification = new TagSpecification();
+        _tagsRepositoryMock.Setup(x => x.GetAll(It.IsAny<TagSpecification>()))
+            .Returns(() => tagsList.Where(x => x.Title.Contains(tagTitleSearch)).AsQueryable());
+
+        //Act
+        var tags = _tagsService.GetAll(specification);
+
+        //Assert
+        Assert.NotNull(tags);
+        Assert.NotEmpty(tags);
+        Assert.NotEqual(notEqualCount, tags.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all tags with specification.
+    /// Should return tags when specification is null.
+    /// </summary>
+    [Theory]
+    [InlineData(0, "Tag ")]
+    public void GetAll_WithContainsSpecification_WhenSpecificationIsNull_ShouldReturnTags(int notEqualCount, string tagTitleSearch)
+    {
+        //Arrange
+        var random = new Random();
+        var tagsList =
+            SetupTagFixture(tagTitleSearch)
+                .With(x => x.Title, tagTitleSearch)
+                .CreateMany(random.Next(100));
+
+        TagSpecification specification = null;
+        _tagsRepositoryMock.Setup(x => x.GetAll(It.IsAny<TagSpecification>()))
+            .Returns(() => tagsList.Where(x => x.Title.Contains(tagTitleSearch)).AsQueryable());
+
+        //Act
+        var tags = _tagsService.GetAll(specification);
+
+        //Assert
+        Assert.NotNull(tags);
+        Assert.NotEmpty(tags);
+        Assert.NotEqual(notEqualCount, tags.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all tags with specification.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Theory]
+    [InlineData("Tag 0")]
+    public void GetAll_WithEqualsSpecification_WhenRepositoryThrowsException_ShouldThrowException(string search)
+    {
+        //Arrange
+        var specification = new TagSpecification(x => x.Title.Equals(search));
+        _tagsRepositoryMock.Setup(x => x.GetAll(It.IsAny<TagSpecification>()))
+            .Throws(() => new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _tagsService.GetAll(specification));
+    }
+
     #endregion
 
     #region Get all async function With Specification
