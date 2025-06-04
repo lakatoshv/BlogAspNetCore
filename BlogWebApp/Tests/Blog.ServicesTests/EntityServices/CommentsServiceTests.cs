@@ -761,6 +761,22 @@ public class CommentsServiceTests
         Assert.Null(comment);
     }
 
+    /// <summary>
+    /// Find comment.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Find_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var commentId = _fixture.Create<int>();
+        _commentsRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
+            .Throws(() => new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _commentsService.Find(commentId));
+    }
+
     #endregion
 
     #region Find Async function 
