@@ -843,6 +843,24 @@ public class CommentsServiceTests
         Assert.Null(comment);
     }
 
+    /// <summary>
+    /// Async find comment.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    /// <returns>Task.</returns>
+    [Fact]
+    public async Task FindAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var commentId = _fixture.Create<int>();
+
+        _commentsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _commentsService.FindAsync(commentId));
+    }
+
     #endregion
 
     #endregion
