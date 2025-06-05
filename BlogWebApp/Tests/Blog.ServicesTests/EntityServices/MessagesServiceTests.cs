@@ -857,6 +857,24 @@ public class MessagesServiceTests
         Assert.Null(message);
     }
 
+    /// <summary>
+    /// Async find message.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    /// <returns>Task.</returns>
+    [Fact]
+    public async Task FindAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var messageId = _fixture.Create<int>();
+
+        _messagesRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _messagesService.FindAsync(messageId));
+    }
+
     #endregion
 
     #endregion
