@@ -771,6 +771,22 @@ public class MessagesServiceTests
         Assert.Null(tag);
     }
 
+    /// <summary>
+    /// Find message.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Find_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var messageId = _fixture.Create<int>();
+        _messagesRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
+            .Throws(() => new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _messagesService.Find(messageId));
+    }
+
     #endregion
 
     #region Find Async function 
