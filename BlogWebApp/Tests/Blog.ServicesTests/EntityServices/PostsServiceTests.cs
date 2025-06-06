@@ -880,6 +880,24 @@ public class PostsServiceTests
         Assert.Null(post);
     }
 
+    /// <summary>
+    /// Async find post.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    /// <returns>Task.</returns>
+    [Fact]
+    public async Task FindAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var postId = _fixture.Create<int>();
+
+        _postsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsService.FindAsync(postId));
+    }
+
     #endregion
 
     #endregion
