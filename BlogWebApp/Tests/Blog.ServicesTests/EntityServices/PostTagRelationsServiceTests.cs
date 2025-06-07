@@ -1097,6 +1097,22 @@ public class PostTagRelationsServiceTests
         Assert.Null(postsTagsRelations);
     }
 
+    /// <summary>
+    /// Find post tag relation.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Find_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var postsTagsRelationId = _fixture.Create<int>();
+        _postsTagsRelationsRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
+            .Throws(() => new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsTagsRelationsService.Find(postsTagsRelationId));
+    }
+
     #endregion
 
     #region Find Async function 
