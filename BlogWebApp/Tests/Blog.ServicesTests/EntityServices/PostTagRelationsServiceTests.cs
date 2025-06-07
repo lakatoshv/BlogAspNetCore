@@ -1187,6 +1187,24 @@ public class PostTagRelationsServiceTests
         Assert.Null(postsTagsRelations);
     }
 
+    /// <summary>
+    /// Async find posts tags relation.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    /// <returns>Task.</returns>
+    [Fact]
+    public async Task FindAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var postsTagsRelationId = _fixture.Create<int>();
+
+        _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsTagsRelationsService.FindAsync(postsTagsRelationId));
+    }
+
     #endregion
 
     #endregion
