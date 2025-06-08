@@ -706,6 +706,22 @@ public class ProfileServiceTests
         Assert.Null(profile);
     }
 
+    /// <summary>
+    /// Find profile.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Find_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var profileId = _fixture.Create<int>();
+        _profileRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
+            .Throws(() => new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _profileService.Find(profileId));
+    }
+
     #endregion
 
     #region Find Async function 
