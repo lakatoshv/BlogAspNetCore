@@ -609,6 +609,78 @@ public class TagsServiceTests
     }
 
     /// <summary>
+    /// Get all Async tags with specification.
+    /// Should return tags when specification is empty.
+    /// </summary>
+    [Theory]
+    [InlineData(0, "Tag ")]
+    public async Task GetAllAsync_WithContainsSpecification_WhenSpecificationIsEmpty_ShouldReturnTags(int notEqualCount, string tagTitleSearch)
+    {
+        //Arrange
+        var random = new Random();
+        var tagsList =
+            SetupTagFixture(tagTitleSearch)
+                .With(x => x.Title, tagTitleSearch)
+                .CreateMany(random.Next(100));
+
+        var specification = new TagSpecification();
+        _tagsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<TagSpecification>()))
+            .ReturnsAsync(() => tagsList.Where(x => x.Title.Contains(tagTitleSearch)).ToList());
+
+        //Act
+        var tags = await _tagsService.GetAllAsync(specification);
+
+        //Assert
+        Assert.NotNull(tags);
+        Assert.NotEmpty(tags);
+        Assert.NotEqual(notEqualCount, tags.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all Async tags with specification.
+    /// Should return tags when specification is null.
+    /// </summary>
+    [Theory]
+    [InlineData(0, "Tag ")]
+    public async Task GetAllAsync_WithContainsSpecification_WhenSpecificationIsNull_ShouldReturnTags(int notEqualCount, string tagTitleSearch)
+    {
+        //Arrange
+        var random = new Random();
+        var tagsList =
+            SetupTagFixture(tagTitleSearch)
+                .With(x => x.Title, tagTitleSearch)
+                .CreateMany(random.Next(100));
+
+        TagSpecification specification = null;
+        _tagsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<TagSpecification>()))
+            .ReturnsAsync(() => tagsList.Where(x => x.Title.Contains(tagTitleSearch)).ToList());
+
+        //Act
+        var tags = await _tagsService.GetAllAsync(specification);
+
+        //Assert
+        Assert.NotNull(tags);
+        Assert.NotEmpty(tags);
+        Assert.NotEqual(notEqualCount, tags.ToList().Count);
+    }
+
+    /// <summary>
+    /// Get all Async tags with specification.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Theory]
+    [InlineData("Tag 0")]
+    public async Task GetAllAsync_WithEqualsSpecification_WhenRepositoryThrowsException_ShouldThrowException(string search)
+    {
+        //Arrange
+        var specification = new TagSpecification(x => x.Title.Equals(search));
+        _tagsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<TagSpecification>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _tagsService.GetAllAsync(specification));
+    }
+
     #endregion
 
     #endregion
@@ -682,6 +754,22 @@ public class TagsServiceTests
 
         //Assert
         Assert.Null(tag);
+    }
+
+    /// <summary>
+    /// Find tag.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Find_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var tagId = _fixture.Create<int>();
+        _tagsRepositoryMock.Setup(x => x.GetById(It.IsAny<int>()))
+            .Throws(() => new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _tagsService.Find(tagId));
     }
 
     #endregion
