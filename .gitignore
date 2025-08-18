@@ -90,3 +90,5 @@
 /Clients/BlogWpf/.vs
 /Clients/BlogWpf/BlogWpf/bin/Debug
 /Clients/BlogWpf/BlogWpf/obj
+/Shared/Blog.FSharp.Core/bin/Debug/net9.0
+/Shared/Blog.FSharp.Core/obj
