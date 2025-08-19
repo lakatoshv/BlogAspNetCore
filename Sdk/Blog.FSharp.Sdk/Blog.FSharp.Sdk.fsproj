@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="V1\ITagsControllerRequestsApi.fs" />
+    <Compile Include="V1\IProfileControllerRequestsApi.fs" />
+    <Compile Include="V1\IPostsControllerRequestsApi.fs" />
+    <Compile Include="V1\IMessagesControllerRequestsApi.fs" />
+    <Compile Include="V1\ICommentsControllerRequestsApi.fs" />
+    <Compile Include="V1\IAccountsControllerRequestsApi.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Refit" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Blog.FSharp.Contracts\Blog.FSharp.Contracts.fsproj" />
+  </ItemGroup>
+</Project>
