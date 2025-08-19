@@ -95,3 +95,5 @@
 /Shared/Blog.FSharp.Contracts/bin/Debug/net9.0
 /Shared/Blog.FSharp.Contracts/obj
 /Sdk/Blog.FSharp.Sdk/obj
+/Sdk/Blog.Sdk.ExampleUsage/bin/Debug/net9.0
+/Sdk/Blog.Sdk/bin/Debug/net9.0
