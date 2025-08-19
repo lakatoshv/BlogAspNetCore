@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<Compile Include="V1\Requests\Interfaces\IRequest.fs" />
+	<Compile Include="V1\Requests\SortParametersRequest.fs" />
+	<Compile Include="V1\Requests\SearchParametersRequest.fs" />
+	<Compile Include="V1\Requests\CategoriesRequests\UpdateCategoryRequest.fs" />
+	<Compile Include="V1\Requests\CategoriesRequests\CreateCategoryRequest.fs" />
+	<Compile Include="V1\Requests\CommentsRequests\UpdateCommentRequest.fs" />
+	<Compile Include="V1\Requests\CommentsRequests\CreateCommentRequest.fs" />
+	<Compile Include="V1\Requests\MessagesRequests\UpdateMessageRequest.fs" />
+	<Compile Include="V1\Requests\MessagesRequests\CreateMessageRequest.fs" />
+	<Compile Include="V1\Requests\TagsRequests\TagRequest.fs" />
+	<Compile Include="V1\Requests\TagsRequests\UpdateTagRequest.fs" />
+	<Compile Include="V1\Requests\TagsRequests\CreateTagRequest.fs" />
+	<Compile Include="V1\Requests\PostsRequests\PostsSearchParametersRequest.fs" />
+	<Compile Include="V1\Requests\PostsRequests\UpdatePostRequest.fs" />
+    <Compile Include="V1\Requests\PostsRequests\CreatePostRequest.fs" />
+    <Compile Include="ErrorModel.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Blog.FSharp.Core\Blog.FSharp.Core.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="V1\Requests\UsersRequests\" />
+  </ItemGroup>
+
+</Project>
