@@ -97,3 +97,5 @@
 /Sdk/Blog.FSharp.Sdk/obj
 /Sdk/Blog.Sdk/bin/Debug/net9.0
 /Sdk/Blog.Sdk.ExampleUsage/bin/Debug/net9.0
+/BlogWebApp/Data/Blog.FSharpData.Core/bin/Debug/net9.0
+/BlogWebApp/Data/Blog.FSharpData.Core/obj
