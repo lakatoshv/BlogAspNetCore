@@ -100,3 +100,4 @@
 /BlogWebApp/Data/Blog.FSharpData.Core/bin/Debug/net9.0
 /BlogWebApp/Data/Blog.FSharpData.Core/obj
 /BlogWebApp/Services/Blog.CommonServices/bin/Debug/net9.0
+/BlogWebApp/Tests/Blog.UnitTests/bin/Debug/net9.0
