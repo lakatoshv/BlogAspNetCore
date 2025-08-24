@@ -1079,6 +1079,23 @@ public class CommentsServiceTests
         Assert.NotEqual(0, newComment.Id);
     }
 
+    /// <summary>
+    /// Async Insert comment.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task InsertAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var newComment = SetupCommentFixture().Create();
+
+        _commentsRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<Comment>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _commentsService.InsertAsync(newComment));
+    }
+
     #endregion
 
     #region Insert Async Enumerable function
