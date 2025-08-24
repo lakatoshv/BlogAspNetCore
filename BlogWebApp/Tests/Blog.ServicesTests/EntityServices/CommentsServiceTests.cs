@@ -1005,6 +1005,28 @@ public class CommentsServiceTests
         });
     }
 
+    /// <summary>
+    /// Insert Enumerable comments.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void InsertEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var newComments =
+            SetupCommentFixture()
+                .CreateMany(itemsCount)
+                .ToList();
+
+        _commentsRepositoryMock.Setup(x => x.Insert(It.IsAny<IEnumerable<Comment>>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _commentsService.Insert(newComments));
+    }
+
     #endregion
 
     #region Insert Async function
