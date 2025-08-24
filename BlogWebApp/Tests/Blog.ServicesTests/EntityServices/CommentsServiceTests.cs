@@ -916,6 +916,23 @@ public class CommentsServiceTests
         Assert.NotEqual(0, newComment.Id);
     }
 
+    /// <summary>
+    /// Insert comment.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Insert_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var newComment = SetupCommentFixture().Create();
+
+        _commentsRepositoryMock.Setup(x => x.Insert(It.IsAny<Comment>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _commentsService.Insert(newComment));
+    }
+
     #endregion
 
     #region Insert Enumerable function
