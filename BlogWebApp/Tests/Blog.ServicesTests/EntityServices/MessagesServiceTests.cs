@@ -1,7 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.Dsl;
 using Blog.Core.Enums;
@@ -15,6 +11,10 @@ using Blog.EntityServices;
 using Blog.EntityServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -932,6 +932,23 @@ public class MessagesServiceTests
 
         //Assert
         Assert.NotEqual(0, newMessage.Id);
+    }
+
+    /// <summary>
+    /// Insert message.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Insert_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var newMessage = SetupMessageFixture().Create();
+
+        _messagesRepositoryMock.Setup(x => x.Insert(It.IsAny<Message>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _messagesService.Insert(newMessage));
     }
 
     #endregion
