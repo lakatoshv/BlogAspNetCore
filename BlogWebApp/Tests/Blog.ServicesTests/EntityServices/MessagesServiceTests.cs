@@ -1021,6 +1021,28 @@ public class MessagesServiceTests
         });
     }
 
+    /// <summary>
+    /// Insert Enumerable messages.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void InsertEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var newMessages =
+            SetupMessageFixture()
+                .CreateMany(itemsCount)
+                .ToList();
+
+        _messagesRepositoryMock.Setup(x => x.Insert(It.IsAny<IEnumerable<Message>>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _messagesService.Insert(newMessages));
+    }
+
     #endregion
 
     #region Insert Async function
