@@ -953,6 +953,23 @@ public class PostsServiceTests
         Assert.NotEqual(0, newPost.Id);
     }
 
+    /// <summary>
+    /// Insert post.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Insert_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var newPost = SetupPostFixture().Create();
+
+        _postsRepositoryMock.Setup(x => x.Insert(It.IsAny<Post>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsService.Insert(newPost));
+    }
+
     #endregion
 
     #region Insert Enumerable function
