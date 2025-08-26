@@ -1100,6 +1100,23 @@ public class MessagesServiceTests
         Assert.NotEqual(0, newMessage.Id);
     }
 
+    /// <summary>
+    /// Async Insert message.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task InsertAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var newMessage = SetupMessageFixture().Create();
+
+        _messagesRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<Message>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _messagesService.InsertAsync(newMessage));
+    }
+
     #endregion
 
     #region Insert Async Enumerable function
