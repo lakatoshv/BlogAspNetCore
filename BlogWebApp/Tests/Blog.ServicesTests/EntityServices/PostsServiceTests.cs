@@ -1040,6 +1040,28 @@ public class PostsServiceTests
         });
     }
 
+    /// <summary>
+    /// Insert Enumerable posts.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void InsertEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var newPosts =
+            SetupPostFixture()
+                .CreateMany(itemsCount)
+                .ToList();
+
+        _postsRepositoryMock.Setup(x => x.Insert(It.IsAny<IEnumerable<Post>>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsService.Insert(newPosts));
+    }
+
     #endregion
 
     #region Insert Async function
