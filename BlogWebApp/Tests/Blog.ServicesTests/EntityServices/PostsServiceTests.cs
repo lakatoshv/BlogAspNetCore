@@ -1114,6 +1114,23 @@ public class PostsServiceTests
         Assert.NotEqual(0, newPost.Id);
     }
 
+    /// <summary>
+    /// Async Insert post.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task InsertAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var newPost = SetupPostFixture().Create();
+
+        _postsRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<Post>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsService.InsertAsync(newPost));
+    }
+
     #endregion
 
     #region Insert Async Enumerable function
