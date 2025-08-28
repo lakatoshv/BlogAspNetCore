@@ -1266,6 +1266,23 @@ public class PostTagRelationsServiceTests
         Assert.NotEqual(0, newPostsTagsRelation.Id);
     }
 
+    /// <summary>
+    /// Insert post tag relation.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Insert_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var newPostTagRelation = SetupPostsTagsRelationsFixture().Create();
+
+        _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(It.IsAny<PostsTagsRelations>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsTagsRelationsService.Insert(newPostTagRelation));
+    }
+
     #endregion
 
     #region Insert Enumerable function
