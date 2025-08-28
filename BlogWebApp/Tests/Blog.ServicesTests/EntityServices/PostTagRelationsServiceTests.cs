@@ -1353,6 +1353,28 @@ public class PostTagRelationsServiceTests
         });
     }
 
+    /// <summary>
+    /// Insert Enumerable post rag relations.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void InsertEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var newPostTagRelations =
+            SetupPostsTagsRelationsFixture()
+                .CreateMany(itemsCount)
+                .ToList();
+
+        _postsTagsRelationsRepositoryMock.Setup(x => x.Insert(It.IsAny<IEnumerable<PostsTagsRelations>>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsTagsRelationsService.Insert(newPostTagRelations));
+    }
+
     #endregion
 
     #region Insert Async function
