@@ -1488,6 +1488,23 @@ public class PostTagRelationsServiceTests
         Assert.Contains(tagTitle, newPostsTagsRelation.Tag.Title);
     }
 
+    /// <summary>
+    /// Async Insert post tag relation.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task InsertAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var newPostTagRelation = SetupPostsTagsRelationsFixture().Create();
+
+        _postsTagsRelationsRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<PostsTagsRelations>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsTagsRelationsService.InsertAsync(newPostTagRelation));
+    }
+
     #endregion
 
     #region Insert Async Enumerable function
