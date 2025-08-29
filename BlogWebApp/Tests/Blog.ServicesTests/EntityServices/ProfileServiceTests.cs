@@ -984,6 +984,28 @@ public class ProfileServiceTests
         });
     }
 
+    /// <summary>
+    /// Insert Enumerable profiles.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void InsertEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var newProfiles =
+            SetupProfileFixture()
+                .CreateMany(itemsCount)
+                .ToList();
+
+        _profileRepositoryMock.Setup(x => x.Insert(It.IsAny<IEnumerable<ProfileModel>>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _profileService.Insert(newProfiles));
+    }
+
     #endregion
 
     #region Insert Async function
