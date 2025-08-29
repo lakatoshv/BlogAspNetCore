@@ -897,6 +897,23 @@ public class ProfileServiceTests
         Assert.NotEqual(0, newProfile.Id);
     }
 
+    /// <summary>
+    /// Insert profile.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Insert_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var newProfile = SetupProfileFixture().Create();
+
+        _profileRepositoryMock.Setup(x => x.Insert(It.IsAny<ProfileModel>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _profileService.Insert(newProfile));
+    }
+
     #endregion
 
     #region Insert Enumerable function
