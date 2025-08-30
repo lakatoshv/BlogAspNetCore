@@ -1058,6 +1058,23 @@ public class ProfileServiceTests
         Assert.NotEqual(0, newProfile.Id);
     }
 
+    /// <summary>
+    /// Async Insert profile.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task InsertAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var newProfile = SetupProfileFixture().Create();
+
+        _profileRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<ProfileModel>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _profileService.InsertAsync(newProfile));
+    }
+
     #endregion
 
     #region Insert Async Enumerable function
