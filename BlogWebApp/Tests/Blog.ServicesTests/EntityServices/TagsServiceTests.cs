@@ -1,7 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.Dsl;
 using Blog.Core.Enums;
@@ -15,6 +11,10 @@ using Blog.EntityServices;
 using Blog.EntityServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -923,6 +923,23 @@ public class TagsServiceTests
 
         //Assert
         Assert.NotEqual(0, newTag.Id);
+    }
+
+    /// <summary>
+    /// Insert tag.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Insert_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var newTag = SetupTagFixture().Create();
+
+        _tagsRepositoryMock.Setup(x => x.Insert(It.IsAny<Tag>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _tagsService.Insert(newTag));
     }
 
     #endregion
