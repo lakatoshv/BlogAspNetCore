@@ -1012,6 +1012,28 @@ public class TagsServiceTests
         });
     }
 
+    /// <summary>
+    /// Insert Enumerable tags.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void InsertEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var newTags =
+            SetupTagFixture()
+                .CreateMany(itemsCount)
+                .ToList();
+
+        _tagsRepositoryMock.Setup(x => x.Insert(It.IsAny<IEnumerable<Tag>>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _tagsService.Insert(newTags));
+    }
+
     #endregion
 
     #region Insert Async Enumerable function
