@@ -1187,6 +1187,23 @@ public class TagsServiceTests
         Assert.NotEqual(0, newTag.Id);
     }
 
+    /// <summary>
+    /// Async Insert tag.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task InsertAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var newTag = SetupTagFixture().Create();
+
+        _tagsRepositoryMock.Setup(x => x.InsertAsync(It.IsAny<Tag>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _tagsService.InsertAsync(newTag));
+    }
+
     #endregion
 
     #endregion
