@@ -102,3 +102,5 @@
 /BlogWebApp/Services/Blog.CommonServices/bin/Debug/net9.0
 /BlogWebApp/Tests/Blog.UnitTests/bin/Debug/net9.0
 /BlogWebApp/Tests/Blog.ServicesTests/bin/Debug/net9.0
+/BlogWebApp/Aspire/Blog.Aspire/Blog.Aspire.ServiceDefaults/bin/Debug/net9.0
+/BlogWebApp/Aspire/Blog.Aspire/Blog.Aspire.ServiceDefaults/obj
