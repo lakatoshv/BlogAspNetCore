@@ -1284,6 +1284,23 @@ public class MessagesServiceTests
         Assert.Equal(newMessageSubject, message.Subject);
     }
 
+    /// <summary>
+    /// Update message.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Update_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var message = SetupMessageFixture().Create();
+
+        _messagesRepositoryMock.Setup(x => x.Update(It.IsAny<Message>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _messagesService.Update(message));
+    }
+
     #endregion
 
     #region Upadate Enumerable function
