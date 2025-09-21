@@ -1478,6 +1478,23 @@ public class MessagesServiceTests
         Assert.Equal(newMessageSubject, message.Subject);
     }
 
+    /// <summary>
+    /// Async Update message.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var message = SetupMessageFixture().Create();
+
+        _messagesRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<Message>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _messagesService.UpdateAsync(message));
+    }
+
     #endregion
 
     #region Upadate Async Enumerable function
