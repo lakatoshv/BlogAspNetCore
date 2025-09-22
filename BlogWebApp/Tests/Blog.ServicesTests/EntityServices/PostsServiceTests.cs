@@ -1488,6 +1488,23 @@ public class PostsServiceTests
         Assert.Equal(newTitle, post.Title);
     }
 
+    /// <summary>
+    /// Async Update post.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var post = SetupPostFixture().Create();
+
+        _postsRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<Post>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsService.UpdateAsync(post));
+    }
+
     #endregion
 
     #region Upadate Async Enumerable function
