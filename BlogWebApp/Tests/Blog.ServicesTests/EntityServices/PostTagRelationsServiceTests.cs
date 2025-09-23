@@ -1,7 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.Dsl;
 using Blog.Core.Enums;
@@ -15,6 +11,10 @@ using Blog.EntityServices;
 using Blog.EntityServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -1671,6 +1671,23 @@ public class PostTagRelationsServiceTests
         //Assert
         Assert.Equal(postsTagsRelations.TagId, newPostsTagsRelation.Tag.Id);
         Assert.Equal(postsTagsRelations.Tag.Title, newPostsTagsRelation.Tag.Title);
+    }
+
+    /// <summary>
+    /// Update post tag relations.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Update_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var postsTagsRelation = SetupPostsTagsRelationsFixture().Create();
+
+        _postsTagsRelationsRepositoryMock.Setup(x => x.Update(It.IsAny<PostsTagsRelations>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsTagsRelationsService.Update(postsTagsRelation));
     }
 
     #endregion
