@@ -1773,6 +1773,27 @@ public class PostTagRelationsServiceTests
         });
     }
 
+    /// <summary>
+    /// Update Enumerable post tag relations.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void UpdateEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(100);
+        var postsTagsRelations = SetupPostsTagsRelationsFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+
+        _postsTagsRelationsRepositoryMock.Setup(x => x.Update(It.IsAny<IEnumerable<PostsTagsRelations>>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsTagsRelationsService.Update(postsTagsRelations));
+    }
+
     #endregion
 
     #region Update Async function
