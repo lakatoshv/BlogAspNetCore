@@ -1595,6 +1595,27 @@ public class PostsServiceTests
         }
     }
 
+    /// <summary>
+    /// Update Async Enumerable posts.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsyncEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(100);
+        var posts = SetupPostFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+
+        _postsRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<IEnumerable<Post>>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsService.UpdateAsync(posts));
+    }
+
     #endregion
 
     #endregion
