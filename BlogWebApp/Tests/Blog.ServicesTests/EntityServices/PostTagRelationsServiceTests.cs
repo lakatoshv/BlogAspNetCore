@@ -2035,6 +2035,27 @@ public class PostTagRelationsServiceTests
         });
     }
 
+    /// <summary>
+    /// Update Async Enumerable post tag relations.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsyncEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(100);
+        var postsTagsRelations = SetupPostsTagsRelationsFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+
+        _postsTagsRelationsRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<IEnumerable<PostsTagsRelations>>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsTagsRelationsService.UpdateAsync(postsTagsRelations));
+    }
+
     #endregion
 
     #endregion
