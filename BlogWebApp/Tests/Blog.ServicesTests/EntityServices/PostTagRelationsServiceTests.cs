@@ -1933,6 +1933,23 @@ public class PostTagRelationsServiceTests
         Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
     }
 
+    /// <summary>
+    /// Async Update post tag relation.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var postsTagsRelation = SetupPostsTagsRelationsFixture().Create();
+
+        _postsTagsRelationsRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<PostsTagsRelations>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsTagsRelationsService.UpdateAsync(postsTagsRelation));
+    }
+
     #endregion
 
     #region Upadate Async Enumerable function
