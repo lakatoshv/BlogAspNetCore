@@ -1,7 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.Dsl;
 using AutoMapper;
@@ -16,6 +12,10 @@ using Blog.EntityServices;
 using Blog.EntityServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 using ProfileModel = Blog.Data.Models.Profile;
 
@@ -1233,6 +1233,23 @@ public class ProfileServiceTests
 
         //Assert
         Assert.Equal(newUserId, profile.UserId);
+    }
+
+    /// <summary>
+    /// Update profile.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Update_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var profile = SetupProfileFixture().Create();
+
+        _profileRepositoryMock.Setup(x => x.Update(It.IsAny<ProfileModel>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _profileService.Update(profile));
     }
 
     #endregion
