@@ -1277,6 +1277,23 @@ public class TagsServiceTests
         Assert.Equal(newTagTitle, tag.Title);
     }
 
+    /// <summary>
+    /// Update tag.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Update_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var tag = SetupTagFixture().Create();
+
+        _tagsRepositoryMock.Setup(x => x.Update(It.IsAny<Tag>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _tagsService.Update(tag));
+    }
+
     #endregion
 
     #region Upadate Enumerable function
