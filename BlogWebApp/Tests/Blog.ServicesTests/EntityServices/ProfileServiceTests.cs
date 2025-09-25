@@ -1424,6 +1424,23 @@ public class ProfileServiceTests
         Assert.Equal(newUserId, profile.UserId);
     }
 
+    /// <summary>
+    /// Async Update profile.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var profile = SetupProfileFixture().Create();
+
+        _profileRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<ProfileModel>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _profileService.UpdateAsync(profile));
+    }
+
     #endregion
 
     #region Upadate Async Enumerable function
