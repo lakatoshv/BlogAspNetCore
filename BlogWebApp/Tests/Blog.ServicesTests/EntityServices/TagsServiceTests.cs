@@ -1582,6 +1582,27 @@ public class TagsServiceTests
         }
     }
 
+    /// <summary>
+    /// Update Async Enumerable tags.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsyncEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(100);
+        var tags = SetupTagFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+
+        _tagsRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<IEnumerable<Tag>>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _tagsService.UpdateAsync(tags));
+    }
+
     #endregion
 
     #endregion
