@@ -1477,6 +1477,23 @@ public class TagsServiceTests
         Assert.Equal(newTagTitle, tag.Title);
     }
 
+    /// <summary>
+    /// Async Update tag.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var tag = SetupTagFixture().Create();
+
+        _tagsRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<Tag>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _tagsService.UpdateAsync(tag));
+    }
+
     #endregion
 
     #region Upadate Async Enumerable function
