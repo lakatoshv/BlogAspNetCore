@@ -1544,7 +1544,7 @@ public class ProfileServiceTests
             .ToList();
 
         _profileRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<IEnumerable<ProfileModel>>()))
-            .Throws(new Exception("Test exception"));
+            .ThrowsAsync(new Exception("Test exception"));
 
         //Assert
         await Assert.ThrowsAsync<Exception>(() => _profileService.UpdateAsync(profiles));

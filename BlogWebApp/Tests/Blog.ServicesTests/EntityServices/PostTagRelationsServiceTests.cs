@@ -2050,7 +2050,7 @@ public class PostTagRelationsServiceTests
             .ToList();
 
         _postsTagsRelationsRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<IEnumerable<PostsTagsRelations>>()))
-            .Throws(new Exception("Test exception"));
+            .ThrowsAsync(new Exception("Test exception"));
 
         //Assert
         await Assert.ThrowsAsync<Exception>(() => _postsTagsRelationsService.UpdateAsync(postsTagsRelations));

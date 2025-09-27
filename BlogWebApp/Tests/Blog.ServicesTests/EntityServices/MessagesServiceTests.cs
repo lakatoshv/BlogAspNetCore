@@ -1596,7 +1596,7 @@ public class MessagesServiceTests
             .ToList();
 
         _messagesRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<IEnumerable<Message>>()))
-            .Throws(new Exception("Test exception"));
+            .ThrowsAsync(new Exception("Test exception"));
 
         //Assert
         await Assert.ThrowsAsync<Exception>(() => _messagesService.UpdateAsync(messages));

@@ -1568,7 +1568,7 @@ public class CommentsServiceTests
             .ToList();
 
         _commentsRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<IEnumerable<Comment>>()))
-            .Throws(new Exception("Test exception"));
+            .ThrowsAsync(new Exception("Test exception"));
 
         //Assert
         await Assert.ThrowsAsync<Exception>(() => _commentsService.UpdateAsync(comments));

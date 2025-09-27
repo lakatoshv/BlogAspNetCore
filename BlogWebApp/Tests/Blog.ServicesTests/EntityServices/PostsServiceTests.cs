@@ -1610,7 +1610,7 @@ public class PostsServiceTests
             .ToList();
 
         _postsRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<IEnumerable<Post>>()))
-            .Throws(new Exception("Test exception"));
+            .ThrowsAsync(new Exception("Test exception"));
 
         //Assert
         await Assert.ThrowsAsync<Exception>(() => _postsService.UpdateAsync(posts));

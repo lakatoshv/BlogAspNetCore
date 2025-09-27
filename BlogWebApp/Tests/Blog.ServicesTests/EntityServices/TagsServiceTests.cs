@@ -1597,7 +1597,7 @@ public class TagsServiceTests
             .ToList();
 
         _tagsRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<IEnumerable<Tag>>()))
-            .Throws(new Exception("Test exception"));
+            .ThrowsAsync(new Exception("Test exception"));
 
         //Assert
         await Assert.ThrowsAsync<Exception>(() => _tagsService.UpdateAsync(tags));
