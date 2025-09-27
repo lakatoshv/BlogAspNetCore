@@ -1,7 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.Dsl;
 using AutoMapper;
@@ -16,6 +12,10 @@ using Blog.EntityServices;
 using Blog.EntityServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 using ProfileModel = Blog.Data.Models.Profile;
 
@@ -1235,6 +1235,23 @@ public class ProfileServiceTests
         Assert.Equal(newUserId, profile.UserId);
     }
 
+    /// <summary>
+    /// Update profile.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Update_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var profile = SetupProfileFixture().Create();
+
+        _profileRepositoryMock.Setup(x => x.Update(It.IsAny<ProfileModel>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _profileService.Update(profile));
+    }
+
     #endregion
 
     #region Upadate Enumerable function
@@ -1321,6 +1338,27 @@ public class ProfileServiceTests
         }
     }
 
+    /// <summary>
+    /// Update Enumerable profiles.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void UpdateEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(100);
+        var profiles = SetupProfileFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+
+        _profileRepositoryMock.Setup(x => x.Update(It.IsAny<IEnumerable<ProfileModel>>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _profileService.Update(profiles));
+    }
+
     #endregion
 
     #region Update Async function
@@ -1384,6 +1422,23 @@ public class ProfileServiceTests
 
         //Assert
         Assert.Equal(newUserId, profile.UserId);
+    }
+
+    /// <summary>
+    /// Async Update profile.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var profile = SetupProfileFixture().Create();
+
+        _profileRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<ProfileModel>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _profileService.UpdateAsync(profile));
     }
 
     #endregion
@@ -1472,6 +1527,27 @@ public class ProfileServiceTests
         {
             Assert.Equal(profileIds[i], newProfiles[i].UserId);
         }
+    }
+
+    /// <summary>
+    /// Update Async Enumerable profiles.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsyncEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(100);
+        var profiles = SetupProfileFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+
+        _profileRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<IEnumerable<ProfileModel>>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _profileService.UpdateAsync(profiles));
     }
 
     #endregion

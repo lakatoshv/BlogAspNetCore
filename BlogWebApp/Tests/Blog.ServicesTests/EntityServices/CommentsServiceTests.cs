@@ -1,7 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.Dsl;
 using Blog.Core.Enums;
@@ -15,6 +11,10 @@ using Blog.EntityServices;
 using Blog.EntityServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -1261,6 +1261,23 @@ public class CommentsServiceTests
         Assert.Equal(newCommentBody, comment.CommentBody);
     }
 
+    /// <summary>
+    /// Update comment.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Update_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var comment = SetupCommentFixture().Create();
+
+        _commentsRepositoryMock.Setup(x => x.Update(It.IsAny<Comment>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _commentsService.Update(comment));
+    }
+
     #endregion
 
     #region Upadate Enumerable function
@@ -1344,6 +1361,27 @@ public class CommentsServiceTests
         }
     }
 
+    /// <summary>
+    /// Update Enumerable comments.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void UpdateEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(100);
+        var comments = SetupCommentFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+
+        _commentsRepositoryMock.Setup(x => x.Update(It.IsAny<IEnumerable<Comment>>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _commentsService.Update(comments));
+    }
+
     #endregion
 
     #region Update Async function
@@ -1411,6 +1449,23 @@ public class CommentsServiceTests
 
         //Assert
         Assert.Equal(newCommentBody, comment.CommentBody);
+    }
+
+    /// <summary>
+    /// Async Update comment.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var comment = SetupCommentFixture().Create();
+
+        _commentsRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<Comment>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _commentsService.UpdateAsync(comment));
     }
 
     #endregion
@@ -1496,6 +1551,27 @@ public class CommentsServiceTests
         {
             Assert.Equal($"{newCommentBody} {i}", newComments[i].CommentBody);
         }
+    }
+
+    /// <summary>
+    /// Update Async Enumerable comments.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsyncEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(100);
+        var comments = SetupCommentFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+
+        _commentsRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<IEnumerable<Comment>>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _commentsService.UpdateAsync(comments));
     }
 
     #endregion

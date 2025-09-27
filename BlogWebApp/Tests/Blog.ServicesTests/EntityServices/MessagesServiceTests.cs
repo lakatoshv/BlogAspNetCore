@@ -1284,6 +1284,23 @@ public class MessagesServiceTests
         Assert.Equal(newMessageSubject, message.Subject);
     }
 
+    /// <summary>
+    /// Update message.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Update_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var message = SetupMessageFixture().Create();
+
+        _messagesRepositoryMock.Setup(x => x.Update(It.IsAny<Message>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _messagesService.Update(message));
+    }
+
     #endregion
 
     #region Upadate Enumerable function
@@ -1368,6 +1385,27 @@ public class MessagesServiceTests
         }
     }
 
+    /// <summary>
+    /// Update Enumerable messages.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void UpdateEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(100);
+        var messages = SetupMessageFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+
+        _messagesRepositoryMock.Setup(x => x.Update(It.IsAny<IEnumerable<Message>>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _messagesService.Update(messages));
+    }
+
     #endregion
 
     #region Update Async function
@@ -1438,6 +1476,23 @@ public class MessagesServiceTests
 
         //Assert
         Assert.Equal(newMessageSubject, message.Subject);
+    }
+
+    /// <summary>
+    /// Async Update message.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var message = SetupMessageFixture().Create();
+
+        _messagesRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<Message>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _messagesService.UpdateAsync(message));
     }
 
     #endregion
@@ -1524,6 +1579,27 @@ public class MessagesServiceTests
         {
             Assert.Equal($"{newMessageSubject} {i}", newMessages[i].Subject);
         }
+    }
+
+    /// <summary>
+    /// Update Async Enumerable messages.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsyncEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(100);
+        var messages = SetupMessageFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+
+        _messagesRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<IEnumerable<Message>>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _messagesService.UpdateAsync(messages));
     }
 
     #endregion

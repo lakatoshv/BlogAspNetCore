@@ -1,7 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.Dsl;
 using Blog.Core.Enums;
@@ -15,6 +11,10 @@ using Blog.EntityServices;
 using Blog.EntityServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -1673,6 +1673,23 @@ public class PostTagRelationsServiceTests
         Assert.Equal(postsTagsRelations.Tag.Title, newPostsTagsRelation.Tag.Title);
     }
 
+    /// <summary>
+    /// Update post tag relations.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Update_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var postsTagsRelation = SetupPostsTagsRelationsFixture().Create();
+
+        _postsTagsRelationsRepositoryMock.Setup(x => x.Update(It.IsAny<PostsTagsRelations>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsTagsRelationsService.Update(postsTagsRelation));
+    }
+
     #endregion
 
     #region Upadate Enumerable function
@@ -1754,6 +1771,27 @@ public class PostTagRelationsServiceTests
             if (postsTagsRelations != null)
                 Assert.Equal(postsTagsRelations.TagId, postsTagsRelations.Tag.Id);
         });
+    }
+
+    /// <summary>
+    /// Update Enumerable post tag relations.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void UpdateEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(100);
+        var postsTagsRelations = SetupPostsTagsRelationsFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+
+        _postsTagsRelationsRepositoryMock.Setup(x => x.Update(It.IsAny<IEnumerable<PostsTagsRelations>>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsTagsRelationsService.Update(postsTagsRelations));
     }
 
     #endregion
@@ -1895,6 +1933,23 @@ public class PostTagRelationsServiceTests
         Assert.Equal(postsTagsRelations.Tag.Title, newTag.Title);
     }
 
+    /// <summary>
+    /// Async Update post tag relation.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var postsTagsRelation = SetupPostsTagsRelationsFixture().Create();
+
+        _postsTagsRelationsRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<PostsTagsRelations>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsTagsRelationsService.UpdateAsync(postsTagsRelation));
+    }
+
     #endregion
 
     #region Upadate Async Enumerable function
@@ -1978,6 +2033,27 @@ public class PostTagRelationsServiceTests
             if (postsTagsRelations != null)
                 Assert.Equal(postsTagsRelations.TagId, postsTagsRelations.Tag.Id);
         });
+    }
+
+    /// <summary>
+    /// Update Async Enumerable post tag relations.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsyncEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(100);
+        var postsTagsRelations = SetupPostsTagsRelationsFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+
+        _postsTagsRelationsRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<IEnumerable<PostsTagsRelations>>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsTagsRelationsService.UpdateAsync(postsTagsRelations));
     }
 
     #endregion

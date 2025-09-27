@@ -1,7 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.Dsl;
 using AutoMapper;
@@ -17,6 +13,10 @@ using Blog.EntityServices;
 using Blog.EntityServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -1294,6 +1294,23 @@ public class PostsServiceTests
         Assert.Equal(newTitle, post.Title);
     }
 
+    /// <summary>
+    /// Update post.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void Update_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var post = SetupPostFixture().Create();
+
+        _postsRepositoryMock.Setup(x => x.Update(It.IsAny<Post>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsService.Update(post));
+    }
+
     #endregion
 
     #region Upadate Enumerable function
@@ -1382,6 +1399,27 @@ public class PostsServiceTests
         }
     }
 
+    /// <summary>
+    /// Update Enumerable posts.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public void UpdateEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(100);
+        var posts = SetupPostFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+
+        _postsRepositoryMock.Setup(x => x.Update(It.IsAny<IEnumerable<Post>>()))
+            .Throws(new Exception("Test exception"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsService.Update(posts));
+    }
+
     #endregion
 
     #region Update Async function
@@ -1448,6 +1486,23 @@ public class PostsServiceTests
 
         //Assert
         Assert.Equal(newTitle, post.Title);
+    }
+
+    /// <summary>
+    /// Async Update post.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var post = SetupPostFixture().Create();
+
+        _postsRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<Post>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsService.UpdateAsync(post));
     }
 
     #endregion
@@ -1538,6 +1593,27 @@ public class PostsServiceTests
         {
             Assert.Equal($"{newTitle} {i}", newPosts[i].Title);
         }
+    }
+
+    /// <summary>
+    /// Update Async Enumerable posts.
+    /// Should throw exception when repository throws exception.
+    /// </summary>
+    [Fact]
+    public async Task UpdateAsyncEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(100);
+        var posts = SetupPostFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+
+        _postsRepositoryMock.Setup(x => x.UpdateAsync(It.IsAny<IEnumerable<Post>>()))
+            .ThrowsAsync(new Exception("Test exception"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsService.UpdateAsync(posts));
     }
 
     #endregion
