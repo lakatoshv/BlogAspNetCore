@@ -1,13 +1,14 @@
-import { Component, ContentChild, ElementRef, EventEmitter, Input, Output } from '@angular/core';
-import { Messages } from 'src/app/core/data/Messages';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { Component, OnInit, Input, ContentChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Messages } from './../../../../core/data/Mesages';
+import { CustomToastrService } from './../../../../core/services/custom-toastr.service';
 
 @Component({
   selector: 'app-change-status',
   templateUrl: './change-status.component.html',
-  styleUrls: ['./change-status.component.scss']
+  styleUrls: ['./change-status.component.css'],
+  standalone: false
 })
-export class ChangeStatusComponent {
+export class ChangeStatusComponent implements OnInit {
   /**
    * @param status any
    */

@@ -11,7 +11,9 @@ describe('TagsActivityChartComponent', () => {
       declarations: [ TagsActivityChartComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(TagsActivityChartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

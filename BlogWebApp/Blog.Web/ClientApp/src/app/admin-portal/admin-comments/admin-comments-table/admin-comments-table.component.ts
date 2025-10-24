@@ -1,23 +1,24 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
-import { Messages } from 'src/app/core/data/Messages';
-import { User } from 'src/app/core/models/User';
-import { Comment } from 'src/app/core/models/Comment';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { GeneralServiceService } from 'src/app/core/services/general-service.service';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
-import { CommentService } from 'src/app/core/services/posts-services/comment.service';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
-import { PageInfo } from 'src/app/core/models/PageInfo';
+import { GlobalService } from '../../../core/services/global-service/global-service.service';
+import { UsersService } from '../../../core/services/users-services/users-service.service';
+import { CommentsService } from '../../../core/services/posts-services/comments.service';
+import { Component, OnInit } from '@angular/core';
+import { Comment } from '../../../core/models/Comment';
+import { User } from '../../../core/models/User';
+import { GeneralServiceService } from '../../../core';
+import { ActivatedRoute } from '@angular/router';
+import { Messages } from '../../../core/data/Mesages';
+import { CustomToastrService } from '../../../core/services/custom-toastr.service';
+import { PageInfo } from '../../../core/models/PageInfo';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 
 @Component({
   selector: 'app-admin-comments-table',
   templateUrl: './admin-comments-table.component.html',
-  styleUrls: ['./admin-comments-table.component.scss']
+  styleUrls: ['./admin-comments-table.component.css'],
+  standalone: false
 })
-export class AdminCommentsTableComponent {
-  /**
+export class AdminCommentsTableComponent implements OnInit {
+/**
    * @param comments Comment[]
    */
   comments: Comment[] = [];
@@ -52,17 +53,11 @@ export class AdminCommentsTableComponent {
   public postId: number | undefined;
 
   /**
-   * @param _commentService CommentService
-   * @param _usersService UsersService
-   * @param _globalService GlobalService
+   * @param _commentsService CommentsService
    * @param _customToastrService CustomToastrService
    */
   constructor(
-    private _commentService: CommentService,
-    private _usersService: UsersService,
-    private _globalService: GlobalService,
-    private _generalService: GeneralServiceService,
-    private _activatedRoute: ActivatedRoute,
+    private _commentsService: CommentsService,
     private _customToastrService: CustomToastrService
   ) { }
 
@@ -71,7 +66,6 @@ export class AdminCommentsTableComponent {
    */
   ngOnInit() {
     this._getComments();
-
     /*this._commentService.commentChanged.subscribe(
       () => {
         if(this.postId !== undefined){
@@ -87,7 +81,7 @@ export class AdminCommentsTableComponent {
    * @returns void
    */
   deleteAction(comment: Comment): void {
-    this._commentService.delete(comment.id);
+    this._commentsService.delete(comment.id);
     this._customToastrService.displaySuccessMessage(Messages.COMMENT_DELETED_SUCCESSFULLY);
   }
 
@@ -109,7 +103,7 @@ export class AdminCommentsTableComponent {
       tag: null,
       sortParameters: sortParameters
     };
-    this._commentService.list(null, model).subscribe(
+    this._commentsService.list(null, model).subscribe(
       (response: any) => {
         this.comments = response.comments;
         this.isLoaded = true;
@@ -121,17 +115,5 @@ export class AdminCommentsTableComponent {
     /*!isNaN(postId)
       ? this._commentService.getCommentsByPostId(postId)
       : this._commentService.list(nu);*/
-  }
-
-  /**
-   * Check if user is logged in.
-   * @returns void
-   */
-  private _checkIfUserIsLoggedIn(): void {
-    this.loggedIn = this._usersService.isLoggedIn();
-    if (this.loggedIn) {
-      this._globalService.resetUserData();
-      this.user = this._globalService._currentUser;
-    }
   }
 }

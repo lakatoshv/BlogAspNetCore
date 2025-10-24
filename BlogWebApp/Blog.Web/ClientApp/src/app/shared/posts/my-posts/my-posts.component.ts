@@ -1,22 +1,23 @@
-import { PostService } from './../../../core/services/posts-services/post.service';
+import { GeneralServiceService } from './../../../core/services/general-service.service';
+import { PostsService } from './../../../core/services/posts-services/posts.service';
+import { PageInfo } from './../../../core/models/PageInfo';
 import { Component, OnInit } from '@angular/core';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
-import { SearchForm } from 'src/app/core/forms/SearchForm';
+import { GlobalService } from './../../../core/services/global-service/global-service.service';
+import { SearchForm } from './../../../core/forms/SearchForm';
 import { FormGroup } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { User } from 'src/app/core/models/User';
-import { Post } from 'src/app/core/models/Post';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
-import { PageInfo } from 'src/app/core/models/PageInfo';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { Messages } from 'src/app/core/data/Messages';
-import { GeneralServiceService } from 'src/app/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { User } from './../../../core/models/User';
+import { UsersService } from '../../../core/services/users-services/users-service.service';
+import { Post } from './../../../core/models/Post';
+import { Messages } from './../../../core/data/Mesages';
+import { CustomToastrService } from './../../../core/services/custom-toastr.service';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 
 @Component({
   selector: 'app-my-posts',
   templateUrl: './my-posts.component.html',
-  styleUrls: ['./my-posts.component.css']
+  styleUrls: ['./my-posts.component.scss'],
+  standalone: false
 })
 export class MyPostsComponent implements OnInit {
   /**
@@ -95,7 +96,7 @@ export class MyPostsComponent implements OnInit {
     private _globalService: GlobalService,
     private _router: Router,
     private _activatedRoute: ActivatedRoute,
-    private _postService: PostService,
+    private _postsService: PostsService,
     private _usersService: UsersService,
     private _customToastrService: CustomToastrService,
     private _generalService: GeneralServiceService
@@ -138,7 +139,7 @@ export class MyPostsComponent implements OnInit {
   public deleteAction(postId: number): void {
     const post = this.posts.find(p =>  p.id === postId);
     if (this.isLoggedIn && this.posts[postId].author.id === this.user?.id && this._globalService._currentUser) {
-      this._postService.delete(postId, this._globalService._currentUser.id).subscribe(
+      this._postsService.delete(postId, this._globalService._currentUser.id).subscribe(
         (response: any) => {
           this._customToastrService.displaySuccessMessage(Messages.POST_DELETED_SUCCESSFULLY);
           this._onDeleteCommentAction(response.id);
@@ -156,7 +157,7 @@ export class MyPostsComponent implements OnInit {
    */
   public like(id: number): void {
     if (this.isLoggedIn) {
-      this._postService.like(id).subscribe(
+      this._postsService.like(id).subscribe(
         (response: any) => {
           const ind = this.posts.findIndex(post =>  post.id === id);
           this.posts[ind] = response;
@@ -175,7 +176,7 @@ export class MyPostsComponent implements OnInit {
    */
   public dislike(id: number): void {
     if (this.isLoggedIn) {
-      this._postService.dislike(id).subscribe(
+      this._postsService.dislike(id).subscribe(
         (response: any) => {
           const ind = this.posts.findIndex(post =>  post.id === id);
           this.posts[ind] = response;
@@ -209,7 +210,7 @@ export class MyPostsComponent implements OnInit {
       sortParameters: null,
     };
     if(this._userId) {
-      this._postService.userPosts(this._userId, model).subscribe(
+      this._postsService.userPosts(this._userId, model).subscribe(
         (response: any) => {
           this.posts = response.posts;
           this.pageInfo = this.pageInfo;
@@ -240,7 +241,7 @@ export class MyPostsComponent implements OnInit {
       sortParameters: sortParameters,
     };
     if(this._userId) {
-      this._postService.userPosts(this._userId, model).subscribe(
+      this._postsService.userPosts(this._userId, model).subscribe(
         (response: any) => {
           this.posts = response.posts;
           this.pageInfo = response.pageInfo;
@@ -270,7 +271,7 @@ export class MyPostsComponent implements OnInit {
       sortParameters: sortParameters,
     };
     if(this._userId) {
-      this._postService.userPosts(this._userId, model).subscribe(
+      this._postsService.userPosts(this._userId, model).subscribe(
         (response: any) => {
           this.posts = response.posts;
           this.pageInfo = response.pageInfo;

@@ -1,5 +1,6 @@
-import { PageInfo } from 'src/app/core/models/PageInfo';
-import { Post } from 'src/app/core/models/Post';
+import { PageInfo } from "../models/PageInfo";
+import { Post } from "../models/Post";
+
 
 /**
  * Page view dto.

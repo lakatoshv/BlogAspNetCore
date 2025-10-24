@@ -1,17 +1,16 @@
-import { Component } from '@angular/core';
-import { PageViewDto } from 'src/app/core/Dto/PageViewDto';
-import { Messages } from 'src/app/core/data/Messages';
-import { Tag } from 'src/app/core/models/Tag';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { TagsService } from 'src/app/core/services/posts-services/tags.service';
+import { TagsService } from '../../../core/services/posts-services/tags.service';
+import { Component, OnInit } from '@angular/core';
+import { Tag } from '../../../core/models/Tag';
+import { CustomToastrService } from '../../../core/services/custom-toastr.service';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 
 @Component({
   selector: 'app-admin-tags-table',
   templateUrl: './admin-tags-table.component.html',
-  styleUrls: ['./admin-tags-table.component.scss']
+  styleUrls: ['./admin-tags-table.component.css'],
+  standalone: false
 })
-export class AdminTagsTableComponent {
+export class AdminTagsTableComponent implements OnInit {
   public tags: Tag[] = [];
 
   /**

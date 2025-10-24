@@ -9,9 +9,9 @@ export class CommentForm {
          * Content input field.
          */
         content: new FormControl('', [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(255)
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(255)
         ]),
 
         /**

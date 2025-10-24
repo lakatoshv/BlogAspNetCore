@@ -11,7 +11,9 @@ describe('AdminTagsTableComponent', () => {
       declarations: [ AdminTagsTableComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(AdminTagsTableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -7,11 +7,13 @@ describe('AddTagComponent', () => {
   let fixture: ComponentFixture<AddTagComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       declarations: [ AddTagComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(AddTagComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

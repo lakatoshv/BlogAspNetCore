@@ -1,19 +1,19 @@
-import { Messages } from './../../../../core/data/Messages';
-import { CommentService } from './../../../../core/services/posts-services/comment.service';
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { CommentForm } from 'src/app/core/forms/posts/CommentForm';
-
+import { CommentsService } from './../../../../core/services/posts-services/comments.service';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { CommentForm } from './../../../../core/forms/posts/CommentForm';
 import { Comment } from '../../../../core/models/Comment';
-import { User } from 'src/app/core/models/User';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { User } from './../../../../core/models/User';
+import { CustomToastrService } from './../../../../core/services/custom-toastr.service';
+import { Messages } from './../../../../core/data/Mesages';
+import { ErrorResponse } from '../../../../core/responses/ErrorResponse';
+import { UsersService } from '../../../../core/services/users-services/users-service.service';
 
 @Component({
   selector: 'app-add-comment',
   templateUrl: './add-comment.component.html',
-  styleUrls: ['./add-comment.component.css']
+  styleUrls: ['./add-comment.component.scss'],
+  standalone: false
 })
 export class AddCommentComponent implements OnInit {
   /**
@@ -38,12 +38,12 @@ export class AddCommentComponent implements OnInit {
 
   /**
    * @param _globalService GlobalService
-   * @param _commentService CommentService
+   * @param _commentsService CommentsService
    * @param _usersService UsersService
    * @param _customToastrService CustomToastrService
    */
   constructor(
-    private _commentService: CommentService,
+    private _commentsService: CommentsService,
     private _usersService: UsersService,
     private _customToastrService: CustomToastrService
   ) { }
@@ -75,7 +75,7 @@ export class AddCommentComponent implements OnInit {
         comment.name = this.commentForm.get('name')?.value;
       }
 
-      this._commentService.add(comment).subscribe(
+      this._commentsService.add(comment).subscribe(
         (response: any) => {
           this.onAdd.emit(response.json());
           this._customToastrService.displaySuccessMessage(Messages.COMMENT_CREATED_SUCCESSFULLY);

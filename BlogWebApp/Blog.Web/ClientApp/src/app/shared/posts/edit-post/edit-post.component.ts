@@ -1,25 +1,26 @@
-import { PostService } from './../../../core/services/posts-services/post.service';
+import { PostsService } from './../../../core/services/posts-services/posts.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { PostForm } from '../../../core/forms/posts/PostForm';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
-import { User } from 'src/app/core/models/User';
-import { Post } from 'src/app/core/models/Post';
-import { TinyMCEOptionsObject } from 'src/app/core/models/TinyMCEOptionsObject';
-import { TinyMCEOptions } from 'src/app/core/data/TinyMCEOptions';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
-import { Tag } from 'src/app/core/models/Tag';
-import { TagsService } from 'src/app/core/services/posts-services/tags.service';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { Messages } from 'src/app/core/data/Messages';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { SelectedTag } from 'src/app/core/models/SelectedTag';
+import { UsersService } from '../../../core/services/users-services/users-service.service';
+import { GlobalService } from './../../../core/services/global-service/global-service.service';
+import { User } from './../../../core/models/User';
+import { Post } from './../../../core/models/Post';
+import { TinyMCEOptionsObject } from './../../../core/models/TinyMCEOptionsObject';
+import { TinyMCEOptions } from './../../../core/data/TinyMCEOptions';
+import { Tag } from './../../../core/models/Tag';
+import { TagsService } from './../../../core/services/posts-services/tags.service';
+import { CustomToastrService } from './../../../core/services/custom-toastr.service';
+import { Messages } from './../../../core/data/Mesages';
+import { SelectedTag } from '../../../core/models/SelectedTag';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 
 @Component({
   selector: 'app-edit-post',
   templateUrl: './edit-post.component.html',
-  styleUrls: ['./edit-post.component.css']
+  styleUrls: ['./edit-post.component.css'],
+  standalone: false
 })
 export class EditPostComponent implements OnInit {
   /**
@@ -93,7 +94,7 @@ export class EditPostComponent implements OnInit {
   /**
    * @param _activatedRoute ActivatedRoute
    * @param _router Router
-   * @param _postService PostService
+   * @param _postsService PostsService
    * @param _usersService UsersService
    * @param _globalService GlobalService
    * @param _tagsService TagsService
@@ -102,7 +103,7 @@ export class EditPostComponent implements OnInit {
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _router: Router,
-    private _postService: PostService,
+    private _postsService: PostsService,
     private _usersService: UsersService,
     private _globalService: GlobalService,
     private _tagsService: TagsService,
@@ -161,7 +162,7 @@ export class EditPostComponent implements OnInit {
       post.id = this._postId;
       post.tags = this.post?.tags;
       post.authorId = this.user?.id;
-      this._postService.edit(this._postId, post).subscribe(
+      this._postsService.edit(this._postId, post).subscribe(
         () => {
           this._customToastrService.displaySuccessMessage(Messages.POST_EDITED_SUCCESSFULLY);
           this._router.navigate(['/blog/post/' + this._postId]);
@@ -177,7 +178,7 @@ export class EditPostComponent implements OnInit {
    */
   deleteAction(): void {
     if (this.isCurrentUserPost && this._postId && this._globalService._currentUser) {
-      this._postService.delete(this._postId, this._globalService._currentUser.id).subscribe(
+      this._postsService.delete(this._postId, this._globalService._currentUser.id).subscribe(
         () => {
           this._customToastrService.displaySuccessMessage(Messages.POST_DELETED_SUCCESSFULLY);
           this._router.navigate(['/blog']);
@@ -264,7 +265,7 @@ export class EditPostComponent implements OnInit {
    */
   private _getPost(): void {
     if(this._postId) {
-      this._postService.showPost(this._postId).subscribe(
+      this._postsService.showPost(this._postId).subscribe(
         (response: any) => {
           this.post = response.post;
           if(this.post) {

@@ -1,22 +1,22 @@
-import { PageInfo } from './../../../../core/models/PageInfo';
-import { CommentService } from './../../../../core/services/posts-services/comment.service';
+import { CommentsService } from './../../../../core/services/posts-services/comments.service';
 import { Component, OnInit, Input } from '@angular/core';
-
-import { Comment } from 'src/app/core/models/Comment';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
-import { User } from 'src/app/core/models/User';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { Messages } from 'src/app/core/data/Messages';
+import { Comment } from './../../../../core/models/Comment';
+import { UsersService } from '../../../../core/services/users-services/users-service.service';
+import { GlobalService } from './../../../../core/services/global-service/global-service.service';
+import { User } from './../../../../core/models/User';
+import { Messages } from './../../../../core/data/Mesages';
+import { CustomToastrService } from './../../../../core/services/custom-toastr.service';
+import { ErrorResponse } from '../../../../core/responses/ErrorResponse';
+import { PageInfo } from '../../../../core/models/PageInfo';
 
 @Component({
   selector: 'app-comments-list',
   templateUrl: './comments-list.component.html',
-  styleUrls: ['./comments-list.component.css']
+  styleUrls: ['./comments-list.component.scss'],
+  standalone: false
 })
 export class CommentsListComponent implements OnInit {
-  /**
+   /**
    * @param postId number | undefined
    */
   @Input("post-id") postId: number | undefined;
@@ -69,7 +69,7 @@ export class CommentsListComponent implements OnInit {
    * @param _customToastrService CustomToastrService
    */
   constructor(
-    private _commentService: CommentService,
+    private _commentsService: CommentsService,
     private _usersService: UsersService,
     private _globalService: GlobalService,
     private _customToastrService: CustomToastrService
@@ -98,7 +98,7 @@ export class CommentsListComponent implements OnInit {
       displayType: null
     };
     if(this.postId) {
-      this._commentService.list(this.postId, sortParameters)
+      this._commentsService.list(this.postId, sortParameters)
         .subscribe((response: any) => {
           this.comments = response.comments;
           this.pageInfo = response.pageInfo;
@@ -163,7 +163,7 @@ export class CommentsListComponent implements OnInit {
    * @returns void
    */
   deleteAction(comment: Comment): void {
-    this._commentService.delete(comment.id).subscribe(
+    this._commentsService.delete(comment.id).subscribe(
       (response: any) => {
         this.onDeleteCommentAction(response.id);
         this._customToastrService.displaySuccessMessage(Messages.COMMENT_DELETED_SUCCESSFULLY);

@@ -11,7 +11,9 @@ describe('AdminPostsListComponent', () => {
       declarations: [ AdminPostsListComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(AdminPostsListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

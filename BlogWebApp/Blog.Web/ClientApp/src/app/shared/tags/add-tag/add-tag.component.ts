@@ -1,22 +1,22 @@
-import { Component } from '@angular/core';
+import { TagsService } from './../../../core/services/posts-services/tags.service';
+import { Tag } from './../../../core/models/Tag';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { TagForm } from './../../../core/forms/posts/TagForm';
+import { User } from './../../../core/models/User';
 import { Router } from '@angular/router';
-import { Messages } from 'src/app/core/data/Messages';
-import { TagForm } from 'src/app/core/forms/posts/TagForm';
-import { Tag } from 'src/app/core/models/Tag';
-import { User } from 'src/app/core/models/User';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
-import { TagsService } from 'src/app/core/services/posts-services/tags.service';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
+import { UsersService } from '../../../core/services/users-services/users-service.service';
+import { GlobalService } from './../../../core/services/global-service/global-service.service';
+import { CustomToastrService } from './../../../core/services/custom-toastr.service';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 
 @Component({
   selector: 'app-add-tag',
   templateUrl: './add-tag.component.html',
-  styleUrls: ['./add-tag.component.scss']
+  styleUrls: ['./add-tag.component.css'],
+  standalone: false
 })
-export class AddTagComponent {
+export class AddTagComponent implements OnInit {
   /**
    * @param tagForm FormGroup
    */

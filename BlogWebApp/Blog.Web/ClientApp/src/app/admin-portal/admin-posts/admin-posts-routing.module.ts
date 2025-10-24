@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
 import { AdminPostsListComponent } from './admin-posts-list/admin-posts-list.component';
-import { ShowComponent } from 'src/app/shared/posts/show/show.component';
-import { AddPostComponent } from 'src/app/shared/posts/add-post/add-post.component';
-import { EditPostComponent } from 'src/app/shared/posts/edit-post/edit-post.component';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { AddPostComponent } from './../../shared/posts/add-post/add-post.component';
+import { EditPostComponent } from './../../shared/posts/edit-post/edit-post.component';
+import { ShowComponent } from './../../shared/posts/show/show.component';
 
 const routes: Routes = [
   {
@@ -11,15 +11,15 @@ const routes: Routes = [
     component: AdminPostsListComponent
   },
   {
-    path: 'show/:post-id',
+    path: 'show/:postId',
     component: ShowComponent
   },
   {
-    path: 'posts/add',
+    path: 'post/add',
     component: AddPostComponent
   },
   {
-    path: 'posts/edit/:post-id',
+    path: 'post/edit/:postId',
     component: EditPostComponent
   },
 ];

@@ -1,6 +1,3 @@
-import { PageInfo } from 'src/app/core/models/PageInfo';
-import { Post } from 'src/app/core/models/Post';
-
 export class ProfileViewDto {
   /**
    * Profile view dto.

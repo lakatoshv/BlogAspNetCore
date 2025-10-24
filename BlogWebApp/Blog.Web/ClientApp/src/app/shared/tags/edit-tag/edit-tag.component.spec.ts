@@ -7,11 +7,13 @@ describe('EditTagComponent', () => {
   let fixture: ComponentFixture<EditTagComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       declarations: [ EditTagComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(EditTagComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -11,7 +11,9 @@ describe('ChangeStatusComponent', () => {
       declarations: [ ChangeStatusComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(ChangeStatusComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

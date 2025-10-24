@@ -1,13 +1,15 @@
 <!-- Area Chart Example-->
-<div class="card mb-3" *ngIf="isLoaded">
+@if(isLoaded) {
+  <div class="card mb-3">
     <div class="card-header">
-        <i class="fa fa-chart-area"></i> Створення постів
+      <i class="fa fa-chart-area"></i> Створення постів
     </div>
     <div class="card-body" #pbgChartContainer>
-        <ngx-charts-line-chart [view]="chartOptions.View" [scheme]="chartOptions.ColorScheme" [results]="chartOptions.Data" [gradient]="chartOptions.Gradient" [xAxis]="chartOptions.ShowXAxis" [yAxis]="chartOptions.ShowYAxis" [showXAxisLabel]="chartOptions.ShowXAxisLabel"
-            [showYAxisLabel]="chartOptions.ShowYAxisLabel" [autoScale]="chartOptions.AutoScale" [timeline]="chartOptions.Timeline" (select)="onSelect($event)">
-        </ngx-charts-line-chart>
+      <ngx-charts-line-chart [view]="chartOptions.View" [scheme]="chartOptions.ColorScheme" [results]="chartOptions.Data" [gradient]="chartOptions.Gradient" [xAxis]="chartOptions.ShowXAxis" [yAxis]="chartOptions.ShowYAxis" [showXAxisLabel]="chartOptions.ShowXAxisLabel"
+                             [showYAxisLabel]="chartOptions.ShowYAxisLabel" [autoScale]="chartOptions.AutoScale" [timeline]="chartOptions.Timeline" (select)="onSelect($event)">
+      </ngx-charts-line-chart>
 
     </div>
     <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-</div>
+  </div>
+}

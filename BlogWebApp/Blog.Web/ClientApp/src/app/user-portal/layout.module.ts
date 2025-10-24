@@ -1,15 +1,14 @@
-import { ErrorsModule } from './../shared/errors/errors.module';
-import { UserModule } from './user/user.module';
+import { PersonalInfoModule } from './personal-info/personal-info.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {LayoutRoutingModule } from './layout-routing.module';
 import { LayoutComponentComponent } from './layout-component/layout-component.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { EditorModule } from '@tinymce/tinymce-angular';
-import { AboutComponent } from './default-pages/about/about.component';
-import { ContactsComponent } from './default-pages/contacts/contacts.component';
 import { ProfileModule } from './profile/profile.module';
-import { PersonalInfoModule } from './personal-info/personal-info.module';
+import { ErrorsModule } from '../shared/errors/errors.module';
+import { DefaultPagesModule } from './default-pages/default-pages.module';
+import { UserModule } from './user/user.module';
 // import { SharedModule } from "@app/shared";
 
 @NgModule({
@@ -18,15 +17,14 @@ import { PersonalInfoModule } from './personal-info/personal-info.module';
     LayoutRoutingModule,
     ReactiveFormsModule,
     EditorModule,
-    UserModule,
     ProfileModule,
     PersonalInfoModule,
-    ErrorsModule
+    ErrorsModule,
+    DefaultPagesModule,
+    UserModule
   ],
   declarations: [
-    LayoutComponentComponent,
-    AboutComponent,
-    ContactsComponent,
+    LayoutComponentComponent
   ],
 })
 export class LayoutModule { }

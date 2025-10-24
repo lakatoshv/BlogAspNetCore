@@ -11,7 +11,9 @@ describe('IndexComponent', () => {
       declarations: [ IndexComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(IndexComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

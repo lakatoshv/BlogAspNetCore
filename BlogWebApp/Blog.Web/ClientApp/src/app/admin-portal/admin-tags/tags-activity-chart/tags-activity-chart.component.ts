@@ -1,16 +1,17 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ChartOptionsData } from 'src/app/core/data/chart/ChartOptionsData';
-import { ChartOptions } from 'src/app/core/models/chart/ChartOptions';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { TagsService } from 'src/app/core/services/posts-services/tags.service';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { ChartOptions } from './../../../core/models/chart/ChartOptions';
+import { ChartOptionsData } from './../../../core/data/chart/ChartOptionsData';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { CustomToastrService } from '../../../core/services/custom-toastr.service';
+import { TagsService } from '../../../core/services/posts-services/tags.service';
 
 @Component({
   selector: 'app-tags-activity-chart',
   templateUrl: './tags-activity-chart.component.html',
-  styleUrls: ['./tags-activity-chart.component.scss']
+  styleUrls: ['./tags-activity-chart.component.css'],
+  standalone: false
 })
-export class TagsActivityChartComponent {
+export class TagsActivityChartComponent implements OnInit {
   /**
    * @param pbgChartContainer ElementRef
    */

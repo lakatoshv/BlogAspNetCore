@@ -1,24 +1,24 @@
+import { PostsService } from './../../../core/services/posts-services/posts.service';
 import { Component, OnInit } from '@angular/core';
-import { GeneralServiceService } from 'src/app/core';
-import { ActivatedRoute } from '@angular/router';
-import { Post } from 'src/app/core/models/Post';
-import { User } from 'src/app/core/models/User';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
+import { GeneralServiceService } from './../../../core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Post } from './../../../core/models/Post';
+import { User } from './../../../core/models/User';
+import { GlobalService } from './../../../core/services/global-service/global-service.service';
+import { UsersService } from '../../../core/services/users-services/users-service.service';
 import { FormGroup } from '@angular/forms';
-import { SearchForm } from 'src/app/core/forms/SearchForm';
-import {debounceTime} from 'rxjs/operators';
-import { PageInfo } from 'src/app/core/models/PageInfo';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
-import { PostService } from 'src/app/core/services/posts-services/post.service';
-import { PageViewDto } from 'src/app/core/Dto/PageViewDto';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { Messages } from 'src/app/core/data/Messages';
+import { SearchForm } from './../../../core/forms/SearchForm';
+import { PageInfo } from './../../../core/models/PageInfo';
+import { CustomToastrService } from './../../../core/services/custom-toastr.service';
+import { Messages } from './../../../core/data/Mesages';
+import { PageViewDto } from '../../../core/Dto/PageViewDto';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 
 @Component({
   selector: 'app-posts-list',
   templateUrl: './posts-list.component.html',
-  styleUrls: ['./posts-list.component.css']
+  styleUrls: ['./posts-list.component.scss'],
+  standalone: false
 })
 export class PostsListComponent implements OnInit {
   /**
@@ -85,7 +85,7 @@ export class PostsListComponent implements OnInit {
    * @param _generalService GeneralServiceService
    * @param _activatedRoute ActivatedRoute
    * @param _usersService UsersService
-   * @param _postService: PostService
+   * @param _postsService: PostsService
    * @param _customToastrService CustomToastrService
    */
   constructor(
@@ -93,7 +93,7 @@ export class PostsListComponent implements OnInit {
     private _generalService: GeneralServiceService,
     private _activatedRoute: ActivatedRoute,
     private _usersService: UsersService,
-    private _postService: PostService,
+    private _postsService: PostsService,
     private _customToastrService: CustomToastrService
   ) {
   }
@@ -120,7 +120,7 @@ export class PostsListComponent implements OnInit {
   deleteAction(postId: number): void {
     const postItem = this.posts.find(post =>  post.id === postId);
     if (this.loggedIn && this._globalService._currentUser && postItem?.authorId === this._globalService._currentUser?.id) {
-      this._postService.delete(postId, this._globalService._currentUser.id).subscribe(
+      this._postsService.delete(postId, this._globalService._currentUser.id).subscribe(
         (response: any) => {
           this._customToastrService.displaySuccessMessage(Messages.POST_DELETED_SUCCESSFULLY);
           this._onDeleteCommentAction(response.id);
@@ -138,7 +138,7 @@ export class PostsListComponent implements OnInit {
    */
   public like(id: number): void {
     if (this.loggedIn) {
-      this._postService.like(id).subscribe(
+      this._postsService.like(id).subscribe(
         (response: any) => {
           const ind = this.posts.findIndex(post =>  post.id === id);
           this.posts[ind] = response;
@@ -157,7 +157,7 @@ export class PostsListComponent implements OnInit {
    */
   public dislike(id: number): void {
     if (this.loggedIn) {
-      this._postService.dislike(id).subscribe(
+      this._postsService.dislike(id).subscribe(
         (response: any) => {
           const ind = this.posts.findIndex(post =>  post.id === id);
           this.posts[ind] = response;
@@ -191,7 +191,7 @@ export class PostsListComponent implements OnInit {
       tag: this._searchFilter,
       sortParameters: null,
     };
-    this._postService.list(model).subscribe(
+    this._postsService.list(model).subscribe(
       (response: any) => {
         this.posts = response.posts;
         this.pageInfo = this.pageInfo;
@@ -220,7 +220,7 @@ export class PostsListComponent implements OnInit {
       tag: this._searchFilter,
       sortParameters: sortParameters,
     };
-    this._postService.list(model).subscribe(
+    this._postsService.list(model).subscribe(
       (response: any) => {
         this.posts = response.posts;
         this.pageInfo = response.pageInfo;
@@ -250,7 +250,7 @@ export class PostsListComponent implements OnInit {
       sortParameters: sortParameters
     };
 
-    this._postService.list(model)
+    this._postsService.list(model)
       .subscribe(
         (response: PageViewDto) => {
           this.posts = response.posts;

@@ -1,9 +1,8 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
-import { User } from '../../models/User';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { User } from '../../models/User';
 import { Profile } from '../../models/Profile';
-
 @Injectable({
   providedIn: 'root'
 })

@@ -1,19 +1,20 @@
-import { MessageType } from './../../../core/enums/MessageType';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MessageForm } from '../../../core/forms/Message';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
-import { User } from 'src/app/core/models/User';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
-import { MessagesService } from 'src/app/core/services/messages-service';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { Messages } from 'src/app/core/data/Messages';
+import { MessageForm } from '../../../core/forms/MessageForm';
+import { Messages } from '../../../core/data/Mesages';
+import { MessageType } from '../../../core/enums/MessageType';
+import { User } from '../../../core/models/User';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { CustomToastrService } from '../../../core/services/custom-toastr.service';
+import { GlobalService } from '../../../core/services/global-service/global-service.service';
+import { MessagesService } from '../../../core/services/messages-service';
+import { UsersService } from '../../../core/services/users-services/users-service.service';
 
 @Component({
   selector: 'app-contacts',
   templateUrl: './contacts.component.html',
-  styleUrls: ['./contacts.component.css']
+  styleUrls: ['./contacts.component.scss'],
+  standalone: false
 })
 export class ContactsComponent implements OnInit {
   /**

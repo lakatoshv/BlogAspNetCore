@@ -11,7 +11,9 @@ describe('PostsActivityChartComponent', () => {
       declarations: [ PostsActivityChartComponent ]
     })
     .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(PostsActivityChartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

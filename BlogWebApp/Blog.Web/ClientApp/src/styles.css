@@ -715,6 +715,23 @@ ul.socialIcons {
     line-height: 43px;
 }
 
+a:not([href]):not([tabindex]) {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:not([href]):not([tabindex]):hover,
+a:not([href]):not([tabindex]):focus {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:not([href]):not([tabindex]):focus {
+    outline: 0;
+}
+
 input.ng-invalid.ng-touched {
     border: 1px solid red;
 }

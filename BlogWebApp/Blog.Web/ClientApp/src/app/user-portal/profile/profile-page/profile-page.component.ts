@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { GeneralServiceService } from 'src/app/core';
+import { GeneralServiceService } from './../../../core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { User } from 'src/app/core/models/User';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
-import { AccountsService } from 'src/app/core/services/users-services/account.sevice';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { Messages } from 'src/app/core/data/Messages';
+import { User } from './../../../core/models/User';
+import { GlobalService } from './../../../core/services/global-service/global-service.service';
+import { UsersService } from '../../../core/services/users-services/users-service.service';
+import { CustomToastrService } from './../../../core/services/custom-toastr.service';
+import { Messages } from './../../../core/data/Mesages';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { AccountsService } from '../../../core/services/users-services/account.sevice';
 
 @Component({
   selector: 'app-profile-page',
   templateUrl: './profile-page.component.html',
-  styleUrls: ['./profile-page.component.css']
+  styleUrls: ['./profile-page.component.css'],
+  standalone: false
 })
 export class ProfilePageComponent implements OnInit {
   /**

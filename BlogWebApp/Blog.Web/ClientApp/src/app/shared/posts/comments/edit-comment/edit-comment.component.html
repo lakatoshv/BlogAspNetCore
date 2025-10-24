@@ -12,7 +12,7 @@
                     <textarea class="comment_text" placeholder="Your Comment" required="required" formControlName="content">
                     </textarea>
 
-                    <button type="submit" class="comment_button" [disabled]="commentForm.invalid">
+                    <button type="submit" class="comment_button" [disabled]="!commentForm.valid">
                         Редагувати
                     </button>
                 </form>
