@@ -1,20 +1,19 @@
 import { TagsService } from './../../core/services/posts-services/tags.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { TagsRoutingModule } from './tags-routing.module';
-import { TagsListComponent } from './tags-list/tags-list.component';
-import { PopularTagsComponent } from './popular-tags/popular-tags.component';
 import { AddTagComponent } from './add-tag/add-tag.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditTagComponent } from './edit-tag/edit-tag.component';
+import { TagsListComponent } from './tags-list/tags-list.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PopularTagsComponent } from './popular-tags/popular-tags.component';
 
 @NgModule({
   declarations: [
-    TagsListComponent,
-    PopularTagsComponent,
-    AddTagComponent,
-    EditTagComponent
+    AddTagComponent, 
+    EditTagComponent, 
+    TagsListComponent, 
+    PopularTagsComponent
   ],
   imports: [
     CommonModule,
@@ -22,13 +21,12 @@ import { EditTagComponent } from './edit-tag/edit-tag.component';
     FormsModule,
     ReactiveFormsModule,
   ],
+  providers: [TagsService],
   exports: [
+    AddTagComponent, 
+    EditTagComponent, 
     TagsListComponent,
-    PopularTagsComponent,
-    AddTagComponent
-  ],
-  providers: [
-    TagsService
+    PopularTagsComponent
   ]
 })
 export class TagsModule { }

@@ -3,11 +3,13 @@
     <div class="card-header">
         <i class="fa fa-chart-area"></i> Створення тегів
     </div>
-    <div class="card-body" #pbgChartContainer *ngIf="isLoaded">
+    @if(isLoaded) {
+      <div class="card-body" #pbgChartContainer>
         <ngx-charts-line-chart [view]="chartOptions.View" [scheme]="chartOptions.ColorScheme" [results]="chartOptions.Data" [gradient]="chartOptions.Gradient" [xAxis]="chartOptions.ShowXAxis" [yAxis]="chartOptions.ShowYAxis" [showXAxisLabel]="chartOptions.ShowXAxisLabel"
-            [showYAxisLabel]="chartOptions.ShowYAxisLabel" [autoScale]="chartOptions.AutoScale" [timeline]="chartOptions.Timeline" (select)="onSelect($event)">
+                               [showYAxisLabel]="chartOptions.ShowYAxisLabel" [autoScale]="chartOptions.AutoScale" [timeline]="chartOptions.Timeline" (select)="onSelect($event)">
         </ngx-charts-line-chart>
 
-    </div>
+      </div>
+    }
     <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
 </div>

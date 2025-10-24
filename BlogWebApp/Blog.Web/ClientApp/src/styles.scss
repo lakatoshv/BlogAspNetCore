@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import '~bootstrap/dist/css/bootstrap.min.css';
+@import "bootstrap/dist/css/bootstrap.min.css";
 body {
     font-size: 20px;
     color: #212529;
@@ -467,7 +467,7 @@ ul.socialIcons {
     padding-right: 1em;
 }
 
-.socialIcons .facebook
+.socialIcons .facebook,
 {
     background: #3b5998;
     box-shadow: 0 0 16px #3b5998;
@@ -713,6 +713,23 @@ ul.socialIcons {
 
 .table td {
     line-height: 43px;
+}
+
+a:not([href]):not([tabindex]) {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:not([href]):not([tabindex]):hover,
+a:not([href]):not([tabindex]):focus {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a:not([href]):not([tabindex]):focus {
+    outline: 0;
 }
 
 input.ng-invalid.ng-touched {

@@ -1,18 +1,19 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { PageViewDto } from 'src/app/core/Dto/PageViewDto';
-import { PageInfo } from 'src/app/core/models/PageInfo';
-import { Post } from 'src/app/core/models/Post';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { PostService } from 'src/app/core/services/posts-services/post.service';
+import { Component, OnInit } from "@angular/core";
+import { PageInfo } from "../../../core/models/PageInfo";
+import { Post } from "../../../core/models/Post";
+import { CustomToastrService } from "../../../core/services/custom-toastr.service";
+import { PageViewDto } from "../../../core/Dto/PageViewDto";
+import { ErrorResponse } from "../../../core/responses/ErrorResponse";
+import { PostsService } from "../../../core/services/posts-services/posts.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-admin-posts-table',
   templateUrl: './admin-posts-table.component.html',
-  styleUrls: ['./admin-posts-table.component.scss']
+  styleUrls: ['./admin-posts-table.component.css'],
+  standalone: false
 })
-export class AdminPostsTableComponent {
+export class AdminPostsTableComponent implements OnInit {
   /**
    * @param posts Post[]
    */
@@ -37,12 +38,12 @@ export class AdminPostsTableComponent {
   /**
    * @param _router Router
    * @param _customToastrService CustomToastrService
-   * @param _postService: PostService
+   * @param _postsService: PostsService
    */
   constructor(
     private _router: Router,
     private _customToastrService: CustomToastrService,
-    private _postService: PostService
+    private _postsService: PostsService
   ) { }
 
   /**
@@ -94,7 +95,7 @@ export class AdminPostsTableComponent {
       sortParameters: sortParameters
     };
 
-    this._postService.list(model)
+    this._postsService.list(model)
       .subscribe(
         (response: PageViewDto) => {
           this.posts = response.posts;

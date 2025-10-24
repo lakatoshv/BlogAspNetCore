@@ -1,22 +1,20 @@
+import { DefaultPagesModule } from './default-pages/default-pages.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { AdminPortalRoutingModule } from './admin-portal-routing.module';
 import { LayoutComponentComponent } from './layout-component/layout-component.component';
-import { DefaultPagesModule } from './default-pages/default-pages.module';
 import { ErrorsModule } from '../shared/errors/errors.module';
-import { ToastrModule } from 'ngx-toastr';
+import { PostsService } from '../core/services/posts-services/posts.service';
+import { HttpClientService } from '../core/services/global-service/http-client-services/http-client.service';
 
 @NgModule({
-  declarations: [
-    LayoutComponentComponent
-  ],
   imports: [
     CommonModule,
     AdminPortalRoutingModule,
     DefaultPagesModule,
     ErrorsModule,
-    ToastrModule.forRoot()
-  ]
+  ],
+  declarations: [LayoutComponentComponent],
+  providers: [PostsService, HttpClientService]
 })
 export class AdminPortalModule { }

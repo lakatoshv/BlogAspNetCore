@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
-import { User } from 'src/app/core/models/User';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
+import { Component, OnInit } from '@angular/core';
+import { GlobalService } from './../../core/services/global-service/global-service.service';
+import { User } from './../../core/models/User';
+import { UsersService } from '../../core/services/users-services/users-service.service';
 
 @Component({
   selector: 'app-layout-component',
   templateUrl: './layout-component.component.html',
-  styleUrls: ['./layout-component.component.scss']
+  styleUrls: ['./layout-component.component.css'],
+  standalone: false
 })
-export class LayoutComponentComponent {
+export class LayoutComponentComponent implements OnInit {
   /**
    * @param user User | undefined
    */

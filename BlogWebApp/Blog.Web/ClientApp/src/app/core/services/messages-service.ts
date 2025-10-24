@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClientService } from './global-service/http-client-services/http-client.service';
 import { map } from 'rxjs/operators';
-import { APiRoutes } from 'src/app/contracts/v1/ApiRoutes';
-
+import { APiRoutes } from '../../contracts/v1/APiRoutes';
 
 @Injectable()
 /**

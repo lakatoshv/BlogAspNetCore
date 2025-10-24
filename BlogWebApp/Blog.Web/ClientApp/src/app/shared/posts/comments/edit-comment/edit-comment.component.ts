@@ -1,20 +1,20 @@
-import { CommentService } from './../../../../core/services/posts-services/comment.service';
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { CommentsService } from './../../../../core/services/posts-services/comments.service';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { CommentForm } from 'src/app/core/forms/posts/CommentForm';
-
+import { CommentForm } from './../../../../core/forms/posts/CommentForm';
 import { Comment } from '../../../../core/models/Comment';
-import { User } from 'src/app/core/models/User';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
-import { Messages } from 'src/app/core/data/Messages';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { User } from './../../../../core/models/User';
+import { UsersService } from '../../../../core/services/users-services/users-service.service';
+import { GlobalService } from './../../../../core/services/global-service/global-service.service';
+import { CustomToastrService } from './../../../../core/services/custom-toastr.service';
+import { Messages } from './../../../../core/data/Mesages';
+import { ErrorResponse } from '../../../../core/responses/ErrorResponse';
 
 @Component({
   selector: 'app-edit-comment',
   templateUrl: './edit-comment.component.html',
-  styleUrls: ['./edit-comment.component.css']
+  styleUrls: ['./edit-comment.component.scss'],
+  standalone: false
 })
 export class EditCommentComponent implements OnInit {
   /**
@@ -43,13 +43,13 @@ export class EditCommentComponent implements OnInit {
   commentForm: FormGroup = new CommentForm().commentForm;
 
   /**
-   * @param _commentService CommentService
+   * @param _commentsService Commentservice
    * @param _usersService UsersService
    * @param _globalService GlobalService
    * @param _customToastrService CustomToastrService
    */
   constructor(
-    private _commentService: CommentService,
+    private _commentsService: CommentsService,
     private _usersService: UsersService,
     private _globalService: GlobalService,
     private _customToastrService: CustomToastrService
@@ -90,7 +90,7 @@ export class EditCommentComponent implements OnInit {
       && this.commentForm.valid
       && this.comment) {
       this.comment.commentBody = this.commentForm.get('content')?.value;
-      this._commentService.edit(this.comment.id, this.comment).subscribe(
+      this._commentsService.edit(this.comment.id, this.comment).subscribe(
         (response: any) => {
           this.onEdit.emit(response);
           this._customToastrService.displaySuccessMessage(Messages.COMMENT_EDITED_SUCCESSFULLY);

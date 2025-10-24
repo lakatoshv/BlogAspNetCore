@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PopularTagsComponent } from './popular-tags.component';
 
@@ -6,12 +6,12 @@ describe('PopularTagsComponent', () => {
   let component: PopularTagsComponent;
   let fixture: ComponentFixture<PopularTagsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [ PopularTagsComponent ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PopularTagsComponent);

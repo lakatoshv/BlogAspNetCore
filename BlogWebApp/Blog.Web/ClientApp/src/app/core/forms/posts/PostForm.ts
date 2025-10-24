@@ -9,25 +9,25 @@ export class PostForm {
          * Title input field.
          */
         title: new FormControl('', [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(255)
+            Validators.required,
+            Validators.minLength(3),
+            Validators.maxLength(255)
         ]),
 
         /**
          * Description input field.
          */
         description: new FormControl('', [
-          Validators.required,
-          Validators.minLength(3),
+            Validators.required,
+            Validators.minLength(3),
         ]),
 
         /**
          * Content input field.
          */
         content: new FormControl('', [
-          Validators.required,
-          Validators.minLength(3),
+            Validators.required,
+            Validators.minLength(3),
         ]),
 
         /**

@@ -1,12 +1,8 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from '../core/guards/AuthGuard';
 import { LayoutComponentComponent } from './layout-component/layout-component.component';
-import { DefaultPagesModule } from './default-pages/default-pages.module';
+import { Routes, RouterModule } from '@angular/router';
 import { NotFoundComponent } from '../shared/errors/not-found/not-found.component';
-import { AdminPostsModule } from './admin-posts/admin-posts.module';
-import { AdminCommentsModule } from './admin-comments/admin-comments.module';
-import { AdminTagsModule } from './admin-tags/admin-tags.module';
+import { AuthGuard } from '../core/guards/AuthGuard';
 
 const routes: Routes = [
   {
@@ -16,19 +12,23 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: () => DefaultPagesModule
+        loadChildren: () => import('./default-pages/default-pages.module').then(m => m.DefaultPagesModule)
       },
       {
         path: 'posts',
-        loadChildren: () => AdminPostsModule
+        loadChildren: () => import('./admin-posts/admin-posts.module').then(m => m.AdminPostsModule)
       },
       {
         path: 'comments',
-        loadChildren: () => AdminCommentsModule
+        loadChildren: () => import('./admin-comments/admin-comments.module').then(m => m.AdminCommentsModule)
+      },
+      {
+        path: 'comments/:postId',
+        loadChildren: () => import('./admin-comments/admin-comments.module').then(m => m.AdminCommentsModule)
       },
       {
         path: 'tags',
-        loadChildren: () => AdminTagsModule
+        loadChildren: () => import('./admin-tags/admin-tags.module').then(m => m.AdminTagsModule)
       },
       {
         path: 'not-found',

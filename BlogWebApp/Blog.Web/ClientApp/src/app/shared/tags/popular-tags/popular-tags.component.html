@@ -1,6 +1,8 @@
 <div class="sidebar-box ftco-animate">
     <h3 class="sidebar-heading">Теги</h3>
-    <ul class="tagcloud" *ngIf="tags">
-        <a routerLink="/blog/posts/{{tag.title}}" class="tag-cloud-link" *ngFor="let tag of tags">{{tag.title}}</a>
-    </ul>
+    @if(tags) {
+        <ul class="tagcloud">
+            <a routerLink="/blog/posts/{{tag.title}}" class="tag-cloud-link" *ngFor="let tag of tags">{{tag.title}}</a>
+        </ul>
+    }
 </div>

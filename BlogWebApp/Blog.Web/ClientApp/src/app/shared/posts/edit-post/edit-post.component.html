@@ -83,29 +83,31 @@
                         <div class="panel-heading">
                             <span class="fa fa-list"></span> Теги:
                         </div>
-                        <div class="panel-body" *ngIf='isLoadEdit'>
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <div class="checkbox">
-                                        <label class="optional" (click)="addTagLabel()">
-                                          Додати новий тег
-                                        </label>
-                                    </div>
-                                </li>
-                                <li class="list-group-item" *ngFor="let tag of post?.tags">
-                                    <div class="checkbox">
-                                        <label>
-                                          {{tag.title}}
-                                        </label>
-                                    </div>
-                                    <div class="pull-right action-buttons">
-                                        <button type="button" (click)="editTag(tag)"><span class="fa fa-pencil"></span></button>
-                                        <button type="button" (click)="onDeleteTagAction(tag)"><span class="fa fa-trash"></span></button>
-                                    </div>
-                                </li>
+                        @if(isLoadEdit) {
+                          <div class="panel-body">
+                              <ul class="list-group">
+                                  <li class="list-group-item">
+                                      <div class="checkbox">
+                                          <label class="optional" (click)="addTagLabel()">
+                                            Додати новий тег
+                                          </label>
+                                      </div>
+                                  </li>
+                                  <li class="list-group-item" *ngFor="let tag of post?.tags">
+                                      <div class="checkbox">
+                                          <label>
+                                            {{tag.title}}
+                                          </label>
+                                      </div>
+                                      <div class="pull-right action-buttons">
+                                          <button type="button" (click)="editTag(tag)"><span class="fa fa-pencil"></span></button>
+                                          <button type="button" (click)="onDeleteTagAction(tag)"><span class="fa fa-trash"></span></button>
+                                      </div>
+                                  </li>
 
-                            </ul>
-                        </div>
+                              </ul>
+                          </div>
+                        }
                     </div>
 
                     <label for="alias" tag="" class="optional">

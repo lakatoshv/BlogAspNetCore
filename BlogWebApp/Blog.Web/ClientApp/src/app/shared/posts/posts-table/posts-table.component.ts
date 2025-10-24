@@ -1,15 +1,17 @@
-import { PostService } from 'src/app/core/services/posts-services/post.service';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { PageViewDto } from 'src/app/core/Dto/PageViewDto';
-import { PageInfo } from 'src/app/core/models/PageInfo';
-import { Post } from 'src/app/core/models/Post';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { Component, OnInit, Input, Output, output } from "@angular/core";
+import EventEmitter from "events";
+import { PageViewDto } from "../../../core/Dto/PageViewDto";
+import { PageInfo } from "../../../core/models/PageInfo";
+import { Post } from "../../../core/models/Post";
+import { ErrorResponse } from "../../../core/responses/ErrorResponse";
+import { CustomToastrService } from "../../../core/services/custom-toastr.service";
+import { PostsService } from "../../../core/services/posts-services/posts.service";
 
 @Component({
   selector: 'app-posts-table',
   templateUrl: './posts-table.component.html',
-  styleUrls: ['./posts-table.component.css']
+  styleUrls: ['./posts-table.component.css'],
+  standalone: false
 })
 export class PostsTableComponent implements OnInit {
   /**
@@ -20,7 +22,7 @@ export class PostsTableComponent implements OnInit {
   /**
    * @param postsCount EventEmitter<number>
    */
-  @Output() postsCount = new EventEmitter<number>();
+  readonly postsCount = output<number>();
 
   /**
    * @param posts Post[]
@@ -42,11 +44,11 @@ export class PostsTableComponent implements OnInit {
   };
 
   /**
-   * @param _postService PostService
+   * @param _postsService PostsService
    * @param _customToastrService CustomToastrService
    */
   constructor(
-    private _postService: PostService,
+    private _postsService: PostsService,
     private _customToastrService: CustomToastrService) { }
 
   /** @inheritdoc */
@@ -72,7 +74,7 @@ export class PostsTableComponent implements OnInit {
       sortParameters: sortParameters,
     };
     if (this.userId != null) {
-      this._postService.userPosts(this.userId, model).subscribe(
+      this._postsService.userPosts(this.userId, model).subscribe(
         (response: any) => {
           this.posts = response.posts;
           this.pageInfo = response.pageInfo;
@@ -84,7 +86,7 @@ export class PostsTableComponent implements OnInit {
           this.isLoaded = true;
         });
     } else {
-      this._postService.list(model)
+      this._postsService.list(model)
         .subscribe(
           (response: PageViewDto) => {
             this.posts = response.posts;
@@ -109,5 +111,4 @@ export class PostsTableComponent implements OnInit {
   public paginate(page: number): void {
     this.pageInfo.pageNumber = page;
   }
-
 }

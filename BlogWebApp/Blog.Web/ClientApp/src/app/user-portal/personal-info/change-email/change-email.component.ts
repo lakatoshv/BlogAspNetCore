@@ -1,22 +1,23 @@
-import { AccountsService } from 'src/app/core/services/users-services/account.sevice';
-import { FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { User } from 'src/app/core/models/User';
-import { ProfileForm } from 'src/app/core/forms/user/ProfileForm';
-import { TinyMCEOptionsObject } from 'src/app/core/models/TinyMCEOptionsObject';
-import { TinyMCEOptions } from 'src/app/core/data/TinyMCEOptions';
+import { User } from './../../../core/models/User';
+import { FormGroup } from '@angular/forms';
+import { ProfileForm } from './../../../core/forms/user/ProfileForm';
+import { TinyMCEOptionsObject } from './../../../core/models/TinyMCEOptionsObject';
+import { TinyMCEOptions } from './../../../core/data/TinyMCEOptions';
 import { Router } from '@angular/router';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
-import { ProfileViewDto } from 'src/app/core/Dto/ProfileViewDto';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { Messages } from 'src/app/core/data/Messages';
+import { GlobalService } from './../../../core/services/global-service/global-service.service';
+import { UsersService } from '../../../core/services/users-services/users-service.service';
+import { CustomToastrService } from './../../../core/services/custom-toastr.service';
+import { Messages } from './../../../core/data/Mesages';
+import { ProfileViewDto } from '../../../core/Dto/ProfileViewDto';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { AccountsService } from '../../../core/services/users-services/account.sevice';
 
 @Component({
   selector: 'app-change-email',
   templateUrl: './change-email.component.html',
-  styleUrls: ['./change-email.component.scss']
+  styleUrls: ['./change-email.component.scss'],
+  standalone: false
 })
 export class ChangeEmailComponent implements OnInit {
   /**

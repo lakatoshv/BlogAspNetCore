@@ -1,6 +1,8 @@
 <select #status (change)="changeStatus(status.value)">
-    <option value="null">Виберіть статус</option>
-    <option value="0">Підтверджено</option>
-    <option value="1">Непідтверджено</option>
-  </select>
-  <button *ngIf="changed" (click)="change()" class="btn btn-sm btn-success btn-@item.Post.Id">Зберегти</button>
+  <option value="null">Виберіть статус</option>
+  <option value="0">Підтверджено</option>
+  <option value="1">Непідтверджено</option>
+</select>
+@if (changed) {
+  <button (click)="change()" class="btn btn-sm btn-success btn-@item.Post.Id">Зберегти</button>
+}

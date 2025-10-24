@@ -1,40 +1,40 @@
-import { Messages } from './../../../core/data/Messages';
-import { ErrorResponse } from './../../../core/responses/ErrorResponse';
 import { TagsService } from './../../../core/services/posts-services/tags.service';
-import { PostService } from './../../../core/services/posts-services/post.service';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { PostsService } from './../../../core/services/posts-services/posts.service';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { PostForm } from '../../../core/forms/posts/PostForm';
 import { Router } from '@angular/router';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
-import { User } from 'src/app/core/models/User';
-import { TinyMCEOptionsObject } from 'src/app/core/models/TinyMCEOptionsObject';
-import { TinyMCEOptions } from 'src/app/core/data/TinyMCEOptions';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
-import { Tag } from 'src/app/core/models/Tag';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { SelectedTag } from 'src/app/core/models/SelectedTag';
+import { UsersService } from '../../../core/services/users-services/users-service.service';
+import { GlobalService } from './../../../core/services/global-service/global-service.service';
+import { User } from './../../../core/models/User';
+import { TinyMCEOptionsObject } from './../../../core/models/TinyMCEOptionsObject';
+import { TinyMCEOptions } from './../../../core/data/TinyMCEOptions';
+import { Tag } from './../../../core/models/Tag';
+import { Messages } from './../../../core/data/Mesages';
+import { CustomToastrService } from './../../../core/services/custom-toastr.service';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 
 @Component({
   selector: 'app-add-post',
   templateUrl: './add-post.component.html',
-  styleUrls: ['./add-post.component.css']
+  styleUrls: ['./add-post.component.css'],
+  standalone: false
 })
 export class AddPostComponent implements OnInit {
   /**
-   * @param tagInput ElementRef | undefined
+   * @param tagInput ElementRef
    */
   @ViewChild('tag') tagInput: ElementRef | undefined;
 
   /**
    * @param postForm FormGroup
    */
-  postForm: FormGroup = new PostForm().postForm;
+  public postForm: FormGroup = new PostForm().postForm;
 
   /**
    * @param tagsList string[]
    */
-  tagsList: Tag[] = [];
+  public tagsList: Tag[] = [];
 
   /**
    * @param availableTags Tag[]
@@ -44,30 +44,30 @@ export class AddPostComponent implements OnInit {
   /**
    * @param isLoggedIn boolean
    */
-  isLoggedIn = false;
+  public isLoggedIn = false;
 
   /**
    * @param tagLabel string
    */
-  tagLabel = 'Додати новий тег';
+  public tagLabel = 'Додати новий тег';
 
   /**
    * @param action string
    */
-  action = 'add';
+  public action = 'add';
 
   /**
    * @param selectedTag object
    */
-  selectedTag: SelectedTag = {
+  public selectedTag: any = {
     value: '',
-    id: undefined
+    id: null
   };
 
   /**
-   * @param user User | undefined
+   * @param user User
    */
-  user: User | undefined;
+  public user: User | undefined;
 
   /**
    * @param tinyMCEOptions TinyMCEOptionsObject
@@ -76,24 +76,25 @@ export class AddPostComponent implements OnInit {
 
   /**
    * @param _router Router
-   * @param _postService: PostService
    * @param _usersService UsersService
    * @param _globalService GlobalService
+   * @param _postsService PostsService,
    * @param _tagsService TagsService
    * @param _customToastrService CustomToastrService
    */
-  constructor(
+  public constructor(
     private _router: Router,
-    private _postService: PostService,
     private _usersService: UsersService,
     private _globalService: GlobalService,
+    private _postsService: PostsService,
     private _tagsService: TagsService,
-    private _customToastrService: CustomToastrService) { }
+    private _customToastrService: CustomToastrService
+  ) { }
 
   /**
    * @inheritdoc
    */
-  ngOnInit() {
+  public ngOnInit() {
     this.isLoggedIn = this._usersService.isLoggedIn();
     if (this.isLoggedIn) {
       this._globalService.resetUserData();
@@ -101,35 +102,32 @@ export class AddPostComponent implements OnInit {
     } else {
       this._router.navigateByUrl('/authorization');
     }
-
     this._getTags();
   }
 
   /**
    * Add/Edit tag action.
+   *
    * @param tag string
    * @param action string
-   * @returns void
    */
-  tagAction(tag: string, action: string): void {
+  public tagAction(tag: string, action: string): void {
     if (action === 'add') { this.onAddTagAction(tag); }
     if (action === 'edit') { this.onEditTagAction(tag); }
   }
 
   /**
-   * Add tag event
-   * @returns void
+   * Add tag event.
    */
-  addTagLabel(): void {
+  public addTagLabel(): void {
     this.clearFormData();
   }
-
   /**
-   * Edit tag event
+   * Edit tag event.
+   * 
    * @param tag string
-   * @returns void
    */
-  editTag(tag: Tag): void {
+  public editTag(tag: Tag): void {
     this.selectedTag['value'] = tag.title;
     this.selectedTag['id'] = this.tagsList.indexOf(tag);
     this.action = 'edit';
@@ -137,9 +135,9 @@ export class AddPostComponent implements OnInit {
   }
 
   /**
-   * Add tag event
+   * Add tag event.
+   * 
    * @param tag string
-   * @returns void
    */
   onAddTagAction(tag: string): void {
     if (tag !== '' && this.tagsList.findIndex(x => x.title === tag) === -1) {
@@ -155,9 +153,9 @@ export class AddPostComponent implements OnInit {
   }
 
   /**
-   * Edit tag event
-   * @param tag any
-   * @returns void
+   * Edit tag event.
+   * 
+   * @param tag string
    */
   onEditTagAction(tag: any): void {
     const index = this.selectedTag['id'];
@@ -168,7 +166,8 @@ export class AddPostComponent implements OnInit {
   }
 
   /**
-   * Delete tag event
+   * Delete tag event.
+   * 
    * @param tag any
    */
   onDeleteTagAction(tag: any): void {
@@ -179,15 +178,16 @@ export class AddPostComponent implements OnInit {
   }
 
   /**
-   * Add new post
-   * @returns void
+   * Add new post.
+   * 
+   * @param post Post
    */
   add() {
     if (this.postForm.valid) {
       this.postForm.value.id = 0;
       this.postForm.value.tags = this.tagsList;
       this.postForm.value.authorId = this.user?.id;
-      this._postService.add({
+      this._postsService.add({
         ...this.postForm.value
       }).subscribe(
         () => {

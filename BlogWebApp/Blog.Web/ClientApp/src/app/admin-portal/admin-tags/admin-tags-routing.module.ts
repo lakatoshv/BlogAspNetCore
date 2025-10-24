@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { EditTagComponent } from './../../shared/tags/edit-tag/edit-tag.component';
+import { AddTagComponent } from './../../shared/tags/add-tag/add-tag.component';
 import { AdminTagsListComponent } from './admin-tags-list/admin-tags-list.component';
-import { AddTagComponent } from 'src/app/shared/tags/add-tag/add-tag.component';
-import { EditTagComponent } from 'src/app/shared/tags/edit-tag/edit-tag.component';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   {
@@ -14,7 +14,7 @@ const routes: Routes = [
     component: AddTagComponent
   },
   {
-    path: 'tags/edit/:post-id',
+    path: 'tags/edit/:postId',
     component: EditTagComponent
   },
 ];

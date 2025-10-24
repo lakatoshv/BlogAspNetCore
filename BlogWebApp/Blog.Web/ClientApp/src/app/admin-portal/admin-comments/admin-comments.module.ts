@@ -1,29 +1,30 @@
+import { CoreModule } from './../../core/core.module';
+import { CommentsModule } from './../../shared/posts/comments/comments.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { AdminCommentsRoutingModule } from './admin-comments-routing.module';
-import { CommentsActivityChartComponent } from './comments-activity-chart/comments-activity-chart.component';
+import { CommentsActivityComponent } from './comments-activity/comments-activity.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { CommentService } from 'src/app/core/services/posts-services/comment.service';
-import { AdminCommentsTableComponent } from './admin-comments-table/admin-comments-table.component';
 import { AdminCommentsListComponent } from './admin-comments-list/admin-comments-list.component';
-
+import { AdminCommentsTableComponent } from './admin-comments-table/admin-comments-table.component';
 
 @NgModule({
   declarations: [
-    CommentsActivityChartComponent,
+    CommentsActivityComponent,
     AdminCommentsTableComponent,
     AdminCommentsListComponent
   ],
   imports: [
     CommonModule,
     AdminCommentsRoutingModule,
-    NgxChartsModule
+    NgxChartsModule,
+    CommentsModule,
+    CoreModule
   ],
   exports: [
-    CommentsActivityChartComponent,
-    AdminCommentsTableComponent
-  ],
-  providers: [CommentService]
+    CommentsActivityComponent,
+    AdminCommentsTableComponent,
+    AdminCommentsListComponent
+  ]
 })
 export class AdminCommentsModule { }

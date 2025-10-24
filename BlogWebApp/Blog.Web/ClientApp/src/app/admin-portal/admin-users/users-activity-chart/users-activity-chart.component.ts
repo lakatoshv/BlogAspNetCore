@@ -1,16 +1,17 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ChartOptionsData } from 'src/app/core/data/chart/ChartOptionsData';
-import { ChartOptions } from 'src/app/core/models/chart/ChartOptions';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { ChartOptions } from './../../../core/models/chart/ChartOptions';
+import { ChartOptionsData } from './../../../core/data/chart/ChartOptionsData';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { CustomToastrService } from '../../../core/services/custom-toastr.service';
+import { UsersService } from '../../../core/services/users-services/users-service.service';
 
 @Component({
   selector: 'app-users-activity-chart',
   templateUrl: './users-activity-chart.component.html',
-  styleUrls: ['./users-activity-chart.component.scss']
+  styleUrls: ['./users-activity-chart.component.css'],
+  standalone: false
 })
-export class UsersActivityChartComponent {
+export class UsersActivityChartComponent implements OnInit {
   /**
    * @param pbgChartContainer ElementRef
    */

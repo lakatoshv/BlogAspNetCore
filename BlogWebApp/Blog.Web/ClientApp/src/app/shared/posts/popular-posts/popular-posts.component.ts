@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { PageViewDto } from 'src/app/core/Dto/PageViewDto';
-import { PageInfo } from 'src/app/core/models/PageInfo';
-import { Post } from 'src/app/core/models/Post';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { PostService } from 'src/app/core/services/posts-services/post.service';
+import { Post } from './../../../core/models/Post';
+import { PostsService } from './../../../core/services/posts-services/posts.service';
+import { PageViewDto } from '../../../core/Dto/PageViewDto';
+import { PageInfo } from '../../../core/models/PageInfo';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { CustomToastrService } from '../../../core/services/custom-toastr.service';
 
 @Component({
   selector: 'app-popular-posts',
   templateUrl: './popular-posts.component.html',
-  styleUrls: ['./popular-posts.component.css']
+  styleUrls: ['./popular-posts.component.css'],
+  standalone: false
 })
 export class PopularPostsComponent implements OnInit {
   /**
@@ -37,11 +38,11 @@ export class PopularPostsComponent implements OnInit {
   };
 
   /**
-   * @param _postsService PostService
+   * @param _postsService PostsService
    * @param _customToastrService CustomToastrService
    */
   constructor(
-    private _postsService: PostService,
+    private _postsService: PostsService,
     private _customToastrService: CustomToastrService
   ) { }
 

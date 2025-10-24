@@ -1,14 +1,15 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ChartOptionsData } from 'src/app/core/data/chart/ChartOptionsData';
-import { ChartOptions } from 'src/app/core/models/chart/ChartOptions';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { PostService } from 'src/app/core/services/posts-services/post.service';
+import { ChartOptions } from '../../../core/models/chart/ChartOptions';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { CustomToastrService } from '../../../core/services/custom-toastr.service';
+import { PostsService } from '../../../core/services/posts-services/posts.service';
+import { ChartOptionsData } from './../../../core/data/chart/ChartOptionsData';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-posts-activity-chart',
   templateUrl: './posts-activity-chart.component.html',
-  styleUrls: ['./posts-activity-chart.component.scss']
+  styleUrls: ['./posts-activity-chart.component.css'],
+  standalone: false
 })
 export class PostsActivityChartComponent implements OnInit {
   /**
@@ -30,7 +31,7 @@ export class PostsActivityChartComponent implements OnInit {
    * @inheritdoc
    */
   ngOnInit(): void {
-    this._postService.postsActivity().subscribe(
+    this._postsService.postsActivity().subscribe(
       (response: any) => {
         this.chartOptions.Data[0] = response;
         this.chartOptions = this.chartOptions;
@@ -46,7 +47,7 @@ export class PostsActivityChartComponent implements OnInit {
    * @param _customToastrService CustomToastrService
    */
   constructor(
-    private _postService: PostService,
+    private _postsService: PostsService,
     private _customToastrService: CustomToastrService) {
   }
 

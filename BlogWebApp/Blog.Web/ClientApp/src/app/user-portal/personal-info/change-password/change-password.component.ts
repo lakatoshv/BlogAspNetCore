@@ -1,21 +1,22 @@
-import { ChangePasswordDto } from './../../../core/Dto/ChangePasswordDto';
 import { Component, OnInit } from '@angular/core';
-import { User } from 'src/app/core/models/User';
+import { User } from './../../../core/models/User';
 import { FormGroup } from '@angular/forms';
-import { TinyMCEOptionsObject } from 'src/app/core/models/TinyMCEOptionsObject';
-import { TinyMCEOptions } from 'src/app/core/data/TinyMCEOptions';
+import { TinyMCEOptionsObject } from './../../../core/models/TinyMCEOptionsObject';
+import { TinyMCEOptions } from './../../../core/data/TinyMCEOptions';
 import { Router } from '@angular/router';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
-import { ChangePasswordForm } from 'src/app/core/forms/user/ChangePasswordForm';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { Messages } from 'src/app/core/data/Messages';
+import { GlobalService } from './../../../core/services/global-service/global-service.service';
+import { UsersService } from '../../../core/services/users-services/users-service.service';
+import { Messages } from './../../../core/data/Mesages';
+import { CustomToastrService } from './../../../core/services/custom-toastr.service';
+import { ChangePasswordDto } from '../../../core/Dto/ChangePasswordDto';
+import { ChangePasswordForm } from '../../../core/forms/user/ChangePasswordForm';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
-  styleUrls: ['./change-password.component.css']
+  styleUrls: ['./change-password.component.css'],
+  standalone: false
 })
 export class ChangePasswordComponent implements OnInit {
   /**

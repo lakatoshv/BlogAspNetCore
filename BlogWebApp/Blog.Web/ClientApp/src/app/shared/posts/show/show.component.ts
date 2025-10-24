@@ -1,20 +1,20 @@
-import { PostService } from './../../../core/services/posts-services/post.service';
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-
+import { PostsService } from './../../../core/services/posts-services/posts.service';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GeneralServiceService } from 'src/app/core';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
-import { User } from 'src/app/core/models/User';
-import { Post } from 'src/app/core/models/Post';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
-import { PageInfo } from 'src/app/core/models/PageInfo';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
+import { GeneralServiceService } from './../../../core';
+import { UsersService } from '../../../core/services/users-services/users-service.service';
+import { GlobalService } from './../../../core/services/global-service/global-service.service';
+import { User } from './../../../core/models/User';
+import { Post } from './../../../core/models/Post';
+import { CustomToastrService } from './../../../core/services/custom-toastr.service';
+import { PageInfo } from '../../../core/models/PageInfo';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 
 @Component({
   selector: 'app-show',
   templateUrl: './show.component.html',
-  styleUrls: ['./show.component.css']
+  styleUrls: ['./show.component.scss'],
+  standalone: false
 })
 export class ShowComponent implements OnInit {
   /**
@@ -59,7 +59,7 @@ export class ShowComponent implements OnInit {
   /**
    * @param _generalService GeneralServiceService
    * @param _activatedRoute ActivatedRoute
-   * @param _postService PostService
+   * @param _postsService PostsService
    * @param _usersService UsersService
    * @param _globalService GlobalService
    * @param _router Router
@@ -68,7 +68,7 @@ export class ShowComponent implements OnInit {
   constructor(
     private _generalService: GeneralServiceService,
     private _activatedRoute: ActivatedRoute,
-    private _postService: PostService,
+    private _postsService: PostsService,
     private _usersService: UsersService,
     private _globalService: GlobalService,
     private _router: Router,
@@ -95,7 +95,7 @@ export class ShowComponent implements OnInit {
    */
   public like(id: number): void {
     if(this.postId) {
-      this._postService.like(this.postId).subscribe(
+      this._postsService.like(this.postId).subscribe(
         (response: any) => {
           this.post = response;
         },
@@ -112,7 +112,7 @@ export class ShowComponent implements OnInit {
    */
   public dislike(id: number): void {
     if(this.postId) {
-      this._postService.dislike(this.postId).subscribe(
+      this._postsService.dislike(this.postId).subscribe(
         (response: any) => {
           this.post = response;
         },
@@ -127,7 +127,7 @@ export class ShowComponent implements OnInit {
    */
   public deleteAction() {
     if (this.loggedIn && this.post && this.post?.authorId === this.user?.id) {
-      this._postService.delete(this.post.id, this.user.id).subscribe(
+      this._postsService.delete(this.post.id, this.user.id).subscribe(
         () => {
           this._router.navigateByUrl('/blog');
         },
@@ -149,7 +149,7 @@ export class ShowComponent implements OnInit {
    */
   private _getPost() {
     if(this.postId) {
-      this._postService.showPost(this.postId).subscribe(
+      this._postsService.showPost(this.postId).subscribe(
         (response: any) => {
           this.post = response.post;
           if(this.post) {
@@ -164,5 +164,4 @@ export class ShowComponent implements OnInit {
         });
     }
   }
-
 }

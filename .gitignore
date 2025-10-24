@@ -106,3 +106,6 @@
 /BlogWebApp/Aspire/Blog.Aspire/Blog.Aspire.ServiceDefaults/obj
 /BlogWebApp/Aspire/Blog.Aspire/Blog.Aspire.AppHost/bin/Debug/net9.0
 /BlogWebApp/Aspire/Blog.Aspire/Blog.Aspire.AppHost/obj
+/BlogWebApp/Blog.Web/ClientApp/.angular/cache/20.0.1/BlogAngular
+/BlogWebApp/Blog.Web/ClientApp/dist/BlogAngular
+/Clients/BlogRazor/bin/Debug/net9.0

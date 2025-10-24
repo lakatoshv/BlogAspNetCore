@@ -1,19 +1,20 @@
-import { AuthorizationForm } from 'src/app/core/forms/user/AuthorizationForm';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { UsersService } from 'src/app/core/services/users-services/users.service';
+import { AuthorizationForm } from './../../../core/forms/user/AuthorizationForm';
 import { Router } from '@angular/router';
-import { JwtToken } from 'src/app/core/models/JwtToken';
-import { AccountsService } from 'src/app/core/services/users-services/account.sevice';
-import { GlobalService } from 'src/app/core/services/global-service/global-service.service';
-import { CustomToastrService } from 'src/app/core/services/custom-toastr.service';
-import { ErrorResponse } from 'src/app/core/responses/ErrorResponse';
-import { Messages } from 'src/app/core/data/Messages';
+import { UsersService } from '../../../core/services/users-services/users-service.service';
+import { Messages } from './../../../core/data/Mesages';
+import { CustomToastrService } from './../../../core/services/custom-toastr.service';
+import { JwtToken } from '../../../core/models/JwtToken';
+import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { GlobalService } from '../../../core/services/global-service/global-service.service';
+import { AccountsService } from '../../../core/services/users-services/account.sevice';
 
 @Component({
   selector: 'app-authorization',
   templateUrl: './authorization.component.html',
-  styleUrls: ['./authorization.component.css']
+  styleUrls: ['./authorization.component.css'],
+  standalone: false
 })
 export class AuthorizationComponent implements OnInit {
   /**
@@ -79,7 +80,7 @@ export class AuthorizationComponent implements OnInit {
    if(jwt) {
      this._usersService.saveToken(jwt.AccessToken, jwt.RefreshToken);
      if(this._globalService._currentUser) {
-       const initializeSubscription = this._accountService.initialize(this._globalService._currentUser.id).subscribe(
+       this._accountService.initialize(this._globalService._currentUser.id).subscribe(
          (initializationData: any) => {
              this._customToastrService.displaySuccessMessage(Messages.AUTHORIZED_SUCCESSFULLY);
              this._router.navigate(['/'])

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChangeEmailComponent } from './change-email.component';
 
@@ -6,12 +6,12 @@ describe('ChangeEmailComponent', () => {
   let component: ChangeEmailComponent;
   let fixture: ComponentFixture<ChangeEmailComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [ ChangeEmailComponent ]
     })
     .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ChangeEmailComponent);
