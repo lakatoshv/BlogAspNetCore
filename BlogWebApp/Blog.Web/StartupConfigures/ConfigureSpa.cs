@@ -3,7 +3,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Rewrite;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Hosting;
 
 /// <summary>
@@ -27,7 +26,7 @@ public static class ConfigureSpa
 
             if (env.IsDevelopment())
             {
-                spa.UseAngularCliServer(npmScript: "start");
+                spa.UseProxyToSpaDevelopmentServer("http://localhost:4200"); ;
             }
             else
             {
