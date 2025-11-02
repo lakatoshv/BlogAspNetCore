@@ -1715,6 +1715,22 @@ public class CommentsServiceTests
         Assert.Null(deletedComment);
     }
 
+    /// <summary>
+    /// Delete By Object comment.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var comment = SetupCommentFixture().Create();
+        _commentsRepositoryMock.Setup(x => x.Delete(It.IsAny<Comment>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _commentsService.Delete(comment));
+    }
+
     #endregion
 
     #region Delete By Enumerable function
