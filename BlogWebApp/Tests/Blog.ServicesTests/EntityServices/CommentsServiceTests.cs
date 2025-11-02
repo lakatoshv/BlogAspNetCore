@@ -1637,6 +1637,24 @@ public class CommentsServiceTests
         Assert.Null(deletedComment);
     }
 
+    /// <summary>
+    /// Delete By Id comment.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteById_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var comment = SetupCommentFixture().Create();
+        _commentsRepositoryMock.Setup(x => x.GetById(It.IsAny<object>()))
+            .Returns(comment);
+        _commentsRepositoryMock.Setup(x => x.Delete(It.IsAny<Comment>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _commentsService.Delete(comment.Id));
+    }
+
     #endregion
 
     #region Delete By Object function
