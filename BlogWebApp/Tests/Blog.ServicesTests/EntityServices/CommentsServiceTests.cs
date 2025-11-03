@@ -2047,6 +2047,26 @@ public class CommentsServiceTests
         Assert.Null(newComments);
     }
 
+    /// <summary>
+    /// Async delete By Enumerable comment.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var comments = SetupCommentFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _commentsRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<IEnumerable<Comment>>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _commentsService.DeleteAsync(comments));
+    }
+
     #endregion
 
     #endregion
