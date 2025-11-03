@@ -1803,6 +1803,26 @@ public class CommentsServiceTests
         Assert.Null(newComments);
     }
 
+    /// <summary>
+    /// Delete By Enumerable comment.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var comments = SetupCommentFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _commentsRepositoryMock.Setup(x => x.Delete(It.IsAny<IEnumerable<Comment>>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _commentsService.Delete(comments));
+    }
+
     #endregion
 
     #region Delete Async By Id function
