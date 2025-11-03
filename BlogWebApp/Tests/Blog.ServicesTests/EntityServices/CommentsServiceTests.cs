@@ -1957,6 +1957,22 @@ public class CommentsServiceTests
         Assert.Null(deletedComment);
     }
 
+    /// <summary>
+    /// Async delete By Object comment.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var comment = SetupCommentFixture().Create();
+        _commentsRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<Comment>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _commentsService.DeleteAsync(comment));
+    }
+
     #endregion
 
     #region Delete Async By Enumerable function
