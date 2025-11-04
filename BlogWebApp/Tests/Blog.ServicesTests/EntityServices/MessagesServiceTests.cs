@@ -1852,6 +1852,26 @@ public class MessagesServiceTests
         Assert.Null(newMessages);
     }
 
+    /// <summary>
+    /// Delete By Enumerable messages.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var messages = SetupMessageFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _messagesRepositoryMock.Setup(x => x.Delete(It.IsAny<IEnumerable<Message>>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _messagesService.Delete(messages));
+    }
+
     #endregion
 
     #region Delete Async By Id function
