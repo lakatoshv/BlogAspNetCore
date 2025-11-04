@@ -1675,6 +1675,24 @@ public class MessagesServiceTests
         Assert.Null(deletedMessage);
     }
 
+    /// <summary>
+    /// Delete By Id message.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteById_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var message = SetupMessageFixture().Create();
+        _messagesRepositoryMock.Setup(x => x.GetById(It.IsAny<object>()))
+            .Returns(message);
+        _messagesRepositoryMock.Setup(x => x.Delete(It.IsAny<Message>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _messagesService.Delete(message.Id));
+    }
+
     #endregion
 
     #region Delete By Object function
