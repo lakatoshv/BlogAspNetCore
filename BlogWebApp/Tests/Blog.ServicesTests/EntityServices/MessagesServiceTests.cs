@@ -1938,6 +1938,24 @@ public class MessagesServiceTests
         Assert.Null(deletedMessage);
     }
 
+    /// <summary>
+    /// Async delete By Id message.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncById_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var message = SetupMessageFixture().Create();
+        _messagesRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<object>()))
+            .ReturnsAsync(message);
+        _messagesRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<Message>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _messagesService.DeleteAsync(message.Id));
+    }
+
     #endregion
 
     #region Delete Async By Object function
