@@ -1762,6 +1762,22 @@ public class MessagesServiceTests
         Assert.Null(deletedMessage);
     }
 
+    /// <summary>
+    /// Delete By Object message.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var message = SetupMessageFixture().Create();
+        _messagesRepositoryMock.Setup(x => x.Delete(It.IsAny<Message>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _messagesService.Delete(message));
+    }
+
     #endregion
 
     #region Delete By Enumerable function
