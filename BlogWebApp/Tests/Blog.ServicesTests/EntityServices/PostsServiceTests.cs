@@ -1,7 +1,6 @@
 using AutoFixture;
 using AutoFixture.Dsl;
 using AutoMapper;
-using Blog.CommonServices.Interfaces;
 using Blog.Core.Enums;
 using Blog.Core.Infrastructure;
 using Blog.Core.Infrastructure.Pagination;
@@ -671,7 +670,7 @@ public class PostsServiceTests
 
         var specification = new PostSpecification();
         _postsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<PostSpecification>()))
-            .Returns(() => postsList.Where(x => x.Title.Contains(postTitleSearch)).AsQueryable());
+            .ReturnsAsync(() => postsList.Where(x => x.Title.Contains(postTitleSearch)).ToList());
 
         //Act
         var posts = await _postsService.GetAllAsync(specification);
