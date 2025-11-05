@@ -2024,6 +2024,22 @@ public class MessagesServiceTests
         Assert.Null(deletedMessage);
     }
 
+    /// <summary>
+    /// Async delete By Object message.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var message = SetupMessageFixture().Create();
+        _messagesRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<Message>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _messagesService.DeleteAsync(message));
+    }
+
     #endregion
 
     #region Delete Async By Enumerable function
