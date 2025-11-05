@@ -1743,6 +1743,22 @@ public class PostsServiceTests
         Assert.Null(deletedPost);
     }
 
+    /// <summary>
+    /// Delete By Object post.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var post = SetupPostFixture().Create();
+        _postsRepositoryMock.Setup(x => x.Delete(It.IsAny<Post>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsService.Delete(post));
+    }
+
     #endregion
 
     #region Delete By Enumerable function
