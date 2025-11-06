@@ -2008,6 +2008,22 @@ public class PostsServiceTests
         Assert.Null(deletedPost);
     }
 
+    /// <summary>
+    /// Async delete By Object post.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var post = SetupPostFixture().Create();
+        _postsRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<Post>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsService.DeleteAsync(post));
+    }
+
     #endregion
 
     #region Delete Async By Enumerable function
