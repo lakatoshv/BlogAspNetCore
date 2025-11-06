@@ -1683,6 +1683,24 @@ public class PostsServiceTests
         Assert.Null(deletedPost);
     }
 
+    /// <summary>
+    /// Delete By Id post.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteById_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var post = SetupPostFixture().Create();
+        _postsRepositoryMock.Setup(x => x.GetById(It.IsAny<object>()))
+            .Returns(post);
+        _postsRepositoryMock.Setup(x => x.Delete(It.IsAny<Post>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsService.Delete(post.Id));
+    }
+
     #endregion
 
     #region Delete By Object function
