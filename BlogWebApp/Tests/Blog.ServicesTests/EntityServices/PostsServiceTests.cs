@@ -2100,6 +2100,26 @@ public class PostsServiceTests
         Assert.Null(newPosts);
     }
 
+    /// <summary>
+    /// Async delete By Enumerable posts.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var posts = SetupPostFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _postsRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<IEnumerable<Post>>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsService.DeleteAsync(posts));
+    }
+
     #endregion
 
     #endregion
