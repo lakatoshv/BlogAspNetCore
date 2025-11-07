@@ -2220,6 +2220,22 @@ public class PostTagRelationsServiceTests
         Assert.Null(postsTagsRelation);
     }
 
+    /// <summary>
+    /// Delete By Object post tag relation.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var postTagRelation = SetupPostsTagsRelationsFixture().Create();
+        _postsTagsRelationsRepositoryMock.Setup(x => x.Delete(It.IsAny<PostsTagsRelations>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsTagsRelationsService.Delete(postTagRelation));
+    }
+
     #endregion
 
     #region Delete By Enumerable function
