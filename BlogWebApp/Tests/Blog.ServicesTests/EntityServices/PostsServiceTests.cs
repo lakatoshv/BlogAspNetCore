@@ -868,7 +868,7 @@ public class PostsServiceTests
     {
         //Arrange
         var postId = _fixture.Create<int>();
-        
+
         _postsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
             .ReturnsAsync(() => null);
 
