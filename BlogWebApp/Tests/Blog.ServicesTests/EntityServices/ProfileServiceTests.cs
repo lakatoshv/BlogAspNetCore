@@ -420,15 +420,15 @@ public class ProfileServiceTests
 
         ProfileSpecification specification = null;
         _profileRepositoryMock.Setup(x => x.GetAll(It.IsAny<ProfileSpecification>()))
-            .Returns(() => profilesList.Where(x => x.UserId.Contains(searchUserId)).AsQueryable());
+            .Returns(() => profilesList.Where(x => x.UserId == searchUserId).AsQueryable());
 
         //Act
         var profiles = _profileService.GetAll(specification);
 
         //Assert
         Assert.NotNull(profiles);
-        Assert.NotEmpty(profiles);
-        Assert.NotEqual(notEqualCount, profiles.ToList().Count);
+        Assert.Empty(profiles);
+        Assert.Equal(notEqualCount, profiles.ToList().Count);
     }
 
     /// <summary>
@@ -609,15 +609,15 @@ public class ProfileServiceTests
 
         ProfileSpecification specification = null;
         _profileRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<ProfileSpecification>()))
-            .Returns(() => profilesList.Where(x => x.UserId.Contains(searchUserId)).ToList());
+            .ReturnsAsync(() => profilesList.Where(x => x.UserId == searchUserId).ToList());
 
         //Act
         var profiles = await _profileService.GetAllAsync(specification);
 
         //Assert
         Assert.NotNull(profiles);
-        Assert.NotEmpty(profiles);
-        Assert.NotEqual(notEqualCount, profiles.ToList().Count);
+        Assert.Empty(profiles);
+        Assert.Equal(notEqualCount, profiles.ToList().Count);
     }
 
     /// <summary>
