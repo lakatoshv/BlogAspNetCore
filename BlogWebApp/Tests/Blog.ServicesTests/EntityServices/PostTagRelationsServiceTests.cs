@@ -2596,6 +2596,26 @@ public class PostTagRelationsServiceTests
         Assert.Null(newPostsTagsRelations);
     }
 
+    /// <summary>
+    /// Async delete By Enumerable post tag relations.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var postTagRelations = SetupPostsTagsRelationsFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _postsTagsRelationsRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<IEnumerable<PostsTagsRelations>>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsTagsRelationsService.DeleteAsync(postTagRelations));
+    }
+
     #endregion
 
     #endregion
