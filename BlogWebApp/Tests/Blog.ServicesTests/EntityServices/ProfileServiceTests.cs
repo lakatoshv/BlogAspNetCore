@@ -1702,6 +1702,22 @@ public class ProfileServiceTests
         Assert.Null(deletedProfile);
     }
 
+    /// <summary>
+    /// Delete By Object profile.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var profile = SetupProfileFixture().Create();
+        _profileRepositoryMock.Setup(x => x.Delete(It.IsAny<ProfileModel>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _profileService.Delete(profile));
+    }
+
     #endregion
 
     #region Delete By Enumerable function
