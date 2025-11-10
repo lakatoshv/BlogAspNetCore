@@ -1962,6 +1962,22 @@ public class ProfileServiceTests
         Assert.Null(deletedProfile);
     }
 
+    /// <summary>
+    /// Async delete By Object comment.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var profile = SetupProfileFixture().Create();
+        _profileRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<ProfileModel>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _profileService.DeleteAsync(profile));
+    }
+
     #endregion
 
     #region Delete Async By Enumerable function
