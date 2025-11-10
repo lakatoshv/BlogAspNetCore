@@ -1753,6 +1753,22 @@ public class TagsServiceTests
         Assert.Null(deletedTag);
     }
 
+    /// <summary>
+    /// Delete By Object tag.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var tag = SetupTagFixture().Create();
+        _tagsRepositoryMock.Setup(x => x.Delete(It.IsAny<Tag>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _tagsService.Delete(tag));
+    }
+
     #endregion
 
     #region Delete By Enumerable function
