@@ -1671,6 +1671,24 @@ public class TagsServiceTests
         Assert.Null(deletedTag);
     }
 
+    /// <summary>
+    /// Delete By Id tag.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteById_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var tag = SetupTagFixture().Create();
+        _tagsRepositoryMock.Setup(x => x.GetById(It.IsAny<object>()))
+            .Returns(tag);
+        _tagsRepositoryMock.Setup(x => x.Delete(It.IsAny<Tag>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _tagsService.Delete(tag.Id));
+    }
+
     #endregion
 
     #region Delete By Object function
