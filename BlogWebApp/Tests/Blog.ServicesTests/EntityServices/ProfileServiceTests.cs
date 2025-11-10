@@ -2052,6 +2052,26 @@ public class ProfileServiceTests
         Assert.Null(newProfiles);
     }
 
+    /// <summary>
+    /// Async delete By Enumerable profiles.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var profiles = SetupProfileFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _profileRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<IEnumerable<ProfileModel>>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _profileService.DeleteAsync(profiles));
+    }
+
     #endregion
 
     #endregion
