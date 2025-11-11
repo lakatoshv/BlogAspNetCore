@@ -1843,6 +1843,26 @@ public class TagsServiceTests
         Assert.Null(newTags);
     }
 
+    /// <summary>
+    /// Delete By Enumerable tags.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var tags = SetupTagFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _tagsRepositoryMock.Setup(x => x.Delete(It.IsAny<IEnumerable<Tag>>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _tagsService.Delete(tags));
+    }
+
     #endregion
 
     #region Delete By Id Async function
