@@ -1924,6 +1924,24 @@ public class TagsServiceTests
         Assert.Null(deletedTag);
     }
 
+    /// <summary>
+    /// Async delete By Id tag.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncById_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var tag = SetupTagFixture().Create();
+        _tagsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<object>()))
+            .ReturnsAsync(tag);
+        _tagsRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<Tag>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _tagsService.DeleteAsync(tag.Id));
+    }
+
     #endregion
 
     #region Delete By Object Async function
