@@ -31,7 +31,7 @@ public static class ApiRoutes
         public const string Accounts = Base + "/accounts";
 
         /// <summary>
-        /// The initialize.
+        /// Initialize.
         /// </summary>
         public const string Initialize = "initialize/{userId}";
 
@@ -53,7 +53,7 @@ public static class ApiRoutes
         /// <summary>
         /// The register.
         /// </summary>
-        public const string Register ="register";
+        public const string Register = "register";
 
         /// <summary>
         /// The change password.
@@ -92,7 +92,7 @@ public static class ApiRoutes
         public const string GetComment = "get-comment";
 
         /// <summary>
-        /// The create comment.
+        /// The creation comment.
         /// </summary>
         public const string CreateComment = "create";
 
