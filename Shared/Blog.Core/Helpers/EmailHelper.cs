@@ -1,9 +1,9 @@
 ﻿namespace Blog.Core.Helpers;
 
+using Calabonga.Microservices.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Calabonga.Microservices.Core.Extensions;
 
 /// <summary>
 /// Email validation helper.
@@ -21,7 +21,8 @@ public static class EmailHelper
         {
             return null;
         }
-        var split = emails.Split(new[] { ';', '|', ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+        var split = emails.Split([';', '|', ' ', ','], StringSplitOptions.RemoveEmptyEntries);
         return split.Where(x => x.IsEmail());
     }
 }

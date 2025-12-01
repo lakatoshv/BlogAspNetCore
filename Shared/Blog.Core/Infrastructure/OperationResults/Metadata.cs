@@ -4,8 +4,8 @@
 
 namespace Blog.Core.Infrastructure.OperationResults;
 
-using System;
 using Interfaces;
+using System;
 
 /// <summary>
 /// Metadata.

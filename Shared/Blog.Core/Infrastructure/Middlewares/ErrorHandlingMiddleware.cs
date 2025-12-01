@@ -4,11 +4,11 @@
 
 namespace Blog.Core.Infrastructure.Middlewares;
 
-using System;
-using System.Threading.Tasks;
+using Helpers;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Helpers;
+using System;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Custom error handler. It allows to view error messages on UI.

@@ -4,9 +4,9 @@
 
 namespace Blog.Core.Infrastructure;
 
-using System.Linq;
-using Enums;
 using Blog.Core.Infrastructure.Pagination.Interfaces;
+using Enums;
+using System.Linq;
 
 /// <summary>
 /// Field sort order.

@@ -1,14 +1,18 @@
-﻿namespace Blog.Core.Infrastructure.Mediator.Behaviors;
+﻿// <copyright file="ValidatorBehavior.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
+namespace Blog.Core.Infrastructure.Mediator.Behaviors;
+
+using Calabonga.Microservices.Core.Exceptions;
+using FluentValidation;
+using MediatR;
+using OperationResults;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using OperationResults;
-using Calabonga.Microservices.Core.Exceptions;
-using FluentValidation;
-using MediatR;
 
 /// <summary>
 /// Base validator for requests.

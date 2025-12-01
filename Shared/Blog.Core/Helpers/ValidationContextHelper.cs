@@ -1,4 +1,8 @@
-﻿namespace Blog.Core.Helpers;
+﻿// <copyright file="ValidationContextHelper.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace Blog.Core.Helpers;
 
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +13,7 @@ using System.ComponentModel.DataAnnotations;
 public static class ValidationContextHelper
 {
     /// <summary>
-    /// Tries the validate.
+    /// Tries to validate.
     /// </summary>
     /// <param name="obj">The object.</param>
     /// <param name="results">The results.</param>
@@ -18,7 +22,7 @@ public static class ValidationContextHelper
     public static bool TryValidate(object obj, out Collection<ValidationResult> results, ValidationContext validationContext = null)
     {
         var context = validationContext ?? new ValidationContext(obj, serviceProvider: null, items: null);
-        results = new Collection<ValidationResult>();
+        results = [];
 
         return Validator.TryValidateObject(obj, context, results, validateAllProperties: true);
     }

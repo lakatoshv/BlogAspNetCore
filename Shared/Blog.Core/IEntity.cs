@@ -7,16 +7,12 @@ namespace Blog.Core;
 /// <summary>
 /// Entity interface.
 /// </summary>
-public interface IEntity
-{
-}
+public interface IEntity;
 
 /// <summary>
 /// Entity base interface.
 /// </summary>
-public interface IEntityBase : IEntity
-{
-}
+public interface IEntityBase : IEntity;
 
 /// <summary>
 /// Entity interface.

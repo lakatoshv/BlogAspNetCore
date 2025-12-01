@@ -4,10 +4,10 @@
 
 namespace Blog.Core.Infrastructure.Pagination;
 
+using Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using Interfaces;
 
 /// <summary>
 /// Search query.
@@ -16,7 +16,7 @@ using Interfaces;
 public class SearchQuery<TEntity>
 {
     /// <summary>
-    /// Gets or sets sort criterias.
+    /// Gets or sets sort criteria.
     /// </summary>
     public List<ISortCriteria<TEntity>> SortCriterias
     {
@@ -44,8 +44,8 @@ public class SearchQuery<TEntity>
     /// </summary>
     public SearchQuery()
     {
-        this.Filters = new List<Expression<Func<TEntity, bool>>>();
-        this.SortCriterias = new List<ISortCriteria<TEntity>>();
+        this.Filters = [];
+        this.SortCriterias = [];
     }
 
     /// <summary>

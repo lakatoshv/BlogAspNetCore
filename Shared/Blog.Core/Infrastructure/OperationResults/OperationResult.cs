@@ -1,4 +1,8 @@
-﻿namespace Blog.Core.Infrastructure.OperationResults;
+﻿// <copyright file="OperationResult.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace Blog.Core.Infrastructure.OperationResults;
 
 using System;
 using System.Collections.Generic;
@@ -19,7 +23,7 @@ public abstract class OperationResult
     /// <summary>
     /// Initializes a new instance of the <see cref="OperationResult"/> class.
     /// </summary>
-    protected OperationResult() => this.ActivityId = OperationResult.Generate(11);
+    protected OperationResult() => this.ActivityId = Generate(11);
 
     /// <summary>
     /// Gets or sets the activity identifier.
@@ -63,12 +67,10 @@ public abstract class OperationResult
     public static OperationResult<TResult> CreateResult<TResult>(
         TResult result,
         Exception error)
-    {
-        return new OperationResult<TResult>()
+        => new()
         {
             Result = result,
         };
-    }
 
     /// <summary>
     /// Creates the result.
@@ -76,14 +78,14 @@ public abstract class OperationResult
     /// <typeparam name="TResult">The type of the result.</typeparam>
     /// <param name="result">The result.</param>
     /// <returns>OperationResult.</returns>
-    public static OperationResult<TResult> CreateResult<TResult>(TResult result) => OperationResult.CreateResult(result, null);
+    public static OperationResult<TResult> CreateResult<TResult>(TResult result) => CreateResult(result, null);
 
     /// <summary>
     /// Creates the result.
     /// </summary>
     /// <typeparam name="TResult">The type of the result.</typeparam>
     /// <returns>OperationResult.</returns>
-    public static OperationResult<TResult> CreateResult<TResult>() => OperationResult.CreateResult<TResult>(default, null);
+    public static OperationResult<TResult> CreateResult<TResult>() => CreateResult<TResult>(default, null);
 
     /// <summary>
     /// Appends the log.
@@ -98,7 +100,7 @@ public abstract class OperationResult
 
         if (messageLog.Length > 500)
         {
-            this._logs.Add(messageLog.Substring(0, 500));
+            this._logs.Add(messageLog[..500]);
         }
 
         this._logs.Add(messageLog);
