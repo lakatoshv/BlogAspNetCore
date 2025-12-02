@@ -4,10 +4,10 @@
 
 namespace Blog.Data.Specifications;
 
+using Base;
+using Models;
 using System;
 using System.Linq.Expressions;
-using Models;
-using Base;
 
 /// <summary>
 /// Tag specification.
@@ -15,13 +15,6 @@ using Base;
 /// <seealso cref="BaseSpecification{Tag}" />
 public class TagSpecification : BaseSpecification<Tag>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TagSpecification"/> class.
-    /// </summary>
-    public TagSpecification()
-    {
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="TagSpecification"/> class.
     /// </summary>

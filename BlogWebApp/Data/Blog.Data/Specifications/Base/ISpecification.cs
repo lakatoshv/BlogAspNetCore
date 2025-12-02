@@ -28,5 +28,5 @@ public interface ISpecification<T>
     /// <value>
     /// The includes.
     /// </value>
-    List<Expression<Func<T, object>>> Includes { get;  }
+    List<Expression<Func<T, object>>> Includes { get; }
 }

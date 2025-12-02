@@ -4,10 +4,10 @@
 
 namespace Blog.Data.Specifications;
 
+using Base;
+using Models;
 using System;
 using System.Linq.Expressions;
-using Models;
-using Base;
 
 /// <summary>
 /// Profile specification.
@@ -15,13 +15,6 @@ using Base;
 /// <seealso cref="BaseSpecification{Profile}" />
 public class ProfileSpecification : BaseSpecification<Profile>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ProfileSpecification"/> class.
-    /// </summary>
-    public ProfileSpecification()
-    {
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="ProfileSpecification"/> class.
     /// </summary>

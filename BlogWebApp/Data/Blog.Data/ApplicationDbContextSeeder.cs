@@ -2,14 +2,16 @@
 // Copyright (c) BLog. All rights reserved.
 // </copyright>
 
+using static System.ArgumentNullException;
+
 namespace Blog.Data;
 
-using System;
-using System.Linq;
 using Blog.Core;
-using Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Models;
+using System;
+using System.Linq;
 
 /// <summary>
 /// Application database context seeder.
@@ -23,15 +25,8 @@ public static class ApplicationDbContextSeeder
     /// <param name="serviceProvider">serviceProvider.</param>
     public static void Seed(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
     {
-        if (dbContext == null)
-        {
-            throw new ArgumentNullException(nameof(dbContext));
-        }
-
-        if (serviceProvider == null)
-        {
-            throw new ArgumentNullException(nameof(serviceProvider));
-        }
+        ThrowIfNull(nameof(dbContext));
+        ThrowIfNull(nameof(serviceProvider));
 
         var roleManager = serviceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
         Seed(dbContext, roleManager);
@@ -44,15 +39,8 @@ public static class ApplicationDbContextSeeder
     /// <param name="roleManager">roleManager.</param>
     public static void Seed(ApplicationDbContext dbContext, RoleManager<ApplicationRole> roleManager)
     {
-        if (dbContext == null)
-        {
-            throw new ArgumentNullException(nameof(dbContext));
-        }
-
-        if (roleManager == null)
-        {
-            throw new ArgumentNullException(nameof(roleManager));
-        }
+        ThrowIfNull(nameof(dbContext));
+        ThrowIfNull(nameof(roleManager));
 
         SeedRoles(roleManager);
     }

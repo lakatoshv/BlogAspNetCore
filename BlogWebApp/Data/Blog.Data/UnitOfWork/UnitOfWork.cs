@@ -1,18 +1,18 @@
 ﻿namespace Blog.Data.UnitOfWork;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+using Blog.Core;
 using EntityFrameworkCore.AutoHistory.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
-using Blog.Core;
 using Repository;
 using RepositoryFactory;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Unit of work.
@@ -41,7 +41,7 @@ public sealed class UnitOfWork<TContext> :
     /// Initializes a new instance of the <see cref="UnitOfWork{TContext}"/> class.
     /// </summary>
     /// <param name="context">The context.</param>
-    /// <exception cref="ArgumentNullException">context</exception>
+    /// <exception cref="ArgumentNullException">context.</exception>
     public UnitOfWork(TContext context)
     {
         var context1 = context;
@@ -98,7 +98,7 @@ public sealed class UnitOfWork<TContext> :
     /// Sets the automatic detect changes.
     /// </summary>
     /// <param name="value">if set to <c>true</c> [value].</param>
-    public void SetAutoDetectChanges(bool value) 
+    public void SetAutoDetectChanges(bool value)
         => this.DbContext.ChangeTracker.AutoDetectChangesEnabled = value;
 
     /// <summary>
@@ -107,7 +107,7 @@ public sealed class UnitOfWork<TContext> :
     /// <value>
     /// The last save changes result.
     /// </value>
-    public SaveChangesResult LastSaveChangesResult { get; private set; }
+    public SaveChangesResult LastSaveChangesResult { get; }
 
     /// <summary>
     /// Executes the SQL command.
@@ -248,15 +248,15 @@ public sealed class UnitOfWork<TContext> :
         }
 
         var key = typeof(TEntity);
-        if (_repositories.ContainsKey(key))
+        if (_repositories.TryGetValue(key, out var repository))
         {
-            return (IRepository<TEntity>)_repositories[key];
+            return (IRepository<TEntity>)repository;
         }
 
         var dbContext = this.DbContext;
         if (dbContext != null)
         {
-            this._repositories[key] = new Repository<IEntity>((DbContext)dbContext) as object;
+            this._repositories[key] = new Repository<IEntity>((DbContext)dbContext);
         }
 
         return (IRepository<TEntity>)this._repositories[key];

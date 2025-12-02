@@ -4,15 +4,15 @@
 
 namespace Blog.Data;
 
+using Blog.Data.Core.Models.Interfaces;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Models;
 using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Blog.Data.Core.Models.Interfaces;
-using Models;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 
 /// <summary>
 /// Application database context.
@@ -159,7 +159,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
         foreach (var deletableEntityType in deletableEntityTypes)
         {
             var method = SetIsDeletedQueryFilterMethod.MakeGenericMethod(deletableEntityType.ClrType);
-            method.Invoke(null, new object[] { builder });
+            method.Invoke(null, [builder]);
         }
 
         // Disable cascade delete

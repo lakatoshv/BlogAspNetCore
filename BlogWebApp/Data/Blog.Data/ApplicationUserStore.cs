@@ -4,10 +4,10 @@
 
 namespace Blog.Data;
 
-using System.Security.Claims;
-using Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Models;
+using System.Security.Claims;
 
 /// <summary>
 /// Application user store.
@@ -64,7 +64,7 @@ public class ApplicationUserStore : UserStore<
     /// <param name="login">login.</param>
     /// <returns>IdentityUserLogin.</returns>
     protected override IdentityUserLogin<string> CreateUserLogin(ApplicationUser user, UserLoginInfo login) =>
-        new ()
+        new()
         {
             UserId = user.Id,
             ProviderKey = login.ProviderKey,
@@ -93,6 +93,7 @@ public class ApplicationUserStore : UserStore<
             Name = name,
             Value = value,
         };
+
         return token;
     }
 }

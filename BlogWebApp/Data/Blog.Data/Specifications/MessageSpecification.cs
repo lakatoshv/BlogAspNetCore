@@ -4,10 +4,10 @@
 
 namespace Blog.Data.Specifications;
 
+using Base;
+using Models;
 using System;
 using System.Linq.Expressions;
-using Models;
-using Base;
 
 /// <summary>
 /// Message specification.
@@ -15,13 +15,6 @@ using Base;
 /// <seealso cref="BaseSpecification{Message}" />
 public class MessageSpecification : BaseSpecification<Message>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MessageSpecification"/> class.
-    /// </summary>
-    public MessageSpecification()
-    {
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="MessageSpecification"/> class.
     /// </summary>

@@ -1,12 +1,12 @@
 ﻿namespace Blog.Data.UnitOfWork;
 
+using Blog.Core;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage;
+using Repository;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Storage;
-using Blog.Core;
-using Repository;
 
 /// <summary>
 /// Unit of work interface.
@@ -96,7 +96,7 @@ public interface IUnitOfWork : IDisposable
 /// </summary>
 /// <typeparam name="TContext">The type of the context.</typeparam>
 /// <seealso cref="IDisposable" />
-public interface IUnitOfWork<TContext> : IUnitOfWork
+public interface IUnitOfWork<out TContext> : IUnitOfWork
     where TContext : Microsoft.EntityFrameworkCore.DbContext
 {
     /// <summary>

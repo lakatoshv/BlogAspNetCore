@@ -8,6 +8,9 @@ using Blog.Core;
 using Blog.Core.Infrastructure.Pagination;
 using Blog.Core.TableFilters;
 using Specifications.Base;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Repository interface.
