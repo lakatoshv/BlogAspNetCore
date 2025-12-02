@@ -4,11 +4,11 @@
 
 namespace Blog.Data.Models;
 
-using System;
-using System.Collections.Generic;
 using Blog.Core;
 using Blog.Data.Core.Models.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
 
 /// <summary>
 /// Application user entity.

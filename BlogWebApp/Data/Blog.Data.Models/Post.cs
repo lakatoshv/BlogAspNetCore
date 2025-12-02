@@ -2,8 +2,8 @@
 
 namespace Blog.Data.Models;
 
-using System;
 using Core;
+using System;
 
 /// <summary>
 /// Post entity.
