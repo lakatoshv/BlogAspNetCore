@@ -114,7 +114,7 @@ public class GeneralService<T>(IRepository<T> repository)
     public async Task<PagedListResult<T>> SearchBySequenceAsync(
         SearchQuery<T> searchQuery,
         IQueryable<T> sequence)
-        => await this.Repository.SearchBySquenceAsync(searchQuery, sequence);
+        => await this.Repository.SearchBySequenceAsync(searchQuery, sequence);
 
     /// <inheritdoc cref="IGeneralService{T}"/>
     public ICollection<T> GetAll()

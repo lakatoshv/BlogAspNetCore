@@ -2969,7 +2969,7 @@ public class PostsServiceTests
         var query = new SearchQuery<Post> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<Post> { Entities = new List<Post>(), Count = 0 };
 
-        _postsRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, data)).ReturnsAsync(expected);
+        _postsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, data)).ReturnsAsync(expected);
 
         var result = await _postsService.SearchBySequenceAsync(query, data);
 
@@ -2987,7 +2987,7 @@ public class PostsServiceTests
         var data = SetupPostFixture().CreateMany(5).AsQueryable();
         var expected = new PagedListResult<Post> { Entities = data.ToList(), Count = 5 };
 
-        _postsRepositoryMock.Setup(r => r.SearchBySquenceAsync(null, data)).ReturnsAsync(expected);
+        _postsRepositoryMock.Setup(r => r.SearchBySequenceAsync(null, data)).ReturnsAsync(expected);
 
         var result = await _postsService.SearchBySequenceAsync(null, data);
 
@@ -3005,7 +3005,7 @@ public class PostsServiceTests
         var query = new SearchQuery<Post> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<Post> { Entities = null, Count = 5 };
 
-        _postsRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, null)).ReturnsAsync(expected);
+        _postsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, null)).ReturnsAsync(expected);
 
         var result = await _postsService.SearchBySequenceAsync(query, null);
 

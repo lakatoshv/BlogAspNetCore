@@ -2908,7 +2908,7 @@ public class CommentsServiceTests
         var query = new SearchQuery<Comment> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<Comment> { Entities = new List<Comment>(), Count = 0 };
 
-        _commentsRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, data)).ReturnsAsync(expected);
+        _commentsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, data)).ReturnsAsync(expected);
 
         var result = await _commentsService.SearchBySequenceAsync(query, data);
 
@@ -2926,7 +2926,7 @@ public class CommentsServiceTests
         var data = SetupCommentFixture().CreateMany(5).AsQueryable();
         var expected = new PagedListResult<Comment> { Entities = data.ToList(), Count = 5 };
 
-        _commentsRepositoryMock.Setup(r => r.SearchBySquenceAsync(null, data)).ReturnsAsync(expected);
+        _commentsRepositoryMock.Setup(r => r.SearchBySequenceAsync(null, data)).ReturnsAsync(expected);
 
         var result = await _commentsService.SearchBySequenceAsync(null, data);
 
@@ -2944,7 +2944,7 @@ public class CommentsServiceTests
         var query = new SearchQuery<Comment> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<Comment> { Entities = null, Count = 5 };
 
-        _commentsRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, null)).ReturnsAsync(expected);
+        _commentsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, null)).ReturnsAsync(expected);
 
         var result = await _commentsService.SearchBySequenceAsync(query, null);
 

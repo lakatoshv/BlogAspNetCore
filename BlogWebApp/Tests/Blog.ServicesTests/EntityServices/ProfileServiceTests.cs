@@ -2818,7 +2818,7 @@ public class ProfileServiceTests
         var query = new SearchQuery<ProfileModel> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<ProfileModel> { Entities = new List<ProfileModel>(), Count = 0 };
 
-        _profileRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, data)).ReturnsAsync(expected);
+        _profileRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, data)).ReturnsAsync(expected);
 
         var result = await _profileService.SearchBySequenceAsync(query, data);
 
@@ -2836,7 +2836,7 @@ public class ProfileServiceTests
         var data = SetupProfileFixture().CreateMany(5).AsQueryable();
         var expected = new PagedListResult<ProfileModel> { Entities = data.ToList(), Count = 5 };
 
-        _profileRepositoryMock.Setup(r => r.SearchBySquenceAsync(null, data)).ReturnsAsync(expected);
+        _profileRepositoryMock.Setup(r => r.SearchBySequenceAsync(null, data)).ReturnsAsync(expected);
 
         var result = await _profileService.SearchBySequenceAsync(null, data);
 
@@ -2854,7 +2854,7 @@ public class ProfileServiceTests
         var query = new SearchQuery<ProfileModel> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<ProfileModel> { Entities = null, Count = 5 };
 
-        _profileRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, null)).ReturnsAsync(expected);
+        _profileRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, null)).ReturnsAsync(expected);
 
         var result = await _profileService.SearchBySequenceAsync(query, null);
 

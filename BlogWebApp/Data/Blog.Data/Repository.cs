@@ -109,7 +109,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     }
 
     /// <inheritdoc cref="IRepository{TEntity}"/>
-    public virtual async Task<PagedListResult<TEntity>> SearchBySquenceAsync(SearchQuery<TEntity> searchQuery, IQueryable<TEntity> sequence)
+    public virtual async Task<PagedListResult<TEntity>> SearchBySequenceAsync(SearchQuery<TEntity> searchQuery, IQueryable<TEntity> sequence)
     {
         // Applying filters
         sequence = this.ManageFilters(searchQuery, sequence);

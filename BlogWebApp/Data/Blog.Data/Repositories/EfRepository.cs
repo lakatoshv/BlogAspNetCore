@@ -89,7 +89,7 @@ public class EfRepository<TEntity> : IRepository<TEntity>
         throw new NotImplementedException();
     }
 
-    public Task<PagedListResult<TEntity>> SearchBySquenceAsync(SearchQuery<TEntity> searchQuery, IQueryable<TEntity> sequence)
+    public Task<PagedListResult<TEntity>> SearchBySequenceAsync(SearchQuery<TEntity> searchQuery, IQueryable<TEntity> sequence)
     {
         throw new NotImplementedException();
     }

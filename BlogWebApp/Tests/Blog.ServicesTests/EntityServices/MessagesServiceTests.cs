@@ -2994,7 +2994,7 @@ public class MessagesServiceTests
         var query = new SearchQuery<Message> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<Message> { Entities = new List<Message>(), Count = 0 };
 
-        _messagesRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, data)).ReturnsAsync(expected);
+        _messagesRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, data)).ReturnsAsync(expected);
 
         var result = await _messagesService.SearchBySequenceAsync(query, data);
 
@@ -3012,7 +3012,7 @@ public class MessagesServiceTests
         var data = SetupMessageFixture().CreateMany(5).AsQueryable();
         var expected = new PagedListResult<Message> { Entities = data.ToList(), Count = 5 };
 
-        _messagesRepositoryMock.Setup(r => r.SearchBySquenceAsync(null, data)).ReturnsAsync(expected);
+        _messagesRepositoryMock.Setup(r => r.SearchBySequenceAsync(null, data)).ReturnsAsync(expected);
 
         var result = await _messagesService.SearchBySequenceAsync(null, data);
 
@@ -3030,7 +3030,7 @@ public class MessagesServiceTests
         var query = new SearchQuery<Message> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<Message> { Entities = null, Count = 5 };
 
-        _messagesRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, null)).ReturnsAsync(expected);
+        _messagesRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, null)).ReturnsAsync(expected);
 
         var result = await _messagesService.SearchBySequenceAsync(query, null);
 

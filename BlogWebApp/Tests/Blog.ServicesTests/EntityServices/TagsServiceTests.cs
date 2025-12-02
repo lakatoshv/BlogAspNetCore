@@ -2950,7 +2950,7 @@ public class TagsServiceTests
         var query = new SearchQuery<Tag> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<Tag> { Entities = new List<Tag>(), Count = 0 };
 
-        _tagsRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, data)).ReturnsAsync(expected);
+        _tagsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, data)).ReturnsAsync(expected);
 
         var result = await _tagsService.SearchBySequenceAsync(query, data);
 
@@ -2968,7 +2968,7 @@ public class TagsServiceTests
         var data = SetupTagFixture().CreateMany(5).AsQueryable();
         var expected = new PagedListResult<Tag> { Entities = data.ToList(), Count = 5 };
 
-        _tagsRepositoryMock.Setup(r => r.SearchBySquenceAsync(null, data)).ReturnsAsync(expected);
+        _tagsRepositoryMock.Setup(r => r.SearchBySequenceAsync(null, data)).ReturnsAsync(expected);
 
         var result = await _tagsService.SearchBySequenceAsync(null, data);
 
@@ -2986,7 +2986,7 @@ public class TagsServiceTests
         var query = new SearchQuery<Tag> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<Tag> { Entities = null, Count = 5 };
 
-        _tagsRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, null)).ReturnsAsync(expected);
+        _tagsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, null)).ReturnsAsync(expected);
 
         var result = await _tagsService.SearchBySequenceAsync(query, null);
 

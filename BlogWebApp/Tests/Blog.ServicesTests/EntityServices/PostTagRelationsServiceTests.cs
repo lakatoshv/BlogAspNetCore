@@ -3467,7 +3467,7 @@ public class PostTagRelationsServiceTests
         var query = new SearchQuery<PostsTagsRelations> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<PostsTagsRelations> { Entities = new List<PostsTagsRelations>(), Count = 0 };
 
-        _postsTagsRelationsRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, data)).ReturnsAsync(expected);
+        _postsTagsRelationsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, data)).ReturnsAsync(expected);
 
         var result = await _postsTagsRelationsService.SearchBySequenceAsync(query, data);
 
@@ -3485,7 +3485,7 @@ public class PostTagRelationsServiceTests
         var data = SetupPostsTagsRelationsFixture().CreateMany(5).AsQueryable();
         var expected = new PagedListResult<PostsTagsRelations> { Entities = data.ToList(), Count = 5 };
 
-        _postsTagsRelationsRepositoryMock.Setup(r => r.SearchBySquenceAsync(null, data)).ReturnsAsync(expected);
+        _postsTagsRelationsRepositoryMock.Setup(r => r.SearchBySequenceAsync(null, data)).ReturnsAsync(expected);
 
         var result = await _postsTagsRelationsService.SearchBySequenceAsync(null, data);
 
@@ -3503,7 +3503,7 @@ public class PostTagRelationsServiceTests
         var query = new SearchQuery<PostsTagsRelations> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<PostsTagsRelations> { Entities = null, Count = 5 };
 
-        _postsTagsRelationsRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, null)).ReturnsAsync(expected);
+        _postsTagsRelationsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, null)).ReturnsAsync(expected);
 
         var result = await _postsTagsRelationsService.SearchBySequenceAsync(query, null);
 
