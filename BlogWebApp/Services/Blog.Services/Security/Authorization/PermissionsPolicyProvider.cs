@@ -4,11 +4,11 @@
 
 namespace Blog.EntityServices.Security.Authorization;
 
-using System;
-using System.Threading.Tasks;
+using Core.Consts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
-using Core.Consts;
+using System;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Permissions policy provider.
@@ -44,7 +44,7 @@ public class PermissionsPolicyProvider(IOptions<AuthorizationOptions> options)
     public Task<AuthorizationPolicy> GetPolicyAsync(string policyName)
     {
         if (!policyName.StartsWith(this.policyPrefix, StringComparison.OrdinalIgnoreCase) ||
-            string.IsNullOrWhiteSpace(policyName.Substring(this.policyPrefix.Length)))
+            string.IsNullOrWhiteSpace(policyName[this.policyPrefix.Length..]))
         {
             return this.FallbackPolicyProvider.GetPolicyAsync(policyName);
         }

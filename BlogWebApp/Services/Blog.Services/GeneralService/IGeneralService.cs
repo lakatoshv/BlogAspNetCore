@@ -2,14 +2,14 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+namespace Blog.EntityServices.GeneralService;
+
+using Core.Infrastructure.Pagination;
+using Core.TableFilters;
+using Data.Specifications.Base;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Blog.Core.Infrastructure.Pagination;
-using Blog.Core.TableFilters;
-using Blog.Data.Specifications.Base;
-
-namespace Blog.EntityServices.GeneralService;
 
 /// <summary>
 /// General service interface.
@@ -195,7 +195,7 @@ public interface IGeneralService<T>
     T FirstOrDefault(ISpecification<T> specification);
 
     /// <summary>
-    /// Lasts the or default.
+    /// Last or default.
     /// </summary>
     /// <param name="specification">The specification.</param>
     /// <returns>T.</returns>

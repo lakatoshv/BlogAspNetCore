@@ -2,12 +2,12 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+namespace Blog.EntityServices.Identity.Auth;
+
+using Data.Models;
+using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Blog.Data.Models;
-using Microsoft.AspNetCore.Identity;
-
-namespace Blog.EntityServices.Identity.Auth;
 
 /// <summary>
 /// Auth service.

@@ -21,25 +21,24 @@ public class EncryptionService : IEncryptionService
     public virtual string CreateSaltKey(int size)
     {
         // generate a cryptographic random number
-        using (var provider = new RNGCryptoServiceProvider())
-        {
-            var buff = new byte[size];
-            provider.GetBytes(buff);
+        using var provider = new RNGCryptoServiceProvider();
 
-            // Return a Base64 string representation of the random number
-            return Convert.ToBase64String(buff);
-        }
+        var buff = new byte[size];
+        provider.GetBytes(buff);
+
+        // Return a Base64 string representation of the random number
+        return Convert.ToBase64String(buff);
     }
 
     /// <summary>
     /// Create a password hash.
     /// </summary>
     /// <param name="password">Password.</param>
-    /// <param name="saltkey">Salk key.</param>
+    /// <param name="saltKey">Salt key.</param>
     /// <param name="passwordFormat">Password format (hash algorithm).</param>
     /// <returns>Password hash</returns>
-    public virtual string CreatePasswordHash(string password, string saltkey, string passwordFormat)
-        => this.CreateHash(Encoding.UTF8.GetBytes(string.Concat(password, saltkey)), passwordFormat);
+    public virtual string CreatePasswordHash(string password, string saltKey, string passwordFormat)
+        => this.CreateHash(Encoding.UTF8.GetBytes(string.Concat(password, saltKey)), passwordFormat);
 
     /// <summary>
     /// Create a data hash.
