@@ -4,13 +4,13 @@
 
 namespace Blog.Services.Core.Caching;
 
+using Blog.Core.Configuration;
+using Interfaces;
+using Newtonsoft.Json;
+using StackExchange.Redis;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Blog.Core.Configuration;
-using Newtonsoft.Json;
-using StackExchange.Redis;
-using Interfaces;
 
 /// <summary>
 /// Redis cache manager.
@@ -143,14 +143,14 @@ public class RedisCacheManager
         var serializedItem = await this.db.StringGetAsync(key);
         if (!serializedItem.HasValue)
         {
-            return default(T);
+            return default;
         }
 
         // deserialize item
         var item = JsonConvert.DeserializeObject<T>(serializedItem);
         if (item == null)
         {
-            return default(T);
+            return default;
         }
 
         // set item in the per-request cache

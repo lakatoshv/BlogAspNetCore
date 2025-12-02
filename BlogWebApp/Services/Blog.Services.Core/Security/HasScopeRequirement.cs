@@ -1,11 +1,11 @@
-﻿// <copyright file="PermissionsPolicyProvider.cs" company="PlaceholderCompany">
+﻿// <copyright file="HasScopeRequirement.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
 namespace Blog.Services.Core.Security;
 
-using System;
 using Microsoft.AspNetCore.Authorization;
+using System;
 
 /// <summary>
 /// Has scope requirement.

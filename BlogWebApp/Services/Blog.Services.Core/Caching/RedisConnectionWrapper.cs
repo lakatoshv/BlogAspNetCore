@@ -4,14 +4,15 @@
 
 namespace Blog.Services.Core.Caching;
 
-using System;
-using System.Linq;
-using System.Net;
+using Blog.Core.Configuration;
+using Interfaces;
 using RedLockNet.SERedis;
 using RedLockNet.SERedis.Configuration;
 using StackExchange.Redis;
-using Blog.Core.Configuration;
-using Interfaces;
+using System;
+using System.Linq;
+using System.Net;
+using System.Threading;
 
 /// <summary>
 /// Redis connection wrapper.
@@ -31,7 +32,7 @@ public class RedisConnectionWrapper : IRedisConnectionWrapper, ILocker
     /// <summary>
     /// Lock object.
     /// </summary>
-    private readonly object @lock = new ();
+    private readonly Lock @lock = new();
 
     /// <summary>
     /// RedLock factory.
@@ -110,6 +111,7 @@ public class RedisConnectionWrapper : IRedisConnectionWrapper, ILocker
     {
         // use RedLock library
         using var redisLock = this.redisLockFactory.CreateLock(resource, expirationTime);
+
         // ensure that lock is acquired
         if (!redisLock.IsAcquired)
         {

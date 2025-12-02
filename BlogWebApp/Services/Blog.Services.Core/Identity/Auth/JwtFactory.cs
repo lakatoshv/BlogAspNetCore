@@ -4,6 +4,10 @@
 
 namespace Blog.Services.Core.Identity.Auth;
 
+using Blog.Core;
+using Data.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,10 +15,6 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
-using Blog.Core;
-using Data.Models;
 using Utilities;
 
 /// <summary>
@@ -57,8 +57,7 @@ public class JwtFactory : IJwtFactory
     /// <inheritdoc cref="IJwtFactory"/>
     public async Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity)
     {
-        var claims = new List<Claim>(new[]
-        {
+        var claims = new List<Claim>([
             new Claim(JwtRegisteredClaimNames.Sub, userName),
             new Claim(JwtRegisteredClaimNames.Jti, await this.jwtOptions.JtiGenerator()),
             new Claim(
@@ -72,8 +71,8 @@ public class JwtFactory : IJwtFactory
             identity.FindFirst(JwtClaimTypes.Email),
             identity.FindFirst(JwtClaimTypes.PhoneNumber),
             identity.FindFirst(JwtClaimTypes.IsEmailVerified),
-            identity.FindFirst(JwtClaimTypes.ProfileId),
-        });
+            identity.FindFirst(JwtClaimTypes.ProfileId)
+        ]);
 
         var user = await this.userManager.FindByNameAsync(userName);
 
@@ -160,14 +159,7 @@ public class JwtFactory : IJwtFactory
             throw new ArgumentException("Must be a non-zero TimeSpan.", nameof(JwtIssuerOptions.ValidFor));
         }
 
-        if (options.SigningCredentials == null)
-        {
-            throw new ArgumentNullException(nameof(JwtIssuerOptions.SigningCredentials));
-        }
-
-        if (options.JtiGenerator == null)
-        {
-            throw new ArgumentNullException(nameof(JwtIssuerOptions.JtiGenerator));
-        }
+        ArgumentNullException.ThrowIfNull(nameof(JwtIssuerOptions.SigningCredentials));
+        ArgumentNullException.ThrowIfNull(nameof(JwtIssuerOptions.JtiGenerator));
     }
 }

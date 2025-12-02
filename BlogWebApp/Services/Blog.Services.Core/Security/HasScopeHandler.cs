@@ -4,9 +4,9 @@
 
 namespace Blog.Services.Core.Security;
 
+using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 /// <summary>
 /// Has scope handler.
@@ -26,7 +26,7 @@ public class HasScopeHandler : AuthorizationHandler<HasScopeRequirement>
         var scopes = context.User.FindFirst(c => c.Type == "scope" && c.Issuer == requirement.Issuer)?.Value.Split(' ');
 
         // Succeed if the scope array contains the required scope
-        if (scopes.Any(s => s == requirement.Scope))
+        if (scopes != null && scopes.Any(s => s == requirement.Scope))
         {
             context.Succeed(requirement);
         }

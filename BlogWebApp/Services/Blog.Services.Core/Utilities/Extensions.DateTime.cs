@@ -22,11 +22,12 @@ public static partial class Extensions
         var universalTime = dateTime.ToUniversalTime();
 
         var delta = Math.Round((universalTime - offset).TotalSeconds);
+
         return (long)delta;
     }
 
     /// <summary>
-    /// Convert DateTime to To user time.
+    /// Convert DateTime to user time.
     /// </summary>
     /// <param name="dt">dt.</param>
     /// <param name="sourceDateTimeKind">sourceDateTimeKind.</param>
@@ -51,6 +52,6 @@ public static partial class Extensions
     /// <returns>string.</returns>
     public static string ToSafeFileName(this DateTime dateTime)
     {
-        return $"{dateTime.Day.ToString("00")}{dateTime.Month.ToString("00")}{dateTime.Year}";
+        return $"{dateTime.Day:00}{dateTime.Month:00}{dateTime.Year}";
     }
 }

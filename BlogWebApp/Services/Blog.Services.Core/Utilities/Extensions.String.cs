@@ -14,9 +14,9 @@ using System.Text.RegularExpressions;
 /// </summary>
 public static partial class Extensions
 {
-    private static readonly Regex WebUrlExpression = new Regex(@"((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(:[0-9]+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)", RegexOptions.Singleline | RegexOptions.Compiled);
-    private static readonly Regex EmailExpression = new Regex(@"^([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$", RegexOptions.Singleline | RegexOptions.Compiled);
-    private static readonly Regex StripHtmlExpression = new Regex("<\\S[^><]*>", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.CultureInvariant | RegexOptions.Compiled);
+    private static readonly Regex WebUrlExpression = new(@"((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(:[0-9]+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)", RegexOptions.Singleline | RegexOptions.Compiled);
+    private static readonly Regex EmailExpression = new("^([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$", RegexOptions.Singleline | RegexOptions.Compiled);
+    private static readonly Regex StripHtmlExpression = new("<\\S[^><]*>", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
     /// <summary>
     /// Convert string to int.
@@ -27,6 +27,7 @@ public static partial class Extensions
     {
         // int result = 0;
         int.TryParse(input, out var result);
+
         return result;
     }
 
@@ -39,6 +40,7 @@ public static partial class Extensions
     {
         // int result = 0;
         bool.TryParse(input, out var result);
+
         return result;
     }
 
@@ -51,6 +53,7 @@ public static partial class Extensions
     public static Guid ToGuid(this string value)
     {
         Guid.TryParse(value, out var result);
+
         return result;
     }
 

@@ -4,13 +4,13 @@
 
 namespace Blog.Services.Core.Caching;
 
+using Interfaces;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Primitives;
-using Interfaces;
 
 /// <summary>
 /// Memory cache manager.
@@ -145,7 +145,7 @@ public class MemoryCacheManager : ILocker, IStaticCacheManager
     protected static void TryRemoveKey(string key)
     {
         // try to remove key from dictionary
-        if (!AllKeys.TryRemove(key, out var _))
+        if (!AllKeys.TryRemove(key, out _))
         {
             // if not possible to remove key from dictionary, then try to mark key as not existing in cache
             AllKeys.TryUpdate(key, false, false);
