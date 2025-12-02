@@ -4,26 +4,22 @@
 
 namespace Blog.Data.Core.Models;
 
+using Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
-using Interfaces;
 
 /// <summary>
 /// Base model.
 /// </summary>
 /// <typeparam name="TKey">TKey.</typeparam>
-public abstract class BaseModel<TKey> : IAuditInfo
+public abstract class BaseModel<TKey>(TKey id)
+    : IAuditInfo
 {
-    protected BaseModel(TKey id)
-    {
-        Id = id;
-    }
-
     /// <summary>
     /// Gets or sets id.
     /// </summary>
     [Key]
-    public TKey Id { get; }
+    public TKey Id { get; } = id;
 
     /// <summary>
     /// Gets or sets created on.

@@ -4,9 +4,9 @@
 
 namespace Blog.Data.Core.Models;
 
-using System;
 using Blog.Core;
 using Interfaces;
+using System;
 
 /// <summary>
 /// Base deletable model.
@@ -89,13 +89,13 @@ public abstract class BaseDeletableModel<TKey> : BaseModel<TKey>, IDeletableEnti
         var otherType = other.GetUnproxiedType();
         var thisType = this.GetUnproxiedType();
 
-        return thisType.IsAssignableFrom(otherType) || otherType.IsAssignableFrom(thisType);
+        return otherType != null && (thisType.IsAssignableFrom(otherType) || otherType.IsAssignableFrom(thisType));
     }
 
     /// <inheritdoc cref="object"/>
     public override int GetHashCode()
     {
-        return Equals(this.Id, default(int)) ? base.GetHashCode() : this.Id.GetHashCode();
+        return Equals(this.Id, 0) ? base.GetHashCode() : this.Id.GetHashCode();
     }
 
     /// <summary>
@@ -105,7 +105,7 @@ public abstract class BaseDeletableModel<TKey> : BaseModel<TKey>, IDeletableEnti
     /// <returns>bool.</returns>
     private static bool IsTransient(BaseDeletableModel<TKey> obj)
     {
-        return obj != null && Equals(obj.Id, default(int));
+        return obj != null && Equals(obj.Id, 0);
     }
 
     /// <summary>
