@@ -223,7 +223,7 @@ public class PostsController(
 
         var response = new CreatedResponse<int> { Id = postToCreate.Id };
 
-        var baseUrl = $@"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
+        var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
         var locationUrl = baseUrl + "/" + ApiRoutes.PostsController.Show.Replace("{id}", postToCreate.Id.ToString());
 
         return Created(locationUrl, response);

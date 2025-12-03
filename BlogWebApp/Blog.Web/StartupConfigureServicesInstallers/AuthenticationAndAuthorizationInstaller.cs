@@ -102,15 +102,15 @@ public class AuthenticationAndAuthorizationInstaller : IInstaller
         });
         services.AddCors(options =>
         {
-            options.AddPolicy("AllowAll", bilder =>
+            options.AddPolicy("AllowAll", builder =>
             {
-                bilder.AllowAnyOrigin()
+                builder.AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
-            options.AddPolicy("AllowAllBlazor", bilder =>
+            options.AddPolicy("AllowAllBlazor", builder =>
             {
-                bilder.WithOrigins("https://localhost:44390").AllowAnyOrigin()
+                builder.WithOrigins("https://localhost:44390").AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });

@@ -24,11 +24,11 @@ public class SwaggerGroupOperationFilter : IOperationFilter
         if (attributes.Any())
         {
             var groupNameAttribute = attributes.First();
-            operation.Tags = new[] { new OpenApiTag { Name = groupNameAttribute.GroupName } };
+            operation.Tags = [new OpenApiTag { Name = groupNameAttribute.GroupName }];
         }
         else
         {
-            operation.Tags = new[] { new OpenApiTag { Name = controllerActionDescriptor.RouteValues["controller"] } };
+            operation.Tags = [new OpenApiTag { Name = controllerActionDescriptor.RouteValues["controller"] }];
         }
     }
 }

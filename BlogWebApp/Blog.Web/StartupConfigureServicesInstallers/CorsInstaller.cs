@@ -29,7 +29,7 @@ public class CorsInstaller : IInstaller
                 {
                     builder.AllowAnyHeader();
                     builder.AllowAnyMethod();
-                    builder.SetIsOriginAllowed(host => true);
+                    builder.SetIsOriginAllowed(_ => true);
                     builder.AllowCredentials();
                 }
                 else

@@ -6,7 +6,9 @@ using Blog.Contracts.V1.Responses;
 /// <summary>
 /// Created response example.
 /// </summary>
-/// <seealso cref="IExamplesProvider{CreatedResponse{int}}" />
+/// <seealso>
+///     <cref>IExamplesProvider{CreatedResponse{int}}</cref>
+/// </seealso>
 public class CreatedResponseExample : IExamplesProvider<CreatedResponse<int>>
 {
     /// <inheritdoc cref="IExamplesProvider{T}"/>
