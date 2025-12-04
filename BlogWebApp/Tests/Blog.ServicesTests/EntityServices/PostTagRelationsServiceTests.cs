@@ -254,7 +254,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Get all post tag relations.
-    /// Should return nothing when post tag relations does not exists.
+    /// Should return nothing when post tag relations does not exist.
     /// </summary>
     [Fact]
     public void GetAll_WhenPostTagRelationsDoesNotExists_ShouldReturnNothing()
@@ -414,7 +414,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Get all post tag relations.
-    /// Should return nothing when post tag relations does not exists.
+    /// Should return nothing when post tag relations does not exist.
     /// </summary>
     [Fact]
     public async Task GetAllAsync_WhenPostTagRelationsDoesNotExists_ShouldReturnNothing()
@@ -517,7 +517,6 @@ public class PostTagRelationsServiceTests
     public void GetAll_WithEqualsSpecification_WhenPostsExists_ShouldReturnPost(int equalCount, string titleSearch)
     {
         //Arrange
-        var random = new Random();
         var postsTagsRelationsList =
             SetupPostsTagsRelationsFixture(_fixture.Create<string>(), titleSearch)
                 .CreateMany(1)
@@ -612,7 +611,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Get all post tag relations.
-    /// Should return nothing with  when post tag relations does not exists.
+    /// Should return nothing with  when post tag relations does not exist.
     /// </summary>
     /// <param name="equalCount">The equal count.</param>
     /// <param name="titleSearch">The title search.</param>
@@ -642,7 +641,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Get all post tag relations.
-    /// Should return nothing with  when post tag relations does not exists.
+    /// Should return nothing with  when post tag relations does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -704,12 +703,11 @@ public class PostTagRelationsServiceTests
                 .With(x => x.PostId, postIdSearch)
                 .CreateMany(random.Next(100));
 
-        BaseSpecification<PostsTagsRelations> specification = null;
         _postsTagsRelationsRepositoryMock.Setup(x => x.GetAll(It.IsAny<BaseSpecification<PostsTagsRelations>>()))
             .Returns(() => postTagRelationsList.Where(x => x.PostId == postIdSearch).AsQueryable());
 
         //Act
-        var postTagRelations = _postsTagsRelationsService.GetAll(specification);
+        var postTagRelations = _postsTagsRelationsService.GetAll(null);
 
         //Assert
         Assert.NotNull(postTagRelations);
@@ -806,7 +804,6 @@ public class PostTagRelationsServiceTests
     public async Task GetAllAsync_WithEqualsSpecification_WhenPostsExists_ShouldReturnPost(int equalCount, string titleSearch)
     {
         //Arrange
-        var random = new Random();
         var postsTagsRelationsList =
             SetupPostsTagsRelationsFixture(_fixture.Create<string>(), titleSearch)
                 .CreateMany(1)
@@ -879,7 +876,6 @@ public class PostTagRelationsServiceTests
     public async Task GetAllAsync_WithContainsSpecification_WhenPostTagRelationsExists_ShouldReturnPostTagRelationsWithExistingPostAndTagsAndShouldContainsTheSameTagsCount(int notEqualCount, string postTitle, string tagTitle)
     {
         //Arrange
-        var random = new Random();
         var postsTagsRelationsList =
             SetupPostsTagsRelationsFixture(postTitle, tagTitle)
                 .CreateMany(1)
@@ -901,7 +897,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Get all async post tag relations.
-    /// Should return nothing with  when post tag relations does not exists.
+    /// Should return nothing with  when post tag relations does not exist.
     /// </summary>
     /// <param name="equalCount">The equal count.</param>
     /// <param name="titleSearch">The title search.</param>
@@ -931,7 +927,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Get all async post tag relations.
-    /// Should return nothing with  when post tag relations does not exists.
+    /// Should return nothing with  when post tag relations does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -993,12 +989,11 @@ public class PostTagRelationsServiceTests
                 .With(x => x.PostId, postIdSearch)
                 .CreateMany(random.Next(100));
 
-        BaseSpecification<PostsTagsRelations> specification = null;
         _postsTagsRelationsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<BaseSpecification<PostsTagsRelations>>()))
             .ReturnsAsync(() => messagesList.Where(x => x.PostId == postIdSearch).ToList());
 
         //Act
-        var messages = await _postsTagsRelationsService.GetAllAsync(specification);
+        var messages = await _postsTagsRelationsService.GetAllAsync(null);
 
         //Assert
         Assert.NotNull(messages);
@@ -1080,7 +1075,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Find post tag relation.
-    /// Should return nothing when post does not exists.
+    /// Should return nothing when post does not exist.
     /// </summary>
     [Fact]
     public void Find_WhenPostTagRelationDoesNotExists_ShouldReturnNothing()
@@ -1168,7 +1163,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Async find post tag relation.
-    /// Should return nothing when post does not exists.
+    /// Should return nothing when post does not exist.
     /// </summary>
     /// <returns>Task.</returns>
     [Fact]
@@ -2347,7 +2342,7 @@ public class PostTagRelationsServiceTests
     #region Delete Async By Id function
 
     /// <summary>
-    /// Verify that function Delete Async By Id has been called.
+    /// Verify that function Delete Async By ID has been called.
     /// </summary>
     /// <returns>Task.</returns>
     [Fact]
@@ -2370,7 +2365,7 @@ public class PostTagRelationsServiceTests
 
         //Act
         await _postsTagsRelationsService.InsertAsync(newPostsTagsRelation);
-        var postsTagsRelation = await _postsTagsRelationsService.FindAsync(id);
+        await _postsTagsRelationsService.FindAsync(id);
         await _postsTagsRelationsService.DeleteAsync(id);
         _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
             .ReturnsAsync(() => null);
@@ -2405,7 +2400,7 @@ public class PostTagRelationsServiceTests
 
         //Act
         await _postsTagsRelationsService.InsertAsync(newPostsTagsRelation);
-        var postsTagsRelations = await _postsTagsRelationsService.FindAsync(id);
+        await _postsTagsRelationsService.FindAsync(id);
         await _postsTagsRelationsService.DeleteAsync(id);
         _postsTagsRelationsRepositoryMock.Setup(x => x.GetByIdAsync(id))
             .ReturnsAsync(() => null);
@@ -2416,7 +2411,7 @@ public class PostTagRelationsServiceTests
     }
 
     /// <summary>
-    /// Async delete By Id post tag relation.
+    /// Async delete By ID post tag relation.
     /// When repository throws exception should throw exception.
     /// </summary>
     [Fact]
@@ -2707,7 +2702,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Check if there are any post tag relations with specification.
-    /// Should return false with when post tag relations does not exists.
+    /// Should return false with when post tag relations does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -2734,7 +2729,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Check if there are any post tag relations with specification.
-    /// Should return false with when post tag relations does not exists.
+    /// Should return false with when post tag relations does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -2843,7 +2838,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Async check if there are any post tag relations with specification.
-    /// Should return false with when post tag relations does not exists.
+    /// Should return false with when post tag relations does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     /// <returns>Task.</returns>
@@ -2871,7 +2866,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Async check if there are any post tag relations with specification.
-    /// Should return false with when post tag relations does not exists.
+    /// Should return false with when post tag relations does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     /// <returns>Task.</returns>
@@ -2982,7 +2977,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Get first or default post with specification.
-    /// Should return nothing with when post does not exists.
+    /// Should return nothing with when post does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -3009,7 +3004,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Get first or default post with specification.
-    /// Should return nothing with when post tag relations does not exists.
+    /// Should return nothing with when post tag relations does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -3117,7 +3112,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Get last or default post with specification.
-    /// Should return nothing with when post does not exists.
+    /// Should return nothing with when post does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -3144,7 +3139,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Get last or default post with specification.
-    /// Should return nothing with when post tag relations does not exists.
+    /// Should return nothing with when post tag relations does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -3195,7 +3190,7 @@ public class PostTagRelationsServiceTests
         }
 
         // Resolving Sort Criteria
-        // This code applies the sorting criterias sent as the parameter
+        // This code applies the sorting criteria sent as the parameter
         if (query.SortCriterias is { Count: > 0 })
         {
             var sortCriteria = query.SortCriterias[0];
@@ -3298,7 +3293,6 @@ public class PostTagRelationsServiceTests
     public async Task SearchAsync_WhenPostsTagsRelationsExists_ShouldReturnPostsTagsRelations(int search, int start, int take, string fieldName, OrderType orderType)
     {
         //Arrange
-        var random = new Random();
         var postsTagsRelationsList =
             SetupPostsTagsRelationsFixture()
                 .With(x => x.TagId, search)
@@ -3417,7 +3411,7 @@ public class PostTagRelationsServiceTests
 
     /// <summary>
     /// Search async posts tags relations.
-    /// Should return nothing when posts tags relations does not exists.
+    /// Should return nothing when posts tags relations does not exist.
     /// </summary>
     /// <param name="search">The search.</param>
     /// <param name="start">The start.</param>

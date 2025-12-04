@@ -175,7 +175,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get all posts.
-    /// Should return nothing when posts does not exists.
+    /// Should return nothing when posts does not exist.
     /// </summary>
     [Fact]
     public void GetAll_WhenPostDoesNotExists_ShouldReturnNothing()
@@ -263,7 +263,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get all async posts.
-    /// Should return nothing when posts does not exists.
+    /// Should return nothing when posts does not exist.
     /// </summary>
     [Fact]
     public async Task GetAllAsync_WhenPostDoesNotExists_ShouldReturnNothing()
@@ -366,7 +366,6 @@ public class PostsServiceTests
     public void GetAll_WithEqualsSpecification_WhenPostsExists_ShouldReturnPost(int equalCount, string titleSearch)
     {
         //Arrange
-        var random = new Random();
         var postsList =
             SetupPostFixture()
                 .With(x => x.Title, titleSearch)
@@ -387,7 +386,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get all posts.
-    /// Should return nothing with  when posts does not exists.
+    /// Should return nothing with  when posts does not exist.
     /// </summary>
     /// <param name="equalCount">The equal count.</param>
     /// <param name="titleSearch">The title search.</param>
@@ -416,7 +415,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get all posts.
-    /// Should return nothing with  when posts does not exists.
+    /// Should return nothing with  when posts does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -478,12 +477,11 @@ public class PostsServiceTests
                 .With(x => x.Title, postTitleSearch)
                 .CreateMany(random.Next(100));
 
-        PostSpecification specification = null;
         _postsRepositoryMock.Setup(x => x.GetAll(It.IsAny<PostSpecification>()))
             .Returns(() => postsList.Where(x => x.Title.Contains(postTitleSearch)).AsQueryable());
 
         //Act
-        var posts = _postsService.GetAll(specification);
+        var posts = _postsService.GetAll(null);
 
         //Assert
         Assert.NotNull(posts);
@@ -582,7 +580,6 @@ public class PostsServiceTests
     public async Task GetAllAsync_WithEqualsSpecification_WhenPostsExists_ShouldReturnPost(int equalCount, string titleSearch)
     {
         //Arrange
-        var random = new Random();
         var postsList =
             SetupPostFixture()
                 .With(x => x.Title, titleSearch)
@@ -604,7 +601,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get all async posts.
-    /// Should return nothing with  when posts does not exists.
+    /// Should return nothing with  when posts does not exist.
     /// </summary>
     /// <param name="equalCount">The equal count.</param>
     /// <param name="titleSearch">The title search.</param>
@@ -634,7 +631,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get all async posts.
-    /// Should return nothing with  when posts does not exists.
+    /// Should return nothing with  when posts does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -696,12 +693,11 @@ public class PostsServiceTests
                 .With(x => x.Title, postTitleSearch)
                 .CreateMany(random.Next(100));
 
-        PostSpecification specification = null;
         _postsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<PostSpecification>()))
             .ReturnsAsync(() => postsList.Where(x => x.Title.Contains(postTitleSearch)).ToList());
 
         //Act
-        var posts = await _postsService.GetAllAsync(specification);
+        var posts = await _postsService.GetAllAsync(null);
 
         //Assert
         Assert.NotNull(posts);
@@ -777,7 +773,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Find post.
-    /// Should return nothing when post does not exists.
+    /// Should return nothing when post does not exist.
     /// </summary>
     [Fact]
     public void Find_WhenPostDoesNotExists_ShouldReturnNothing()
@@ -860,7 +856,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Async find post.
-    /// Should return nothing when post does not exists.
+    /// Should return nothing when post does not exist.
     /// </summary>
     /// <returns>Task.</returns>
     [Fact]
@@ -1624,7 +1620,7 @@ public class PostsServiceTests
     #region Delete By Id function
 
     /// <summary>
-    /// Verify that function Delete By Id has been called.
+    /// Verify that function Delete By ID has been called.
     /// </summary>
     [Fact]
     public void Verify_FunctionDeleteById_HasBeenCalled()
@@ -1640,7 +1636,7 @@ public class PostsServiceTests
 
         //Act
         _postsService.Insert(newPost);
-        var post = _postsService.Find(postId);
+        _postsService.Find(postId);
         _postsService.Delete(postId);
         _postsRepositoryMock.Setup(x => x.GetById(postId))
             .Returns(() => null);
@@ -1651,7 +1647,7 @@ public class PostsServiceTests
     }
 
     /// <summary>
-    /// Delete By Id post.
+    /// Delete By ID post.
     /// Should return nothing when post is deleted.
     /// </summary>
     [Fact]
@@ -1673,7 +1669,7 @@ public class PostsServiceTests
 
         //Act
         _postsService.Insert(newPost);
-        var post = _postsService.Find(postId);
+        _postsService.Find(postId);
         _postsService.Delete(postId);
         _postsRepositoryMock.Setup(x => x.GetById(postId))
             .Returns(() => null);
@@ -1684,7 +1680,7 @@ public class PostsServiceTests
     }
 
     /// <summary>
-    /// Delete By Id post.
+    /// Delete By ID post.
     /// When repository throws exception should throw exception.
     /// </summary>
     [Fact]
@@ -1879,7 +1875,7 @@ public class PostsServiceTests
     #region Delete Async By Id function
 
     /// <summary>
-    /// Verify that function Delete Async By Id has been called.
+    /// Verify that function Delete Async By ID has been called.
     /// </summary>
     /// <returns>Task.</returns>
     [Fact]
@@ -1932,7 +1928,7 @@ public class PostsServiceTests
     }
 
     /// <summary>
-    /// Async delete By Id post.
+    /// Async delete By ID post.
     /// When repository throws exception should throw exception.
     /// </summary>
     [Fact]
@@ -2211,7 +2207,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Check if there are any posts with specification.
-    /// Should return false with when posts does not exists.
+    /// Should return false with when posts does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -2237,7 +2233,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Check if there are any posts with specification.
-    /// Should return false with when posts does not exists.
+    /// Should return false with when posts does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -2346,7 +2342,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Async check if there are any posts with specification.
-    /// Should return false with when posts does not exists.
+    /// Should return false with when posts does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     /// <returns>Task.</returns>
@@ -2373,7 +2369,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Async check if there are any posts with specification.
-    /// Should return false with when posts does not exists.
+    /// Should return false with when posts does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     /// <returns>Task.</returns>
@@ -2484,7 +2480,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get first or default post with specification.
-    /// Should return nothing with when post does not exists.
+    /// Should return nothing with when post does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -2510,7 +2506,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get first or default post with specification.
-    /// Should return nothing with when posts does not exists.
+    /// Should return nothing with when posts does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -2618,7 +2614,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get last or default post with specification.
-    /// Should return nothing with when post does not exists.
+    /// Should return nothing with when post does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -2644,7 +2640,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get last or default post with specification.
-    /// Should return nothing with when posts does not exists.
+    /// Should return nothing with when posts does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -2683,7 +2679,6 @@ public class PostsServiceTests
             foreach (var filterClause in query.Filters)
             {
                 sequence = sequence.Where(filterClause);
-                var a = sequence.Select(x => x).ToList();
             }
         }
 
@@ -2694,10 +2689,9 @@ public class PostsServiceTests
 
             sequence = properties.Aggregate(sequence, (current, includeProperty) => current.Include(includeProperty));
         }
-        var b = sequence.ToList();
 
         // Resolving Sort Criteria
-        // This code applies the sorting criterias sent as the parameter
+        // This code applies the sorting criteria sent as the parameter
         if (query.SortCriterias is { Count: > 0 })
         {
             var sortCriteria = query.SortCriterias[0];
@@ -2919,7 +2913,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Search async posts.
-    /// Should return nothing when posts does not exists.
+    /// Should return nothing when posts does not exist.
     /// </summary>
     /// <param name="search">The search.</param>
     /// <param name="start">The start.</param>
