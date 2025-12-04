@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "Blog.Web\\Blog.Web.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "BlogBlazor\\BlogBlazor.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

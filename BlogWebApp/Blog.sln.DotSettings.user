@@ -1,4 +1,7 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
+  &lt;Assembly Path="C:\Users\user\.nuget\packages\microsoft.aspnetcore.mvc.core\2.2.5\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Core.dll" /&gt;&#xD;
+&lt;/AssemblyExplorer&gt;</s:String>
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=780df159_002D8db1_002D4d42_002D9c85_002D23db90ee4434/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="PostTagRelationsServiceTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::8AE98490-2264-4CBC-8B61-62DA16A2EC82::net5.0::Blog.ServicesTests.EntityServices.PostTagRelationsServiceTests&lt;/TestId&gt;&#xD;
