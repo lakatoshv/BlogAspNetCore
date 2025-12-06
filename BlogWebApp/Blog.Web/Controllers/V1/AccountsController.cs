@@ -222,7 +222,7 @@ public class AccountsController(
             return Bad(result);
         }
 
-        model.Roles ??= new[] {"User"};
+        model.Roles ??= ["User"];
             
         foreach(var role in model.Roles)
         {

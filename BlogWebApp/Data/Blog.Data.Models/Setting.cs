@@ -9,7 +9,6 @@ using Core;
 /// <summary>
 /// Setting.
 /// </summary>
-
 public class Setting : Entity
 {
     /// <summary>

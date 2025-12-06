@@ -4,11 +4,11 @@
 
 namespace Blog.Services.Core.Identity.User;
 
-using System.Linq;
+using Blog.Services.Core.Dtos.User;
 using Contracts.V1.Requests.UsersRequests;
 using Contracts.V1.Responses.UsersResponses;
 using Data.Models;
-using Blog.Services.Core.Dtos.User;
+using System.Linq;
 
 /// <summary>
 /// View model to entity mapping user.

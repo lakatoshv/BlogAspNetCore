@@ -52,16 +52,15 @@ public class PermissionService : IPermissionService
         return this.Authorize(this.workContext.CurrentUser);
     }
 
+    /// <summary>
+    /// The authorization.
+    /// </summary>
     private bool Authorize(ApplicationUser user)
-    {
-        if (this.CheckIsUserAdmin(user))
-        {
-            return true;
-        }
+        => this.CheckIsUserAdmin(user) || true;
 
-        return true;
-    }
-
+    /// <summary>
+    /// The check if user is admin.
+    /// </summary>
     private bool CheckIsUserAdmin(ApplicationUser user)
     {
         var systemAdminKey = string.Format("Admin", user.Id);

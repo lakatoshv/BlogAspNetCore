@@ -7,7 +7,7 @@ namespace Blog.Data.Models;
 using Core;
 
 /// <summary>
-/// Posts Tags Many to Many Relations entity.
+/// Posts Tags Many-to-Many Relations entity.
 /// </summary>
 /// <seealso cref="Entity" />
 public class PostsTagsRelations : Entity

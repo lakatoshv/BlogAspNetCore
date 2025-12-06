@@ -19,13 +19,13 @@ using Core.Configuration;
 /// <remarks>
 /// Initializes a new instance of the <see cref="CachedAttribute"/> class.
 /// </remarks>
-/// <param name="lifeTimeSeconds">The life time seconds.</param>
+/// <param name="lifeTimeSeconds">The lifetime seconds.</param>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class CachedAttribute(int lifeTimeSeconds)
     : Attribute, IAsyncActionFilter
 {
     /// <summary>
-    /// The life time seconds.
+    /// The lifetime seconds.
     /// </summary>
     private readonly int _lifeTimeSeconds = lifeTimeSeconds;
 

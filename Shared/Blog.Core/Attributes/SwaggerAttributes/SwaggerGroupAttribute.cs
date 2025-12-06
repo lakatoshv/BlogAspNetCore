@@ -1,4 +1,8 @@
-﻿namespace Blog.Core.Attributes.SwaggerAttributes;
+﻿// <copyright file="SwaggerGroupAttribute.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+namespace Blog.Core.Attributes.SwaggerAttributes;
 
 using System;
 

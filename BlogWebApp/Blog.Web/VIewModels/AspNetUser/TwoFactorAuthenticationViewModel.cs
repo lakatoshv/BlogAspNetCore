@@ -1,7 +1,7 @@
 ﻿namespace BLog.Web.ViewModels.AspNetUser;
 
 /// <summary>
-/// Two factor authentication view model
+/// Two-factor authentication view model
 /// </summary>
 public class TwoFactorAuthenticationViewModel
 {

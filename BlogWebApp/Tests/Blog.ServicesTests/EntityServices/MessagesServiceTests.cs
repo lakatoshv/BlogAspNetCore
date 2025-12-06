@@ -158,7 +158,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Get all messages.
-    /// Should return nothing when messages does not exists.
+    /// Should return nothing when messages does not exist.
     /// </summary>
     [Fact]
     public void GetAll_WhenMessagesDoesNotExists_ShouldReturnNothing()
@@ -246,7 +246,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Get all async messages.
-    /// Should return nothing when messages does not exists.
+    /// Should return nothing when messages does not exist.
     /// </summary>
     [Fact]
     public void GetAllAsync_WhenMessagesDoesNotExists_ShouldReturnNothing()
@@ -369,7 +369,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Get all messages with specification.
-    /// Should return nothing with  when messages does not exists.
+    /// Should return nothing with  when messages does not exist.
     /// </summary>
     /// <param name="equalCount">The equal count.</param>
     /// <param name="bodySearch">The body search.</param>
@@ -398,7 +398,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Get all messages.
-    /// Should return nothing with  when messages does not exists.
+    /// Should return nothing with  when messages does not exist.
     /// </summary>
     /// <param name="bodySearch">The message search.</param>
     [Theory]
@@ -432,7 +432,7 @@ public class MessagesServiceTests
                 .With(x => x.Body, messageBodySearch)
                 .CreateMany(random.Next(100));
 
-        var specification = new MessageSpecification();
+        var specification = new MessageSpecification(null);
         _messagesRepositoryMock.Setup(x => x.GetAll(It.IsAny<MessageSpecification>()))
             .Returns(() => messagesList.Where(x => x.Body.Contains(messageBodySearch)).AsQueryable());
 
@@ -460,12 +460,11 @@ public class MessagesServiceTests
                 .With(x => x.Body, messageBodySearch)
                 .CreateMany(random.Next(100));
 
-        MessageSpecification specification = null;
         _messagesRepositoryMock.Setup(x => x.GetAll(It.IsAny<MessageSpecification>()))
             .Returns(() => messagesList.Where(x => x.Body.Contains(messageBodySearch)).AsQueryable());
 
         //Act
-        var messages = _messagesService.GetAll(specification);
+        var messages = _messagesService.GetAll(null);
 
         //Assert
         Assert.NotNull(messages);
@@ -582,7 +581,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Get all async messages with specification.
-    /// Should return nothing with  when messages does not exists.
+    /// Should return nothing with  when messages does not exist.
     /// </summary>
     /// <param name="equalCount">The equal count.</param>
     /// <param name="bodySearch">The body search.</param>
@@ -611,7 +610,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Get all async messages.
-    /// Should return nothing with  when messages does not exists.
+    /// Should return nothing with  when messages does not exist.
     /// </summary>
     /// <param name="bodySearch">The message search.</param>
     [Theory]
@@ -645,7 +644,7 @@ public class MessagesServiceTests
                 .With(x => x.Body, messageBodySearch)
                 .CreateMany(random.Next(100));
 
-        var specification = new MessageSpecification();
+        var specification = new MessageSpecification(null);
         _messagesRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<MessageSpecification>()))
             .ReturnsAsync(() => messagesList.Where(x => x.Body.Contains(messageBodySearch)).ToList());
 
@@ -673,12 +672,11 @@ public class MessagesServiceTests
                 .With(x => x.Body, messageBodySearch)
                 .CreateMany(random.Next(100));
 
-        MessageSpecification specification = null;
         _messagesRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<MessageSpecification>()))
             .ReturnsAsync(() => messagesList.Where(x => x.Body.Contains(messageBodySearch)).ToList());
 
         //Act
-        var messages = await _messagesService.GetAllAsync(specification);
+        var messages = await _messagesService.GetAllAsync(null);
 
         //Assert
         Assert.NotNull(messages);
@@ -754,7 +752,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Find message.
-    /// Should return nothing when message does not exists.
+    /// Should return nothing when message does not exist.
     /// </summary>
     [Fact]
     public void Find_WhenMessageDoesNotExists_ShouldReturnNothing()
@@ -838,7 +836,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Async find message.
-    /// Should return nothing when message does not exists.
+    /// Should return nothing when message does not exist.
     /// </summary>
     /// <returns>Task.</returns>
     [Fact]
@@ -1611,7 +1609,7 @@ public class MessagesServiceTests
     #region Delete By Id function
 
     /// <summary>
-    /// Verify that function Delete By Id has been called.
+    /// Verify that function Delete By ID has been called.
     /// </summary>
     [Fact]
     public void Verify_FunctionDeleteById_HasBeenCalled()
@@ -1632,7 +1630,7 @@ public class MessagesServiceTests
 
         //Act
         _messagesService.Insert(newMessage);
-        var message = _messagesService.Find(messageId);
+        _messagesService.Find(messageId);
         _messagesService.Delete(messageId);
         _messagesRepositoryMock.Setup(x => x.GetById(messageId))
             .Returns(() => null);
@@ -1643,7 +1641,7 @@ public class MessagesServiceTests
     }
 
     /// <summary>
-    /// Delete By Id message.
+    /// Delete By ID message.
     /// Should return nothing when message is deleted.
     /// </summary>
     [Fact]
@@ -1665,7 +1663,7 @@ public class MessagesServiceTests
 
         //Act
         _messagesService.Insert(newMessage);
-        var message = _messagesService.Find(messageId);
+        _messagesService.Find(messageId);
         _messagesService.Delete(messageId);
         _messagesRepositoryMock.Setup(x => x.GetById(messageId))
             .Returns(() => null);
@@ -1673,6 +1671,24 @@ public class MessagesServiceTests
 
         //Assert
         Assert.Null(deletedMessage);
+    }
+
+    /// <summary>
+    /// Delete By ID message.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteById_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var message = SetupMessageFixture().Create();
+        _messagesRepositoryMock.Setup(x => x.GetById(It.IsAny<object>()))
+            .Returns(message);
+        _messagesRepositoryMock.Setup(x => x.Delete(It.IsAny<Message>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _messagesService.Delete(message.Id));
     }
 
     #endregion
@@ -1742,6 +1758,22 @@ public class MessagesServiceTests
 
         //Assert
         Assert.Null(deletedMessage);
+    }
+
+    /// <summary>
+    /// Delete By Object message.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var message = SetupMessageFixture().Create();
+        _messagesRepositoryMock.Setup(x => x.Delete(It.IsAny<Message>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _messagesService.Delete(message));
     }
 
     #endregion
@@ -1818,12 +1850,32 @@ public class MessagesServiceTests
         Assert.Null(newMessages);
     }
 
+    /// <summary>
+    /// Delete By Enumerable messages.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var messages = SetupMessageFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _messagesRepositoryMock.Setup(x => x.Delete(It.IsAny<IEnumerable<Message>>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _messagesService.Delete(messages));
+    }
+
     #endregion
 
     #region Delete Async By Id function
 
     /// <summary>
-    /// Verify that function Delete Async By Id has been called.
+    /// Verify that function Delete Async By ID has been called.
     /// </summary>
     /// <returns>Task.</returns>
     [Fact]
@@ -1882,6 +1934,24 @@ public class MessagesServiceTests
 
         //Assert
         Assert.Null(deletedMessage);
+    }
+
+    /// <summary>
+    /// Async delete By ID message.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncById_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var message = SetupMessageFixture().Create();
+        _messagesRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<object>()))
+            .ReturnsAsync(message);
+        _messagesRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<Message>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _messagesService.DeleteAsync(message.Id));
     }
 
     #endregion
@@ -1950,6 +2020,22 @@ public class MessagesServiceTests
 
         //Assert
         Assert.Null(deletedMessage);
+    }
+
+    /// <summary>
+    /// Async delete By Object message.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var message = SetupMessageFixture().Create();
+        _messagesRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<Message>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _messagesService.DeleteAsync(message));
     }
 
     #endregion
@@ -2026,6 +2112,26 @@ public class MessagesServiceTests
 
         //Assert
         Assert.Null(newMessages);
+    }
+
+    /// <summary>
+    /// Async delete By Enumerable messages.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var messages = SetupMessageFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _messagesRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<IEnumerable<Message>>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _messagesService.DeleteAsync(messages));
     }
 
     #endregion
@@ -2119,7 +2225,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Check if there are any messages with specification.
-    /// Should return false with when messages does not exists.
+    /// Should return false with when messages does not exist.
     /// </summary>
     /// <param name="subjectSearch">The subject search.</param>
     [Theory]
@@ -2145,7 +2251,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Check if there are any messages with specification.
-    /// Should return false with when messages does not exists.
+    /// Should return false with when messages does not exist.
     /// </summary>
     /// <param name="subjectSearch">The subject search.</param>
     [Theory]
@@ -2254,7 +2360,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Async check if there are any messages with specification.
-    /// Should return false with when messages does not exists.
+    /// Should return false with when messages does not exist.
     /// </summary>
     /// <param name="subjectSearch">The subject search.</param>
     /// <returns>Task.</returns>
@@ -2281,7 +2387,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Async check if there are any messages with specification.
-    /// Should return false with when messages does not exists.
+    /// Should return false with when messages does not exist.
     /// </summary>
     /// <param name="subjectSearch">The subject search.</param>
     /// <returns>Task.</returns>
@@ -2392,7 +2498,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Get first or default message with specification.
-    /// Should return nothing with when messages does not exists.
+    /// Should return nothing with when messages does not exist.
     /// </summary>
     /// <param name="subjectSearch">The subject search.</param>
     [Theory]
@@ -2418,7 +2524,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Get first or default message with specification.
-    /// Should return nothing with when messages does not exists.
+    /// Should return nothing with when messages does not exist.
     /// </summary>
     /// <param name="subjectSearch">The subject search.</param>
     [Theory]
@@ -2526,7 +2632,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Get last or default message with specification.
-    /// Should return nothing with when messages does not exists.
+    /// Should return nothing with when messages does not exist.
     /// </summary>
     /// <param name="subjectSearch">The subject search.</param>
     [Theory]
@@ -2552,7 +2658,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Get last or default message with specification.
-    /// Should return nothing with when messages does not exists.
+    /// Should return nothing with when messages does not exist.
     /// </summary>
     /// <param name="subjectSearch">The subject search.</param>
     [Theory]
@@ -2591,7 +2697,6 @@ public class MessagesServiceTests
             foreach (var filterClause in query.Filters)
             {
                 sequence = sequence.Where(filterClause);
-                var a = sequence.Select(x => x).ToList();
             }
         }
 
@@ -2604,7 +2709,7 @@ public class MessagesServiceTests
         }
 
         // Resolving Sort Criteria
-        // This code applies the sorting criterias sent as the parameter
+        // This code applies the sorting criteria sent as the parameter
         if (query.SortCriterias is { Count: > 0 })
         {
             var sortCriteria = query.SortCriterias[0];
@@ -2789,7 +2894,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Search async messages with specification.
-    /// Should return nothing with  when messages does not exists.
+    /// Should return nothing with  when messages does not exist.
     /// </summary>
     /// <param name="search">The search.</param>
     /// <param name="start">The start.</param>
@@ -2836,7 +2941,7 @@ public class MessagesServiceTests
 
     /// <summary>
     /// Search async messages.
-    /// Should return nothing when messages does not exists.
+    /// Should return nothing when messages does not exist.
     /// </summary>
     /// <param name="search">The search.</param>
     /// <param name="start">The start.</param>
@@ -2886,7 +2991,7 @@ public class MessagesServiceTests
         var query = new SearchQuery<Message> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<Message> { Entities = new List<Message>(), Count = 0 };
 
-        _messagesRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, data)).ReturnsAsync(expected);
+        _messagesRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, data)).ReturnsAsync(expected);
 
         var result = await _messagesService.SearchBySequenceAsync(query, data);
 
@@ -2904,7 +3009,7 @@ public class MessagesServiceTests
         var data = SetupMessageFixture().CreateMany(5).AsQueryable();
         var expected = new PagedListResult<Message> { Entities = data.ToList(), Count = 5 };
 
-        _messagesRepositoryMock.Setup(r => r.SearchBySquenceAsync(null, data)).ReturnsAsync(expected);
+        _messagesRepositoryMock.Setup(r => r.SearchBySequenceAsync(null, data)).ReturnsAsync(expected);
 
         var result = await _messagesService.SearchBySequenceAsync(null, data);
 
@@ -2922,7 +3027,7 @@ public class MessagesServiceTests
         var query = new SearchQuery<Message> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<Message> { Entities = null, Count = 5 };
 
-        _messagesRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, null)).ReturnsAsync(expected);
+        _messagesRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, null)).ReturnsAsync(expected);
 
         var result = await _messagesService.SearchBySequenceAsync(query, null);
 

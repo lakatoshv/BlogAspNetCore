@@ -12,14 +12,6 @@ using System.Collections.Generic;
 public class Email
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="Email"/> class.
-    /// </summary>
-    public Email()
-    {
-        this.Attachments = [];
-    }
-
-    /// <summary>
     /// Gets or sets body.
     /// </summary>
     public string Body { get; set; }
@@ -42,5 +34,5 @@ public class Email
     /// <summary>
     /// Gets or sets attachments.
     /// </summary>
-    public List<byte[]> Attachments { get; set; }
+    public List<byte[]> Attachments { get; set; } = [];
 }

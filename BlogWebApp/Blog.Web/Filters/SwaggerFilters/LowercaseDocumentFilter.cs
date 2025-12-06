@@ -17,7 +17,7 @@ public class LowercaseDocumentFilter : IDocumentFilter
     }
 
     /// <summary>
-    /// Lowercase the everything but parameters.
+    /// Lowercase everything but parameters.
     /// </summary>
     /// <param name="key">The key.</param>
     /// <returns>string.</returns>

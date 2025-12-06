@@ -4,6 +4,7 @@
 
 namespace Blog.Core.Helpers;
 
+using Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,7 +14,6 @@ using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
-using Infrastructure;
 
 /// <summary>
 /// Common Helper.
@@ -50,7 +50,7 @@ public class CommonHelper
         var businessDays = span.Days + 1;
         var fullWeekCount = businessDays / 7;
 
-        // find out if there are weekends during the time exceedng the full weeks
+        // find out if there are weekends during the time exceeding the full weeks
         if (businessDays > fullWeekCount * 7)
         {
             // we are here to find out if there is a 1-day or 2-days weekend
@@ -140,9 +140,7 @@ public class CommonHelper
     /// <param name="ipAddress">ipAddress.</param>
     /// <returns>bool.</returns>
     public static bool IsValidIpAddress(string ipAddress)
-    {
-        return IPAddress.TryParse(ipAddress, out IPAddress _);
-    }
+        => IPAddress.TryParse(ipAddress, out _);
 
     /// <summary>
     /// Generate random digit code.
@@ -183,19 +181,14 @@ public class CommonHelper
     /// <returns>string.</returns>
     public static string EnsureMaximumLength(string str, int maxLength, string postfix = null)
     {
-        if (string.IsNullOrEmpty(str))
-        {
-            return str;
-        }
-
-        if (str.Length <= maxLength)
+        if (string.IsNullOrEmpty(str) || str.Length <= maxLength)
         {
             return str;
         }
 
         var pLen = postfix?.Length ?? 0;
 
-        var result = str.Substring(0, maxLength - pLen);
+        var result = str[..(maxLength - pLen)];
         if (!string.IsNullOrEmpty(postfix))
         {
             result += postfix;
@@ -298,7 +291,7 @@ public class CommonHelper
             value = To(value, pi.PropertyType);
         }
 
-        pi.SetValue(instance, value, new object[0]);
+        pi.SetValue(instance, value, []);
     }
 
     /// <summary>
@@ -382,7 +375,7 @@ public class CommonHelper
         {
             if (c.ToString() != c.ToString().ToLower())
             {
-                result += " " + c.ToString();
+                result += " " + c;
             }
             else
             {
@@ -436,12 +429,12 @@ public class CommonHelper
     {
         if (target == null)
         {
-            throw new ArgumentNullException("target", "The assignment target cannot be null.");
+            throw new ArgumentNullException(nameof(target), "The assignment target cannot be null.");
         }
 
         if (string.IsNullOrEmpty(fieldName))
         {
-            throw new ArgumentException("The field name cannot be null or empty.", "fieldName");
+            throw new ArgumentException("The field name cannot be null or empty.", nameof(fieldName));
         }
 
         var t = target.GetType();

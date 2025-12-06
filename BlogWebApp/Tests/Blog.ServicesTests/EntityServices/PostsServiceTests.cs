@@ -1,7 +1,6 @@
 using AutoFixture;
 using AutoFixture.Dsl;
 using AutoMapper;
-using Blog.CommonServices.Interfaces;
 using Blog.Core.Enums;
 using Blog.Core.Infrastructure;
 using Blog.Core.Infrastructure.Pagination;
@@ -176,7 +175,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get all posts.
-    /// Should return nothing when posts does not exists.
+    /// Should return nothing when posts does not exist.
     /// </summary>
     [Fact]
     public void GetAll_WhenPostDoesNotExists_ShouldReturnNothing()
@@ -264,7 +263,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get all async posts.
-    /// Should return nothing when posts does not exists.
+    /// Should return nothing when posts does not exist.
     /// </summary>
     [Fact]
     public async Task GetAllAsync_WhenPostDoesNotExists_ShouldReturnNothing()
@@ -367,7 +366,6 @@ public class PostsServiceTests
     public void GetAll_WithEqualsSpecification_WhenPostsExists_ShouldReturnPost(int equalCount, string titleSearch)
     {
         //Arrange
-        var random = new Random();
         var postsList =
             SetupPostFixture()
                 .With(x => x.Title, titleSearch)
@@ -388,7 +386,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get all posts.
-    /// Should return nothing with  when posts does not exists.
+    /// Should return nothing with  when posts does not exist.
     /// </summary>
     /// <param name="equalCount">The equal count.</param>
     /// <param name="titleSearch">The title search.</param>
@@ -417,7 +415,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get all posts.
-    /// Should return nothing with  when posts does not exists.
+    /// Should return nothing with  when posts does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -479,12 +477,11 @@ public class PostsServiceTests
                 .With(x => x.Title, postTitleSearch)
                 .CreateMany(random.Next(100));
 
-        PostSpecification specification = null;
         _postsRepositoryMock.Setup(x => x.GetAll(It.IsAny<PostSpecification>()))
             .Returns(() => postsList.Where(x => x.Title.Contains(postTitleSearch)).AsQueryable());
 
         //Act
-        var posts = _postsService.GetAll(specification);
+        var posts = _postsService.GetAll(null);
 
         //Assert
         Assert.NotNull(posts);
@@ -583,7 +580,6 @@ public class PostsServiceTests
     public async Task GetAllAsync_WithEqualsSpecification_WhenPostsExists_ShouldReturnPost(int equalCount, string titleSearch)
     {
         //Arrange
-        var random = new Random();
         var postsList =
             SetupPostFixture()
                 .With(x => x.Title, titleSearch)
@@ -605,7 +601,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get all async posts.
-    /// Should return nothing with  when posts does not exists.
+    /// Should return nothing with  when posts does not exist.
     /// </summary>
     /// <param name="equalCount">The equal count.</param>
     /// <param name="titleSearch">The title search.</param>
@@ -635,7 +631,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get all async posts.
-    /// Should return nothing with  when posts does not exists.
+    /// Should return nothing with  when posts does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -671,7 +667,7 @@ public class PostsServiceTests
 
         var specification = new PostSpecification();
         _postsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<PostSpecification>()))
-            .Returns(() => postsList.Where(x => x.Title.Contains(postTitleSearch)).AsQueryable());
+            .ReturnsAsync(() => postsList.Where(x => x.Title.Contains(postTitleSearch)).ToList());
 
         //Act
         var posts = await _postsService.GetAllAsync(specification);
@@ -697,12 +693,11 @@ public class PostsServiceTests
                 .With(x => x.Title, postTitleSearch)
                 .CreateMany(random.Next(100));
 
-        PostSpecification specification = null;
         _postsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<PostSpecification>()))
             .ReturnsAsync(() => postsList.Where(x => x.Title.Contains(postTitleSearch)).ToList());
 
         //Act
-        var posts = await _postsService.GetAllAsync(specification);
+        var posts = await _postsService.GetAllAsync(null);
 
         //Assert
         Assert.NotNull(posts);
@@ -778,7 +773,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Find post.
-    /// Should return nothing when post does not exists.
+    /// Should return nothing when post does not exist.
     /// </summary>
     [Fact]
     public void Find_WhenPostDoesNotExists_ShouldReturnNothing()
@@ -861,7 +856,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Async find post.
-    /// Should return nothing when post does not exists.
+    /// Should return nothing when post does not exist.
     /// </summary>
     /// <returns>Task.</returns>
     [Fact]
@@ -869,7 +864,7 @@ public class PostsServiceTests
     {
         //Arrange
         var postId = _fixture.Create<int>();
-        
+
         _postsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<int>()))
             .ReturnsAsync(() => null);
 
@@ -1625,7 +1620,7 @@ public class PostsServiceTests
     #region Delete By Id function
 
     /// <summary>
-    /// Verify that function Delete By Id has been called.
+    /// Verify that function Delete By ID has been called.
     /// </summary>
     [Fact]
     public void Verify_FunctionDeleteById_HasBeenCalled()
@@ -1641,7 +1636,7 @@ public class PostsServiceTests
 
         //Act
         _postsService.Insert(newPost);
-        var post = _postsService.Find(postId);
+        _postsService.Find(postId);
         _postsService.Delete(postId);
         _postsRepositoryMock.Setup(x => x.GetById(postId))
             .Returns(() => null);
@@ -1652,7 +1647,7 @@ public class PostsServiceTests
     }
 
     /// <summary>
-    /// Delete By Id post.
+    /// Delete By ID post.
     /// Should return nothing when post is deleted.
     /// </summary>
     [Fact]
@@ -1674,7 +1669,7 @@ public class PostsServiceTests
 
         //Act
         _postsService.Insert(newPost);
-        var post = _postsService.Find(postId);
+        _postsService.Find(postId);
         _postsService.Delete(postId);
         _postsRepositoryMock.Setup(x => x.GetById(postId))
             .Returns(() => null);
@@ -1682,6 +1677,24 @@ public class PostsServiceTests
 
         //Assert
         Assert.Null(deletedPost);
+    }
+
+    /// <summary>
+    /// Delete By ID post.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteById_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var post = SetupPostFixture().Create();
+        _postsRepositoryMock.Setup(x => x.GetById(It.IsAny<object>()))
+            .Returns(post);
+        _postsRepositoryMock.Setup(x => x.Delete(It.IsAny<Post>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsService.Delete(post.Id));
     }
 
     #endregion
@@ -1742,6 +1755,22 @@ public class PostsServiceTests
 
         //Assert
         Assert.Null(deletedPost);
+    }
+
+    /// <summary>
+    /// Delete By Object post.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var post = SetupPostFixture().Create();
+        _postsRepositoryMock.Setup(x => x.Delete(It.IsAny<Post>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsService.Delete(post));
     }
 
     #endregion
@@ -1821,12 +1850,32 @@ public class PostsServiceTests
         Assert.Null(newPosts);
     }
 
+    /// <summary>
+    /// Delete By Enumerable posts.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var posts = SetupPostFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _postsRepositoryMock.Setup(x => x.Delete(It.IsAny<IEnumerable<Post>>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsService.Delete(posts));
+    }
+
     #endregion
 
     #region Delete Async By Id function
 
     /// <summary>
-    /// Verify that function Delete Async By Id has been called.
+    /// Verify that function Delete Async By ID has been called.
     /// </summary>
     /// <returns>Task.</returns>
     [Fact]
@@ -1876,6 +1925,24 @@ public class PostsServiceTests
 
         //Assert
         Assert.Null(deletedPost);
+    }
+
+    /// <summary>
+    /// Async delete By ID post.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncById_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var post = SetupPostFixture().Create();
+        _postsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<object>()))
+            .ReturnsAsync(post);
+        _postsRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<Post>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsService.DeleteAsync(post.Id));
     }
 
     #endregion
@@ -1935,6 +2002,22 @@ public class PostsServiceTests
 
         //Assert
         Assert.Null(deletedPost);
+    }
+
+    /// <summary>
+    /// Async delete By Object post.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var post = SetupPostFixture().Create();
+        _postsRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<Post>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsService.DeleteAsync(post));
     }
 
     #endregion
@@ -2011,6 +2094,26 @@ public class PostsServiceTests
 
         //Assert
         Assert.Null(newPosts);
+    }
+
+    /// <summary>
+    /// Async delete By Enumerable posts.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var posts = SetupPostFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _postsRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<IEnumerable<Post>>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsService.DeleteAsync(posts));
     }
 
     #endregion
@@ -2104,7 +2207,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Check if there are any posts with specification.
-    /// Should return false with when posts does not exists.
+    /// Should return false with when posts does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -2130,7 +2233,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Check if there are any posts with specification.
-    /// Should return false with when posts does not exists.
+    /// Should return false with when posts does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -2239,7 +2342,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Async check if there are any posts with specification.
-    /// Should return false with when posts does not exists.
+    /// Should return false with when posts does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     /// <returns>Task.</returns>
@@ -2266,7 +2369,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Async check if there are any posts with specification.
-    /// Should return false with when posts does not exists.
+    /// Should return false with when posts does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     /// <returns>Task.</returns>
@@ -2377,7 +2480,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get first or default post with specification.
-    /// Should return nothing with when post does not exists.
+    /// Should return nothing with when post does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -2403,7 +2506,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get first or default post with specification.
-    /// Should return nothing with when posts does not exists.
+    /// Should return nothing with when posts does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -2511,7 +2614,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get last or default post with specification.
-    /// Should return nothing with when post does not exists.
+    /// Should return nothing with when post does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -2537,7 +2640,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Get last or default post with specification.
-    /// Should return nothing with when posts does not exists.
+    /// Should return nothing with when posts does not exist.
     /// </summary>
     /// <param name="titleSearch">The title search.</param>
     [Theory]
@@ -2576,7 +2679,6 @@ public class PostsServiceTests
             foreach (var filterClause in query.Filters)
             {
                 sequence = sequence.Where(filterClause);
-                var a = sequence.Select(x => x).ToList();
             }
         }
 
@@ -2587,10 +2689,9 @@ public class PostsServiceTests
 
             sequence = properties.Aggregate(sequence, (current, includeProperty) => current.Include(includeProperty));
         }
-        var b = sequence.ToList();
 
         // Resolving Sort Criteria
-        // This code applies the sorting criterias sent as the parameter
+        // This code applies the sorting criteria sent as the parameter
         if (query.SortCriterias is { Count: > 0 })
         {
             var sortCriteria = query.SortCriterias[0];
@@ -2812,7 +2913,7 @@ public class PostsServiceTests
 
     /// <summary>
     /// Search async posts.
-    /// Should return nothing when posts does not exists.
+    /// Should return nothing when posts does not exist.
     /// </summary>
     /// <param name="search">The search.</param>
     /// <param name="start">The start.</param>
@@ -2862,7 +2963,7 @@ public class PostsServiceTests
         var query = new SearchQuery<Post> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<Post> { Entities = new List<Post>(), Count = 0 };
 
-        _postsRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, data)).ReturnsAsync(expected);
+        _postsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, data)).ReturnsAsync(expected);
 
         var result = await _postsService.SearchBySequenceAsync(query, data);
 
@@ -2880,7 +2981,7 @@ public class PostsServiceTests
         var data = SetupPostFixture().CreateMany(5).AsQueryable();
         var expected = new PagedListResult<Post> { Entities = data.ToList(), Count = 5 };
 
-        _postsRepositoryMock.Setup(r => r.SearchBySquenceAsync(null, data)).ReturnsAsync(expected);
+        _postsRepositoryMock.Setup(r => r.SearchBySequenceAsync(null, data)).ReturnsAsync(expected);
 
         var result = await _postsService.SearchBySequenceAsync(null, data);
 
@@ -2898,7 +2999,7 @@ public class PostsServiceTests
         var query = new SearchQuery<Post> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<Post> { Entities = null, Count = 5 };
 
-        _postsRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, null)).ReturnsAsync(expected);
+        _postsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, null)).ReturnsAsync(expected);
 
         var result = await _postsService.SearchBySequenceAsync(query, null);
 

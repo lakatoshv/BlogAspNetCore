@@ -2,11 +2,11 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-using System.Threading.Tasks;
-using Blog.Data.Models;
-using Microsoft.AspNetCore.Identity;
-
 namespace Blog.EntityServices.Identity.Registration;
+
+using Data.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Registration service interface.

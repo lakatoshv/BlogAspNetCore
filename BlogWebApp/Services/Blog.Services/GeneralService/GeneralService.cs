@@ -4,16 +4,16 @@
 
 namespace Blog.EntityServices.GeneralService;
 
+using Blog.Data.Core;
+using Core.Infrastructure.Pagination;
+using Core.TableFilters;
+using Data.Repository;
+using Data.Specifications.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Core.Infrastructure.Pagination;
-using Core.TableFilters;
-using Blog.Data.Core;
-using Data.Repository;
-using Data.Specifications.Base;
 
 /// <summary>
 /// General service.
@@ -114,7 +114,7 @@ public class GeneralService<T>(IRepository<T> repository)
     public async Task<PagedListResult<T>> SearchBySequenceAsync(
         SearchQuery<T> searchQuery,
         IQueryable<T> sequence)
-        => await this.Repository.SearchBySquenceAsync(searchQuery, sequence);
+        => await this.Repository.SearchBySequenceAsync(searchQuery, sequence);
 
     /// <inheritdoc cref="IGeneralService{T}"/>
     public ICollection<T> GetAll()

@@ -4,13 +4,13 @@
 
 namespace Blog.Data.Repository;
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Blog.Core;
 using Blog.Core.Infrastructure.Pagination;
 using Blog.Core.TableFilters;
 using Specifications.Base;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Repository interface.
@@ -82,7 +82,7 @@ public interface IRepository<T>
     /// <param name="searchQuery">searchQuery.</param>
     /// <param name="sequence">sequence.</param>
     /// <returns>Task.</returns>
-    Task<PagedListResult<T>> SearchBySquenceAsync(SearchQuery<T> searchQuery, IQueryable<T> sequence);
+    Task<PagedListResult<T>> SearchBySequenceAsync(SearchQuery<T> searchQuery, IQueryable<T> sequence);
 
     /// <summary>
     /// Generate query.

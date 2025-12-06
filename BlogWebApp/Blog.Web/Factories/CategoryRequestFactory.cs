@@ -49,7 +49,7 @@ public class CategoryRequestFactory : RequestFactory<int, Category, CreateCatego
     public override UpdateCategoryRequest GenerateForUpdate(int id)
     {
         var category = _unitOfWork.GetRepository<Category>().FirstOrDefault(new CategorySpecification(x => x.Id == id))
-            ?? throw new MicroserviceArgumentNullException();;
+            ?? throw new MicroserviceArgumentNullException();
 
 
         var mapped = _mapper.Map<UpdateCategoryRequest>(category);

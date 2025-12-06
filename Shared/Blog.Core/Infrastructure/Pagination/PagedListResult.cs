@@ -13,12 +13,12 @@ using System.Collections.Generic;
 public class PagedListResult<TEntity>
 {
     /// <summary>
-    /// Gets or sets a value indicating whether has next value.
+    /// Gets or sets a value indicating whether it has next value.
     /// </summary>
     public bool HasNext { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether has previous value.
+    /// Gets or sets a value indicating whether it has previous value.
     /// </summary>
     public bool HasPrevious { get; set; }
 

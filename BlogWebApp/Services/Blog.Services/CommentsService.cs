@@ -135,11 +135,9 @@ public class CommentsService(IRepository<Comment> repo)
 
     /// <inheritdoc cref="ICommentsService"/>
     public async Task<Comment> GetCommentAsync(int id)
-    {
-        return await this.Repository.Table
+        => await this.Repository.Table
             .Where(new CommentSpecification(x => x.Id.Equals(id)).Filter)
             .FirstOrDefaultAsync();
-    }
 
     /// <inheritdoc cref="ICommentsService"/>
     public async Task<ChartDataModel> GetCommentsActivity()

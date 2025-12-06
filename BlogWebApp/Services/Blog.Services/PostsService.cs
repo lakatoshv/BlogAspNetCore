@@ -4,27 +4,25 @@
 
 namespace Blog.EntityServices;
 
+using AutoMapper;
+using Blog.Services.Core;
+using Blog.Services.Core.Dtos;
+using Blog.Services.Core.Dtos.Posts;
+using Blog.Services.Core.Dtos.User;
+using Contracts.V1.Responses.Chart;
+using Core.Helpers;
+using Data.Models;
+using Data.Repository;
+using Data.Specifications;
+using GeneralService;
+using Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using Blog.CommonServices.Interfaces;
-using Contracts.V1.Responses.Chart;
-using Core.Helpers;
-using Data.Models;
-using Data.Repository;
-using Data.Specifications;
-using Blog.Services.Core;
-using Blog.Services.Core.Dtos;
-using Blog.Services.Core.Dtos.Exports;
-using Blog.Services.Core.Dtos.Posts;
-using Blog.Services.Core.Dtos.User;
-using GeneralService;
-using Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 /// <summary>
 /// Posts service.
@@ -278,7 +276,7 @@ public class PostsService(
 
     /// <inheritdoc cref="IPostsService"/>
     public async Task<ChartDataModel> GetPostsActivity()
-        => new ()
+        => new()
         {
             Name = "Posts",
             Series = await Repository.TableNoTracking

@@ -183,7 +183,7 @@ public class CommentsController(
         comment.CreatedAt = Now;
         await _commentService.InsertAsync(comment);
         var response = new CreatedResponse<int> {Id = comment.Id};
-        var baseUrl = $@"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
+        var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
         var locationUrl = baseUrl + "/" +
                           ApiRoutes.CommentsController.Comments + "/" +
                           ApiRoutes.CommentsController.GetComment + "/" + comment.Id;

@@ -2,10 +2,10 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Refit;
 using Blog.Contracts.V1.Requests.UsersRequests;
 using Blog.Contracts.V1.Responses.UsersResponses;
+using Microsoft.AspNetCore.Identity;
+using Refit;
 
 /// <summary>
 /// Account controller requests api interface.

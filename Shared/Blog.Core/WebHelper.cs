@@ -4,10 +4,10 @@
 
 namespace Blog.Core;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+using Configuration;
+using Helpers;
+using Infrastructure;
+using Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Http.Features;
@@ -15,10 +15,10 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
-using Configuration;
-using Helpers;
-using Infrastructure;
-using Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 
 /// <summary>
 /// Web helper.
@@ -114,7 +114,7 @@ public class WebHelper(
                 if (!string.IsNullOrEmpty(this.hostingConfig.ForwardedHttpHeader))
                 {
                     // but in some cases server use other HTTP header
-                    // in these cases an administrator can specify a custom Forwarded HTTP header (e.g. CF-Connecting-IP, X-FORWARDED-PROTO, etc)
+                    // in these cases an administrator can specify a custom Forwarded HTTP header (e.g. CF-Connecting-IP, X-FORWARDED-PROTO, etc.)
                     forwardedHttpHeaderKey = this.hostingConfig.ForwardedHttpHeader;
                 }
 
@@ -258,11 +258,11 @@ public class WebHelper(
 
         string path = this.httpContextAccessor.HttpContext.Request.Path;
 
-        // a little workaround. FileExtensionContentTypeProvider contains most of static file extensions. So we can use it
+        // a little workaround. FileExtensionContentTypeProvider contains most static file extensions. So we can use it
         // source: https://github.com/aspnet/StaticFiles/blob/dev/src/Microsoft.AspNetCore.StaticFiles/FileExtensionContentTypeProvider.cs
         // if it can return content type, then it's a static file
         var contentTypeProvider = new FileExtensionContentTypeProvider();
-        return contentTypeProvider.TryGetContentType(path, out string _);
+        return contentTypeProvider.TryGetContentType(path, out var _);
     }
 
     /// <inheritdoc cref="IWebHelper"/>
@@ -333,14 +333,9 @@ public class WebHelper(
     /// <inheritdoc cref="IWebHelper"/>
     public virtual T QueryString<T>(string name)
     {
-        if (!this.IsRequestAvailable())
+        if (!this.IsRequestAvailable() || StringValues.IsNullOrEmpty(this.httpContextAccessor.HttpContext.Request.Query[name]))
         {
-            return default(T);
-        }
-
-        if (StringValues.IsNullOrEmpty(this.httpContextAccessor.HttpContext.Request.Query[name]))
-        {
-            return default(T);
+            return default;
         }
 
         return CommonHelper.To<T>(this.httpContextAccessor.HttpContext.Request.Query[name].ToString());
@@ -429,7 +424,7 @@ public class WebHelper(
     }
 
     /// <summary>
-    /// Try write web config.
+    /// Try to write web config.
     /// </summary>
     /// <returns>bool.</returns>
     protected virtual bool TryWriteWebConfig()

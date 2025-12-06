@@ -140,7 +140,7 @@ public class ProfileServiceTests
 
     /// <summary>
     /// Get all profiles.
-    /// Should return nothing when profiles does not exists.
+    /// Should return nothing when profiles does not exist.
     /// </summary>
     [Fact]
     public void GetAll_WhenProfilesDoesNotExists_ShouldReturnNothing()
@@ -228,7 +228,7 @@ public class ProfileServiceTests
 
     /// <summary>
     /// Get all async profiles.
-    /// Should return nothing when profiles does not exists.
+    /// Should return nothing when profiles does not exist.
     /// </summary>
     [Fact]
     public async Task GetAllAsync_WhenProfilesDoesNotExists_ShouldReturnNothing()
@@ -271,7 +271,7 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
 
         var profilesList =
             SetupProfileFixture()
@@ -302,7 +302,7 @@ public class ProfileServiceTests
         //Test failed
         //Arrange
         var random = new Random();
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
 
         var profilesList =
             SetupProfileFixture()
@@ -325,7 +325,7 @@ public class ProfileServiceTests
 
     /// <summary>
     /// Get all messages with specification.
-    /// Should return nothing with  when messages does not exists.
+    /// Should return nothing with  when messages does not exist.
     /// </summary>
     /// <param name="equalCount">The equal count.</param>
     [Theory]
@@ -334,7 +334,7 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var searchUserId = $"{new Guid()}1";
+        var searchUserId = $"{Guid.Empty}1";
 
         var profilesList =
             SetupProfileFixture()
@@ -356,13 +356,13 @@ public class ProfileServiceTests
 
     /// <summary>
     /// Get all messages.
-    /// Should return nothing with  when messages does not exists.
+    /// Should return nothing with  when messages does not exist.
     /// </summary>
     [Fact]
     public void GetAll_WithEqualSpecification_WhenMessagesDoesNotExists_ShouldReturnNothing()
     {
         //Arrange
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
         var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
         _profileRepositoryMock.Setup(x => x.GetAll(specification))
             .Returns(() => new List<ProfileModel>().AsQueryable());
@@ -390,7 +390,7 @@ public class ProfileServiceTests
                 .With(x => x.UserId, searchUserId)
                 .CreateMany(random.Next(100));
 
-        var specification = new ProfileSpecification();
+        var specification = new ProfileSpecification(null);
         _profileRepositoryMock.Setup(x => x.GetAll(It.IsAny<ProfileSpecification>()))
             .Returns(() => profilesList.Where(x => x.UserId.Contains(searchUserId)).AsQueryable());
 
@@ -413,22 +413,20 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        string searchUserId = null;
         var profilesList =
             SetupProfileFixture()
                 .CreateMany(random.Next(100));
 
-        ProfileSpecification specification = null;
         _profileRepositoryMock.Setup(x => x.GetAll(It.IsAny<ProfileSpecification>()))
-            .Returns(() => profilesList.Where(x => x.UserId.Contains(searchUserId)).AsQueryable());
+            .Returns(() => profilesList.Where(x => x.UserId == null).AsQueryable());
 
         //Act
-        var profiles = _profileService.GetAll(specification);
+        var profiles = _profileService.GetAll(null);
 
         //Assert
         Assert.NotNull(profiles);
-        Assert.NotEmpty(profiles);
-        Assert.NotEqual(notEqualCount, profiles.ToList().Count);
+        Assert.Empty(profiles);
+        Assert.Equal(notEqualCount, profiles.ToList().Count);
     }
 
     /// <summary>
@@ -460,7 +458,7 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
 
         var profilesList =
             SetupProfileFixture()
@@ -491,7 +489,7 @@ public class ProfileServiceTests
         //Test failed
         //Arrange
         var random = new Random();
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
 
         var profilesList =
             SetupProfileFixture()
@@ -514,7 +512,7 @@ public class ProfileServiceTests
 
     /// <summary>
     /// Get all async messages with specification.
-    /// Should return nothing with  when messages does not exists.
+    /// Should return nothing with  when messages does not exist.
     /// </summary>
     /// <param name="equalCount">The equal count.</param>
     [Theory]
@@ -523,7 +521,7 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var searchUserId = $"{new Guid()}1";
+        var searchUserId = $"{Guid.Empty}1";
 
         var profilesList =
             SetupProfileFixture()
@@ -545,13 +543,13 @@ public class ProfileServiceTests
 
     /// <summary>
     /// Get all async messages.
-    /// Should return nothing with  when messages does not exists.
+    /// Should return nothing with  when messages does not exist.
     /// </summary>
     [Fact]
     public async Task GetAllAsync_WithEqualSpecification_WhenMessagesDoesNotExists_ShouldReturnNothing()
     {
         //Arrange
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
         var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
         _profileRepositoryMock.Setup(x => x.GetAllAsync(specification))
             .ReturnsAsync(() => []);
@@ -579,7 +577,7 @@ public class ProfileServiceTests
                 .With(x => x.UserId, searchUserId)
                 .CreateMany(random.Next(100));
 
-        var specification = new ProfileSpecification();
+        var specification = new ProfileSpecification(null);
         _profileRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<ProfileSpecification>()))
             .ReturnsAsync(() => profilesList.Where(x => x.UserId.Contains(searchUserId)).ToList());
 
@@ -602,22 +600,20 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        string searchUserId = null;
         var profilesList =
             SetupProfileFixture()
                 .CreateMany(random.Next(100));
 
-        ProfileSpecification specification = null;
         _profileRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<ProfileSpecification>()))
-            .Returns(() => profilesList.Where(x => x.UserId.Contains(searchUserId)).ToList());
+            .ReturnsAsync(() => profilesList.Where(x => x.UserId == null).ToList());
 
         //Act
-        var profiles = await _profileService.GetAllAsync(specification);
+        var profiles = await _profileService.GetAllAsync(null);
 
         //Assert
         Assert.NotNull(profiles);
-        Assert.NotEmpty(profiles);
-        Assert.NotEqual(notEqualCount, profiles.ToList().Count);
+        Assert.Empty(profiles);
+        Assert.Equal(notEqualCount, profiles.ToList().Count);
     }
 
     /// <summary>
@@ -688,7 +684,7 @@ public class ProfileServiceTests
 
     /// <summary>
     /// Find profile.
-    /// Should return nothing when profiles does not exists.
+    /// Should return nothing when profiles does not exist.
     /// </summary>
     [Fact]
     public void Find_WhenProfilesDoesNotExists_ShouldReturnNothing()
@@ -737,7 +733,7 @@ public class ProfileServiceTests
         var random = new Random();
         var profileId = random.Next(52);
 
-        var userId = new Guid().ToString();
+        var userId = Guid.Empty.ToString();
         var user = new ApplicationUser
         {
             Id = userId,
@@ -776,7 +772,7 @@ public class ProfileServiceTests
         var random = new Random();
         var profileId = random.Next(52);
 
-        var userId = new Guid().ToString();
+        var userId = Guid.Empty.ToString();
         var user = new ApplicationUser
         {
             Id = userId,
@@ -805,7 +801,7 @@ public class ProfileServiceTests
 
     /// <summary>
     /// Async find profile.
-    /// Should return nothing when profiles does not exists.
+    /// Should return nothing when profiles does not exist.
     /// </summary>
     /// <returns>Task.</returns>
     [Fact]
@@ -1198,7 +1194,7 @@ public class ProfileServiceTests
         //Act
         _profileService.Insert(newProfile);
         var profile = _profileService.Find(profileId);
-        profile.UserId = new Guid().ToString();
+        profile.UserId = Guid.Empty.ToString();
         _profileService.Update(profile);
 
         //Assert
@@ -1227,7 +1223,7 @@ public class ProfileServiceTests
         //Act
         _profileService.Insert(newProfile);
         var profile = _profileService.Find(profileId);
-        var newUserId = new Guid().ToString();
+        var newUserId = Guid.Empty.ToString();
         profile.UserId = newUserId;
         _profileService.Update(profile);
 
@@ -1386,7 +1382,7 @@ public class ProfileServiceTests
         //Act
         await _profileService.InsertAsync(newProfile);
         var profile = await _profileService.FindAsync(profileId);
-        profile.UserId = new Guid().ToString();
+        profile.UserId = Guid.Empty.ToString();
         await _profileService.UpdateAsync(profile);
 
         //Assert
@@ -1416,7 +1412,7 @@ public class ProfileServiceTests
         //Act
         await _profileService.InsertAsync(newProfile);
         var profile = await _profileService.FindAsync(profileId);
-        var newUserId = new Guid().ToString();
+        var newUserId = Guid.Empty.ToString();
         profile.UserId = newUserId;
         await _profileService.UpdateAsync(profile);
 
@@ -1559,7 +1555,7 @@ public class ProfileServiceTests
     #region Delete By Id function
 
     /// <summary>
-    /// Verify that function Delete By Id has been called.
+    /// Verify that function Delete By ID has been called.
     /// </summary>
     [Fact]
     public void Verify_FunctionDeleteById_HasBeenCalled()
@@ -1578,7 +1574,7 @@ public class ProfileServiceTests
 
         //Act
         _profileService.Insert(newProfile);
-        var profile = _profileService.Find(profileId);
+        _profileService.Find(profileId);
         _profileService.Delete(profileId);
         _profileRepositoryMock.Setup(x => x.GetById(profileId))
             .Returns(() => null);
@@ -1589,7 +1585,7 @@ public class ProfileServiceTests
     }
 
     /// <summary>
-    /// Delete By Id profile.
+    /// Delete By ID profile.
     /// Should return nothing when profile is deleted.
     /// </summary>
     [Fact]
@@ -1609,7 +1605,7 @@ public class ProfileServiceTests
 
         //Act
         _profileService.Insert(newProfile);
-        var profile = _profileService.Find(profileId);
+        _profileService.Find(profileId);
         _profileService.Delete(profileId);
         _profileRepositoryMock.Setup(x => x.GetById(profileId))
             .Returns(() => null);
@@ -1617,6 +1613,24 @@ public class ProfileServiceTests
 
         //Assert
         Assert.Null(deletedProfile);
+    }
+
+    /// <summary>
+    /// Delete By ID profile.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteById_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var profile = SetupProfileFixture().Create();
+        _profileRepositoryMock.Setup(x => x.GetById(It.IsAny<object>()))
+            .Returns(profile);
+        _profileRepositoryMock.Setup(x => x.Delete(It.IsAny<ProfileModel>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _profileService.Delete(profile.Id));
     }
 
     #endregion
@@ -1682,6 +1696,22 @@ public class ProfileServiceTests
 
         //Assert
         Assert.Null(deletedProfile);
+    }
+
+    /// <summary>
+    /// Delete By Object profile.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var profile = SetupProfileFixture().Create();
+        _profileRepositoryMock.Setup(x => x.Delete(It.IsAny<ProfileModel>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _profileService.Delete(profile));
     }
 
     #endregion
@@ -1762,12 +1792,32 @@ public class ProfileServiceTests
         Assert.Null(newProfiles);
     }
 
+    /// <summary>
+    /// Delete By Enumerable profiles.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var profiles = SetupProfileFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _profileRepositoryMock.Setup(x => x.Delete(It.IsAny<IEnumerable<ProfileModel>>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _profileService.Delete(profiles));
+    }
+
     #endregion
 
     #region Delete Async By Id function
 
     /// <summary>
-    /// Verify that function Delete Async By Id has been called.
+    /// Verify that function Delete Async By ID has been called.
     /// </summary>
     /// <returns>Task.</returns>
     [Fact]
@@ -1787,7 +1837,7 @@ public class ProfileServiceTests
 
         //Act
         await _profileService.InsertAsync(newProfile);
-        var profile = await _profileService.FindAsync(profileId);
+        await _profileService.FindAsync(profileId);
         await _profileService.DeleteAsync(profileId);
 
         //Assert
@@ -1816,7 +1866,7 @@ public class ProfileServiceTests
 
         //Act
         await _profileService.InsertAsync(newProfile);
-        var profile = await _profileService.FindAsync(profileId);
+        await _profileService.FindAsync(profileId);
         await _profileService.DeleteAsync(profileId);
         _profileRepositoryMock.Setup(x => x.GetByIdAsync(profileId))
             .ReturnsAsync(() => null);
@@ -1824,6 +1874,24 @@ public class ProfileServiceTests
 
         //Assert
         Assert.Null(deletedProfile);
+    }
+
+    /// <summary>
+    /// Async delete By ID comment.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncById_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var profile = SetupProfileFixture().Create();
+        _profileRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<object>()))
+            .ReturnsAsync(profile);
+        _profileRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<ProfileModel>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _profileService.DeleteAsync(profile.Id));
     }
 
     #endregion
@@ -1888,6 +1956,22 @@ public class ProfileServiceTests
 
         //Assert
         Assert.Null(deletedProfile);
+    }
+
+    /// <summary>
+    /// Async delete By Object comment.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var profile = SetupProfileFixture().Create();
+        _profileRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<ProfileModel>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _profileService.DeleteAsync(profile));
     }
 
     #endregion
@@ -1964,6 +2048,26 @@ public class ProfileServiceTests
         Assert.Null(newProfiles);
     }
 
+    /// <summary>
+    /// Async delete By Enumerable profiles.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var profiles = SetupProfileFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _profileRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<IEnumerable<ProfileModel>>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _profileService.DeleteAsync(profiles));
+    }
+
     #endregion
 
     #endregion
@@ -1980,7 +2084,7 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
 
         var profilesList =
             SetupProfileFixture()
@@ -2009,7 +2113,7 @@ public class ProfileServiceTests
         //Test failed
         //Arrange
         var random = new Random();
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
 
         var profilesList =
             SetupProfileFixture()
@@ -2030,14 +2134,14 @@ public class ProfileServiceTests
 
     /// <summary>
     /// Check if there are any messages with specification.
-    /// Should return false with when messages does not exists.
+    /// Should return false with when messages does not exist.
     /// </summary>
     [Fact]
     public void Any_WithEqualSpecification_WhenProfilesExists_ShouldReturnFalse()
     {
         //Arrange
         var random = new Random();
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
 
         var profilesList =
             SetupProfileFixture()
@@ -2057,13 +2161,13 @@ public class ProfileServiceTests
 
     /// <summary>
     /// Check if there are any profiles with specification.
-    /// Should return false with when profiles does not exists.
+    /// Should return false with when profiles does not exist.
     /// </summary>
     [Fact]
     public void Any_WithEqualSpecification_WhenProfilesDoesNotExists_ShouldReturnNothing()
     {
         //Arrange
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
         var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
         _profileRepositoryMock.Setup(x => x.Any(specification))
             .Returns(() => false);
@@ -2088,7 +2192,7 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
 
         var profilesList =
             SetupProfileFixture()
@@ -2118,7 +2222,7 @@ public class ProfileServiceTests
         //Test failed
         //Arrange
         var random = new Random();
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
 
         var profilesList =
             SetupProfileFixture()
@@ -2139,7 +2243,7 @@ public class ProfileServiceTests
 
     /// <summary>
     /// Async check if there are any profiles with specification.
-    /// Should return false with when profiles does not exists.
+    /// Should return false with when profiles does not exist.
     /// </summary>
     /// <returns>Task.</returns>
     [Fact]
@@ -2147,7 +2251,7 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
 
         var profilesList =
             SetupProfileFixture()
@@ -2167,14 +2271,14 @@ public class ProfileServiceTests
 
     /// <summary>
     /// Async check if there are any profiles with specification.
-    /// Should return false with when profiles does not exists.
+    /// Should return false with when profiles does not exist.
     /// </summary>
     /// <returns>Task.</returns>
     [Fact]
     public async Task AnyAsync_WithEqualSpecification_WhenProfilesDoesNotExists_ShouldReturnNothing()
     {
         //Arrange
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
         var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
         _profileRepositoryMock.Setup(x => x.AnyAsync(specification))
             .ReturnsAsync(() => false);
@@ -2200,7 +2304,7 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
 
         var profilesList =
             SetupProfileFixture()
@@ -2229,7 +2333,7 @@ public class ProfileServiceTests
         //Test failed
         //Arrange
         var random = new Random();
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
 
         var profilesList =
             SetupProfileFixture()
@@ -2258,7 +2362,7 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
 
         var profilesList =
             SetupProfileFixture()
@@ -2278,13 +2382,13 @@ public class ProfileServiceTests
 
     /// <summary>
     /// Get first or default profile with specification.
-    /// Should return nothing with equal specification when profiles does not exists.
+    /// Should return nothing with equal specification when profiles does not exist.
     /// </summary>
     [Fact]
     public void FirstOrDefault_WithEqualSpecification_WhenProfilesDoesNotExists_ShouldReturnNothing()
     {
         //Arrange
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
         var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
         _profileRepositoryMock.Setup(x => x.FirstOrDefault(specification))
             .Returns(() => null);
@@ -2308,7 +2412,7 @@ public class ProfileServiceTests
     {
         //Arrange
         var random = new Random();
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
 
         var profilesList =
             SetupProfileFixture()
@@ -2337,7 +2441,7 @@ public class ProfileServiceTests
         //Test failed
         //Arrange
         var random = new Random();
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
 
         var profilesList =
             SetupProfileFixture()
@@ -2359,14 +2463,14 @@ public class ProfileServiceTests
 
     /// <summary>
     /// Get last or default profile with specification.
-    /// Should return nothing with equals specification when profiles does not exists.
+    /// Should return nothing with equals specification when profiles does not exist.
     /// </summary>
     [Fact]
     public void LastOrDefault_WithEqualSpecification_WhenProfilesExists_ShouldReturnNothing()
     {
         //Arrange
         var random = new Random();
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
 
         var profilesList =
             SetupProfileFixture()
@@ -2386,13 +2490,13 @@ public class ProfileServiceTests
 
     /// <summary>
     /// Get last or default profile with specification.
-    /// Should return nothing with specification when profiles does not exists.
+    /// Should return nothing with specification when profiles does not exist.
     /// </summary>
     [Fact]
     public void LastOrDefault_WithEqualSpecification_WhenProfilesDoesNotExists_ShouldReturnNothing()
     {
         //Arrange
-        var searchUserId = new Guid().ToString();
+        var searchUserId = Guid.Empty.ToString();
         var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
         _profileRepositoryMock.Setup(x => x.LastOrDefault(specification))
             .Returns(() => null);
@@ -2424,7 +2528,6 @@ public class ProfileServiceTests
             foreach (var filterClause in query.Filters)
             {
                 sequence = sequence.Where(filterClause);
-                var a = sequence.Select(x => x).ToList();
             }
         }
 
@@ -2437,7 +2540,7 @@ public class ProfileServiceTests
         }
 
         // Resolving Sort Criteria
-        // This code applies the sorting criterias sent as the parameter
+        // This code applies the sorting criteria sent as the parameter
         if (query.SortCriterias is { Count: > 0 })
         {
             var sortCriteria = query.SortCriterias[0];
@@ -2585,7 +2688,6 @@ public class ProfileServiceTests
     public async Task SearchAsync_WithEqualsSpecification_WhenProfilesExists_ShouldReturnProfile(string search, int start, int take, string fieldName, OrderType orderType)
     {
         //Arrange
-        var random = new Random();
         var profilesList =
             SetupProfileFixture()
                 .With(x => x.UserId, search)
@@ -2660,7 +2762,7 @@ public class ProfileServiceTests
 
     /// <summary>
     /// Search async profiles.
-    /// Should return nothing when profiles does not exists.
+    /// Should return nothing when profiles does not exist.
     /// </summary>
     /// <param name="search">The search.</param>
     /// <param name="start">The start.</param>
@@ -2710,7 +2812,7 @@ public class ProfileServiceTests
         var query = new SearchQuery<ProfileModel> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<ProfileModel> { Entities = new List<ProfileModel>(), Count = 0 };
 
-        _profileRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, data)).ReturnsAsync(expected);
+        _profileRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, data)).ReturnsAsync(expected);
 
         var result = await _profileService.SearchBySequenceAsync(query, data);
 
@@ -2728,7 +2830,7 @@ public class ProfileServiceTests
         var data = SetupProfileFixture().CreateMany(5).AsQueryable();
         var expected = new PagedListResult<ProfileModel> { Entities = data.ToList(), Count = 5 };
 
-        _profileRepositoryMock.Setup(r => r.SearchBySquenceAsync(null, data)).ReturnsAsync(expected);
+        _profileRepositoryMock.Setup(r => r.SearchBySequenceAsync(null, data)).ReturnsAsync(expected);
 
         var result = await _profileService.SearchBySequenceAsync(null, data);
 
@@ -2746,7 +2848,7 @@ public class ProfileServiceTests
         var query = new SearchQuery<ProfileModel> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<ProfileModel> { Entities = null, Count = 5 };
 
-        _profileRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, null)).ReturnsAsync(expected);
+        _profileRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, null)).ReturnsAsync(expected);
 
         var result = await _profileService.SearchBySequenceAsync(query, null);
 

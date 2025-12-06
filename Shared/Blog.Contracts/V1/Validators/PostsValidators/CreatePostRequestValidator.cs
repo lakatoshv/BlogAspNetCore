@@ -7,7 +7,7 @@ namespace Blog.Contracts.V1.Validators.PostsValidators;
 /// Create post request validator.
 /// </summary>
 /// <seealso cref="AbstractValidator{UpdatePostRequest}" />
-class CreatePostRequestValidator : AbstractValidator<CreatePostRequest>
+public class CreatePostRequestValidator : AbstractValidator<CreatePostRequest>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="CreatePostRequestValidator"/> class.

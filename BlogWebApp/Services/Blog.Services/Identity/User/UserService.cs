@@ -4,9 +4,6 @@
 
 namespace Blog.EntityServices.Identity.User;
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Contracts.V1.Responses.Chart;
 using Core.Infrastructure.Pagination;
@@ -15,6 +12,9 @@ using Data.Models;
 using Data.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 /// <summary>
 /// User service.
@@ -214,12 +214,12 @@ public class UserService : IUserService
     {
         var sequence = this.applicationUserRepository.Table;
 
-        return await this.applicationUserRepository.SearchBySquenceAsync(this.AddFilter(tableFilter), sequence);
+        return await this.applicationUserRepository.SearchBySequenceAsync(this.AddFilter(tableFilter), sequence);
     }
 
     /// <inheritdoc cref="IUserService"/>
     public async Task<ChartDataModel> GetUsersActivity()
-        => new ()
+        => new()
         {
             Name = "Posts",
             Series = await applicationUserRepository.TableNoTracking

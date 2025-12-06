@@ -5,47 +5,47 @@
 namespace Blog.EntityServices.Security;
 
 /// <summary>
-/// Encryption service
+/// Encryption service.
 /// </summary>
 public interface IEncryptionService
 {
     /// <summary>
-    /// Create salt key
+    /// Create salt key.
     /// </summary>
-    /// <param name="size">Key size</param>
-    /// <returns>Salt key</returns>
+    /// <param name="size">Key size.</param>
+    /// <returns>Salt key.</returns>
     string CreateSaltKey(int size);
 
     /// <summary>
-    /// Create a password hash
+    /// Create a password hash.
     /// </summary>
-    /// <param name="password">Password</param>
-    /// <param name="saltkey">Salk key</param>
-    /// <param name="passwordFormat">Password format (hash algorithm)</param>
-    /// <returns>Password hash</returns>
-    string CreatePasswordHash(string password, string saltkey, string passwordFormat);
+    /// <param name="password">Password.</param>
+    /// <param name="saltKey">Salt key.</param>
+    /// <param name="passwordFormat">Password format (hash algorithm).</param>
+    /// <returns>Password hash.</returns>
+    string CreatePasswordHash(string password, string saltKey, string passwordFormat);
 
     /// <summary>
-    /// Create a data hash
+    /// Create a data hash.
     /// </summary>
-    /// <param name="data">The data for calculating the hash</param>
-    /// <param name="hashAlgorithm">Hash algorithm</param>
-    /// <returns>Data hash</returns>
+    /// <param name="data">The data for calculating the hash.</param>
+    /// <param name="hashAlgorithm">Hash algorithm.</param>
+    /// <returns>Data hash.</returns>
     string CreateHash(byte[] data, string hashAlgorithm);
 
     /// <summary>
-    /// Encrypt text
+    /// Encrypt text.
     /// </summary>
-    /// <param name="plainText">Text to encrypt</param>
-    /// <param name="encryptionPrivateKey">Encryption private key</param>
-    /// <returns>Encrypted text</returns>
+    /// <param name="plainText">Text to encrypt.</param>
+    /// <param name="encryptionPrivateKey">Encryption private key.</param>
+    /// <returns>Encrypted text.</returns>
     string EncryptText(string plainText, string encryptionPrivateKey = "");
 
     /// <summary>
-    /// Decrypt text
+    /// Decrypt text.
     /// </summary>
-    /// <param name="cipherText">Text to decrypt</param>
-    /// <param name="encryptionPrivateKey">Encryption private key</param>
-    /// <returns>Decrypted text</returns>
+    /// <param name="cipherText">Text to decrypt.</param>
+    /// <param name="encryptionPrivateKey">Encryption private key.</param>
+    /// <returns>Decrypted text.</returns>
     string DecryptText(string cipherText, string encryptionPrivateKey = "");
 }

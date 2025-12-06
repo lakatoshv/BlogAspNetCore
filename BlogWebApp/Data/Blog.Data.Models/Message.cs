@@ -2,10 +2,9 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-using Blog.Core.Enums;
-
 namespace Blog.Data.Models;
 
+using Blog.Core.Enums;
 using Core;
 
 /// <summary>

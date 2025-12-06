@@ -85,6 +85,9 @@ public class TagsController(
     [Cached(600)]
     public async Task<ActionResult> GetTagsByFilter([FromBody] SearchParametersRequest searchParameters = null)
     {
+        if (searchParameters == null)
+            return BadRequest();
+        
         searchParameters.SortParameters ??= new SortParametersRequest();
 
         searchParameters.SortParameters.OrderBy ??= "asc";
@@ -179,12 +182,7 @@ public class TagsController(
     [Authorize]
     public async Task<IActionResult> CreateAsync([FromBody] CreateTagRequest model)
     {
-        if (!ModelState.IsValid)
-        {
-            return Bad(ModelState);
-        }
-
-        if (await _tagsService.AnyAsync(new TagSpecification(x => x.Title.ToLower().Equals(model.Title.ToLower()))))
+        if (!ModelState.IsValid || await _tagsService.AnyAsync(new TagSpecification(x => x.Title.ToLower().Equals(model.Title.ToLower()))))
         {
             return Bad(ModelState);
         }
@@ -194,7 +192,7 @@ public class TagsController(
 
         var response = new CreatedResponse<int> { Id = tag.Id };
 
-        var baseUrl = $@"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
+        var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
         var locationUrl = baseUrl + "/" + ApiRoutes.TagsController.GetTag.Replace("{id}", tag.Id.ToString());
 
         return Created(locationUrl, response);

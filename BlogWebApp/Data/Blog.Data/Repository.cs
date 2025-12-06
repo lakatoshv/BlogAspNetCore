@@ -4,17 +4,17 @@
 
 namespace Blog.Data;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Blog.Core;
 using Blog.Core.Infrastructure;
 using Blog.Core.Infrastructure.Pagination;
 using Blog.Core.TableFilters;
-using Specifications.Base;
+using Microsoft.EntityFrameworkCore;
 using Repository;
+using Specifications.Base;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Table methods.
@@ -40,7 +40,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     public virtual IQueryable<TEntity> TableNoTracking =>
 
         // AsNoTracking method temporarily doesn't work, it's a bug in EF Core 2.1 (details in https://github.com/aspnet/EntityFrameworkCore/issues/11689)
-        // Update - I checked this functionality and it is working fine, that's why I returned
+        // Update - I checked this functionality, and it is working fine, that's why I returned
         this.Entities.AsNoTracking();
 
     /// <summary>
@@ -109,7 +109,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     }
 
     /// <inheritdoc cref="IRepository{TEntity}"/>
-    public virtual async Task<PagedListResult<TEntity>> SearchBySquenceAsync(SearchQuery<TEntity> searchQuery, IQueryable<TEntity> sequence)
+    public virtual async Task<PagedListResult<TEntity>> SearchBySequenceAsync(SearchQuery<TEntity> searchQuery, IQueryable<TEntity> sequence)
     {
         // Applying filters
         sequence = this.ManageFilters(searchQuery, sequence);
@@ -350,10 +350,7 @@ public class Repository<TEntity> : IRepository<TEntity>
     /// <inheritdoc cref="IRepository{TEntity}"/>
     public bool Any(ISpecification<TEntity> specification)
     {
-        if (specification.Filter == null)
-        {
-            throw new ArgumentNullException(nameof(specification));
-        }
+        ArgumentNullException.ThrowIfNull(nameof(specification));
 
         return this.Entities.Any(specification.Filter);
     }

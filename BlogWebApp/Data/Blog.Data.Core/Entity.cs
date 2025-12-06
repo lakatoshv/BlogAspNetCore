@@ -4,8 +4,8 @@
 
 namespace Blog.Data.Core;
 
-using System;
 using Blog.Core;
+using System;
 
 /// <summary>
 /// Entity.
@@ -74,13 +74,13 @@ public abstract class Entity : IEntityBase<int>
         var otherType = other.GetUnproxiedType();
         var thisType = this.GetUnproxiedType();
 
-        return thisType.IsAssignableFrom(otherType) || otherType.IsAssignableFrom(thisType);
+        return otherType != null && (thisType.IsAssignableFrom(otherType) || otherType.IsAssignableFrom(thisType));
     }
 
     /// <inheritdoc cref="object"/>
     public override int GetHashCode()
     {
-        return Equals(this.Id, default(int)) ? base.GetHashCode() : this.Id.GetHashCode();
+        return Equals(this.Id, 0) ? base.GetHashCode() : this.Id.GetHashCode();
     }
 
     /// <summary>
@@ -90,7 +90,7 @@ public abstract class Entity : IEntityBase<int>
     /// <returns>bool.</returns>
     private static bool IsTransient(Entity obj)
     {
-        return obj != null && Equals(obj.Id, default(int));
+        return obj != null && Equals(obj.Id, 0);
     }
 
     /// <summary>

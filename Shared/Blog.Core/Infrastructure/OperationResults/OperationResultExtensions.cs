@@ -1,9 +1,13 @@
-﻿namespace Blog.Core.Infrastructure.OperationResults;
+﻿// <copyright file="OperationResultExtensions.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
+namespace Blog.Core.Infrastructure.OperationResults;
+
+using Interfaces;
 using System;
 using System.Linq;
 using System.Text;
-using Interfaces;
 
 /// <summary>
 /// Operation result extensions.

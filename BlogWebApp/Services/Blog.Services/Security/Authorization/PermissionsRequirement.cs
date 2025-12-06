@@ -2,9 +2,9 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-using Microsoft.AspNetCore.Authorization;
-
 namespace Blog.EntityServices.Security.Authorization;
+
+using Microsoft.AspNetCore.Authorization;
 
 /// <summary>
 /// Permissions requirement.

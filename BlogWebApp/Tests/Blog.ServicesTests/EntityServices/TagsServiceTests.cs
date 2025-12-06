@@ -130,7 +130,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Get all tags.
-    /// Should return nothing when tags does not exists.
+    /// Should return nothing when tags does not exist.
     /// </summary>
     [Fact]
     public void GetAll_WhenTagsDoesNotExists_ShouldReturnNothing()
@@ -218,7 +218,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Get all async tags.
-    /// Should return nothing when tags does not exists.
+    /// Should return nothing when tags does not exist.
     /// </summary>
     [Fact]
     public async Task GetAllAsync_WhenTagsDoesNotExists_ShouldReturnNothing()
@@ -344,7 +344,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Get all tags with specification.
-    /// Should return nothing with  when tags does not exists.
+    /// Should return nothing with  when tags does not exist.
     /// </summary>
     /// <param name="equalCount">The equal count.</param>
     /// <param name="tagSearch">The tag search.</param>
@@ -374,7 +374,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Get all tags.
-    /// Should return nothing with  when tags does not exists.
+    /// Should return nothing with  when tags does not exist.
     /// </summary>
     /// <param name="tagSearch">The tag search.</param>
     [Theory]
@@ -408,7 +408,7 @@ public class TagsServiceTests
                 .With(x => x.Title, tagTitleSearch)
                 .CreateMany(random.Next(100));
 
-        var specification = new TagSpecification();
+        var specification = new TagSpecification(null);
         _tagsRepositoryMock.Setup(x => x.GetAll(It.IsAny<TagSpecification>()))
             .Returns(() => tagsList.Where(x => x.Title.Contains(tagTitleSearch)).AsQueryable());
 
@@ -436,12 +436,11 @@ public class TagsServiceTests
                 .With(x => x.Title, tagTitleSearch)
                 .CreateMany(random.Next(100));
 
-        TagSpecification specification = null;
         _tagsRepositoryMock.Setup(x => x.GetAll(It.IsAny<TagSpecification>()))
             .Returns(() => tagsList.Where(x => x.Title.Contains(tagTitleSearch)).AsQueryable());
 
         //Act
-        var tags = _tagsService.GetAll(specification);
+        var tags = _tagsService.GetAll(null);
 
         //Assert
         Assert.NotNull(tags);
@@ -560,7 +559,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Get all async tags with specification.
-    /// Should return nothing with  when tags does not exists.
+    /// Should return nothing with  when tags does not exist.
     /// </summary>
     /// <param name="equalCount">The equal count.</param>
     /// <param name="tagSearch">The tag search.</param>
@@ -589,7 +588,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Get all async tags.
-    /// Should return nothing with  when tags does not exists.
+    /// Should return nothing with  when tags does not exist.
     /// </summary>
     /// <param name="tagSearch">The tag search.</param>
     [Theory]
@@ -623,7 +622,7 @@ public class TagsServiceTests
                 .With(x => x.Title, tagTitleSearch)
                 .CreateMany(random.Next(100));
 
-        var specification = new TagSpecification();
+        var specification = new TagSpecification(null);
         _tagsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<TagSpecification>()))
             .ReturnsAsync(() => tagsList.Where(x => x.Title.Contains(tagTitleSearch)).ToList());
 
@@ -651,12 +650,11 @@ public class TagsServiceTests
                 .With(x => x.Title, tagTitleSearch)
                 .CreateMany(random.Next(100));
 
-        TagSpecification specification = null;
         _tagsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<TagSpecification>()))
             .ReturnsAsync(() => tagsList.Where(x => x.Title.Contains(tagTitleSearch)).ToList());
 
         //Act
-        var tags = await _tagsService.GetAllAsync(specification);
+        var tags = await _tagsService.GetAllAsync(null);
 
         //Assert
         Assert.NotNull(tags);
@@ -738,7 +736,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Find tag.
-    /// Should return nothing when tag does not exists.
+    /// Should return nothing when tag does not exist.
     /// </summary>
     [Fact]
     public void Find_WhenTagDoesNotExists_ShouldReturnNothing()
@@ -827,7 +825,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Async find tag.
-    /// Should return nothing when tag does not exists.
+    /// Should return nothing when tag does not exist.
     /// </summary>
     /// <returns>Task.</returns>
     [Fact]
@@ -1612,7 +1610,7 @@ public class TagsServiceTests
     #region Delete By Id function
 
     /// <summary>
-    /// Verify that function Delete By Id has been called.
+    /// Verify that function Delete By ID has been called.
     /// </summary>
     [Fact]
     public void Verify_FunctionDeleteById_HasBeenCalled()
@@ -1628,7 +1626,7 @@ public class TagsServiceTests
 
         //Act
         _tagsService.Insert(newTag);
-        var tag = _tagsService.Find(tagId);
+        _tagsService.Find(tagId);
         _tagsService.Delete(tagId);
         _tagsRepositoryMock.Setup(x => x.GetById(tagId))
             .Returns(() => null);
@@ -1639,7 +1637,7 @@ public class TagsServiceTests
     }
 
     /// <summary>
-    /// Delete By Id tag.
+    /// Delete By ID tag.
     /// Should return nothing when tag is deleted.
     /// </summary>
     [Fact]
@@ -1661,7 +1659,7 @@ public class TagsServiceTests
 
         //Act
         _tagsService.Insert(newTag);
-        var tag = _tagsService.Find(tagId);
+        _tagsService.Find(tagId);
         _tagsService.Delete(tagId);
         _tagsRepositoryMock.Setup(x => x.GetById(tagId))
             .Returns(() => null);
@@ -1669,6 +1667,24 @@ public class TagsServiceTests
 
         //Assert
         Assert.Null(deletedTag);
+    }
+
+    /// <summary>
+    /// Delete By ID tag.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteById_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var tag = SetupTagFixture().Create();
+        _tagsRepositoryMock.Setup(x => x.GetById(It.IsAny<object>()))
+            .Returns(tag);
+        _tagsRepositoryMock.Setup(x => x.Delete(It.IsAny<Tag>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _tagsService.Delete(tag.Id));
     }
 
     #endregion
@@ -1733,6 +1749,22 @@ public class TagsServiceTests
 
         //Assert
         Assert.Null(deletedTag);
+    }
+
+    /// <summary>
+    /// Delete By Object tag.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var tag = SetupTagFixture().Create();
+        _tagsRepositoryMock.Setup(x => x.Delete(It.IsAny<Tag>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _tagsService.Delete(tag));
     }
 
     #endregion
@@ -1809,12 +1841,32 @@ public class TagsServiceTests
         Assert.Null(newTags);
     }
 
+    /// <summary>
+    /// Delete By Enumerable tags.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var tags = SetupTagFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _tagsRepositoryMock.Setup(x => x.Delete(It.IsAny<IEnumerable<Tag>>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _tagsService.Delete(tags));
+    }
+
     #endregion
 
     #region Delete By Id Async function
 
     /// <summary>
-    /// Verify that function Delete Async By Id has been called.
+    /// Verify that function Delete Async By ID has been called.
     /// </summary>
     /// <returns>Task.</returns>
     [Fact]
@@ -1868,6 +1920,24 @@ public class TagsServiceTests
 
         //Assert
         Assert.Null(deletedTag);
+    }
+
+    /// <summary>
+    /// Async delete By ID tag.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncById_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var tag = SetupTagFixture().Create();
+        _tagsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<object>()))
+            .ReturnsAsync(tag);
+        _tagsRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<Tag>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _tagsService.DeleteAsync(tag.Id));
     }
 
     #endregion
@@ -1931,6 +2001,22 @@ public class TagsServiceTests
 
         //Assert
         Assert.Null(deletedTag);
+    }
+
+    /// <summary>
+    /// Async delete By Object tag.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var tag = SetupTagFixture().Create();
+        _tagsRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<Tag>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _tagsService.DeleteAsync(tag));
     }
 
     #endregion
@@ -2005,6 +2091,26 @@ public class TagsServiceTests
 
         //Assert
         Assert.Null(newTags);
+    }
+
+    /// <summary>
+    /// Async delete By Enumerable tags.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var tags = SetupTagFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _tagsRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<IEnumerable<Tag>>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _tagsService.DeleteAsync(tags));
     }
 
     #endregion
@@ -2101,7 +2207,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Check if there are any tags with specification.
-    /// Should return false with when tags does not exists.
+    /// Should return false with when tags does not exist.
     /// </summary>
     /// <param name="tagSearch">The tag search.</param>
     [Theory]
@@ -2128,7 +2234,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Check if there are any tags with specification.
-    /// Should return false with when tags does not exists.
+    /// Should return false with when tags does not exist.
     /// </summary>
     /// <param name="tagSearch">The tag search.</param>
     [Theory]
@@ -2240,7 +2346,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Async check if there are any tags with specification.
-    /// Should return false with when tags does not exists.
+    /// Should return false with when tags does not exist.
     /// </summary>
     /// <param name="tagSearch">The tag search.</param>
     /// <returns>Task.</returns>
@@ -2268,7 +2374,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Async check if there are any tags with specification.
-    /// Should return false with when tags does not exists.
+    /// Should return false with when tags does not exist.
     /// </summary>
     /// <param name="tagSearch">The tag search.</param>
     /// <returns>Task.</returns>
@@ -2379,7 +2485,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Get first or default tag with specification.
-    /// Should return nothing with when tags does not exists.
+    /// Should return nothing with when tags does not exist.
     /// </summary>
     /// <param name="tagSearch">The tag search.</param>
     [Theory]
@@ -2405,7 +2511,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Get first or default tag with specification.
-    /// Should return nothing with when tags does not exists.
+    /// Should return nothing with when tags does not exist.
     /// </summary>
     /// <param name="tagSearch">The tag search.</param>
     [Theory]
@@ -2513,7 +2619,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Get last or default tag with specification.
-    /// Should return nothing with when tags does not exists.
+    /// Should return nothing with when tags does not exist.
     /// </summary>
     /// <param name="tagSearch">The tag search.</param>
     [Theory]
@@ -2539,7 +2645,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Get last or default tag with specification.
-    /// Should return nothing with when tags does not exists.
+    /// Should return nothing with when tags does not exist.
     /// </summary>
     /// <param name="tagSearch">The tag search.</param>
     [Theory]
@@ -2578,7 +2684,6 @@ public class TagsServiceTests
             foreach (var filterClause in query.Filters)
             {
                 sequence = sequence.Where(filterClause);
-                var a = sequence.Select(x => x).ToList();
             }
         }
 
@@ -2591,7 +2696,7 @@ public class TagsServiceTests
         }
 
         // Resolving Sort Criteria
-        // This code applies the sorting criterias sent as the parameter
+        // This code applies the sorting criteria sent as the parameter
         if (query.SortCriterias is { Count: > 0 })
         {
             var sortCriteria = query.SortCriterias[0];
@@ -2726,7 +2831,6 @@ public class TagsServiceTests
     public async Task SearchAsync_WithEqualsSpecification_WhenTagsExists_ShouldReturnTag(string search, int start, int take, string fieldName, OrderType orderType)
     {
         //Arrange
-        var random = new Random();
         var tagsList =
             SetupTagFixture()
                 .With(x => x.Title, search)
@@ -2758,7 +2862,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Search async tags with specification.
-    /// Should return nothing with  when tags does not exists.
+    /// Should return nothing with  when tags does not exist.
     /// </summary>
     [Theory]
     [InlineData("Tag -0", 0, 10, "Title", OrderType.Ascending)]
@@ -2797,7 +2901,7 @@ public class TagsServiceTests
 
     /// <summary>
     /// Search async tags.
-    /// Should return nothing when tags does not exists.
+    /// Should return nothing when tags does not exist.
     /// </summary>
     [Theory]
     [InlineData("Comment 0", 0, 10, "CommentBody", OrderType.Ascending)]
@@ -2842,7 +2946,7 @@ public class TagsServiceTests
         var query = new SearchQuery<Tag> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<Tag> { Entities = new List<Tag>(), Count = 0 };
 
-        _tagsRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, data)).ReturnsAsync(expected);
+        _tagsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, data)).ReturnsAsync(expected);
 
         var result = await _tagsService.SearchBySequenceAsync(query, data);
 
@@ -2860,7 +2964,7 @@ public class TagsServiceTests
         var data = SetupTagFixture().CreateMany(5).AsQueryable();
         var expected = new PagedListResult<Tag> { Entities = data.ToList(), Count = 5 };
 
-        _tagsRepositoryMock.Setup(r => r.SearchBySquenceAsync(null, data)).ReturnsAsync(expected);
+        _tagsRepositoryMock.Setup(r => r.SearchBySequenceAsync(null, data)).ReturnsAsync(expected);
 
         var result = await _tagsService.SearchBySequenceAsync(null, data);
 
@@ -2878,7 +2982,7 @@ public class TagsServiceTests
         var query = new SearchQuery<Tag> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<Tag> { Entities = null, Count = 5 };
 
-        _tagsRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, null)).ReturnsAsync(expected);
+        _tagsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, null)).ReturnsAsync(expected);
 
         var result = await _tagsService.SearchBySequenceAsync(query, null);
 

@@ -152,7 +152,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Get all comments.
-    /// Should return nothing when comments does not exists.
+    /// Should return nothing when comments does not exist.
     /// </summary>
     [Fact]
     public void GetAll_WhenCommentsDoesNotExists_ShouldReturnNothing()
@@ -238,7 +238,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Get all async comments.
-    /// Should return nothing when comments does not exists.
+    /// Should return nothing when comments does not exist.
     /// </summary>
     [Fact]
     public async Task GetAllAsync_WhenCommentsDoesNotExists_ShouldReturnNothing()
@@ -359,7 +359,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Get all comments with specification.
-    /// Should return nothing with  when comments does not exists.
+    /// Should return nothing with  when comments does not exist.
     /// </summary>
     /// <param name="equalCount">The equal count.</param>
     /// <param name="commentBodySearch">The CommentBody search.</param>
@@ -389,7 +389,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Get all comments.
-    /// Should return nothing with  when comments does not exists.
+    /// Should return nothing with  when comments does not exist.
     /// </summary>
     /// <param name="commentBodySearch">The CommentBody search.</param>
     [Theory]
@@ -451,12 +451,11 @@ public class CommentsServiceTests
                 .With(x => x.CommentBody, commentBodySearch)
                 .CreateMany(random.Next(100));
 
-        CommentSpecification specification = null;
         _commentsRepositoryMock.Setup(x => x.GetAll(It.IsAny<CommentSpecification>()))
             .Returns(() => commentsList.Where(x => x.CommentBody.Contains(commentBodySearch)).AsQueryable());
 
         //Act
-        var comments = _commentsService.GetAll(specification);
+        var comments = _commentsService.GetAll(null);
 
         //Assert
         Assert.NotNull(comments);
@@ -572,7 +571,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Get all async comments with specification.
-    /// Should return nothing with  when comments does not exists.
+    /// Should return nothing with  when comments does not exist.
     /// </summary>
     /// <param name="equalCount">The equal count.</param>
     /// <param name="commentBodySearch">The CommentBody search.</param>
@@ -602,7 +601,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Get all async comments.
-    /// Should return nothing with  when comments does not exists.
+    /// Should return nothing with  when comments does not exist.
     /// </summary>
     /// <param name="commentBodySearch">The CommentBody search.</param>
     [Theory]
@@ -666,12 +665,11 @@ public class CommentsServiceTests
                 .With(x => x.CommentBody, commentBodySearch)
                 .CreateMany(random.Next(100));
 
-        CommentSpecification specification = null;
         _commentsRepositoryMock.Setup(x => x.GetAllAsync(It.IsAny<CommentSpecification>()))
             .ReturnsAsync(() => commentsList.Where(x => x.CommentBody.Contains(commentBodySearch)).ToList());
 
         //Act
-        var comments = await _commentsService.GetAllAsync(specification);
+        var comments = await _commentsService.GetAllAsync(null);
 
         //Assert
         Assert.NotNull(comments);
@@ -744,7 +742,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Find comment.
-    /// Should return nothing when comment does not exists.
+    /// Should return nothing when comment does not exist.
     /// </summary>
     [Fact]
     public void Find_WhenCommentDoesNotExists_ShouldReturnNothing()
@@ -824,7 +822,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Async find comment.
-    /// Should return nothing when comment does not exists.
+    /// Should return nothing when comment does not exist.
     /// </summary>
     /// <returns>Task.</returns>
     [Fact]
@@ -978,7 +976,7 @@ public class CommentsServiceTests
     {
         //Arrange
         var random = new Random();
-        var commentId = _fixture.Create<int>(); ;
+        var commentId = _fixture.Create<int>();
         var itemsCount = random.Next(10);
         var newComments =
             SetupCommentFixture()
@@ -1583,7 +1581,7 @@ public class CommentsServiceTests
     #region Delete By Id function
 
     /// <summary>
-    /// Verify that function Delete By Id has been called.
+    /// Verify that function Delete By ID has been called.
     /// </summary>
     [Fact]
     public void Verify_FunctionDeleteById_HasBeenCalled()
@@ -1596,7 +1594,7 @@ public class CommentsServiceTests
 
         //Act
         _commentsService.Insert(newComment);
-        var comment = _commentsService.Find(commentId);
+        _commentsService.Find(commentId);
         _commentsService.Delete(commentId);
         _commentsRepositoryMock.Setup(x => x.GetById(commentId))
             .Returns(() => null);
@@ -1607,7 +1605,7 @@ public class CommentsServiceTests
     }
 
     /// <summary>
-    /// Delete By Id comment.
+    /// Delete By ID comment.
     /// Should return nothing when comment is deleted.
     /// </summary>
     [Fact]
@@ -1627,7 +1625,7 @@ public class CommentsServiceTests
 
         //Act
         _commentsService.Insert(newComment);
-        var comment = _commentsService.Find(commentId);
+        _commentsService.Find(commentId);
         _commentsService.Delete(commentId);
         _commentsRepositoryMock.Setup(x => x.GetById(commentId))
             .Returns(() => null);
@@ -1635,6 +1633,24 @@ public class CommentsServiceTests
 
         //Assert
         Assert.Null(deletedComment);
+    }
+
+    /// <summary>
+    /// Delete By ID comment.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteById_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var comment = SetupCommentFixture().Create();
+        _commentsRepositoryMock.Setup(x => x.GetById(It.IsAny<object>()))
+            .Returns(comment);
+        _commentsRepositoryMock.Setup(x => x.Delete(It.IsAny<Comment>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _commentsService.Delete(comment.Id));
     }
 
     #endregion
@@ -1695,6 +1711,22 @@ public class CommentsServiceTests
 
         //Assert
         Assert.Null(deletedComment);
+    }
+
+    /// <summary>
+    /// Delete By Object comment.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var comment = SetupCommentFixture().Create();
+        _commentsRepositoryMock.Setup(x => x.Delete(It.IsAny<Comment>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _commentsService.Delete(comment));
     }
 
     #endregion
@@ -1769,12 +1801,32 @@ public class CommentsServiceTests
         Assert.Null(newComments);
     }
 
+    /// <summary>
+    /// Delete By Enumerable comment.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void DeleteByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var comments = SetupCommentFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _commentsRepositoryMock.Setup(x => x.Delete(It.IsAny<IEnumerable<Comment>>()))
+            .Throws(new Exception("Repo fail"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _commentsService.Delete(comments));
+    }
+
     #endregion
 
     #region Delete Async By Id function
 
     /// <summary>
-    /// Verify that function Delete Async By Id has been called.
+    /// Verify that function Delete Async By ID has been called.
     /// </summary>
     /// <returns>Task.</returns>
     [Fact]
@@ -1825,6 +1877,24 @@ public class CommentsServiceTests
 
         //Assert
         Assert.Null(deletedComment);
+    }
+
+    /// <summary>
+    /// Async delete By ID comment.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncById_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var comment = SetupCommentFixture().Create();
+        _commentsRepositoryMock.Setup(x => x.GetByIdAsync(It.IsAny<object>()))
+            .ReturnsAsync(comment);
+        _commentsRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<Comment>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _commentsService.DeleteAsync(comment.Id));
     }
 
     #endregion
@@ -1883,6 +1953,22 @@ public class CommentsServiceTests
 
         //Assert
         Assert.Null(deletedComment);
+    }
+
+    /// <summary>
+    /// Async delete By Object comment.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByObject_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var comment = SetupCommentFixture().Create();
+        _commentsRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<Comment>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _commentsService.DeleteAsync(comment));
     }
 
     #endregion
@@ -1957,6 +2043,26 @@ public class CommentsServiceTests
 
         //Assert
         Assert.Null(newComments);
+    }
+
+    /// <summary>
+    /// Async delete By Enumerable comment.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task DeleteAsyncByEnumerable_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var random = new Random();
+        var itemsCount = random.Next(10);
+        var comments = SetupCommentFixture()
+            .CreateMany(itemsCount)
+            .ToList();
+        _commentsRepositoryMock.Setup(x => x.DeleteAsync(It.IsAny<IEnumerable<Comment>>()))
+            .ThrowsAsync(new Exception("Repo fail"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _commentsService.DeleteAsync(comments));
     }
 
     #endregion
@@ -2049,7 +2155,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Check if there are any comments with specification.
-    /// Should return false with when comments does not exists.
+    /// Should return false with when comments does not exist.
     /// </summary>
     /// <param name="commentBodySearch">The CommentBody search.</param>
     [Theory]
@@ -2075,7 +2181,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Check if there are any comments with specification.
-    /// Should return false with when comments does not exists.
+    /// Should return false with when comments does not exist.
     /// </summary>
     /// <param name="commentBodySearch">The CommentBody search.</param>
     [Theory]
@@ -2184,7 +2290,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Async check if there are any comments with specification.
-    /// Should return false with when comments does not exists.
+    /// Should return false with when comments does not exist.
     /// </summary>
     /// <param name="commentBodySearch">The CommentBody search.</param>
     /// <returns>Task.</returns>
@@ -2211,7 +2317,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Async check if there are any comments with specification.
-    /// Should return false with when comments does not exists.
+    /// Should return false with when comments does not exist.
     /// </summary>
     /// <param name="commentBodySearch">The CommentBody search.</param>
     /// <returns>Task.</returns>
@@ -2322,7 +2428,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Get first or default comment with specification.
-    /// Should return nothing with when comment does not exists.
+    /// Should return nothing with when comment does not exist.
     /// </summary>
     /// <param name="commentBodySearch">The CommentBody search.</param>
     [Theory]
@@ -2348,7 +2454,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Get first or default comment with specification.
-    /// Should return nothing with when comments does not exists.
+    /// Should return nothing with when comments does not exist.
     /// </summary>
     /// <param name="commentBodySearch">The CommentBody search.</param>
     [Theory]
@@ -2456,7 +2562,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Get last or default comment with specification.
-    /// Should return nothing with when comment does not exists.
+    /// Should return nothing with when comment does not exist.
     /// </summary>
     /// <param name="commentBodySearch">The CommentBody search.</param>
     [Theory]
@@ -2482,7 +2588,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Get last or default comment with specification.
-    /// Should return nothing with when comments does not exists.
+    /// Should return nothing with when comments does not exist.
     /// </summary>
     /// <param name="commentBodySearch">The CommentBody search.</param>
     [Theory]
@@ -2531,7 +2637,7 @@ public class CommentsServiceTests
         }
 
         // Resolving Sort Criteria
-        // This code applies the sorting criterias sent as the parameter
+        // This code applies the sorting criteria sent as the parameter
         if (query.SortCriterias is { Count: > 0 })
         {
             var sortCriteria = query.SortCriterias[0];
@@ -2707,7 +2813,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Search async comments with specification.
-    /// Should return nothing with  when comments does not exists.
+    /// Should return nothing with  when comments does not exist.
     /// </summary>
     /// <param name="search">The search.</param>
     /// <param name="start">The start.</param>
@@ -2750,7 +2856,7 @@ public class CommentsServiceTests
 
     /// <summary>
     /// Search async comments.
-    /// Should return nothing when comments does not exists.
+    /// Should return nothing when comments does not exist.
     /// </summary>
     /// <param name="search">The search.</param>
     /// <param name="start">The start.</param>
@@ -2800,7 +2906,7 @@ public class CommentsServiceTests
         var query = new SearchQuery<Comment> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<Comment> { Entities = new List<Comment>(), Count = 0 };
 
-        _commentsRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, data)).ReturnsAsync(expected);
+        _commentsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, data)).ReturnsAsync(expected);
 
         var result = await _commentsService.SearchBySequenceAsync(query, data);
 
@@ -2818,7 +2924,7 @@ public class CommentsServiceTests
         var data = SetupCommentFixture().CreateMany(5).AsQueryable();
         var expected = new PagedListResult<Comment> { Entities = data.ToList(), Count = 5 };
 
-        _commentsRepositoryMock.Setup(r => r.SearchBySquenceAsync(null, data)).ReturnsAsync(expected);
+        _commentsRepositoryMock.Setup(r => r.SearchBySequenceAsync(null, data)).ReturnsAsync(expected);
 
         var result = await _commentsService.SearchBySequenceAsync(null, data);
 
@@ -2836,7 +2942,7 @@ public class CommentsServiceTests
         var query = new SearchQuery<Comment> { Skip = 0, Take = 5 };
         var expected = new PagedListResult<Comment> { Entities = null, Count = 5 };
 
-        _commentsRepositoryMock.Setup(r => r.SearchBySquenceAsync(query, null)).ReturnsAsync(expected);
+        _commentsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, null)).ReturnsAsync(expected);
 
         var result = await _commentsService.SearchBySequenceAsync(query, null);
 

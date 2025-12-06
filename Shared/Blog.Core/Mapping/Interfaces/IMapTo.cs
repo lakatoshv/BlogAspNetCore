@@ -8,6 +8,4 @@ namespace Blog.Core.Mapping.Interfaces;
 /// Map To interface.
 /// </summary>
 /// <typeparam name="T">Type.</typeparam>
-public interface IMapTo<T>
-{
-}
+public interface IMapTo<T>;

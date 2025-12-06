@@ -4,9 +4,9 @@
 
 namespace Blog.Services.Core.Identity.Auth;
 
+using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 /// <summary>
 /// Tokens.
@@ -34,6 +34,7 @@ public class Tokens
         };
 
         var json = JsonConvert.SerializeObject(response, serializerSettings);
+
         return json;
     }
 }

@@ -4,13 +4,13 @@
 
 namespace Blog.Services.Core;
 
+using Dtos;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using Dtos;
 
 /// <summary>
-/// Queriable extensions.
+/// Queryable extensions.
 /// </summary>
 public static class QueryableExtensions
 {
@@ -36,6 +36,7 @@ public static class QueryableExtensions
             [source.ElementType, selector.Type],
             expression,
             Expression.Quote(Expression.Lambda(selector, parameter)));
+
         return source.Provider.CreateQuery<T>(expression);
     }
 }

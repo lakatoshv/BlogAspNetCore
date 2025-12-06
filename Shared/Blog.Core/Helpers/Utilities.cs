@@ -110,20 +110,19 @@ public static class Utilities
         try
         {
             var folder = Path.GetDirectoryName(filePath);
-            if (!Directory.Exists(folder))
+            if (!string.IsNullOrEmpty(folder) && !Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
             }
 
-            if (File.Exists(filePath))
+            if (string.IsNullOrEmpty(filePath) || File.Exists(filePath))
             {
             }
 
-            using (var fs = File.Create(filePath))
-            {
-                var info = new UTF8Encoding(true).GetBytes(content);
-                await fs.WriteAsync(info, 0, info.Length);
-            }
+            await using var fs = File.Create(filePath);
+
+            var info = new UTF8Encoding(true).GetBytes(content);
+            await fs.WriteAsync(info, 0, info.Length);
         }
         catch
         {
@@ -163,13 +162,12 @@ public static class Utilities
     /// <returns>string.</returns>
     private static string GenerateETag(byte[] data)
     {
-        using (var md5 = MD5.Create())
-        {
-            var hash = md5.ComputeHash(data);
-            var hex = BitConverter.ToString(hash);
+        using var md5 = MD5.Create();
 
-            return hex.Replace("-", string.Empty);
-        }
+        var hash = md5.ComputeHash(data);
+        var hex = BitConverter.ToString(hash);
+
+        return hex.Replace("-", string.Empty);
     }
 
     /// <summary>
