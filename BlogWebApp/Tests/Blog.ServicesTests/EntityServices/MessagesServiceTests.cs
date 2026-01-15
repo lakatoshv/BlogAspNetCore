@@ -3057,6 +3057,21 @@ public class MessagesServiceTests
         Assert.Null(result.Entities);
     }
 
+    /// <summary>
+    /// Search by sequence async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task SearchBySequenceAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        var data = SetupMessageFixture().CreateMany(3).AsQueryable();
+        var query = new SearchQuery<Message> { Skip = 0, Take = 5 };
+
+        _messagesRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, data)).ThrowsAsync(new Exception("DB fail"));
+
+        await Assert.ThrowsAsync<Exception>(() => _messagesService.SearchBySequenceAsync(query, data));
+    }
+
     #endregion
 
     #region GenerateQuery
