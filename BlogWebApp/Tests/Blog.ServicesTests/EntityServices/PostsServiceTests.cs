@@ -3029,6 +3029,21 @@ public class PostsServiceTests
         Assert.Null(result.Entities);
     }
 
+    /// <summary>
+    /// Search by sequence async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task SearchBySequenceAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        var data = SetupPostFixture().CreateMany(3).AsQueryable();
+        var query = new SearchQuery<Post> { Skip = 0, Take = 5 };
+
+        _postsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, data)).ThrowsAsync(new Exception("DB fail"));
+
+        await Assert.ThrowsAsync<Exception>(() => _postsService.SearchBySequenceAsync(query, data));
+    }
+
     #endregion
 
     #region GenerateQuery
