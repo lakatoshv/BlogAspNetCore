@@ -2948,6 +2948,28 @@ public class PostsServiceTests
         Assert.Null(posts.Entities);
     }
 
+    /// <summary>
+    /// Search async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task SearchAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        // Arrange
+        var query = new SearchQuery<Post>
+        {
+            Skip = 0,
+            Take = 10
+        };
+
+        _postsRepositoryMock
+            .Setup(r => r.SearchAsync(query))
+            .ThrowsAsync(new Exception("Database error"));
+
+        // Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsService.SearchAsync(query));
+    }
+
     #endregion
 
     #region SearchBySequenceAsync function
