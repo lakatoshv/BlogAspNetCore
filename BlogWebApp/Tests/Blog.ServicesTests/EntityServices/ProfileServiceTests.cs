@@ -2878,6 +2878,21 @@ public class ProfileServiceTests
         Assert.Null(result.Entities);
     }
 
+    /// <summary>
+    /// Search by sequence async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task SearchBySequenceAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        var data = SetupProfileFixture().CreateMany(3).AsQueryable();
+        var query = new SearchQuery<ProfileModel> { Skip = 0, Take = 5 };
+
+        _profileRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, data)).ThrowsAsync(new Exception("DB fail"));
+
+        await Assert.ThrowsAsync<Exception>(() => _profileService.SearchBySequenceAsync(query, data));
+    }
+
     #endregion
 
     #region GenerateQuery
