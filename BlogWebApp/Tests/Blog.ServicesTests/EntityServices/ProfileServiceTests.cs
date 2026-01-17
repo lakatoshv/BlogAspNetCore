@@ -2797,6 +2797,28 @@ public class ProfileServiceTests
         Assert.Null(posts.Entities);
     }
 
+    /// <summary>
+    /// Search async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task SearchAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        // Arrange
+        var query = new SearchQuery<ProfileModel>
+        {
+            Skip = 0,
+            Take = 10
+        };
+
+        _profileRepositoryMock
+            .Setup(r => r.SearchAsync(query))
+            .ThrowsAsync(new Exception("Database error"));
+
+        // Assert
+        await Assert.ThrowsAsync<Exception>(() => _profileService.SearchAsync(query));
+    }
+
     #endregion
 
     #region SearchBySequenceAsync function
