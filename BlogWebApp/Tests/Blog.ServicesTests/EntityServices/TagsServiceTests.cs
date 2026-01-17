@@ -2797,7 +2797,6 @@ public class TagsServiceTests
                 .CreateMany(random.Next(100))
                 .ToList();
 
-
         var query = new SearchQuery<Tag>
         {
             Skip = start,
@@ -2929,6 +2928,28 @@ public class TagsServiceTests
 
         //Assert
         Assert.Null(tags.Entities);
+    }
+
+    /// <summary>
+    /// Search async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task SearchAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        // Arrange
+        var query = new SearchQuery<Tag>
+        {
+            Skip = 0,
+            Take = 10
+        };
+
+        _tagsRepositoryMock
+            .Setup(r => r.SearchAsync(query))
+            .ThrowsAsync(new Exception("Database error"));
+
+        // Assert
+        await Assert.ThrowsAsync<Exception>(() => _tagsService.SearchAsync(query));
     }
 
     #endregion
