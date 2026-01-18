@@ -3446,6 +3446,28 @@ public class PostTagRelationsServiceTests
         Assert.Null(postsTagsRelations.Entities);
     }
 
+    /// <summary>
+    /// Search async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task SearchAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        // Arrange
+        var query = new SearchQuery<PostsTagsRelations>
+        {
+            Skip = 0,
+            Take = 10
+        };
+
+        _postsTagsRelationsRepositoryMock
+            .Setup(r => r.SearchAsync(query))
+            .ThrowsAsync(new Exception("Database error"));
+
+        // Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsTagsRelationsService.SearchAsync(query));
+    }
+
     #endregion
 
     #region SearchBySequenceAsync function
@@ -3503,6 +3525,21 @@ public class PostTagRelationsServiceTests
 
         Assert.NotNull(result);
         Assert.Null(result.Entities);
+    }
+
+    /// <summary>
+    /// Search by sequence async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task SearchBySequenceAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        var data = SetupPostsTagsRelationsFixture().CreateMany(3).AsQueryable();
+        var query = new SearchQuery<PostsTagsRelations> { Skip = 0, Take = 5 };
+
+        _postsTagsRelationsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, data)).ThrowsAsync(new Exception("DB fail"));
+
+        await Assert.ThrowsAsync<Exception>(() => _postsTagsRelationsService.SearchBySequenceAsync(query, data));
     }
 
     #endregion

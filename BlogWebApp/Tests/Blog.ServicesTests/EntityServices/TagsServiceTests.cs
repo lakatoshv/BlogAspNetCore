@@ -2797,7 +2797,6 @@ public class TagsServiceTests
                 .CreateMany(random.Next(100))
                 .ToList();
 
-
         var query = new SearchQuery<Tag>
         {
             Skip = start,
@@ -2931,6 +2930,28 @@ public class TagsServiceTests
         Assert.Null(tags.Entities);
     }
 
+    /// <summary>
+    /// Search async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task SearchAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        // Arrange
+        var query = new SearchQuery<Tag>
+        {
+            Skip = 0,
+            Take = 10
+        };
+
+        _tagsRepositoryMock
+            .Setup(r => r.SearchAsync(query))
+            .ThrowsAsync(new Exception("Database error"));
+
+        // Assert
+        await Assert.ThrowsAsync<Exception>(() => _tagsService.SearchAsync(query));
+    }
+
     #endregion
 
     #region SearchBySequenceAsync function
@@ -2988,6 +3009,21 @@ public class TagsServiceTests
 
         Assert.NotNull(result);
         Assert.Null(result.Entities);
+    }
+
+    /// <summary>
+    /// Search by sequence async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task SearchBySequenceAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        var data = SetupTagFixture().CreateMany(3).AsQueryable();
+        var query = new SearchQuery<Tag> { Skip = 0, Take = 5 };
+
+        _tagsRepositoryMock.Setup(r => r.SearchBySequenceAsync(query, data)).ThrowsAsync(new Exception("DB fail"));
+
+        await Assert.ThrowsAsync<Exception>(() => _tagsService.SearchBySequenceAsync(query, data));
     }
 
     #endregion
