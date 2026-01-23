@@ -2354,6 +2354,22 @@ public class CommentsServiceTests
         Assert.False(areAnyComments);
     }
 
+    /// <summary>
+    /// Any async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task AnyAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var specification = new CommentSpecification(x => x.CommentBody.Equals("Comment 0"));
+        _commentsRepositoryMock.Setup(r => r.AnyAsync(It.IsAny<ISpecification<Comment>>()))
+            .ThrowsAsync(new Exception("DB error"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _commentsService.AnyAsync(specification));
+    }
+
     #endregion
 
     #endregion
