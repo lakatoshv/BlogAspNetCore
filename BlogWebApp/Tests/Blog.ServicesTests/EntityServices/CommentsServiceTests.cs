@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blog.Data.Specifications.Base;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -2198,6 +2199,22 @@ public class CommentsServiceTests
 
         //Assert
         Assert.False(areAnyComments);
+    }
+
+    /// <summary>
+    /// Any.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void Any_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var specification = new CommentSpecification(x => x.CommentBody.Equals("Comment 0"));
+        _commentsRepositoryMock.Setup(r => r.Any(It.IsAny<ISpecification<Comment>>()))
+            .Throws(new Exception("DB error"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _commentsService.Any(specification));
     }
 
     #endregion
