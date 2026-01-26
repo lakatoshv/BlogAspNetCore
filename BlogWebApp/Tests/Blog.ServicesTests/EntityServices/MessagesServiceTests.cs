@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blog.Data.Specifications.Base;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -2268,6 +2269,22 @@ public class MessagesServiceTests
 
         //Assert
         Assert.False(areAnyMessages);
+    }
+
+    /// <summary>
+    /// Any.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void Any_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var specification = new MessageSpecification(x => x.Subject.Equals("Test subject0"));
+        _messagesRepositoryMock.Setup(r => r.Any(It.IsAny<ISpecification<Message>>()))
+            .Throws(new Exception("DB error"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _messagesService.Any(specification));
     }
 
     #endregion
