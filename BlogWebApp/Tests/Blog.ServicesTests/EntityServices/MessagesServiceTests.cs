@@ -2424,6 +2424,22 @@ public class MessagesServiceTests
         Assert.False(areAnyMessages);
     }
 
+    /// <summary>
+    /// Any async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task AnyAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var specification = new MessageSpecification(x => x.Subject.Equals("Test subject0"));
+        _messagesRepositoryMock.Setup(r => r.AnyAsync(It.IsAny<ISpecification<Message>>()))
+            .ThrowsAsync(new Exception("DB error"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _messagesService.AnyAsync(specification));
+    }
+
     #endregion
 
     #endregion
