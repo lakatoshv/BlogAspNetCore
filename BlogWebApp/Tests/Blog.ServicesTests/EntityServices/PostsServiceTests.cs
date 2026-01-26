@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blog.Data.Specifications.Base;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -2250,6 +2251,22 @@ public class PostsServiceTests
 
         //Assert
         Assert.False(areAnyPosts);
+    }
+
+    /// <summary>
+    /// Any.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void Any_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var specification = new PostSpecification(x => x.Title.Equals("Created from ServicesTests 0"));
+        _postsRepositoryMock.Setup(r => r.Any(It.IsAny<ISpecification<Post>>()))
+            .Throws(new Exception("DB error"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsService.Any(specification));
     }
 
     #endregion
