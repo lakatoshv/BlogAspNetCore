@@ -2406,6 +2406,22 @@ public class PostsServiceTests
         Assert.False(areAnyPosts);
     }
 
+    /// <summary>
+    /// Any async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task AnyAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var specification = new PostSpecification(x => x.Title.Equals("Created from ServicesTests 0"));
+        _postsRepositoryMock.Setup(r => r.AnyAsync(It.IsAny<ISpecification<Post>>()))
+            .ThrowsAsync(new Exception("DB error"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsService.AnyAsync(specification));
+    }
+
     #endregion
 
     #endregion
