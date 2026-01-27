@@ -2903,6 +2903,23 @@ public class PostTagRelationsServiceTests
         Assert.False(areAnyPosts);
     }
 
+    /// <summary>
+    /// Any async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task AnyAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var specification =
+            new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals("Created from ServicesTests 0"));
+        _postsTagsRelationsRepositoryMock.Setup(r => r.AnyAsync(It.IsAny<ISpecification<PostsTagsRelations>>()))
+            .ThrowsAsync(new Exception("DB error"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsTagsRelationsService.AnyAsync(specification));
+    }
+
     #endregion
 
     #endregion
