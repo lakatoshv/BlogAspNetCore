@@ -2411,6 +2411,22 @@ public class TagsServiceTests
         Assert.False(areAnyTags);
     }
 
+    /// <summary>
+    /// Any async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task AnyAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var specification = new TagSpecification(x => x.Title.Equals("Tag 0"));
+        _tagsRepositoryMock.Setup(r => r.AnyAsync(specification))
+            .ThrowsAsync(new Exception("DB error"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _tagsService.AnyAsync(specification));
+    }
+
     #endregion
 
     #endregion
