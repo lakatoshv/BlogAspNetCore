@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blog.Data.Specifications.Base;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -2251,6 +2252,22 @@ public class TagsServiceTests
 
         //Assert
         Assert.False(areAnyTags);
+    }
+
+    /// <summary>
+    /// Any.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void Any_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var specification = new TagSpecification(x => x.Title.Equals("Tag 0"));
+        _tagsRepositoryMock.Setup(r => r.Any(It.IsAny<ISpecification<Tag>>()))
+            .Throws(new Exception("DB error"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _tagsService.Any(specification));
     }
 
     #endregion
