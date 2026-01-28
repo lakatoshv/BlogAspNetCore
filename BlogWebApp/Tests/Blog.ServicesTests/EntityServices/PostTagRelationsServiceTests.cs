@@ -2748,6 +2748,23 @@ public class PostTagRelationsServiceTests
         Assert.False(areAnyPosts);
     }
 
+    /// <summary>
+    /// Any.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void Any_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var specification =
+            new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals("Created from ServicesTests 0"));
+        _postsTagsRelationsRepositoryMock.Setup(r => r.Any(It.IsAny<ISpecification<PostsTagsRelations>>()))
+            .Throws(new Exception("DB error"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _postsTagsRelationsService.Any(specification));
+    }
+
     #endregion
 
     #region Any Async function With Specification
@@ -2884,6 +2901,23 @@ public class PostTagRelationsServiceTests
 
         //Assert
         Assert.False(areAnyPosts);
+    }
+
+    /// <summary>
+    /// Any async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task AnyAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var specification =
+            new BaseSpecification<PostsTagsRelations>(x => x.Tag.Title.Equals("Created from ServicesTests 0"));
+        _postsTagsRelationsRepositoryMock.Setup(r => r.AnyAsync(It.IsAny<ISpecification<PostsTagsRelations>>()))
+            .ThrowsAsync(new Exception("DB error"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _postsTagsRelationsService.AnyAsync(specification));
     }
 
     #endregion

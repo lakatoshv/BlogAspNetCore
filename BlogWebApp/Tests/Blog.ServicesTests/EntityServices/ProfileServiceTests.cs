@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blog.Data.Specifications.Base;
 using Xunit;
 using ProfileModel = Blog.Data.Models.Profile;
 
@@ -2179,6 +2180,23 @@ public class ProfileServiceTests
         Assert.False(areAnyProfiles);
     }
 
+    /// <summary>
+    /// Any.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void Any_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var searchUserId = Guid.Empty.ToString();
+        var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+        _profileRepositoryMock.Setup(r => r.Any(It.IsAny<ISpecification<ProfileModel>>()))
+            .Throws(new Exception("DB error"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _profileService.Any(specification));
+    }
+
     #endregion
 
     #region Any Async function With Specification
@@ -2288,6 +2306,23 @@ public class ProfileServiceTests
 
         //Assert
         Assert.False(areAnyProfiles);
+    }
+
+    /// <summary>
+    /// Any async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task AnyAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var searchUserId = Guid.Empty.ToString();
+        var specification = new ProfileSpecification(x => x.UserId.Equals(searchUserId));
+        _profileRepositoryMock.Setup(r => r.AnyAsync(It.IsAny<ISpecification<ProfileModel>>()))
+            .ThrowsAsync(new Exception("DB error"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _profileService.AnyAsync(specification));
     }
 
     #endregion

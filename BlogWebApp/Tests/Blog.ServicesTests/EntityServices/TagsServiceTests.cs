@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blog.Data.Specifications.Base;
 using Xunit;
 
 namespace Blog.ServicesTests.EntityServices;
@@ -2253,6 +2254,22 @@ public class TagsServiceTests
         Assert.False(areAnyTags);
     }
 
+    /// <summary>
+    /// Any.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public void Any_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var specification = new TagSpecification(x => x.Title.Equals("Tag 0"));
+        _tagsRepositoryMock.Setup(r => r.Any(It.IsAny<ISpecification<Tag>>()))
+            .Throws(new Exception("DB error"));
+
+        //Assert
+        Assert.Throws<Exception>(() => _tagsService.Any(specification));
+    }
+
     #endregion
 
     #region Any Async function With Specification
@@ -2392,6 +2409,22 @@ public class TagsServiceTests
 
         //Assert
         Assert.False(areAnyTags);
+    }
+
+    /// <summary>
+    /// Any async.
+    /// When repository throws exception should throw exception.
+    /// </summary>
+    [Fact]
+    public async Task AnyAsync_WhenRepositoryThrowsException_ShouldThrowException()
+    {
+        //Arrange
+        var specification = new TagSpecification(x => x.Title.Equals("Tag 0"));
+        _tagsRepositoryMock.Setup(r => r.AnyAsync(specification))
+            .ThrowsAsync(new Exception("DB error"));
+
+        //Assert
+        await Assert.ThrowsAsync<Exception>(() => _tagsService.AnyAsync(specification));
     }
 
     #endregion
