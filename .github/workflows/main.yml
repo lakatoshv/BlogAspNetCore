@@ -1,0 +1,60 @@
+name: Angular + .NET CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+# ======================= ANGULAR =======================
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: npm
+          cache-dependency-path: BlogWebApp/Blog.Web/ClientApp/package-lock.json
+
+      - name: Install Angular dependencies
+        working-directory: BlogWebApp/Blog.Web/ClientApp
+        run: npm ci
+
+      - name: Build Angular (production)
+        working-directory: BlogWebApp/Blog.Web/ClientApp
+        run: npm run build -- --configuration production
+
+      - name: Copy Angular build to wwwroot
+        run: |
+          rm -rf BlogWebApp/Blog.Web/wwwroot/*
+          cp -r BlogWebApp/Blog.Web/ClientApp/dist/* BlogWebApp/Blog.Web/wwwroot/
+
+# ======================= .NET =======================
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Restore .NET
+        run: dotnet restore BlogWebApp/Blog.sln
+
+      - name: Build .NET
+        run: dotnet build BlogWebApp/Blog.sln --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test BlogWebApp/Blog.sln --no-build --verbosity normal
+
+      - name: Publish Web App
+        run: dotnet publish BlogWebApp/Blog.Web/Blog.Web.csproj -c Release -o out
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: webapp-build
+          path: out
