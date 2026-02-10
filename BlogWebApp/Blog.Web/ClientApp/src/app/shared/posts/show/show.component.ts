@@ -96,14 +96,16 @@ export class ShowComponent implements OnInit {
    * @param id number
    * @returns void
    */
-  public like(id: number): void {
+  public async like(id: number): Promise<void> {
     if(this.postId) {
-      this._postsService.like(this.postId).subscribe(
-        (response: any) => {
+      this._postsService.like(this.postId)
+        .subscribe({
+          next: (response: any) => {
           this.post = response;
         },
-        (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }
@@ -113,14 +115,16 @@ export class ShowComponent implements OnInit {
    * @param id number
    * @returns void
    */
-  public dislike(id: number): void {
+  public async dislike(id: number): Promise<void> {
     if(this.postId) {
-      this._postsService.dislike(this.postId).subscribe(
-        (response: any) => {
+      this._postsService.dislike(this.postId)
+        .subscribe({
+          next: (response: any) => {
           this.post = response;
         },
-        (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }
@@ -128,14 +132,16 @@ export class ShowComponent implements OnInit {
   /**
    * Delete post.
    */
-  public deleteAction() {
+  public async deleteAction(): Promise<void> {
     if (this.loggedIn && this.post && this.post?.authorId === this.user?.id) {
-      this._postsService.delete(this.post.id, this.user.id).subscribe(
-        () => {
+      this._postsService.delete(this.post.id, this.user.id)
+        .subscribe({
+          next: (response: any) => {
           this._router.navigateByUrl('/blog');
         },
-        (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }
@@ -150,20 +156,22 @@ export class ShowComponent implements OnInit {
   /**
    * Get post by id.
    */
-  private _getPost() {
+  private async _getPost(): Promise<void> {
     if(this.postId) {
-      this._postsService.showPost(this.postId).subscribe(
-        (response: any) => {
+      this._postsService.showPost(this.postId)
+
+        .subscribe({
+          next: (response: any) => {
           this.post = response.post;
           if(this.post) {
             this.post.tags = response.tags;
             this.post.comments = response.comments.comments;
           }
           this.pageInfo = response.comments.pageInfo;
-          this.isLoaded = true;
         },
-        (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }

@@ -157,7 +157,7 @@ export class EditPostComponent implements OnInit {
    * @param post Post
    * @returns void
    */
-  edit(post: Post): void {
+  async edit(post: Post): Promise<void> {
     if (this.isCurrentUserPost 
       && this.postForm.valid
       && this._postId
@@ -165,13 +165,15 @@ export class EditPostComponent implements OnInit {
       post.id = this._postId;
       post.tags = this.post?.tags;
       post.authorId = this.user?.id;
-      this._postsService.edit(this._postId, post).subscribe(
-        () => {
+      this._postsService.edit(this._postId, post)
+        .subscribe({
+          next: (response: any) => {
           this._customToastrService.displaySuccessMessage(Messages.POST_EDITED_SUCCESSFULLY);
           this._router.navigate(['/blog/post/' + this._postId]);
         },
-        (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }
@@ -179,15 +181,17 @@ export class EditPostComponent implements OnInit {
   /**
    * Delete post action.
    */
-  deleteAction(): void {
+  async deleteAction(): Promise<void> {
     if (this.isCurrentUserPost && this._postId && this._globalService._currentUser) {
-      this._postsService.delete(this._postId, this._globalService._currentUser.id).subscribe(
-        () => {
+      this._postsService.delete(this._postId, this._globalService._currentUser.id)
+        .subscribe({
+          next: () => {
           this._customToastrService.displaySuccessMessage(Messages.POST_DELETED_SUCCESSFULLY);
           this._router.navigate(['/blog']);
         },
-        (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }
@@ -266,10 +270,11 @@ export class EditPostComponent implements OnInit {
    * Get post.
    * @returns void
    */
-  private _getPost(): void {
+  private async _getPost(): Promise<void> {
     if(this._postId) {
-      this._postsService.showPost(this._postId).subscribe(
-        (response: any) => {
+      this._postsService.showPost(this._postId)
+        .subscribe({
+          next: (response: any) => {
           this.post = response.post;
           if(this.post) {
             this.post.tags = response.tags;
@@ -282,8 +287,9 @@ export class EditPostComponent implements OnInit {
             this._setFormData();
           }
         },
-        (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }
@@ -292,13 +298,16 @@ export class EditPostComponent implements OnInit {
    * Get available tags.
    * @returns void
    */
-  private _getTags(): void {
-    this._tagsService.list().subscribe(
-      (response: Tag[]) => {
+  private async _getTags(): Promise<void> {
+    this._tagsService.list()
+
+      .subscribe({
+        next: (response: Tag[]) => {
         this.availableTags = response;
       },
-      (error: ErrorResponse) => {
+        error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
+        }
       });
   }
 

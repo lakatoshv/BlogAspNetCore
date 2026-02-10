@@ -119,16 +119,18 @@ export class PostsListComponent implements OnInit {
    * @param postId number
    * @returns void
    */
-  deleteAction(postId: number): void {
+  async deleteAction(postId: number): Promise<void> {
     const postItem = this.posts.find(post =>  post.id === postId);
     if (this.loggedIn && this._globalService._currentUser && postItem?.authorId === this._globalService._currentUser?.id) {
-      this._postsService.delete(postId, this._globalService._currentUser.id).subscribe(
-        (response: any) => {
+      this._postsService.delete(postId, this._globalService._currentUser.id)
+        .subscribe({
+          next: (response: any) => {
           this._customToastrService.displaySuccessMessage(Messages.POST_DELETED_SUCCESSFULLY);
           this._onDeleteCommentAction(response.id);
         },
-        (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }
@@ -138,16 +140,18 @@ export class PostsListComponent implements OnInit {
    * @param id number
    * @returns void
    */
-  public like(id: number): void {
+  public async like(id: number): Promise<void> {
     if (this.loggedIn) {
-      this._postsService.like(id).subscribe(
-        (response: any) => {
+      this._postsService.like(id)
+        .subscribe({
+          next: (response: any) => {
           const ind = this.posts.findIndex(post =>  post.id === id);
           this.posts[ind] = response;
           this.posts = this.posts;
         },
-        (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }
@@ -157,16 +161,18 @@ export class PostsListComponent implements OnInit {
    * @param id number
    * @returns void
    */
-  public dislike(id: number): void {
+  public async dislike(id: number): Promise<void> {
     if (this.loggedIn) {
-      this._postsService.dislike(id).subscribe(
-        (response: any) => {
+      this._postsService.dislike(id)
+        .subscribe({
+          next: (response: any) => {
           const ind = this.posts.findIndex(post =>  post.id === id);
           this.posts[ind] = response;
           this.posts = this.posts;
         },
-        (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }
@@ -186,22 +192,22 @@ export class PostsListComponent implements OnInit {
    * @param search string
    * @returns void
    */
-  public search(search: string): void {
+  public async search(search: string): Promise<void> {
     this.isLoaded = false;
     const model = {
       search: search,
       tag: this._searchFilter,
       sortParameters: null,
     };
-    this._postsService.list(model).subscribe(
-      (response: any) => {
-        this.posts = response.posts;
-        this.pageInfo = this.pageInfo;
-        this.isLoaded = true;
+    this._postsService.list(model)
+      .subscribe({
+        next: (response: any) => {
+          this.posts = [...response.posts];
+          this.pageInfo = { ...response.pageInfo };
       },
-      (error: ErrorResponse) => {
+        error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
-        this.isLoaded = true;
+        }
       });
   }
 
@@ -209,7 +215,7 @@ export class PostsListComponent implements OnInit {
    * Sort posts by parameter.
    * @returns void
    */
-  public sort(): void {
+  public async sort(): Promise<void> {
     const sortParameters = {
       sortBy: this.sortBy,
       orderBy: this.orderBy,
@@ -222,23 +228,23 @@ export class PostsListComponent implements OnInit {
       tag: this._searchFilter,
       sortParameters: sortParameters,
     };
-    this._postsService.list(model).subscribe(
-      (response: any) => {
-        this.posts = response.posts;
-        this.pageInfo = response.pageInfo;
-
+    this._postsService.list(model)
+      .subscribe({
+        next: (response: any) => {
+          this.posts = [...response.posts];
+          this.pageInfo = { ...response.pageInfo };
       },
-      (error: ErrorResponse) => {
+        error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
+        }
       });
-
   }
 
   /**
    * Get all posts.
    * @returns void
    */
-  private _getPosts(page = 1): void {
+  private async _getPosts(page = 1): Promise<void> {
     const sortParameters = {
       sortBy: null,
       orderBy: null,
@@ -253,15 +259,14 @@ export class PostsListComponent implements OnInit {
     };
 
     this._postsService.list(model)
-      .subscribe(
-        (response: PageViewDto) => {
-          this.posts = response.posts;
-          this.pageInfo = response.pageInfo;
-          this.isLoaded = true;
+      .subscribe({
+        next: (response: any) => {
+          this.posts = [...response.posts];
+          this.pageInfo = { ...response.pageInfo };
         },
-        (error: ErrorResponse) => {
+        error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
-          this.isLoaded = true;
+        }
         });
   }
 

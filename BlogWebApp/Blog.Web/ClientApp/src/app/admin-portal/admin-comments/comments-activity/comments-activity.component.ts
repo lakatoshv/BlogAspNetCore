@@ -31,15 +31,16 @@ export class CommentsActivityComponent implements OnInit {
   /**
    * @inheritdoc
    */
-  ngOnInit(): void {
-    this._commentService.commentsActivity().subscribe(
-      (response: any) => {
+  async ngOnInit(): Promise<void> {
+    this._commentService.commentsActivity()
+      .subscribe({
+        next: (response: any) => {
         this.chartOptions.Data[0] = response;
         this.chartOptions = this.chartOptions;
-        this.isLoaded = true;
       },
-      (error: ErrorResponse) => {
+        error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
+        }
       });
   }
 

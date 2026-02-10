@@ -84,7 +84,7 @@ export class AdminPostsTableComponent implements OnInit {
   /**
    * Get all posts
    */
-  private _getPosts(page = 1): void {
+  private async _getPosts(page = 1): Promise<void> {
     const sortParameters = {
       sortBy: null,
       orderBy: null,
@@ -99,15 +99,14 @@ export class AdminPostsTableComponent implements OnInit {
     };
 
     this._postsService.list(model)
-      .subscribe(
-        (response: PageViewDto) => {
-          this.posts = response.posts;
-          this.pageInfo = response.pageInfo;
-          this.isLoaded = true;
+      .subscribe({
+        next: (response: any) => {
+          this.posts = [...response.posts];
+          this.pageInfo = { ...response.pageInfo };
         },
-        (error: ErrorResponse) => {
+        error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
-          this.isLoaded = true;
+        }
         });
   }
 

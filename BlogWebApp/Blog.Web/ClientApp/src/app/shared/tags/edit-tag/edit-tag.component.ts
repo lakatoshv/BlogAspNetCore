@@ -8,7 +8,6 @@ import { GlobalService } from './../../../core/services/global-service/global-se
 import { TagsService } from './../../../core/services/posts-services/tags.service';
 import { Tag } from './../../../core/models/Tag';
 import { CustomToastrService } from './../../../core/services/custom-toastr.service';
-import { Messages } from './../../../core/data/Mesages';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 
 @Component({
@@ -89,17 +88,18 @@ export class EditTagComponent implements OnInit {
    * 
    * @param tag Tag
    */
-  public edit(tag: Tag): void {
+  public async edit(tag: Tag): Promise<void> {
     if (this.tagForm.valid && this.tag && this._tagId) {
       this.tag.title = tag['title'];
       this._tagsService.edit(this._tagId, this.tag)
-        .subscribe(
-          () => {
+        .subscribe({
+          next: (response: any) => {
             //this._customToastrService.displaySuccessMessage(Messages.TAG_EDITED_SUCCESSFULLY);
             this._router.navigate(['/admin/tags']);
           },
-          (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
             this._customToastrService.displayErrorMessage(error);
+          }
           });
     }
   }
@@ -114,16 +114,17 @@ export class EditTagComponent implements OnInit {
   /**
    * Get tag by id.
    */
-  private _getTag(): void {
+  private async _getTag(): Promise<void> {
     if(this._tagId) {
       this._tagsService.getTag(this._tagId)
-        .subscribe(
-          (response: any) => {
+        .subscribe({
+          next: (response: any) => {
             this.tag = response;
             this._setFormData();
           },
-          (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
             this._customToastrService.displayErrorMessage(error);
+          }
           });
     }
   }

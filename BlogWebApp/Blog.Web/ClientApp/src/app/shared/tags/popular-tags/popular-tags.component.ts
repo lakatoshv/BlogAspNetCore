@@ -28,7 +28,7 @@ export class PopularTagsComponent implements OnInit {
    * Get all tags.
    * @returns void
    */
-  private _getTags(page = 1): void {
+  private async _getTags(page = 1): Promise<void> {
     const sortParameters = {
       sortBy: null,
       orderBy: null,
@@ -40,13 +40,15 @@ export class PopularTagsComponent implements OnInit {
       search: null,
       sortParameters: sortParameters
     };
+
     this._tagsService.list(model)
-      .subscribe(
-        (response: any) => {
+      .subscribe({
+        next: (response: any) => {
           this.tags = response.tags;
         },
-        (error: ErrorResponse) => {
+        error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+        }
         });
   }
 }

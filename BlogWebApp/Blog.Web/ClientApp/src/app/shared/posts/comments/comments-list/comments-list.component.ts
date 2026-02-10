@@ -81,7 +81,7 @@ export class CommentsListComponent implements OnInit {
   /**
    * @inheritdoc
    */
-  ngOnInit() {
+  async ngOnInit(): Promise<void> {
     // this._getCommentsForCurrentPost();
 
     this.loggedIn = this._usersService.isLoggedIn();
@@ -100,14 +100,18 @@ export class CommentsListComponent implements OnInit {
       pageSize: 10,
       displayType: null
     };
+
     if(this.postId) {
       this._commentsService.list(this.postId, sortParameters)
-        .subscribe((response: any) => {
+
+        .subscribe({
+          next: (response: any) => {
           this.comments = response.comments;
           this.pageInfo = response.pageInfo;
         },
-        (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }
@@ -165,14 +169,16 @@ export class CommentsListComponent implements OnInit {
    * @param comment Comment
    * @returns void
    */
-  deleteAction(comment: Comment): void {
-    this._commentsService.delete(comment.id).subscribe(
-      (response: any) => {
+  async deleteAction(comment: Comment): Promise<void> {
+    this._commentsService.delete(comment.id)
+      .subscribe({
+        next: (response: any) => {
         this.onDeleteCommentAction(response.id);
         this._customToastrService.displaySuccessMessage(Messages.COMMENT_DELETED_SUCCESSFULLY);
       },
-      (error: ErrorResponse) => {
+        error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
+        }
       });
   }
 

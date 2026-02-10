@@ -66,18 +66,18 @@ export class AddTagComponent implements OnInit {
    * 
    * @param tag Tag
    */
-  public add(tag: Tag): void {
+  public async add(tag: Tag): Promise<void> {
     if (this.tagForm.valid) {
-      this._tagsService.add(...this.tagForm.value).subscribe(
-        () => {
-          //this._customToastrService.displaySuccessMessage(Messages.TAG_CREATED_SUCCESSFULLY);
-          this._router.navigate(['/admin/tags']);
-        },
-        (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
-        });
-      
-      
+      this._tagsService.add(...this.tagForm.value)
+        .subscribe({
+          next: (response: any) => {
+            //this._customToastrService.displaySuccessMessage(Messages.TAG_CREATED_SUCCESSFULLY);
+            this._router.navigate(['/admin/tags']);
+          },
+          error: (error: ErrorResponse) => {
+            this._customToastrService.displayErrorMessage(error);
+          }
+        });    
     }
   }
 }

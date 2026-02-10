@@ -60,7 +60,7 @@ export class PopularPostsComponent implements OnInit {
    * Get all posts.
    * @returns void
    */
-  private _getPosts(page = 1): void {
+  private async _getPosts(page = 1): Promise<void> {
     const sortParameters = {
       sortBy: this.sortBy,
       orderBy: this.orderBy,
@@ -74,13 +74,14 @@ export class PopularPostsComponent implements OnInit {
     };
 
     this._postsService.list(model)
-      .subscribe(
-        (response: PageViewDto) => {
+      .subscribe({
+        next: (response: any) => {
           this.posts = response.posts;
           this.pageInfo = response.pageInfo;
         },
-        (error: ErrorResponse) => {
+        error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+        }
         });
   }
 }

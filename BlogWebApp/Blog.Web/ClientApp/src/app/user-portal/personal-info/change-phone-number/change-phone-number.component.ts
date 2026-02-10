@@ -77,13 +77,15 @@ export class ChangePhoneNumberComponent implements OnInit {
    * @returns void
    */
   private _getProfile(id: number): void {
-    this._usersService.getProfile(id).subscribe(
-      (response: any) => {
+    this._usersService.getProfile(id)
+      .subscribe({
+        next: (response: any) => {
         this.user = response;
         this._setFormData();
       },
-      (error: ErrorResponse) => {
+        error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
+        }
       });
   }
 
@@ -92,7 +94,7 @@ export class ChangePhoneNumberComponent implements OnInit {
    * @param profileModel any
    * @returns void
    */
-  edit(profileModel: any): void {
+  async edit(profileModel: any): Promise<void> {
     if(this.user && this._globalService._currentUser?.profile) {
       const profile = new ProfileViewDto(
         this.user.email ?? '',
@@ -101,8 +103,11 @@ export class ChangePhoneNumberComponent implements OnInit {
         profileModel.phoneNumber,
         undefined,
         this.user.profile?.about);
-      this._usersService.updateProfile(this._globalService._currentUser.profile.id, profile).subscribe(
-        (result: any) => {
+
+      this._usersService.updateProfile(this._globalService._currentUser.profile.id, profile)
+
+        .subscribe({
+          next: (result: any) => {
           if(this._globalService._currentUser?.profile) {
             this._globalService._currentUser.userName = result.firstName + ' ' + result.lastName;
             this._globalService._currentUser.email = result.email;
@@ -114,8 +119,9 @@ export class ChangePhoneNumberComponent implements OnInit {
           // this._usersService.saveUser(JSON.stringify(this._globalService._currentUser));*/
           this._customToastrService.displaySuccessMessage(Messages.PHONE_NUMBER_CHANGED_SUCCESSFULLY);
         },
-        (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }

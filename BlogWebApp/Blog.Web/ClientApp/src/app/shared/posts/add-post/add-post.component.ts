@@ -185,20 +185,21 @@ export class AddPostComponent implements OnInit {
    * 
    * @param post Post
    */
-  add() {
+  async add(): Promise<void> {
     if (this.postForm.valid) {
       this.postForm.value.id = 0;
       this.postForm.value.tags = this.tagsList;
       this.postForm.value.authorId = this.user?.id;
       this._postsService.add({
         ...this.postForm.value
-      }).subscribe(
-        () => {
+      }).subscribe({
+        next: () => {
           this._customToastrService.displaySuccessMessage(Messages.POST_CREATED_SUCCESSFULLY);
           this._router.navigate(['/']);
         },
-        (error: ErrorResponse) => {
+        error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+        }
         });
     }
   }
@@ -214,13 +215,16 @@ export class AddPostComponent implements OnInit {
    * Get available tags.
    * @returns void
    */
-  private _getTags(): void {
-    this._tagsService.list().subscribe(
-      (response: Tag[]) => {
+  private async _getTags(): Promise<void> {
+    this._tagsService.list()
+
+    .subscribe({
+      next: (response: Tag[]) => {
         this.availableTags = response;
       },
-      (error: ErrorResponse) => {
+      error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
+      }
       });
   }
 

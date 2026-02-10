@@ -107,13 +107,15 @@ export class ProfilePageComponent implements OnInit {
    * @param id number
    * @returns void
    */
-  private _getProfile(id: number): void {
-    this._usersService.getProfile(id).subscribe(
-      (response: any) => {
+  private async _getProfile(id: number): Promise<void> {
+    this._usersService.getProfile(id)
+      .subscribe({
+        next: (response: any) => {
         this.user = response;
       },
-      (error: ErrorResponse) => {
+        error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
+        }
       });
   }
 
@@ -137,13 +139,15 @@ export class ProfilePageComponent implements OnInit {
    * Verify email.
    * @returns void.
    */
-  public verifyEmail(): void {
-    this._accountsService.sendConfirmationEmail().subscribe(
-      () => {
+  public async verifyEmail(): Promise<void> {
+    this._accountsService.sendConfirmationEmail()
+      .subscribe({
+        next: () => {
         this._customToastrService.displaySuccessMessage(Messages.EMAIL_VERIFIED_SUCCESSFULLY);
       },
-      (error: ErrorResponse) => {
+        error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
+        }
       });
   }
 }

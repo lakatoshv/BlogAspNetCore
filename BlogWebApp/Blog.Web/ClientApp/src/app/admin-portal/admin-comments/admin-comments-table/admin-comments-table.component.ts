@@ -91,7 +91,7 @@ export class AdminCommentsTableComponent implements OnInit {
    * @param page number
    * @returns void
    */
-  private _getComments(page: number = 0): void {
+  private async _getComments(page: number = 0): Promise<void> {
     const sortParameters = {
       sortBy: null,
       orderBy: null,
@@ -104,14 +104,16 @@ export class AdminCommentsTableComponent implements OnInit {
       tag: null,
       sortParameters: sortParameters
     };
-    this._commentsService.list(null, model).subscribe(
-      (response: any) => {
-        this.comments = response.comments;
-        this.isLoaded = true;
+
+    this._commentsService.list(null, model)
+    .subscribe({
+      next: (response: any) => {
+        this.comments = [...response.comments];
+        this.pageInfo = { ...response.pageInfo };
       },
-      (error: ErrorResponse) => {
+      error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
-        this.isLoaded = true;
+      }
       });
     /*!isNaN(postId)
       ? this._commentService.getCommentsByPostId(postId)

@@ -31,15 +31,17 @@ export class UsersActivityChartComponent implements OnInit {
   /**
    * @inheritdoc
    */
-  ngOnInit(): void {
-    this._usersService.usersActivity().subscribe(
-      (response: any) => {
+  async ngOnInit(): Promise<void> {
+    this._usersService.usersActivity()
+
+    .subscribe({
+      next: (response: any) => {
         this.chartOptions.Data[0] = response;
         this.chartOptions = this.chartOptions;
-        this.isLoaded = true;
       },
-      (error: ErrorResponse) => {
+      error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
+      }
       });
   }
 

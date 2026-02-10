@@ -65,7 +65,7 @@ export class AddCommentComponent implements OnInit {
    * Add Comment
    * @returns void
    */
-  addComment(): void {
+  async addComment(): Promise<void> {
     if (this._usersService.isLoggedIn() && this.commentForm.valid) {
       const comment: Comment = new Comment ();
       comment.postId = this.postId;
@@ -78,13 +78,15 @@ export class AddCommentComponent implements OnInit {
         comment.name = this.commentForm.get('name')?.value;
       }
 
-      this._commentsService.add(comment).subscribe(
-        (response: any) => {
+      this._commentsService.add(comment)
+        .subscribe({
+          next: (response: any) => {
           this.onAdd.emit(response.json());
           this._customToastrService.displaySuccessMessage(Messages.COMMENT_CREATED_SUCCESSFULLY);
         },
-        (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+          }
         });
       this.onAdd.emit(null);
     }

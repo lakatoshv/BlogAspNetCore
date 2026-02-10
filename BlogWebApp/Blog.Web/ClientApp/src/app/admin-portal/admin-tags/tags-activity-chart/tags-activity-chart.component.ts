@@ -31,15 +31,16 @@ export class TagsActivityChartComponent implements OnInit {
   /**
    * @inheritdoc
    */
-  ngOnInit(): void {
-    this._tagsService.tagsActivity().subscribe(
-      (response: any) => {
+  async ngOnInit(): Promise<void> {
+    this._tagsService.tagsActivity()
+          .subscribe({
+            next: (response: any) => {
         this.chartOptions.Data[0] = response;
         this.chartOptions = this.chartOptions;
-        this.isLoaded = true;
       },
-      (error: ErrorResponse) => {
+            error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
+            }
       });
   }
 

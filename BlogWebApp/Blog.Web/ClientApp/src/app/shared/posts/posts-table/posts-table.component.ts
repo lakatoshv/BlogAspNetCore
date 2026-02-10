@@ -63,7 +63,7 @@ export class PostsTableComponent implements OnInit {
    * @param page number
    * @returns void
    */
-  private _getPosts(page: number = 1): void {
+  private async _getPosts(page: number = 1): Promise<void> {
     const sortParameters = {
       sortBy: null,
       orderBy: null,
@@ -76,29 +76,28 @@ export class PostsTableComponent implements OnInit {
       sortParameters: sortParameters,
     };
     if (this.userId != null) {
-      this._postsService.userPosts(this.userId, model).subscribe(
-        (response: any) => {
+      this._postsService.userPosts(this.userId, model)
+        .subscribe({
+          next: (response: any) => {
           this.posts = response.posts;
           this.pageInfo = response.pageInfo;
           this.postsCount.emit(this.pageInfo.totalItems);
-          this.isLoaded = true;
         },
-        (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
-          this.isLoaded = true;
+          }
         });
     } else {
       this._postsService.list(model)
-        .subscribe(
-          (response: PageViewDto) => {
+        .subscribe({
+          next: (response: any) => {
             this.posts = response.posts;
             this.pageInfo = response.pageInfo;
             this.postsCount.emit(this.pageInfo.totalItems);
-            this.isLoaded = true;
           },
-          (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
             this._customToastrService.displayErrorMessage(error);
-            this.isLoaded = true;
+          }
           });
     }
 

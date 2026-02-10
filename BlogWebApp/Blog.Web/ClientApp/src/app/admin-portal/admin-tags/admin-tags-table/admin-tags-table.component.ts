@@ -41,7 +41,7 @@ export class AdminTagsTableComponent implements OnInit {
    * Get all tags.
    * @param page number
    */
-  private _getTags(page: number = 0): void {
+  private async _getTags(page: number = 0): Promise<void> {
     const sortParameters = {
       sortBy: null,
       orderBy: null,
@@ -55,15 +55,14 @@ export class AdminTagsTableComponent implements OnInit {
       sortParameters: sortParameters
     };
     this._tagsService.list(model)
-    .subscribe(
-      (response: any) => {
+          .subscribe({
+            next: (response: any) => {
         this.tags = response.tags;
-        this.isLoaded = true;
       },
-      (error: ErrorResponse) => {
+            error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
-        this.isLoaded = true;
-      });;
+            }
+          });
   }
 
   /**

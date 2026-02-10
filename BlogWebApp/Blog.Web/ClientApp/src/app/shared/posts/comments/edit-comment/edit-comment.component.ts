@@ -88,18 +88,20 @@ export class EditCommentComponent implements OnInit {
    * @param comment Comment
    * @returns void
    */
-  public edit(): void {
+  public async edit(): Promise<void> {
     if (this.user?.id === this.comment?.userId
       && this.commentForm.valid
       && this.comment) {
       this.comment.commentBody = this.commentForm.get('content')?.value;
-      this._commentsService.edit(this.comment.id, this.comment).subscribe(
-        (response: any) => {
-          this.onEdit.emit(response);
-          this._customToastrService.displaySuccessMessage(Messages.COMMENT_EDITED_SUCCESSFULLY);
-        },
-        (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+      this._commentsService.edit(this.comment.id, this.comment)
+        .subscribe({
+          next: (response: any) => {
+            this.onEdit.emit(response);
+            this._customToastrService.displaySuccessMessage(Messages.COMMENT_EDITED_SUCCESSFULLY);
+          },
+          error: (error: ErrorResponse) => {
+            this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }

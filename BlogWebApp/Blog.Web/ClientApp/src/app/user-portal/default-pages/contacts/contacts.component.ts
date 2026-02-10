@@ -62,14 +62,16 @@ export class ContactsComponent implements OnInit {
    * @param message any
    * @returns void
    */
-  public sendMessage(message: any): void {
+  public async sendMessage(message: any): Promise<void> {
     message['messageType'] = MessageType.MessageForAdmins;
-    this._messagesService.sendMessage(message).subscribe(
-      () => {
-        this._customToastrService.displaySuccessMessage(Messages.MESSAGE_SENDED_SUCCESSFULLY);
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+    this._messagesService.sendMessage(message)
+      .subscribe({
+        next: (response: any) => {
+          this._customToastrService.displaySuccessMessage(Messages.MESSAGE_SENDED_SUCCESSFULLY);
+        },
+        error: (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        }
       });
   }
 }

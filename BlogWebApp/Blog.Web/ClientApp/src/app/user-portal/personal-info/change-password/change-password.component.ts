@@ -76,14 +76,16 @@ export class ChangePasswordComponent implements OnInit {
    * @param id number
    * @returns void
    */
-  private _getProfile(id: number): void {
-    this._usersService.getProfile(id).subscribe(
-      (response: any) => {
+  private async _getProfile(id: number): Promise<void> {
+    this._usersService.getProfile(id)
+      .subscribe({
+        next: (response: any) => {
         this.user = response;
         this._setFormData();
       },
-      (error: ErrorResponse) => {
+        error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
+        }
       });
   }
 
@@ -91,7 +93,7 @@ export class ChangePasswordComponent implements OnInit {
    * Change user email.
    * @param profileModel any
    */
-  edit(profileModel: any): void {
+  async edit(profileModel: any): Promise<void> {
     if (profileModel.oldPassword !== null
         && profileModel.newPassword !== null
         && profileModel.confirmPassword != null
@@ -102,13 +104,15 @@ export class ChangePasswordComponent implements OnInit {
       const profile = new ChangePasswordDto(
         profileModel.oldPassword,
         profileModel.newPassword);
-      this._usersService.changePassword(profile).subscribe(
-        () => {
+      this._usersService.changePassword(profile)
+        .subscribe({
+          next: (response: any) => {
           // this._usersService.saveUser(JSON.stringify(this._globalService._currentUser));*/
           this._customToastrService.displaySuccessMessage(Messages.PASSWORD_CHANGED_SUCCESSFULLY);
         },
-        (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }
