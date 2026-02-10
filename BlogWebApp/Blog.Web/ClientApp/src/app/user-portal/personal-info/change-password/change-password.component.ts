@@ -11,6 +11,7 @@ import { CustomToastrService } from './../../../core/services/custom-toastr.serv
 import { ChangePasswordDto } from '../../../core/Dto/ChangePasswordDto';
 import { ChangePasswordForm } from '../../../core/forms/user/ChangePasswordForm';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-change-password',
@@ -78,13 +79,18 @@ export class ChangePasswordComponent implements OnInit {
    */
   private async _getProfile(id: number): Promise<void> {
     this._usersService.getProfile(id)
+      .pipe(
+        finalize(() => {
+          this._changeDetectorRef.markForCheck();
+        })
+      )
       .subscribe({
         next: (response: any) => {
-        this.user = response;
-        this._setFormData();
-      },
+          this.user = response;
+          this._setFormData();
+        },
         error: (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+          this._customToastrService.displayErrorMessage(error);
         }
       });
   }
@@ -107,11 +113,11 @@ export class ChangePasswordComponent implements OnInit {
       this._usersService.changePassword(profile)
         .subscribe({
           next: (response: any) => {
-          // this._usersService.saveUser(JSON.stringify(this._globalService._currentUser));*/
-          this._customToastrService.displaySuccessMessage(Messages.PASSWORD_CHANGED_SUCCESSFULLY);
-        },
+            // this._usersService.saveUser(JSON.stringify(this._globalService._currentUser));*/
+            this._customToastrService.displaySuccessMessage(Messages.PASSWORD_CHANGED_SUCCESSFULLY);
+          },
           error: (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+            this._customToastrService.displayErrorMessage(error);
           }
         });
     }

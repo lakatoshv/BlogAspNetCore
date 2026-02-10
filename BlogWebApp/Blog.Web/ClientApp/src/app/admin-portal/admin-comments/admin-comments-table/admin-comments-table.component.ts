@@ -1,5 +1,3 @@
-import { GlobalService } from '../../../core/services/global-service/global-service.service';
-import { UsersService } from '../../../core/services/users-services/users-service.service';
 import { CommentsService } from '../../../core/services/posts-services/comments.service';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Comment } from '../../../core/models/Comment';
@@ -8,6 +6,7 @@ import { Messages } from '../../../core/data/Mesages';
 import { CustomToastrService } from '../../../core/services/custom-toastr.service';
 import { PageInfo } from '../../../core/models/PageInfo';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-admin-comments-table',
@@ -106,6 +105,12 @@ export class AdminCommentsTableComponent implements OnInit {
     };
 
     this._commentsService.list(null, model)
+      .pipe(
+        finalize(() => {
+          this.isLoaded = true;
+          this._changeDetectorRef.markForCheck();
+        })
+      )
     .subscribe({
       next: (response: any) => {
         this.comments = [...response.comments];
@@ -114,7 +119,7 @@ export class AdminCommentsTableComponent implements OnInit {
       error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
       }
-      });
+    });
     /*!isNaN(postId)
       ? this._commentService.getCommentsByPostId(postId)
       : this._commentService.list(nu);*/

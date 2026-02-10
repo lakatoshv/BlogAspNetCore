@@ -6,6 +6,7 @@ import { PageViewDto } from "../../../core/Dto/PageViewDto";
 import { ErrorResponse } from "../../../core/responses/ErrorResponse";
 import { PostsService } from "../../../core/services/posts-services/posts.service";
 import { Router } from "@angular/router";
+import { finalize } from "rxjs";
 
 @Component({
   selector: 'app-admin-posts-table',
@@ -99,6 +100,12 @@ export class AdminPostsTableComponent implements OnInit {
     };
 
     this._postsService.list(model)
+      .pipe(
+        finalize(() => {
+          this.isLoaded = true;
+          this._changeDetectorRef.markForCheck();
+        })
+      )
       .subscribe({
         next: (response: any) => {
           this.posts = [...response.posts];
@@ -107,7 +114,7 @@ export class AdminPostsTableComponent implements OnInit {
         error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
         }
-        });
+      });
   }
 
   /**

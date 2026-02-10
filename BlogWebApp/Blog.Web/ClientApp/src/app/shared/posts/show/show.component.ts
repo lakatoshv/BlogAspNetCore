@@ -9,6 +9,7 @@ import { Post } from './../../../core/models/Post';
 import { CustomToastrService } from './../../../core/services/custom-toastr.service';
 import { PageInfo } from '../../../core/models/PageInfo';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-show',
@@ -101,10 +102,10 @@ export class ShowComponent implements OnInit {
       this._postsService.like(this.postId)
         .subscribe({
           next: (response: any) => {
-          this.post = response;
-        },
+            this.post = response;
+          },
           error: (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+            this._customToastrService.displayErrorMessage(error);
           }
         });
     }
@@ -120,10 +121,10 @@ export class ShowComponent implements OnInit {
       this._postsService.dislike(this.postId)
         .subscribe({
           next: (response: any) => {
-          this.post = response;
-        },
+            this.post = response;
+          },
           error: (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+            this._customToastrService.displayErrorMessage(error);
           }
         });
     }
@@ -137,10 +138,10 @@ export class ShowComponent implements OnInit {
       this._postsService.delete(this.post.id, this.user.id)
         .subscribe({
           next: (response: any) => {
-          this._router.navigateByUrl('/blog');
-        },
+            this._router.navigateByUrl('/blog');
+          },
           error: (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+            this._customToastrService.displayErrorMessage(error);
           }
         });
     }
@@ -159,18 +160,23 @@ export class ShowComponent implements OnInit {
   private async _getPost(): Promise<void> {
     if(this.postId) {
       this._postsService.showPost(this.postId)
-
+        .pipe(
+          finalize(() => {
+            this.isLoaded = true;
+            this._changeDetectorRef.markForCheck();
+          })
+        )
         .subscribe({
           next: (response: any) => {
-          this.post = response.post;
-          if(this.post) {
-            this.post.tags = response.tags;
-            this.post.comments = response.comments.comments;
-          }
-          this.pageInfo = response.comments.pageInfo;
-        },
+            this.post = response.post;
+            if(this.post) {
+              this.post.tags = response.tags;
+              this.post.comments = response.comments.comments;
+            }
+            this.pageInfo = response.comments.pageInfo;
+          },
           error: (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+            this._customToastrService.displayErrorMessage(error);
           }
         });
     }

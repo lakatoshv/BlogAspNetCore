@@ -13,6 +13,7 @@ import { Tag } from './../../../core/models/Tag';
 import { Messages } from './../../../core/data/Mesages';
 import { CustomToastrService } from './../../../core/services/custom-toastr.service';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-add-post',
@@ -200,7 +201,7 @@ export class AddPostComponent implements OnInit {
         error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
         }
-        });
+      });
     }
   }
 
@@ -217,7 +218,11 @@ export class AddPostComponent implements OnInit {
    */
   private async _getTags(): Promise<void> {
     this._tagsService.list()
-
+     .pipe(
+       finalize(() => {
+         this._changeDetectorRef.markForCheck();
+       })
+     )
     .subscribe({
       next: (response: Tag[]) => {
         this.availableTags = response;
@@ -225,7 +230,7 @@ export class AddPostComponent implements OnInit {
       error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
       }
-      });
+    });
   }
 
   /**

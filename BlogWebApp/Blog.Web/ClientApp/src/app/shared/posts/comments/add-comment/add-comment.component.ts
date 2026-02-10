@@ -81,11 +81,11 @@ export class AddCommentComponent implements OnInit {
       this._commentsService.add(comment)
         .subscribe({
           next: (response: any) => {
-          this.onAdd.emit(response.json());
+            this.onAdd.emit(response.json());
           this._customToastrService.displaySuccessMessage(Messages.COMMENT_CREATED_SUCCESSFULLY);
-        },
+          },
           error: (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+            this._customToastrService.displayErrorMessage(error);
           }
         });
       this.onAdd.emit(null);

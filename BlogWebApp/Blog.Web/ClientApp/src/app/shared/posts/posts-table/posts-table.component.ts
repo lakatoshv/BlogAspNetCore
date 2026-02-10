@@ -5,6 +5,7 @@ import { Post } from "../../../core/models/Post";
 import { ErrorResponse } from "../../../core/responses/ErrorResponse";
 import { CustomToastrService } from "../../../core/services/custom-toastr.service";
 import { PostsService } from "../../../core/services/posts-services/posts.service";
+import { finalize } from "rxjs";
 
 @Component({
   selector: 'app-posts-table',
@@ -77,18 +78,12 @@ export class PostsTableComponent implements OnInit {
     };
     if (this.userId != null) {
       this._postsService.userPosts(this.userId, model)
-        .subscribe({
-          next: (response: any) => {
-          this.posts = response.posts;
-          this.pageInfo = response.pageInfo;
-          this.postsCount.emit(this.pageInfo.totalItems);
-        },
-          error: (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
-          }
-        });
-    } else {
-      this._postsService.list(model)
+        .pipe(
+          finalize(() => {
+            this.isLoaded = true;
+            this._changeDetectorRef.markForCheck();
+          })
+        )
         .subscribe({
           next: (response: any) => {
             this.posts = response.posts;
@@ -98,7 +93,25 @@ export class PostsTableComponent implements OnInit {
           error: (error: ErrorResponse) => {
             this._customToastrService.displayErrorMessage(error);
           }
-          });
+        });
+    } else {
+      this._postsService.list(model)
+        .pipe(
+          finalize(() => {
+            this.isLoaded = true;
+            this._changeDetectorRef.markForCheck();
+          })
+        )
+        .subscribe({
+          next: (response: any) => {
+            this.posts = response.posts;
+            this.pageInfo = response.pageInfo;
+            this.postsCount.emit(this.pageInfo.totalItems);
+          },
+          error: (error: ErrorResponse) => {
+            this._customToastrService.displayErrorMessage(error);
+          }
+        });
     }
 
     this.pageInfo.totalItems = this.posts.length;

@@ -3,6 +3,7 @@ import { Tag } from './../../../core/models/Tag';
 import { TagsService } from './../../../core/services/posts-services/tags.service';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 import { CustomToastrService } from '../../../core/services/custom-toastr.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-popular-tags',
@@ -42,6 +43,11 @@ export class PopularTagsComponent implements OnInit {
     };
 
     this._tagsService.list(model)
+      .pipe(
+        finalize(() => {
+          this._changeDetectorRef.markForCheck();
+        })
+      )
       .subscribe({
         next: (response: any) => {
           this.tags = response.tags;
@@ -49,6 +55,6 @@ export class PopularTagsComponent implements OnInit {
         error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
         }
-        });
+      });
   }
 }

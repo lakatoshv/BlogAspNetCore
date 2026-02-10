@@ -1,3 +1,4 @@
+import { finalize } from 'rxjs';
 import { ChartOptions } from '../../../core/models/chart/ChartOptions';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 import { CustomToastrService } from '../../../core/services/custom-toastr.service';
@@ -33,6 +34,12 @@ export class PostsActivityChartComponent implements OnInit {
    */
   async ngOnInit(): Promise<void> {
     this._postsService.postsActivity()
+      .pipe(
+        finalize(() => {
+          this.isLoaded = true;
+          this._changeDetectorRef.markForCheck();
+        })
+      )
     .subscribe({
       next: (response: any) => {
         this.chartOptions.Data[0] = response;
@@ -41,7 +48,7 @@ export class PostsActivityChartComponent implements OnInit {
       error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
       }
-      });
+    });
   }
 
   /**

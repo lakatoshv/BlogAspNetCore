@@ -6,6 +6,7 @@ import { CustomToastrService } from '../../../core/services/custom-toastr.servic
 import { PageInfo } from '../../..//core/models/PageInfo';
 import { CommentsService } from '../../../core/services/posts-services/comments.service';
 import { Messages } from '../../../core/data/Mesages';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-admin-comments-list',
@@ -105,6 +106,12 @@ export class AdminCommentsListComponent implements OnInit {
     };
     
     this._commentsService.list(null, model)
+      .pipe(
+        finalize(() => {
+          this.isLoaded = true;
+          this._changeDetectorRef.markForCheck();
+        })
+      )
     .subscribe({
       next: (response: any) => {
         this.comments = [...response.comments];
@@ -112,7 +119,7 @@ export class AdminCommentsListComponent implements OnInit {
       error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
       }
-      });
+    });
     /*!isNaN(postId)
       ? this._commentService.getCommentsByPostId(postId)
       : this._commentService.list(nu);*/

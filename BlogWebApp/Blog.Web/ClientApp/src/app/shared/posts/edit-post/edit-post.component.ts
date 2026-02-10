@@ -15,6 +15,7 @@ import { CustomToastrService } from './../../../core/services/custom-toastr.serv
 import { Messages } from './../../../core/data/Mesages';
 import { SelectedTag } from '../../../core/models/SelectedTag';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-edit-post',
@@ -168,11 +169,11 @@ export class EditPostComponent implements OnInit {
       this._postsService.edit(this._postId, post)
         .subscribe({
           next: (response: any) => {
-          this._customToastrService.displaySuccessMessage(Messages.POST_EDITED_SUCCESSFULLY);
-          this._router.navigate(['/blog/post/' + this._postId]);
-        },
+            this._customToastrService.displaySuccessMessage(Messages.POST_EDITED_SUCCESSFULLY);
+            this._router.navigate(['/blog/post/' + this._postId]);
+          },
           error: (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+            this._customToastrService.displayErrorMessage(error);
           }
         });
     }
@@ -186,11 +187,11 @@ export class EditPostComponent implements OnInit {
       this._postsService.delete(this._postId, this._globalService._currentUser.id)
         .subscribe({
           next: () => {
-          this._customToastrService.displaySuccessMessage(Messages.POST_DELETED_SUCCESSFULLY);
-          this._router.navigate(['/blog']);
-        },
+            this._customToastrService.displaySuccessMessage(Messages.POST_DELETED_SUCCESSFULLY);
+            this._router.navigate(['/blog']);
+          },
           error: (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+            this._customToastrService.displayErrorMessage(error);
           }
         });
     }
@@ -273,22 +274,27 @@ export class EditPostComponent implements OnInit {
   private async _getPost(): Promise<void> {
     if(this._postId) {
       this._postsService.showPost(this._postId)
+        .pipe(
+          finalize(() => {
+            this._changeDetectorRef.markForCheck();
+          })
+        )
         .subscribe({
           next: (response: any) => {
-          this.post = response.post;
-          if(this.post) {
-            this.post.tags = response.tags;
-            if (! this.isLoggedIn || this.user?.id !== this.post.authorId) {
-              this._router.navigateByUrl('/');
+            this.post = response.post;
+            if(this.post) {
+              this.post.tags = response.tags;
+              if (! this.isLoggedIn || this.user?.id !== this.post.authorId) {
+                this._router.navigateByUrl('/');
+              }
+              if (this.user?.id === this.post.authorId) {
+                this.isCurrentUserPost = true;
+              }
+              this._setFormData();
             }
-            if (this.user?.id === this.post.authorId) {
-              this.isCurrentUserPost = true;
-            }
-            this._setFormData();
-          }
-        },
+          },
           error: (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+            this._customToastrService.displayErrorMessage(error);
           }
         });
     }
@@ -300,13 +306,17 @@ export class EditPostComponent implements OnInit {
    */
   private async _getTags(): Promise<void> {
     this._tagsService.list()
-
+      .pipe(
+        finalize(() => {
+          this._changeDetectorRef.markForCheck();
+        })
+      )
       .subscribe({
         next: (response: Tag[]) => {
-        this.availableTags = response;
-      },
+          this.availableTags = response;
+        },
         error: (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+          this._customToastrService.displayErrorMessage(error);
         }
       });
   }

@@ -12,6 +12,7 @@ import { PageInfo } from './../../../core/models/PageInfo';
 import { CustomToastrService } from './../../../core/services/custom-toastr.service';
 import { Messages } from './../../../core/data/Mesages';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-posts-list',
@@ -125,11 +126,11 @@ export class PostsListComponent implements OnInit {
       this._postsService.delete(postId, this._globalService._currentUser.id)
         .subscribe({
           next: (response: any) => {
-          this._customToastrService.displaySuccessMessage(Messages.POST_DELETED_SUCCESSFULLY);
-          this._onDeleteCommentAction(response.id);
-        },
+            this._customToastrService.displaySuccessMessage(Messages.POST_DELETED_SUCCESSFULLY);
+            this._onDeleteCommentAction(response.id);
+          },
           error: (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+            this._customToastrService.displayErrorMessage(error);
           }
         });
     }
@@ -145,12 +146,12 @@ export class PostsListComponent implements OnInit {
       this._postsService.like(id)
         .subscribe({
           next: (response: any) => {
-          const ind = this.posts.findIndex(post =>  post.id === id);
-          this.posts[ind] = response;
-          this.posts = this.posts;
-        },
+            const ind = this.posts.findIndex(post =>  post.id === id);
+            this.posts[ind] = response;
+            this.posts = this.posts;
+          },
           error: (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+            this._customToastrService.displayErrorMessage(error);
           }
         });
     }
@@ -166,12 +167,12 @@ export class PostsListComponent implements OnInit {
       this._postsService.dislike(id)
         .subscribe({
           next: (response: any) => {
-          const ind = this.posts.findIndex(post =>  post.id === id);
-          this.posts[ind] = response;
-          this.posts = this.posts;
-        },
+            const ind = this.posts.findIndex(post =>  post.id === id);
+            this.posts[ind] = response;
+            this.posts = this.posts;
+          },
           error: (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+            this._customToastrService.displayErrorMessage(error);
           }
         });
     }
@@ -200,13 +201,19 @@ export class PostsListComponent implements OnInit {
       sortParameters: null,
     };
     this._postsService.list(model)
+      .pipe(
+        finalize(() => {
+          this.isLoaded = true;
+          this._changeDetectorRef.markForCheck();
+        })
+      )
       .subscribe({
         next: (response: any) => {
           this.posts = [...response.posts];
           this.pageInfo = { ...response.pageInfo };
-      },
+        },
         error: (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+          this._customToastrService.displayErrorMessage(error);
         }
       });
   }
@@ -229,13 +236,19 @@ export class PostsListComponent implements OnInit {
       sortParameters: sortParameters,
     };
     this._postsService.list(model)
+      .pipe(
+        finalize(() => {
+          this.isLoaded = true;
+          this._changeDetectorRef.markForCheck();
+        })
+      )
       .subscribe({
         next: (response: any) => {
           this.posts = [...response.posts];
           this.pageInfo = { ...response.pageInfo };
-      },
+        },
         error: (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+          this._customToastrService.displayErrorMessage(error);
         }
       });
   }
@@ -259,6 +272,12 @@ export class PostsListComponent implements OnInit {
     };
 
     this._postsService.list(model)
+      .pipe(
+        finalize(() => {
+          this.isLoaded = true;
+          this._changeDetectorRef.markForCheck();
+        })
+      )
       .subscribe({
         next: (response: any) => {
           this.posts = [...response.posts];
@@ -267,7 +286,7 @@ export class PostsListComponent implements OnInit {
         error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
         }
-        });
+      });
   }
 
   /**

@@ -4,6 +4,7 @@ import { ChartOptionsData } from './../../../core/data/chart/ChartOptionsData';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 import { CustomToastrService } from '../../../core/services/custom-toastr.service';
 import { CommentsService } from '../../../core/services/posts-services/comments.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-comments-activity',
@@ -33,13 +34,19 @@ export class CommentsActivityComponent implements OnInit {
    */
   async ngOnInit(): Promise<void> {
     this._commentService.commentsActivity()
+      .pipe(
+        finalize(() => {
+          this.isLoaded = true;
+          this._changeDetectorRef.markForCheck();
+        })
+      )
       .subscribe({
         next: (response: any) => {
-        this.chartOptions.Data[0] = response;
-        this.chartOptions = this.chartOptions;
-      },
+          this.chartOptions.Data[0] = response;
+          this.chartOptions = this.chartOptions;
+        },
         error: (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+          this._customToastrService.displayErrorMessage(error);
         }
       });
   }

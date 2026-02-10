@@ -12,6 +12,7 @@ import { Messages } from './../../../core/data/Mesages';
 import { ProfileViewDto } from '../../../core/Dto/ProfileViewDto';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 import { AccountsService } from '../../../core/services/users-services/account.sevice';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-change-email',
@@ -81,13 +82,18 @@ export class ChangeEmailComponent implements OnInit {
    */
   private async _getProfile(id: number): Promise<void> {
     this._usersService.getProfile(id)
+      .pipe(
+        finalize(() => {
+          this._changeDetectorRef.markForCheck();
+        })
+      )
       .subscribe({
         next: (response: any) => {
-        this.user = response;
-        this._setFormData();
-      },
+          this.user = response;
+          this._setFormData();
+        },
         error: (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+          this._customToastrService.displayErrorMessage(error);
         }
       });
   }
@@ -107,22 +113,26 @@ export class ChangeEmailComponent implements OnInit {
         this.user.profile?.about);
 
       this._usersService.updateProfile(this._globalService._currentUser?.profile?.id, profile)
-
+        .pipe(
+          finalize(() => {
+            this._changeDetectorRef.markForCheck();
+          })
+        )
         .subscribe({
           next: (result: any) => {
-          if(this._globalService._currentUser && this._globalService._currentUser.profile) {
-            this._globalService._currentUser.userName = result.firstName + ' ' + result.lastName;
-            this._globalService._currentUser.email = result.email;
-            this._globalService._currentUser.firstName = result.firstName;
-            this._globalService._currentUser.lastName = result.lastName;
-            this._globalService._currentUser.phoneNumber = result.phoneNumber;
-            this._globalService._currentUser.profile.about = result.about;
-          }
-          // this._usersService.saveUser(JSON.stringify(this._globalService._currentUser));*/
-          this._customToastrService.displaySuccessMessage(Messages.EMAIL_CHANGED_SUCCESSFULLY);
-        },
+            if(this._globalService._currentUser && this._globalService._currentUser.profile) {
+              this._globalService._currentUser.userName = result.firstName + ' ' + result.lastName;
+              this._globalService._currentUser.email = result.email;
+              this._globalService._currentUser.firstName = result.firstName;
+              this._globalService._currentUser.lastName = result.lastName;
+              this._globalService._currentUser.phoneNumber = result.phoneNumber;
+              this._globalService._currentUser.profile.about = result.about;
+            }
+            // this._usersService.saveUser(JSON.stringify(this._globalService._currentUser));*/
+            this._customToastrService.displaySuccessMessage(Messages.EMAIL_CHANGED_SUCCESSFULLY);
+          },
           error: (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+            this._customToastrService.displayErrorMessage(error);
           }
         });
     }
@@ -136,10 +146,10 @@ export class ChangeEmailComponent implements OnInit {
     this._accountsService.sendConfirmationEmail()
       .subscribe({
         next: () => {
-        this._customToastrService.displaySuccessMessage(Messages.EMAIL_VERIFIED_SUCCESSFULLY);
-      },
+          this._customToastrService.displaySuccessMessage(Messages.EMAIL_VERIFIED_SUCCESSFULLY);
+        },
         error: (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+          this._customToastrService.displayErrorMessage(error);
         }
       });
   }

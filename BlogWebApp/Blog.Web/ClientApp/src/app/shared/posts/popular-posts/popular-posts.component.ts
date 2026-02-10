@@ -5,6 +5,7 @@ import { PageViewDto } from '../../../core/Dto/PageViewDto';
 import { PageInfo } from '../../../core/models/PageInfo';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 import { CustomToastrService } from '../../../core/services/custom-toastr.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-popular-posts',
@@ -74,6 +75,11 @@ export class PopularPostsComponent implements OnInit {
     };
 
     this._postsService.list(model)
+      .pipe(
+        finalize(() => {
+          this._changeDetectorRef.markForCheck();
+        })
+      )
       .subscribe({
         next: (response: any) => {
           this.posts = response.posts;
@@ -82,6 +88,6 @@ export class PopularPostsComponent implements OnInit {
         error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
         }
-        });
+      });
   }
 }

@@ -8,6 +8,7 @@ import { Messages } from './../../../../core/data/Mesages';
 import { CustomToastrService } from './../../../../core/services/custom-toastr.service';
 import { ErrorResponse } from '../../../../core/responses/ErrorResponse';
 import { PageInfo } from '../../../../core/models/PageInfo';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-comments-list',
@@ -103,14 +104,18 @@ export class CommentsListComponent implements OnInit {
 
     if(this.postId) {
       this._commentsService.list(this.postId, sortParameters)
-
+        .pipe(
+          finalize(() => {
+            this._changeDetectorRef.markForCheck();
+          })
+        )
         .subscribe({
           next: (response: any) => {
-          this.comments = response.comments;
-          this.pageInfo = response.pageInfo;
-        },
+            this.comments = response.comments;
+            this.pageInfo = response.pageInfo;
+          },
           error: (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+            this._customToastrService.displayErrorMessage(error);
           }
         });
     }
@@ -173,11 +178,11 @@ export class CommentsListComponent implements OnInit {
     this._commentsService.delete(comment.id)
       .subscribe({
         next: (response: any) => {
-        this.onDeleteCommentAction(response.id);
-        this._customToastrService.displaySuccessMessage(Messages.COMMENT_DELETED_SUCCESSFULLY);
-      },
+          this.onDeleteCommentAction(response.id);
+          this._customToastrService.displaySuccessMessage(Messages.COMMENT_DELETED_SUCCESSFULLY);
+        },
         error: (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+          this._customToastrService.displayErrorMessage(error);
         }
       });
   }

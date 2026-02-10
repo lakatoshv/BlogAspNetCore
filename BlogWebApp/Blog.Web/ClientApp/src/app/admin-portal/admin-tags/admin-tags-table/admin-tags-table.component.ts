@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { Tag } from '../../../core/models/Tag';
 import { CustomToastrService } from '../../../core/services/custom-toastr.service';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-admin-tags-table',
@@ -55,12 +56,18 @@ export class AdminTagsTableComponent implements OnInit {
       sortParameters: sortParameters
     };
     this._tagsService.list(model)
+      .pipe(
+            finalize(() => {
+              this.isLoaded = true;
+              this._changeDetectorRef.markForCheck();
+            })
+          )
           .subscribe({
             next: (response: any) => {
-        this.tags = response.tags;
-      },
+              this.tags = response.tags;
+            },
             error: (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+              this._customToastrService.displayErrorMessage(error);
             }
           });
   }

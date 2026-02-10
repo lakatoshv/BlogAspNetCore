@@ -4,6 +4,7 @@ import { ChartOptionsData } from './../../../core/data/chart/ChartOptionsData';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 import { CustomToastrService } from '../../../core/services/custom-toastr.service';
 import { TagsService } from '../../../core/services/posts-services/tags.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-tags-activity-chart',
@@ -33,15 +34,21 @@ export class TagsActivityChartComponent implements OnInit {
    */
   async ngOnInit(): Promise<void> {
     this._tagsService.tagsActivity()
+    .pipe(
+            finalize(() => {
+              this.isLoaded = true;
+              this._changeDetectorRef.markForCheck();
+            })
+          )
           .subscribe({
             next: (response: any) => {
-        this.chartOptions.Data[0] = response;
-        this.chartOptions = this.chartOptions;
-      },
+              this.chartOptions.Data[0] = response;
+              this.chartOptions = this.chartOptions;
+            },
             error: (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+              this._customToastrService.displayErrorMessage(error);
             }
-      });
+          });
   }
 
   /**

@@ -8,6 +8,7 @@ import { CustomToastrService } from './../../../core/services/custom-toastr.serv
 import { Messages } from './../../../core/data/Mesages';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 import { AccountsService } from '../../../core/services/users-services/account.sevice';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-profile-page',
@@ -109,12 +110,17 @@ export class ProfilePageComponent implements OnInit {
    */
   private async _getProfile(id: number): Promise<void> {
     this._usersService.getProfile(id)
+      .pipe(
+        finalize(() => {
+          this._changeDetectorRef.markForCheck();
+        })
+      )
       .subscribe({
         next: (response: any) => {
-        this.user = response;
-      },
+          this.user = response;
+        },
         error: (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+          this._customToastrService.displayErrorMessage(error);
         }
       });
   }
@@ -143,10 +149,10 @@ export class ProfilePageComponent implements OnInit {
     this._accountsService.sendConfirmationEmail()
       .subscribe({
         next: () => {
-        this._customToastrService.displaySuccessMessage(Messages.EMAIL_VERIFIED_SUCCESSFULLY);
-      },
+          this._customToastrService.displaySuccessMessage(Messages.EMAIL_VERIFIED_SUCCESSFULLY);
+        },
         error: (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+          this._customToastrService.displayErrorMessage(error);
         }
       });
   }

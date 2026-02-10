@@ -9,6 +9,7 @@ import { TagsService } from './../../../core/services/posts-services/tags.servic
 import { Tag } from './../../../core/models/Tag';
 import { CustomToastrService } from './../../../core/services/custom-toastr.service';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-edit-tag',
@@ -100,7 +101,7 @@ export class EditTagComponent implements OnInit {
           error: (error: ErrorResponse) => {
             this._customToastrService.displayErrorMessage(error);
           }
-          });
+        });
     }
   }
 
@@ -117,6 +118,11 @@ export class EditTagComponent implements OnInit {
   private async _getTag(): Promise<void> {
     if(this._tagId) {
       this._tagsService.getTag(this._tagId)
+        .pipe(
+          finalize(() => {
+            this._changeDetectorRef.markForCheck();
+          })
+        )
         .subscribe({
           next: (response: any) => {
             this.tag = response;
@@ -125,7 +131,7 @@ export class EditTagComponent implements OnInit {
           error: (error: ErrorResponse) => {
             this._customToastrService.displayErrorMessage(error);
           }
-          });
+        });
     }
   }
 
