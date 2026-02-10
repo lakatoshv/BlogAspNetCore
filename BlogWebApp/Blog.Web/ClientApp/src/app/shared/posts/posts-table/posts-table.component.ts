@@ -1,5 +1,4 @@
-import { Component, OnInit, Input, Output, output } from "@angular/core";
-import EventEmitter from "events";
+import { Component, OnInit, Input, Output, output, ChangeDetectionStrategy, ChangeDetectorRef } from "@angular/core";
 import { PageViewDto } from "../../../core/Dto/PageViewDto";
 import { PageInfo } from "../../../core/models/PageInfo";
 import { Post } from "../../../core/models/Post";
@@ -11,7 +10,8 @@ import { PostsService } from "../../../core/services/posts-services/posts.servic
   selector: 'app-posts-table',
   templateUrl: './posts-table.component.html',
   styleUrls: ['./posts-table.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostsTableComponent implements OnInit {
   /**
@@ -46,10 +46,12 @@ export class PostsTableComponent implements OnInit {
   /**
    * @param _postsService PostsService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _postsService: PostsService,
-    private _customToastrService: CustomToastrService) { }
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef) { }
 
   /** @inheritdoc */
   ngOnInit() {

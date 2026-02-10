@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ChartOptions } from './../../../core/models/chart/ChartOptions';
 import { ChartOptionsData } from './../../../core/data/chart/ChartOptionsData';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
@@ -9,7 +9,8 @@ import { CommentsService } from '../../../core/services/posts-services/comments.
   selector: 'app-comments-activity',
   templateUrl: './comments-activity.component.html',
   styleUrls: ['./comments-activity.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommentsActivityComponent implements OnInit {
   /**
@@ -45,10 +46,12 @@ export class CommentsActivityComponent implements OnInit {
   /**
    * @param _commentService CommentService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _commentService: CommentsService,
-    private _customToastrService: CustomToastrService) {
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef) {
   }
 
   /**

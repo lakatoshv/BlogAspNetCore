@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { User } from '../../../core/models/User';
 import { Comment } from '../../../core/models/Comment';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
@@ -11,7 +11,8 @@ import { Messages } from '../../../core/data/Mesages';
   selector: 'app-admin-comments-list',
   templateUrl: './admin-comments-list.component.html',
   styleUrls: ['./admin-comments-list.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminCommentsListComponent implements OnInit {
   /**
@@ -51,10 +52,12 @@ export class AdminCommentsListComponent implements OnInit {
   /**
    * @param _commentService CommentService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _commentsService: CommentsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**

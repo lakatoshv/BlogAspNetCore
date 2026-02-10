@@ -3,13 +3,14 @@ import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 import { CustomToastrService } from '../../../core/services/custom-toastr.service';
 import { PostsService } from '../../../core/services/posts-services/posts.service';
 import { ChartOptionsData } from './../../../core/data/chart/ChartOptionsData';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-posts-activity-chart',
   templateUrl: './posts-activity-chart.component.html',
   styleUrls: ['./posts-activity-chart.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostsActivityChartComponent implements OnInit {
   /**
@@ -45,10 +46,12 @@ export class PostsActivityChartComponent implements OnInit {
   /**
    * @param _postService PostService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _postsService: PostsService,
-    private _customToastrService: CustomToastrService) {
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef) {
   }
 
   /**

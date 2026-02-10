@@ -1,5 +1,5 @@
 import { PostsService } from './../../../core/services/posts-services/posts.service';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
 import { PostForm } from '../../../core/forms/posts/PostForm';
@@ -20,7 +20,8 @@ import { ErrorResponse } from '../../../core/responses/ErrorResponse';
   selector: 'app-edit-post',
   templateUrl: './edit-post.component.html',
   styleUrls: ['./edit-post.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditPostComponent implements OnInit {
   /**
@@ -99,6 +100,7 @@ export class EditPostComponent implements OnInit {
    * @param _globalService GlobalService
    * @param _tagsService TagsService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -107,7 +109,8 @@ export class EditPostComponent implements OnInit {
     private _usersService: UsersService,
     private _globalService: GlobalService,
     private _tagsService: TagsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**

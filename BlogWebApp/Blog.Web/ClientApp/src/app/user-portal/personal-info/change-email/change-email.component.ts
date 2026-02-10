@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { User } from './../../../core/models/User';
 import { FormGroup } from '@angular/forms';
 import { ProfileForm } from './../../../core/forms/user/ProfileForm';
@@ -17,7 +17,8 @@ import { AccountsService } from '../../../core/services/users-services/account.s
   selector: 'app-change-email',
   templateUrl: './change-email.component.html',
   styleUrls: ['./change-email.component.scss'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChangeEmailComponent implements OnInit {
   /**
@@ -46,13 +47,15 @@ export class ChangeEmailComponent implements OnInit {
    * @param _usersService UsersService
    * @param _accountsService: AccountsService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _router: Router,
     private _globalService: GlobalService,
     private _usersService: UsersService,
     private _accountsService: AccountsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**

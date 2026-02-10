@@ -1,7 +1,7 @@
 import { PostsService } from './../../../core/services/posts-services/posts.service';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { GeneralServiceService } from './../../../core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Post } from './../../../core/models/Post';
 import { User } from './../../../core/models/User';
 import { GlobalService } from './../../../core/services/global-service/global-service.service';
@@ -11,14 +11,14 @@ import { SearchForm } from './../../../core/forms/SearchForm';
 import { PageInfo } from './../../../core/models/PageInfo';
 import { CustomToastrService } from './../../../core/services/custom-toastr.service';
 import { Messages } from './../../../core/data/Mesages';
-import { PageViewDto } from '../../../core/Dto/PageViewDto';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 
 @Component({
   selector: 'app-posts-list',
   templateUrl: './posts-list.component.html',
   styleUrls: ['./posts-list.component.scss'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostsListComponent implements OnInit {
   /**
@@ -87,6 +87,7 @@ export class PostsListComponent implements OnInit {
    * @param _usersService UsersService
    * @param _postsService: PostsService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _globalService: GlobalService,
@@ -94,7 +95,8 @@ export class PostsListComponent implements OnInit {
     private _activatedRoute: ActivatedRoute,
     private _usersService: UsersService,
     private _postsService: PostsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
   }
 

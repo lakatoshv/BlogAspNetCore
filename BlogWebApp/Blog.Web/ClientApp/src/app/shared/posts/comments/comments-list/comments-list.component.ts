@@ -1,5 +1,5 @@
 import { CommentsService } from './../../../../core/services/posts-services/comments.service';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Comment } from './../../../../core/models/Comment';
 import { UsersService } from '../../../../core/services/users-services/users-service.service';
 import { GlobalService } from './../../../../core/services/global-service/global-service.service';
@@ -13,7 +13,8 @@ import { PageInfo } from '../../../../core/models/PageInfo';
   selector: 'app-comments-list',
   templateUrl: './comments-list.component.html',
   styleUrls: ['./comments-list.component.scss'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommentsListComponent implements OnInit {
    /**
@@ -67,12 +68,14 @@ export class CommentsListComponent implements OnInit {
    * @param _usersService UsersService
    * @param _globalService GlobalService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _commentsService: CommentsService,
     private _usersService: UsersService,
     private _globalService: GlobalService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { PageInfo } from "../../../core/models/PageInfo";
 import { Post } from "../../../core/models/Post";
 import { CustomToastrService } from "../../../core/services/custom-toastr.service";
@@ -11,7 +11,8 @@ import { Router } from "@angular/router";
   selector: 'app-admin-posts-table',
   templateUrl: './admin-posts-table.component.html',
   styleUrls: ['./admin-posts-table.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminPostsTableComponent implements OnInit {
   /**
@@ -39,11 +40,13 @@ export class AdminPostsTableComponent implements OnInit {
    * @param _router Router
    * @param _customToastrService CustomToastrService
    * @param _postsService: PostsService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _router: Router,
     private _customToastrService: CustomToastrService,
-    private _postsService: PostsService
+    private _postsService: PostsService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**

@@ -1,5 +1,5 @@
 import { CommentsService } from './../../../../core/services/posts-services/comments.service';
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { CommentForm } from './../../../../core/forms/posts/CommentForm';
 import { Comment } from '../../../../core/models/Comment';
@@ -13,7 +13,8 @@ import { UsersService } from '../../../../core/services/users-services/users-ser
   selector: 'app-add-comment',
   templateUrl: './add-comment.component.html',
   styleUrls: ['./add-comment.component.scss'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddCommentComponent implements OnInit {
   /**
@@ -41,11 +42,13 @@ export class AddCommentComponent implements OnInit {
    * @param _commentsService CommentsService
    * @param _usersService UsersService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _commentsService: CommentsService,
     private _usersService: UsersService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**

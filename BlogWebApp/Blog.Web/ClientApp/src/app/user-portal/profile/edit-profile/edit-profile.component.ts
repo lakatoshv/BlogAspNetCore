@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { User } from './../../../core/models/User';
 import { Router } from '@angular/router';
 import { GlobalService } from './../../../core/services/global-service/global-service.service';
@@ -16,7 +16,8 @@ import { ErrorResponse } from '../../../core/responses/ErrorResponse';
   selector: 'app-edit-profile',
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditProfileComponent implements OnInit {
   /**
@@ -44,12 +45,14 @@ export class EditProfileComponent implements OnInit {
    * @param _globalService GlobalService
    * @param _usersService UsersService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _router: Router,
     private _globalService: GlobalService,
     private _usersService: UsersService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { GeneralServiceService } from './../../../core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from './../../../core/models/User';
@@ -13,7 +13,8 @@ import { AccountsService } from '../../../core/services/users-services/account.s
   selector: 'app-profile-page',
   templateUrl: './profile-page.component.html',
   styleUrls: ['./profile-page.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfilePageComponent implements OnInit {
   /**
@@ -70,7 +71,8 @@ export class ProfilePageComponent implements OnInit {
     private _globalService: GlobalService,
     private _usersService: UsersService,
     private _accountsService: AccountsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**

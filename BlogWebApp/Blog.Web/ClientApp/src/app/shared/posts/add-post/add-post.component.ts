@@ -1,6 +1,6 @@
 import { TagsService } from './../../../core/services/posts-services/tags.service';
 import { PostsService } from './../../../core/services/posts-services/posts.service';
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { PostForm } from '../../../core/forms/posts/PostForm';
 import { Router } from '@angular/router';
@@ -18,7 +18,8 @@ import { ErrorResponse } from '../../../core/responses/ErrorResponse';
   selector: 'app-add-post',
   templateUrl: './add-post.component.html',
   styleUrls: ['./add-post.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddPostComponent implements OnInit {
   /**
@@ -81,6 +82,7 @@ export class AddPostComponent implements OnInit {
    * @param _postsService PostsService,
    * @param _tagsService TagsService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   public constructor(
     private _router: Router,
@@ -88,7 +90,8 @@ export class AddPostComponent implements OnInit {
     private _globalService: GlobalService,
     private _postsService: PostsService,
     private _tagsService: TagsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**

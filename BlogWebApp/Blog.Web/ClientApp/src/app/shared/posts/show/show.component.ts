@@ -1,5 +1,5 @@
 import { PostsService } from './../../../core/services/posts-services/posts.service';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GeneralServiceService } from './../../../core';
 import { UsersService } from '../../../core/services/users-services/users-service.service';
@@ -14,7 +14,8 @@ import { ErrorResponse } from '../../../core/responses/ErrorResponse';
   selector: 'app-show',
   templateUrl: './show.component.html',
   styleUrls: ['./show.component.scss'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShowComponent implements OnInit {
   /**
@@ -64,6 +65,7 @@ export class ShowComponent implements OnInit {
    * @param _globalService GlobalService
    * @param _router Router
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _generalService: GeneralServiceService,
@@ -72,7 +74,8 @@ export class ShowComponent implements OnInit {
     private _usersService: UsersService,
     private _globalService: GlobalService,
     private _router: Router,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ChartOptions } from './../../../core/models/chart/ChartOptions';
 import { ChartOptionsData } from './../../../core/data/chart/ChartOptionsData';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
@@ -9,7 +9,8 @@ import { UsersService } from '../../../core/services/users-services/users-servic
   selector: 'app-users-activity-chart',
   templateUrl: './users-activity-chart.component.html',
   styleUrls: ['./users-activity-chart.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsersActivityChartComponent implements OnInit {
   /**
@@ -45,10 +46,12 @@ export class UsersActivityChartComponent implements OnInit {
   /**
    * @param _usersService UsersService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _usersService: UsersService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
   }
 

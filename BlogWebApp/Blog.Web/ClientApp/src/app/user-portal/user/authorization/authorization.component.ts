@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { AuthorizationForm } from './../../../core/forms/user/AuthorizationForm';
 import { Router } from '@angular/router';
@@ -14,7 +14,8 @@ import { AccountsService } from '../../../core/services/users-services/account.s
   selector: 'app-authorization',
   templateUrl: './authorization.component.html',
   styleUrls: ['./authorization.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthorizationComponent implements OnInit {
   /**

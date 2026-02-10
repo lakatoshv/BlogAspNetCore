@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { User } from './../../../core/models/User';
 import { FormGroup } from '@angular/forms';
 import { TinyMCEOptionsObject } from './../../../core/models/TinyMCEOptionsObject';
@@ -16,7 +16,8 @@ import { ErrorResponse } from '../../../core/responses/ErrorResponse';
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
   styleUrls: ['./change-password.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChangePasswordComponent implements OnInit {
   /**
@@ -44,12 +45,14 @@ export class ChangePasswordComponent implements OnInit {
    * @param _globalService GlobalService
    * @param _usersService UsersService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _router: Router,
     private _globalService: GlobalService,
     private _usersService: UsersService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**

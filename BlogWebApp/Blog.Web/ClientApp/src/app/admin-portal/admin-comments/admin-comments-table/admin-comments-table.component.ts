@@ -1,11 +1,9 @@
 import { GlobalService } from '../../../core/services/global-service/global-service.service';
 import { UsersService } from '../../../core/services/users-services/users-service.service';
 import { CommentsService } from '../../../core/services/posts-services/comments.service';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Comment } from '../../../core/models/Comment';
 import { User } from '../../../core/models/User';
-import { GeneralServiceService } from '../../../core';
-import { ActivatedRoute } from '@angular/router';
 import { Messages } from '../../../core/data/Mesages';
 import { CustomToastrService } from '../../../core/services/custom-toastr.service';
 import { PageInfo } from '../../../core/models/PageInfo';
@@ -15,7 +13,8 @@ import { ErrorResponse } from '../../../core/responses/ErrorResponse';
   selector: 'app-admin-comments-table',
   templateUrl: './admin-comments-table.component.html',
   styleUrls: ['./admin-comments-table.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminCommentsTableComponent implements OnInit {
 /**
@@ -55,10 +54,12 @@ export class AdminCommentsTableComponent implements OnInit {
   /**
    * @param _commentsService CommentsService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _commentsService: CommentsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**

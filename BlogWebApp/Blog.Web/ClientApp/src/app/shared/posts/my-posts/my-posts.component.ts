@@ -1,7 +1,7 @@
 import { GeneralServiceService } from './../../../core/services/general-service.service';
 import { PostsService } from './../../../core/services/posts-services/posts.service';
 import { PageInfo } from './../../../core/models/PageInfo';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { GlobalService } from './../../../core/services/global-service/global-service.service';
 import { SearchForm } from './../../../core/forms/SearchForm';
 import { FormGroup } from '@angular/forms';
@@ -17,7 +17,8 @@ import { ErrorResponse } from '../../../core/responses/ErrorResponse';
   selector: 'app-my-posts',
   templateUrl: './my-posts.component.html',
   styleUrls: ['./my-posts.component.scss'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MyPostsComponent implements OnInit {
   /**
@@ -91,6 +92,7 @@ export class MyPostsComponent implements OnInit {
    * @param _usersService UsersService
    * @param _customToastrService CustomToastrService
    * @param _generalService GeneralServiceService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _globalService: GlobalService,
@@ -99,7 +101,8 @@ export class MyPostsComponent implements OnInit {
     private _postsService: PostsService,
     private _usersService: UsersService,
     private _customToastrService: CustomToastrService,
-    private _generalService: GeneralServiceService
+    private _generalService: GeneralServiceService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
   }
 

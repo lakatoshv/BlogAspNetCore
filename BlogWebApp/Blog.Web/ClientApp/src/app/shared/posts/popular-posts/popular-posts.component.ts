@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Post } from './../../../core/models/Post';
 import { PostsService } from './../../../core/services/posts-services/posts.service';
 import { PageViewDto } from '../../../core/Dto/PageViewDto';
@@ -10,7 +10,8 @@ import { CustomToastrService } from '../../../core/services/custom-toastr.servic
   selector: 'app-popular-posts',
   templateUrl: './popular-posts.component.html',
   styleUrls: ['./popular-posts.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PopularPostsComponent implements OnInit {
   /**
@@ -40,10 +41,12 @@ export class PopularPostsComponent implements OnInit {
   /**
    * @param _postsService PostsService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _postsService: PostsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**

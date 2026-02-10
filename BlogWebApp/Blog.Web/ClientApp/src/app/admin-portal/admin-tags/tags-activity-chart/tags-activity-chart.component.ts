@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ChartOptions } from './../../../core/models/chart/ChartOptions';
 import { ChartOptionsData } from './../../../core/data/chart/ChartOptionsData';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
@@ -9,7 +9,8 @@ import { TagsService } from '../../../core/services/posts-services/tags.service'
   selector: 'app-tags-activity-chart',
   templateUrl: './tags-activity-chart.component.html',
   styleUrls: ['./tags-activity-chart.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagsActivityChartComponent implements OnInit {
   /**
@@ -45,10 +46,12 @@ export class TagsActivityChartComponent implements OnInit {
   /**
    * @param _tagsService UsersService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _tagsService: TagsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
   }
 

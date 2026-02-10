@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Messages } from './../../../core/data/Mesages';
 import { CustomToastrService } from './../../../core/services/custom-toastr.service';
 import { RegistrationForm } from '../../../core/forms/user/RegistrationForm';
-import { GlobalService } from '../../../core/services/global-service/global-service.service';
 import { UsersService } from '../../../core/services/users-services/users-service.service';
 import { Router } from '@angular/router';
 
@@ -11,7 +10,8 @@ import { Router } from '@angular/router';
   selector: 'app-registration',
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegistrationComponent implements OnInit {
   /**

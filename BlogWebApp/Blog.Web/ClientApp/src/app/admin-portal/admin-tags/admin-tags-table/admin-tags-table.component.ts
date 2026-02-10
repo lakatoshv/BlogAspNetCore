@@ -1,5 +1,5 @@
 import { TagsService } from '../../../core/services/posts-services/tags.service';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Tag } from '../../../core/models/Tag';
 import { CustomToastrService } from '../../../core/services/custom-toastr.service';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
@@ -8,7 +8,8 @@ import { ErrorResponse } from '../../../core/responses/ErrorResponse';
   selector: 'app-admin-tags-table',
   templateUrl: './admin-tags-table.component.html',
   styleUrls: ['./admin-tags-table.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminTagsTableComponent implements OnInit {
   public tags: Tag[] = [];
@@ -21,10 +22,12 @@ export class AdminTagsTableComponent implements OnInit {
   /**
    * @param _tagsService TagsService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _tagsService: TagsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**

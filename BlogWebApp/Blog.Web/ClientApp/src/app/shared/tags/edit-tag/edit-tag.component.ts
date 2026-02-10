@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { TagForm } from './../../../core/forms/posts/TagForm';
 import { User } from './../../../core/models/User';
@@ -15,7 +15,8 @@ import { ErrorResponse } from '../../../core/responses/ErrorResponse';
   selector: 'app-edit-tag',
   templateUrl: './edit-tag.component.html',
   styleUrls: ['./edit-tag.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditTagComponent implements OnInit {
   /**
@@ -50,6 +51,7 @@ export class EditTagComponent implements OnInit {
    * @param _globalService GlobalService
    * @param _tagsService TagsService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -57,7 +59,8 @@ export class EditTagComponent implements OnInit {
     private _usersService: UsersService,
     private _globalService: GlobalService,
     private _tagsService: TagsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**
