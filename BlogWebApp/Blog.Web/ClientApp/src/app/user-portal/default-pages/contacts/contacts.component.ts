@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MessageForm } from '../../../core/forms/MessageForm';
 import { Messages } from '../../../core/data/Mesages';
@@ -14,7 +14,8 @@ import { UsersService } from '../../../core/services/users-services/users-servic
   selector: 'app-contacts',
   templateUrl: './contacts.component.html',
   styleUrls: ['./contacts.component.scss'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContactsComponent implements OnInit {
   /**
@@ -61,14 +62,16 @@ export class ContactsComponent implements OnInit {
    * @param message any
    * @returns void
    */
-  public sendMessage(message: any): void {
+  public async sendMessage(message: any): Promise<void> {
     message['messageType'] = MessageType.MessageForAdmins;
-    this._messagesService.sendMessage(message).subscribe(
-      () => {
-        this._customToastrService.displaySuccessMessage(Messages.MESSAGE_SENDED_SUCCESSFULLY);
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+    this._messagesService.sendMessage(message)
+      .subscribe({
+        next: (response: any) => {
+          this._customToastrService.displaySuccessMessage(Messages.MESSAGE_SENDED_SUCCESSFULLY);
+        },
+        error: (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        }
       });
   }
 }

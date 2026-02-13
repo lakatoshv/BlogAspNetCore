@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { AuthorizationForm } from './../../../core/forms/user/AuthorizationForm';
 import { Router } from '@angular/router';
@@ -14,7 +14,8 @@ import { AccountsService } from '../../../core/services/users-services/account.s
   selector: 'app-authorization',
   templateUrl: './authorization.component.html',
   styleUrls: ['./authorization.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthorizationComponent implements OnInit {
   /**
@@ -51,18 +52,19 @@ export class AuthorizationComponent implements OnInit {
    * @param dataForAuthorize any
    * @returns void
    */
-  authorization(dataForAuthorize: any): void {
+  async authorization(dataForAuthorize: any): Promise<void> {
     if (this.authorizationForm.valid) {
       this._usersService.login(dataForAuthorize)
-        .subscribe(
-          (jwt: JwtToken) => {
+        .subscribe({
+          next: (jwt: JwtToken) => {
             if (jwt) {
               this.succesLogin(jwt);
             }
           },
-          (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
             this._customToastrService.displayErrorMessage(error);
-          });
+          }
+        });
     }
   }
 
@@ -70,29 +72,31 @@ export class AuthorizationComponent implements OnInit {
    * Save user data if login success
    * @param jwt JwtToken
    */
-  public succesLogin(jwt: JwtToken | null): void {
-   if(typeof jwt === 'string') {
-     const jwtString = jwt;
-     jwt = null;
-     const parsedJwtString = JSON.parse(jwtString);
-     jwt = new JwtToken(parsedJwtString['auth_token'], parsedJwtString['refresh_token'], parsedJwtString['expires_in']);
-   }
-   if(jwt) {
-     this._usersService.saveToken(jwt.AccessToken, jwt.RefreshToken);
-     if(this._globalService._currentUser) {
-       this._accountService.initialize(this._globalService._currentUser.id).subscribe(
-         (initializationData: any) => {
-             this._customToastrService.displaySuccessMessage(Messages.AUTHORIZED_SUCCESSFULLY);
-             this._router.navigate(['/'])
-               .then(() => {
-                 this._globalService.initializeData(initializationData);
-               });;
-         },
-         (error: ErrorResponse) => {
-           this._customToastrService.displayErrorMessage(error);
-         });
-     }
-   }
+  public async succesLogin(jwt: JwtToken | null): Promise<void> {
+    if(typeof jwt === 'string') {
+      const jwtString = jwt;
+      jwt = null;
+      const parsedJwtString = JSON.parse(jwtString);
+      jwt = new JwtToken(parsedJwtString['auth_token'], parsedJwtString['refresh_token'], parsedJwtString['expires_in']);
+    }
+    if(jwt) {
+      this._usersService.saveToken(jwt.AccessToken, jwt.RefreshToken);
+      if(this._globalService._currentUser) {
+        this._accountService.initialize(this._globalService._currentUser.id)
+          .subscribe({
+            next: (initializationData: any) => {
+              this._customToastrService.displaySuccessMessage(Messages.AUTHORIZED_SUCCESSFULLY);
+              this._router.navigate(['/'])
+                .then(() => {
+                  this._globalService.initializeData(initializationData);
+                });
+            },
+            error: (error: ErrorResponse) => {
+              this._customToastrService.displayErrorMessage(error);
+            }
+          });
+      }
+    }
     // this._subscription.add(initializeSubscription);
     // this._globalService.setIsLoadedData(false);
   }

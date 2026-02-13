@@ -1,6 +1,6 @@
 import { TagsService } from './../../../core/services/posts-services/tags.service';
 import { Tag } from './../../../core/models/Tag';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { TagForm } from './../../../core/forms/posts/TagForm';
 import { User } from './../../../core/models/User';
@@ -14,7 +14,8 @@ import { ErrorResponse } from '../../../core/responses/ErrorResponse';
   selector: 'app-add-tag',
   templateUrl: './add-tag.component.html',
   styleUrls: ['./add-tag.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddTagComponent implements OnInit {
   /**
@@ -65,18 +66,18 @@ export class AddTagComponent implements OnInit {
    * 
    * @param tag Tag
    */
-  public add(tag: Tag): void {
+  public async add(tag: Tag): Promise<void> {
     if (this.tagForm.valid) {
-      this._tagsService.add(...this.tagForm.value).subscribe(
-        () => {
-          //this._customToastrService.displaySuccessMessage(Messages.TAG_CREATED_SUCCESSFULLY);
-          this._router.navigate(['/admin/tags']);
-        },
-        (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
-        });
-      
-      
+      this._tagsService.add(...this.tagForm.value)
+        .subscribe({
+          next: (response: any) => {
+            //this._customToastrService.displaySuccessMessage(Messages.TAG_CREATED_SUCCESSFULLY);
+            this._router.navigate(['/admin/tags']);
+          },
+          error: (error: ErrorResponse) => {
+            this._customToastrService.displayErrorMessage(error);
+          }
+        });    
     }
   }
 }

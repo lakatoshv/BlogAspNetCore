@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { User } from './../../../core/models/User';
 import { Router } from '@angular/router';
 import { GlobalService } from './../../../core/services/global-service/global-service.service';
@@ -11,12 +11,14 @@ import { Messages } from './../../../core/data/Mesages';
 import { CustomToastrService } from './../../../core/services/custom-toastr.service';
 import { ProfileViewDto } from '../../../core/Dto/ProfileViewDto';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-edit-profile',
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditProfileComponent implements OnInit {
   /**
@@ -44,12 +46,14 @@ export class EditProfileComponent implements OnInit {
    * @param _globalService GlobalService
    * @param _usersService UsersService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _router: Router,
     private _globalService: GlobalService,
     private _usersService: UsersService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**
@@ -74,13 +78,20 @@ export class EditProfileComponent implements OnInit {
    * @returns void
    */
   private _getProfile(id: number): void {
-    this._usersService.getProfile(id).subscribe(
-      (response: any) => {
-        this.user = response;
-        this._setFormData();
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+    this._usersService.getProfile(id)
+      .pipe(
+        finalize(() => {
+          this._changeDetectorRef.markForCheck();
+        })
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.user = response;
+          this._setFormData();
+        },
+        error: (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        }
       });
   }
 
@@ -89,7 +100,7 @@ export class EditProfileComponent implements OnInit {
    * @param profileModel any
    * @returns void
    */
-  edit(profileModel: any): void {
+  async edit(profileModel: any): Promise<void> {
     if(this.user && this._globalService._currentUser?.profile) {
       const profile = new ProfileViewDto(
         this.user.email ?? '',
@@ -98,21 +109,28 @@ export class EditProfileComponent implements OnInit {
         this.user.phoneNumber,
         undefined,
         profileModel.about);
-      this._usersService.updateProfile(this._globalService._currentUser.profile.id, profile).subscribe(
-        (result: any) => {
-          if(this._globalService._currentUser?.profile) {
-            this._globalService._currentUser.userName = result.firstName + ' ' + result.lastName;
-            this._globalService._currentUser.email = result.email;
-            this._globalService._currentUser.firstName = result.firstName;
-            this._globalService._currentUser.lastName = result.lastName;
-            this._globalService._currentUser.phoneNumber = result.phoneNumber;
-            this._globalService._currentUser.profile.about = result.about;
+      this._usersService.updateProfile(this._globalService._currentUser.profile.id, profile)
+        .pipe(
+          finalize(() => {
+            this._changeDetectorRef.markForCheck();
+          })
+        )
+        .subscribe({
+          next: (result: any) => {
+            if(this._globalService._currentUser?.profile) {
+              this._globalService._currentUser.userName = result.firstName + ' ' + result.lastName;
+              this._globalService._currentUser.email = result.email;
+              this._globalService._currentUser.firstName = result.firstName;
+              this._globalService._currentUser.lastName = result.lastName;
+              this._globalService._currentUser.phoneNumber = result.phoneNumber;
+              this._globalService._currentUser.profile.about = result.about;
+            }
+            // this._usersService.saveUser(JSON.stringify(this._globalService._currentUser));*/
+            this._customToastrService.displaySuccessMessage(Messages.PROFILE_EDITED_SUCCESSFULLY);
+          },
+          error: (error: ErrorResponse) => {
+            this._customToastrService.displayErrorMessage(error);
           }
-          // this._usersService.saveUser(JSON.stringify(this._globalService._currentUser));*/
-          this._customToastrService.displaySuccessMessage(Messages.PROFILE_EDITED_SUCCESSFULLY);
-        },
-        (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
         });
     }
   }

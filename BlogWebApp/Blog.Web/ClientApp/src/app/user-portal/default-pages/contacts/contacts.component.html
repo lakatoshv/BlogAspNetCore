@@ -27,7 +27,7 @@
         <h2 class="text-center" id="form-header"><i class="fa fa-envelope"></i> Форма зворотнього звязку</h2>
         <div class="row justify-content-center">
             <div class="col-12 col-md-8 col-lg-6 pb-5">
-                <form #contact="ngForm" [formGroup]="messageForm" (ngSubmit)="sendMessage(f.value)">
+                <form #contact="ngForm" [formGroup]="messageForm" (ngSubmit)="sendMessage(contact.value)">
                     <div class="card border-primary rounded-0">
                         <div class="card-body p-3">
                           @if(!isLoggedIn) {

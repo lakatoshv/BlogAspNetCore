@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { GeneralServiceService } from './../../../core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from './../../../core/models/User';
@@ -8,12 +8,14 @@ import { CustomToastrService } from './../../../core/services/custom-toastr.serv
 import { Messages } from './../../../core/data/Mesages';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 import { AccountsService } from '../../../core/services/users-services/account.sevice';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-profile-page',
   templateUrl: './profile-page.component.html',
   styleUrls: ['./profile-page.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfilePageComponent implements OnInit {
   /**
@@ -70,7 +72,8 @@ export class ProfilePageComponent implements OnInit {
     private _globalService: GlobalService,
     private _usersService: UsersService,
     private _accountsService: AccountsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**
@@ -105,13 +108,20 @@ export class ProfilePageComponent implements OnInit {
    * @param id number
    * @returns void
    */
-  private _getProfile(id: number): void {
-    this._usersService.getProfile(id).subscribe(
-      (response: any) => {
-        this.user = response;
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+  private async _getProfile(id: number): Promise<void> {
+    this._usersService.getProfile(id)
+      .pipe(
+        finalize(() => {
+          this._changeDetectorRef.markForCheck();
+        })
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.user = response;
+        },
+        error: (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        }
       });
   }
 
@@ -135,13 +145,15 @@ export class ProfilePageComponent implements OnInit {
    * Verify email.
    * @returns void.
    */
-  public verifyEmail(): void {
-    this._accountsService.sendConfirmationEmail().subscribe(
-      () => {
-        this._customToastrService.displaySuccessMessage(Messages.EMAIL_VERIFIED_SUCCESSFULLY);
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+  public async verifyEmail(): Promise<void> {
+    this._accountsService.sendConfirmationEmail()
+      .subscribe({
+        next: () => {
+          this._customToastrService.displaySuccessMessage(Messages.EMAIL_VERIFIED_SUCCESSFULLY);
+        },
+        error: (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        }
       });
   }
 }

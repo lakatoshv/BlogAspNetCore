@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ContentChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ContentChild, ElementRef, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { Messages } from './../../../../core/data/Mesages';
 import { CustomToastrService } from './../../../../core/services/custom-toastr.service';
 
@@ -6,7 +6,8 @@ import { CustomToastrService } from './../../../../core/services/custom-toastr.s
   selector: 'app-change-status',
   templateUrl: './change-status.component.html',
   styleUrls: ['./change-status.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChangeStatusComponent implements OnInit {
   /**

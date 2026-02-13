@@ -1,5 +1,5 @@
 import { CommentsService } from './../../../../core/services/posts-services/comments.service';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Comment } from './../../../../core/models/Comment';
 import { UsersService } from '../../../../core/services/users-services/users-service.service';
 import { GlobalService } from './../../../../core/services/global-service/global-service.service';
@@ -8,12 +8,14 @@ import { Messages } from './../../../../core/data/Mesages';
 import { CustomToastrService } from './../../../../core/services/custom-toastr.service';
 import { ErrorResponse } from '../../../../core/responses/ErrorResponse';
 import { PageInfo } from '../../../../core/models/PageInfo';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-comments-list',
   templateUrl: './comments-list.component.html',
   styleUrls: ['./comments-list.component.scss'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommentsListComponent implements OnInit {
    /**
@@ -67,18 +69,20 @@ export class CommentsListComponent implements OnInit {
    * @param _usersService UsersService
    * @param _globalService GlobalService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _commentsService: CommentsService,
     private _usersService: UsersService,
     private _globalService: GlobalService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**
    * @inheritdoc
    */
-  ngOnInit() {
+  async ngOnInit(): Promise<void> {
     // this._getCommentsForCurrentPost();
 
     this.loggedIn = this._usersService.isLoggedIn();
@@ -97,14 +101,22 @@ export class CommentsListComponent implements OnInit {
       pageSize: 10,
       displayType: null
     };
+
     if(this.postId) {
       this._commentsService.list(this.postId, sortParameters)
-        .subscribe((response: any) => {
-          this.comments = response.comments;
-          this.pageInfo = response.pageInfo;
-        },
-        (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+        .pipe(
+          finalize(() => {
+            this._changeDetectorRef.markForCheck();
+          })
+        )
+        .subscribe({
+          next: (response: any) => {
+            this.comments = response.comments;
+            this.pageInfo = response.pageInfo;
+          },
+          error: (error: ErrorResponse) => {
+            this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }
@@ -162,14 +174,16 @@ export class CommentsListComponent implements OnInit {
    * @param comment Comment
    * @returns void
    */
-  deleteAction(comment: Comment): void {
-    this._commentsService.delete(comment.id).subscribe(
-      (response: any) => {
-        this.onDeleteCommentAction(response.id);
-        this._customToastrService.displaySuccessMessage(Messages.COMMENT_DELETED_SUCCESSFULLY);
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+  async deleteAction(comment: Comment): Promise<void> {
+    this._commentsService.delete(comment.id)
+      .subscribe({
+        next: (response: any) => {
+          this.onDeleteCommentAction(response.id);
+          this._customToastrService.displaySuccessMessage(Messages.COMMENT_DELETED_SUCCESSFULLY);
+        },
+        error: (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        }
       });
   }
 

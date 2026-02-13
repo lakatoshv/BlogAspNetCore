@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule,
   ],
-  declarations: [AboutComponent, ContactsComponent]
+  declarations: [AboutComponent, ContactsComponent],
+  exports: [AboutComponent, ContactsComponent]
 })
 export class DefaultPagesModule { }

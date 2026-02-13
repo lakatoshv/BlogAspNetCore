@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { GlobalService } from './../../core/services/global-service/global-service.service';
 import { UsersService } from '../../core/services/users-services/users-service.service';
 import { User } from './../../core/models/User';
@@ -7,7 +7,8 @@ import { User } from './../../core/models/User';
   selector: 'app-layout-component',
   templateUrl: './layout-component.component.html',
   styleUrls: ['./layout-component.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LayoutComponentComponent implements OnInit {
   /**

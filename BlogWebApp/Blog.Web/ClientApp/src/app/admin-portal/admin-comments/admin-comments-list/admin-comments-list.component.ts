@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { User } from '../../../core/models/User';
 import { Comment } from '../../../core/models/Comment';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
@@ -6,12 +6,14 @@ import { CustomToastrService } from '../../../core/services/custom-toastr.servic
 import { PageInfo } from '../../..//core/models/PageInfo';
 import { CommentsService } from '../../../core/services/posts-services/comments.service';
 import { Messages } from '../../../core/data/Mesages';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-admin-comments-list',
   templateUrl: './admin-comments-list.component.html',
   styleUrls: ['./admin-comments-list.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminCommentsListComponent implements OnInit {
   /**
@@ -51,10 +53,12 @@ export class AdminCommentsListComponent implements OnInit {
   /**
    * @param _commentService CommentService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _commentsService: CommentsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**
@@ -87,7 +91,7 @@ export class AdminCommentsListComponent implements OnInit {
    * @param page number
    * @returns void
    */
-  private _getComments(page: number = 0): void {
+  private async _getComments(page: number = 0): Promise<void> {
     const sortParameters = {
       sortBy: null,
       orderBy: null,
@@ -100,15 +104,22 @@ export class AdminCommentsListComponent implements OnInit {
       tag: null,
       sortParameters: sortParameters
     };
-    this._commentsService.list(null, model).subscribe(
-      (response: any) => {
-        this.comments = response.comments;
-        this.isLoaded = true;
+    
+    this._commentsService.list(null, model)
+      .pipe(
+        finalize(() => {
+          this.isLoaded = true;
+          this._changeDetectorRef.markForCheck();
+        })
+      )
+    .subscribe({
+      next: (response: any) => {
+        this.comments = [...response.comments];
       },
-      (error: ErrorResponse) => {
+      error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
-        this.isLoaded = true;
-      });
+      }
+    });
     /*!isNaN(postId)
       ? this._commentService.getCommentsByPostId(postId)
       : this._commentService.list(nu);*/

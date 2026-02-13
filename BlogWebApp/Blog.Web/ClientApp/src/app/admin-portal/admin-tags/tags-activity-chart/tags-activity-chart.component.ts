@@ -1,15 +1,17 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ChartOptions } from './../../../core/models/chart/ChartOptions';
 import { ChartOptionsData } from './../../../core/data/chart/ChartOptionsData';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 import { CustomToastrService } from '../../../core/services/custom-toastr.service';
 import { TagsService } from '../../../core/services/posts-services/tags.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-tags-activity-chart',
   templateUrl: './tags-activity-chart.component.html',
   styleUrls: ['./tags-activity-chart.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagsActivityChartComponent implements OnInit {
   /**
@@ -30,25 +32,34 @@ export class TagsActivityChartComponent implements OnInit {
   /**
    * @inheritdoc
    */
-  ngOnInit(): void {
-    this._tagsService.tagsActivity().subscribe(
-      (response: any) => {
-        this.chartOptions.Data[0] = response;
-        this.chartOptions = this.chartOptions;
-        this.isLoaded = true;
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
-      });
+  async ngOnInit(): Promise<void> {
+    this._tagsService.tagsActivity()
+    .pipe(
+            finalize(() => {
+              this.isLoaded = true;
+              this._changeDetectorRef.markForCheck();
+            })
+          )
+          .subscribe({
+            next: (response: any) => {
+              this.chartOptions.Data[0] = response;
+              this.chartOptions = this.chartOptions;
+            },
+            error: (error: ErrorResponse) => {
+              this._customToastrService.displayErrorMessage(error);
+            }
+          });
   }
 
   /**
    * @param _tagsService UsersService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _tagsService: TagsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) {
   }
 

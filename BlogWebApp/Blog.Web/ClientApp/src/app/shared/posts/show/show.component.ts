@@ -1,5 +1,5 @@
 import { PostsService } from './../../../core/services/posts-services/posts.service';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GeneralServiceService } from './../../../core';
 import { UsersService } from '../../../core/services/users-services/users-service.service';
@@ -9,12 +9,14 @@ import { Post } from './../../../core/models/Post';
 import { CustomToastrService } from './../../../core/services/custom-toastr.service';
 import { PageInfo } from '../../../core/models/PageInfo';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-show',
   templateUrl: './show.component.html',
   styleUrls: ['./show.component.scss'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShowComponent implements OnInit {
   /**
@@ -64,6 +66,7 @@ export class ShowComponent implements OnInit {
    * @param _globalService GlobalService
    * @param _router Router
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _generalService: GeneralServiceService,
@@ -72,7 +75,8 @@ export class ShowComponent implements OnInit {
     private _usersService: UsersService,
     private _globalService: GlobalService,
     private _router: Router,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**
@@ -93,14 +97,16 @@ export class ShowComponent implements OnInit {
    * @param id number
    * @returns void
    */
-  public like(id: number): void {
+  public async like(id: number): Promise<void> {
     if(this.postId) {
-      this._postsService.like(this.postId).subscribe(
-        (response: any) => {
-          this.post = response;
-        },
-        (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+      this._postsService.like(this.postId)
+        .subscribe({
+          next: (response: any) => {
+            this.post = response;
+          },
+          error: (error: ErrorResponse) => {
+            this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }
@@ -110,14 +116,16 @@ export class ShowComponent implements OnInit {
    * @param id number
    * @returns void
    */
-  public dislike(id: number): void {
+  public async dislike(id: number): Promise<void> {
     if(this.postId) {
-      this._postsService.dislike(this.postId).subscribe(
-        (response: any) => {
-          this.post = response;
-        },
-        (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+      this._postsService.dislike(this.postId)
+        .subscribe({
+          next: (response: any) => {
+            this.post = response;
+          },
+          error: (error: ErrorResponse) => {
+            this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }
@@ -125,14 +133,16 @@ export class ShowComponent implements OnInit {
   /**
    * Delete post.
    */
-  public deleteAction() {
+  public async deleteAction(): Promise<void> {
     if (this.loggedIn && this.post && this.post?.authorId === this.user?.id) {
-      this._postsService.delete(this.post.id, this.user.id).subscribe(
-        () => {
-          this._router.navigateByUrl('/blog');
-        },
-        (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
+      this._postsService.delete(this.post.id, this.user.id)
+        .subscribe({
+          next: (response: any) => {
+            this._router.navigateByUrl('/blog');
+          },
+          error: (error: ErrorResponse) => {
+            this._customToastrService.displayErrorMessage(error);
+          }
         });
     }
   }
@@ -147,20 +157,27 @@ export class ShowComponent implements OnInit {
   /**
    * Get post by id.
    */
-  private _getPost() {
+  private async _getPost(): Promise<void> {
     if(this.postId) {
-      this._postsService.showPost(this.postId).subscribe(
-        (response: any) => {
-          this.post = response.post;
-          if(this.post) {
-            this.post.tags = response.tags;
-            this.post.comments = response.comments.comments;
+      this._postsService.showPost(this.postId)
+        .pipe(
+          finalize(() => {
+            this.isLoaded = true;
+            this._changeDetectorRef.markForCheck();
+          })
+        )
+        .subscribe({
+          next: (response: any) => {
+            this.post = response.post;
+            if(this.post) {
+              this.post.tags = response.tags;
+              this.post.comments = response.comments.comments;
+            }
+            this.pageInfo = response.comments.pageInfo;
+          },
+          error: (error: ErrorResponse) => {
+            this._customToastrService.displayErrorMessage(error);
           }
-          this.pageInfo = response.comments.pageInfo;
-          this.isLoaded = true;
-        },
-        (error: ErrorResponse) => {
-          this._customToastrService.displayErrorMessage(error);
         });
     }
   }

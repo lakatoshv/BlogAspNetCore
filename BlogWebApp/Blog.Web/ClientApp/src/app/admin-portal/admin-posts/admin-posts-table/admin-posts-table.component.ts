@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { PageInfo } from "../../../core/models/PageInfo";
 import { Post } from "../../../core/models/Post";
 import { CustomToastrService } from "../../../core/services/custom-toastr.service";
@@ -6,12 +6,14 @@ import { PageViewDto } from "../../../core/Dto/PageViewDto";
 import { ErrorResponse } from "../../../core/responses/ErrorResponse";
 import { PostsService } from "../../../core/services/posts-services/posts.service";
 import { Router } from "@angular/router";
+import { finalize } from "rxjs";
 
 @Component({
   selector: 'app-admin-posts-table',
   templateUrl: './admin-posts-table.component.html',
   styleUrls: ['./admin-posts-table.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminPostsTableComponent implements OnInit {
   /**
@@ -39,11 +41,13 @@ export class AdminPostsTableComponent implements OnInit {
    * @param _router Router
    * @param _customToastrService CustomToastrService
    * @param _postsService: PostsService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _router: Router,
     private _customToastrService: CustomToastrService,
-    private _postsService: PostsService
+    private _postsService: PostsService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**
@@ -81,7 +85,7 @@ export class AdminPostsTableComponent implements OnInit {
   /**
    * Get all posts
    */
-  private _getPosts(page = 1): void {
+  private async _getPosts(page = 1): Promise<void> {
     const sortParameters = {
       sortBy: null,
       orderBy: null,
@@ -96,16 +100,21 @@ export class AdminPostsTableComponent implements OnInit {
     };
 
     this._postsService.list(model)
-      .subscribe(
-        (response: PageViewDto) => {
-          this.posts = response.posts;
-          this.pageInfo = response.pageInfo;
+      .pipe(
+        finalize(() => {
           this.isLoaded = true;
+          this._changeDetectorRef.markForCheck();
+        })
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.posts = [...response.posts];
+          this.pageInfo = { ...response.pageInfo };
         },
-        (error: ErrorResponse) => {
+        error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
-          this.isLoaded = true;
-        });
+        }
+      });
   }
 
   /**

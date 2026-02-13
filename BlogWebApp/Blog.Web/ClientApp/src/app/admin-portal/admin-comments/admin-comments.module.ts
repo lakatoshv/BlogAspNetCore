@@ -7,6 +7,7 @@ import { CommentsActivityComponent } from './comments-activity/comments-activity
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { AdminCommentsListComponent } from './admin-comments-list/admin-comments-list.component';
 import { AdminCommentsTableComponent } from './admin-comments-table/admin-comments-table.component';
+import { DefaultPagesModule } from '../../user-portal/default-pages/default-pages.module';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { AdminCommentsTableComponent } from './admin-comments-table/admin-commen
     AdminCommentsRoutingModule,
     NgxChartsModule,
     CommentsModule,
-    CoreModule
+    CoreModule,
+    DefaultPagesModule
   ],
   exports: [
     CommentsActivityComponent,

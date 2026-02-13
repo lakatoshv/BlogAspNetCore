@@ -1,15 +1,17 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ChartOptions } from './../../../core/models/chart/ChartOptions';
 import { ChartOptionsData } from './../../../core/data/chart/ChartOptionsData';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
 import { CustomToastrService } from '../../../core/services/custom-toastr.service';
 import { CommentsService } from '../../../core/services/posts-services/comments.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-comments-activity',
   templateUrl: './comments-activity.component.html',
   styleUrls: ['./comments-activity.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CommentsActivityComponent implements OnInit {
   /**
@@ -30,25 +32,34 @@ export class CommentsActivityComponent implements OnInit {
   /**
    * @inheritdoc
    */
-  ngOnInit(): void {
-    this._commentService.commentsActivity().subscribe(
-      (response: any) => {
-        this.chartOptions.Data[0] = response;
-        this.chartOptions = this.chartOptions;
-        this.isLoaded = true;
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
+  async ngOnInit(): Promise<void> {
+    this._commentService.commentsActivity()
+      .pipe(
+        finalize(() => {
+          this.isLoaded = true;
+          this._changeDetectorRef.markForCheck();
+        })
+      )
+      .subscribe({
+        next: (response: any) => {
+          this.chartOptions.Data[0] = response;
+          this.chartOptions = this.chartOptions;
+        },
+        error: (error: ErrorResponse) => {
+          this._customToastrService.displayErrorMessage(error);
+        }
       });
   }
 
   /**
    * @param _commentService CommentService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _commentService: CommentsService,
-    private _customToastrService: CustomToastrService) {
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef) {
   }
 
   /**

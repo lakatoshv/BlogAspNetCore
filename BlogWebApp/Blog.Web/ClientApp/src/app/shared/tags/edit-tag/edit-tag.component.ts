@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { TagForm } from './../../../core/forms/posts/TagForm';
 import { User } from './../../../core/models/User';
@@ -8,14 +8,15 @@ import { GlobalService } from './../../../core/services/global-service/global-se
 import { TagsService } from './../../../core/services/posts-services/tags.service';
 import { Tag } from './../../../core/models/Tag';
 import { CustomToastrService } from './../../../core/services/custom-toastr.service';
-import { Messages } from './../../../core/data/Mesages';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-edit-tag',
   templateUrl: './edit-tag.component.html',
   styleUrls: ['./edit-tag.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EditTagComponent implements OnInit {
   /**
@@ -50,6 +51,7 @@ export class EditTagComponent implements OnInit {
    * @param _globalService GlobalService
    * @param _tagsService TagsService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _activatedRoute: ActivatedRoute,
@@ -57,7 +59,8 @@ export class EditTagComponent implements OnInit {
     private _usersService: UsersService,
     private _globalService: GlobalService,
     private _tagsService: TagsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**
@@ -86,18 +89,19 @@ export class EditTagComponent implements OnInit {
    * 
    * @param tag Tag
    */
-  public edit(tag: Tag): void {
+  public async edit(tag: Tag): Promise<void> {
     if (this.tagForm.valid && this.tag && this._tagId) {
       this.tag.title = tag['title'];
       this._tagsService.edit(this._tagId, this.tag)
-        .subscribe(
-          () => {
+        .subscribe({
+          next: (response: any) => {
             //this._customToastrService.displaySuccessMessage(Messages.TAG_EDITED_SUCCESSFULLY);
             this._router.navigate(['/admin/tags']);
           },
-          (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
             this._customToastrService.displayErrorMessage(error);
-          });
+          }
+        });
     }
   }
 
@@ -111,17 +115,23 @@ export class EditTagComponent implements OnInit {
   /**
    * Get tag by id.
    */
-  private _getTag(): void {
+  private async _getTag(): Promise<void> {
     if(this._tagId) {
       this._tagsService.getTag(this._tagId)
-        .subscribe(
-          (response: any) => {
+        .pipe(
+          finalize(() => {
+            this._changeDetectorRef.markForCheck();
+          })
+        )
+        .subscribe({
+          next: (response: any) => {
             this.tag = response;
             this._setFormData();
           },
-          (error: ErrorResponse) => {
+          error: (error: ErrorResponse) => {
             this._customToastrService.displayErrorMessage(error);
-          });
+          }
+        });
     }
   }
 

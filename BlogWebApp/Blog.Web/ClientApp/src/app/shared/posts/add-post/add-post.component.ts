@@ -1,6 +1,6 @@
 import { TagsService } from './../../../core/services/posts-services/tags.service';
 import { PostsService } from './../../../core/services/posts-services/posts.service';
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { PostForm } from '../../../core/forms/posts/PostForm';
 import { Router } from '@angular/router';
@@ -13,12 +13,14 @@ import { Tag } from './../../../core/models/Tag';
 import { Messages } from './../../../core/data/Mesages';
 import { CustomToastrService } from './../../../core/services/custom-toastr.service';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-add-post',
   templateUrl: './add-post.component.html',
   styleUrls: ['./add-post.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddPostComponent implements OnInit {
   /**
@@ -81,6 +83,7 @@ export class AddPostComponent implements OnInit {
    * @param _postsService PostsService,
    * @param _tagsService TagsService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   public constructor(
     private _router: Router,
@@ -88,7 +91,8 @@ export class AddPostComponent implements OnInit {
     private _globalService: GlobalService,
     private _postsService: PostsService,
     private _tagsService: TagsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**
@@ -182,21 +186,22 @@ export class AddPostComponent implements OnInit {
    * 
    * @param post Post
    */
-  add() {
+  async add(): Promise<void> {
     if (this.postForm.valid) {
       this.postForm.value.id = 0;
       this.postForm.value.tags = this.tagsList;
       this.postForm.value.authorId = this.user?.id;
       this._postsService.add({
         ...this.postForm.value
-      }).subscribe(
-        () => {
+      }).subscribe({
+        next: () => {
           this._customToastrService.displaySuccessMessage(Messages.POST_CREATED_SUCCESSFULLY);
           this._router.navigate(['/']);
         },
-        (error: ErrorResponse) => {
+        error: (error: ErrorResponse) => {
           this._customToastrService.displayErrorMessage(error);
-        });
+        }
+      });
     }
   }
 
@@ -211,14 +216,21 @@ export class AddPostComponent implements OnInit {
    * Get available tags.
    * @returns void
    */
-  private _getTags(): void {
-    this._tagsService.list().subscribe(
-      (response: Tag[]) => {
+  private async _getTags(): Promise<void> {
+    this._tagsService.list()
+     .pipe(
+       finalize(() => {
+         this._changeDetectorRef.markForCheck();
+       })
+     )
+    .subscribe({
+      next: (response: Tag[]) => {
         this.availableTags = response;
       },
-      (error: ErrorResponse) => {
+      error: (error: ErrorResponse) => {
         this._customToastrService.displayErrorMessage(error);
-      });
+      }
+    });
   }
 
   /**

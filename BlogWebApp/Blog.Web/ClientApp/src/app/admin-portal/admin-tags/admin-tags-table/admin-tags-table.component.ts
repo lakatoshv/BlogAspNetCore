@@ -1,14 +1,16 @@
 import { TagsService } from '../../../core/services/posts-services/tags.service';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Tag } from '../../../core/models/Tag';
 import { CustomToastrService } from '../../../core/services/custom-toastr.service';
 import { ErrorResponse } from '../../../core/responses/ErrorResponse';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-admin-tags-table',
   templateUrl: './admin-tags-table.component.html',
   styleUrls: ['./admin-tags-table.component.css'],
-  standalone: false
+  standalone: false,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminTagsTableComponent implements OnInit {
   public tags: Tag[] = [];
@@ -21,10 +23,12 @@ export class AdminTagsTableComponent implements OnInit {
   /**
    * @param _tagsService TagsService
    * @param _customToastrService CustomToastrService
+   * @param _changeDetectorRef: ChangeDetectorRef
    */
   constructor(
     private _tagsService: TagsService,
-    private _customToastrService: CustomToastrService
+    private _customToastrService: CustomToastrService,
+    private _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   /**
@@ -38,7 +42,7 @@ export class AdminTagsTableComponent implements OnInit {
    * Get all tags.
    * @param page number
    */
-  private _getTags(page: number = 0): void {
+  private async _getTags(page: number = 0): Promise<void> {
     const sortParameters = {
       sortBy: null,
       orderBy: null,
@@ -52,15 +56,20 @@ export class AdminTagsTableComponent implements OnInit {
       sortParameters: sortParameters
     };
     this._tagsService.list(model)
-    .subscribe(
-      (response: any) => {
-        this.tags = response.tags;
-        this.isLoaded = true;
-      },
-      (error: ErrorResponse) => {
-        this._customToastrService.displayErrorMessage(error);
-        this.isLoaded = true;
-      });;
+      .pipe(
+            finalize(() => {
+              this.isLoaded = true;
+              this._changeDetectorRef.markForCheck();
+            })
+          )
+          .subscribe({
+            next: (response: any) => {
+              this.tags = response.tags;
+            },
+            error: (error: ErrorResponse) => {
+              this._customToastrService.displayErrorMessage(error);
+            }
+          });
   }
 
   /**
