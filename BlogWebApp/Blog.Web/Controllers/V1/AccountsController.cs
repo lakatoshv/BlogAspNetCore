@@ -13,15 +13,15 @@ using AutoMapper;
 using Blog.Services.Core.Utilities;
 using CommonServices.EmailServices.Interfaces;
 using EntityServices.ControllerContext;
-using EntityServices.Identity.Auth;
-using EntityServices.Identity.Registration;
-using EntityServices.Identity.User;
 using Blog.Contracts.V1;
 using Blog.Contracts.V1.Requests.UsersRequests;
 using Blog.Contracts.V1.Responses.UsersResponses;
 using Blog.Contracts.V1.Responses.Chart;
 using Core.Consts;
 using Cache;
+using EntityServices.EntityFrameworkServices.Identity.Auth;
+using EntityServices.EntityFrameworkServices.Identity.Registration;
+using EntityServices.EntityFrameworkServices.Identity.User;
 
 /// <summary>
 /// Accounts controller.

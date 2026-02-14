@@ -1,5 +1,3 @@
-﻿using Blog.EntityServices;
-
 namespace Blog.Web.StartupConfigureServicesInstallers;
 
 using Microsoft.AspNetCore.Authorization;
@@ -23,11 +21,12 @@ using CommonServices;
 using CommonServices.EmailServices;
 using CommonServices.Interfaces;
 using EntityServices.ControllerContext;
-using EntityServices.Identity.Auth;
-using EntityServices.Identity.User;
-using EntityServices.Identity.RefreshToken;
-using EntityServices.Identity.Registration;
 using EntityServices.Interfaces;
+using EntityServices.EntityFrameworkServices;
+using EntityServices.EntityFrameworkServices.Identity.Auth;
+using EntityServices.EntityFrameworkServices.Identity.RefreshToken;
+using EntityServices.EntityFrameworkServices.Identity.Registration;
+using EntityServices.EntityFrameworkServices.Identity.User;
 
 /// <summary>
 /// Application services installer.

@@ -1,4 +1,4 @@
-﻿// <copyright file="TableMethods.cs" company="Blog">
+﻿// <copyright file="Repository.cs" company="Blog">
 // Copyright (c) Blog. All rights reserved.
 // </copyright>
 
@@ -17,7 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 /// <summary>
-/// Table methods.
+/// Repository.
 /// </summary>
 /// <typeparam name="TEntity">TEntity.</typeparam>
 public class Repository<TEntity> : IRepository<TEntity>

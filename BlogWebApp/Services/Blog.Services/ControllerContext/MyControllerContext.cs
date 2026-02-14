@@ -8,7 +8,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Data.Models;
-using Identity.User;
+using EntityFrameworkServices.Identity.User;
 
 /// <summary>
 /// Controller context.
