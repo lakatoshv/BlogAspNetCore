@@ -1,4 +1,4 @@
-namespace Blog.Web.StartupConfigureServicesInstallers;
+﻿namespace Blog.Web.StartupConfigureServicesInstallers;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

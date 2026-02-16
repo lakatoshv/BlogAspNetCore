@@ -7,8 +7,6 @@ using Blog.Core.TableFilters;
 using Blog.Data.Models;
 using Blog.Data.Repository;
 using Blog.Data.Specifications;
-using Blog.EntityServices;
-using Blog.EntityServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
@@ -16,9 +14,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blog.Data.Specifications.Base;
+using Blog.EntityServices.EntityFrameworkServices;
 using Xunit;
+using Blog.EntityServices.Interfaces;
 
-namespace Blog.ServicesTests.EntityServices;
+namespace Blog.ServicesTests.EntityServices.EntityFrameworkServices;
 
 /// <summary>
 /// Comments service tests.

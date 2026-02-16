@@ -8,8 +8,7 @@ using Blog.Core.TableFilters;
 using Blog.Data.Models;
 using Blog.Data.Repository;
 using Blog.Data.Specifications;
-using Blog.EntityServices;
-using Blog.EntityServices.Interfaces;
+using Blog.EntityServices.EntityFrameworkServices;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
@@ -18,8 +17,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blog.Data.Specifications.Base;
 using Xunit;
+using Blog.EntityServices.Interfaces;
 
-namespace Blog.ServicesTests.EntityServices;
+namespace Blog.ServicesTests.EntityServices.EntityFrameworkServices;
 
 /// <summary>
 /// Posts service tests.

@@ -7,7 +7,7 @@ using Blog.Core.TableFilters;
 using Blog.Data.Models;
 using Blog.Data.Repository;
 using Blog.Data.Specifications.Base;
-using Blog.EntityServices;
+using Blog.EntityServices.EntityFrameworkServices;
 using Blog.EntityServices.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -17,7 +17,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Blog.ServicesTests.EntityServices;
+namespace Blog.ServicesTests.EntityServices.EntityFrameworkServices;
 
 /// <summary>
 /// Post tag relations service tests.
