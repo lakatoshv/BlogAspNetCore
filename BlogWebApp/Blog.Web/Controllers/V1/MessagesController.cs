@@ -1,5 +1,4 @@
 ﻿using Blog.EntityServices.ControllerContext;
-using Blog.EntityServices.Interfaces;
 
 namespace Blog.Web.Controllers.V1;
 
@@ -16,6 +15,7 @@ using Blog.Contracts.V1.Requests.MessagesRequests;
 using Blog.Contracts.V1.Responses;
 using Core.Consts;
 using Data.Specifications;
+using EntityServices.Interfaces;
 
 /// <summary>
 /// Messages controller.
