@@ -1,4 +1,8 @@
-﻿using Blog.Contracts.V1.Responses.Chart;
+﻿// <copyright file="ICommentsDapperService.cs" company="Blog">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
+
+using Blog.Contracts.V1.Responses.Chart;
 using Blog.EntityServices.GeneralService;
 using Blog.Services.Core.Dtos;
 using Blog.Services.Core.Dtos.Posts;
