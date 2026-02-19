@@ -1,11 +1,16 @@
-﻿namespace Blog.Web.StartupConfigureServicesInstallers;
+﻿using Blog.EntityServices.DapperServices.Interfaces;
 
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+namespace Blog.Web.StartupConfigureServicesInstallers;
+
+using Blog.EntityServices.DapperServices;
+using Blog.Services.Core.Caching;
+using Blog.Services.Core.Caching.Interfaces;
+using Blog.Services.Core.Email.Templates;
+using Blog.Services.Core.Security;
+using CommonServices;
+using CommonServices.EmailServices;
 using CommonServices.EmailServices.Interfaces;
+using CommonServices.Interfaces;
 using Core;
 using Core.Configuration;
 using Core.Infrastructure;
@@ -13,20 +18,18 @@ using Core.Interfaces;
 using Data;
 using Data.Models;
 using Data.Repository;
-using Blog.Services.Core.Caching;
-using Blog.Services.Core.Caching.Interfaces;
-using Blog.Services.Core.Email.Templates;
-using Blog.Services.Core.Security;
-using CommonServices;
-using CommonServices.EmailServices;
-using CommonServices.Interfaces;
 using EntityServices.ControllerContext;
-using EntityServices.Interfaces;
 using EntityServices.EntityFrameworkServices;
 using EntityServices.EntityFrameworkServices.Identity.Auth;
 using EntityServices.EntityFrameworkServices.Identity.RefreshToken;
 using EntityServices.EntityFrameworkServices.Identity.Registration;
 using EntityServices.EntityFrameworkServices.Identity.User;
+using EntityServices.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 /// <summary>
 /// Application services installer.
@@ -71,5 +74,13 @@ public class ApplicationServicesInstaller : IInstaller
         services.AddTransient<IPostsTagsRelationsService, PostsTagsRelationsService>();
 
         services.AddTransient<IResponseCacheService, ResponseCacheService>();
+
+        // Dapper services
+        services.AddTransient<IPostsDapperService, PostsDapperService>();
+        services.AddTransient<ICommentsDapperService, CommentsDapperService>();
+        services.AddTransient<IProfileDapperService, ProfileDapperService>();
+        services.AddTransient<IMessagesDapperService, MessagesDapperService>();
+        services.AddTransient<ITagsDapperService, TagsDapperService>();
+        services.AddTransient<IPostsTagsRelationsDapperService, PostsTagsRelationsDapperService>();
     }
 }
