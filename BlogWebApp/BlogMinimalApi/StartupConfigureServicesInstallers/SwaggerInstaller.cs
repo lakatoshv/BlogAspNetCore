@@ -98,6 +98,8 @@
 
                 c.OperationFilter<ApplySummariesOperationFilter>();
             });
+
+            services.AddSwaggerExamplesFromAssemblyOf<Program>();
         }
     }
 }
