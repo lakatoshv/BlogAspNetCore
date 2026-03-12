@@ -148,8 +148,12 @@ public class CommentsApiEndpoints : IRoutesInstaller
                     Id = comment.Id
                 });
             })
+            .WithName("CreateComment")
             .Produces<CreatedResponse<int>>(201)
-            .Produces(400);
+            .Produces(400)
+            .WithSummary("Create comment")
+            .WithDescription("Create comment")
+            .HasApiVersion(1.0);
 
 
         // Edit Comment
