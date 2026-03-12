@@ -31,7 +31,7 @@ public class HealthCheckApiEndpoints : IRoutesInstaller
         publicGroup.MapGet("/health", async (HealthCheckService healthCheckService) =>
             {
                 var report = await healthCheckService.CheckHealthAsync();
-
+                
                 var response = new
                 {
                     Status = report.Status.ToString(),
