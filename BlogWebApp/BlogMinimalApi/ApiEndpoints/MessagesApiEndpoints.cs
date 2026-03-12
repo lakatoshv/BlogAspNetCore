@@ -130,8 +130,12 @@ public class MessagesApiEndpoints : IRoutesInstaller
 
                     return Results.Created($"/messages/{message.Id}", null);
                 })
-            .Produces(201)
-            .Produces(400);
+            .WithName("CreateMessage")
+            .Produces<CreatedResponse<int>>(201)
+            .Produces(400)
+            .WithSummary("Create message")
+            .WithDescription("Create message")
+            .HasApiVersion(1.0);
 
 
         // UPDATE
