@@ -1,0 +1,6 @@
+@BlogVerticalSliceCQRSMinimalApi_HostAddress = http://localhost:5037
+
+GET {{BlogVerticalSliceCQRSMinimalApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
