@@ -167,8 +167,12 @@ public class PostsApiEndpoints : IRoutesInstaller
                         $"{ApiRoutes.PostsController.Posts}/{post.Id}",
                         new CreatedResponse<int> { Id = post.Id });
                 })
+            .WithName("CreatePost")
             .Produces<CreatedResponse<int>>(201)
-            .Produces(400);
+            .Produces(400)
+            .WithSummary("Create post")
+            .WithDescription("Create post")
+            .HasApiVersion(1.0);
 
 
         // LIKE POST
