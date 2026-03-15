@@ -1,0 +1,27 @@
+﻿using Carter;
+
+namespace BlogVerticalSliceCQRSMinimalApi.StartupConfigureServicesInstallers;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using System.Text;
+
+/// <summary>
+/// ApplicationBaseInstaller.
+/// </summary>
+/// <seealso cref="IInstaller" />
+public class ApplicationBaseInstaller : IInstaller
+{
+    /// <inheritdoc cref="IInstaller"/>
+    public void InstallServices(IServiceCollection services, IConfiguration configuration)
+    {
+        // file upload dependency
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+        services.AddAutoMapper(typeof(Program));
+        services.AddOptions();
+        services.AddLocalization();
+        services.AddMemoryCache();
+        services.AddResponseCaching();
+    }
+}
