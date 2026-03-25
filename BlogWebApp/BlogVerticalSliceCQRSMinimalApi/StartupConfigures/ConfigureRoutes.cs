@@ -76,6 +76,8 @@ public class ConfigureRoutes
             //endpoints.MapHealthChecks("/health");
         });
 
+        app.MapCarter();
+
         app.MapDefaultEndpoints();
 
         //TODO: move to StartupConfigures

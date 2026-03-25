@@ -23,5 +23,11 @@ public class ApplicationBaseInstaller : IInstaller
         services.AddLocalization();
         services.AddMemoryCache();
         services.AddResponseCaching();
+
+        services.AddCarter();
+        services.AddMediatR(configuration =>
+        {
+            configuration.RegisterServicesFromAssembly(typeof(Program).Assembly);
+        });
     }
 }

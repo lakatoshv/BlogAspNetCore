@@ -12,6 +12,8 @@
 	</PropertyGroup>
 
   <ItemGroup>
+	  <PackageReference Include="Carter" Version="10.0.0" />
+	  <PackageReference Include="Mapster" Version="7.4.0" />
 	  <PackageReference Include="MediatR" Version="14.1.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.3" />
 	  <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.3" />
