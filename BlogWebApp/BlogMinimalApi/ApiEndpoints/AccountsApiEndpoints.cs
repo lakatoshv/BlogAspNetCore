@@ -82,8 +82,12 @@ public class AccountsApiEndpoints : IRoutesInstaller
                         ? Results.BadRequest("Invalid name or password") 
                         : Results.Ok(jwt);
                 })
-            .Produces<string>()
-            .Produces<string>(400);
+            .WithName("Login")
+            .Produces(200)
+            .Produces<string>(400)
+            .WithSummary("Login")
+            .WithDescription("Login")
+            .HasApiVersion(1.0);
 
 
         // Register
@@ -118,8 +122,12 @@ public class AccountsApiEndpoints : IRoutesInstaller
 
                     return Results.NoContent();
                 })
+            .WithName("Register")
             .Produces(204)
-            .Produces<IdentityResult>(400);
+            .Produces<IdentityResult>(400)
+            .WithSummary("Register")
+            .WithDescription("Register")
+            .HasApiVersion(1.0);
 
         // -------------------------
         // PRIVATE ENDPOINTS
