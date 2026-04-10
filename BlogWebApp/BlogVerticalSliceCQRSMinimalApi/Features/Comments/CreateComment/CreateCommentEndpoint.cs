@@ -4,6 +4,7 @@ using Blog.Contracts.V1.Responses;
 using Carter;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BlogVerticalSliceCQRSMinimalApi.Features.Comments.CreateComment;
 
@@ -22,9 +23,9 @@ public class CreateCommentEndpoint : ICarterModule
             .WithTags("Comments");
 
         group.MapPost(ApiRoutes.CommentsController.CreateComment,
-                async (CreateCommentRequest request,
-                    ISender sender,
-                    HttpContext context) =>
+                async ([FromBody] CreateCommentRequest request,
+                    [FromServices] ISender sender,
+                    [FromServices] HttpContext context) =>
                 {
                     var command = request.Adapt<CreateCommentCommand>();
 

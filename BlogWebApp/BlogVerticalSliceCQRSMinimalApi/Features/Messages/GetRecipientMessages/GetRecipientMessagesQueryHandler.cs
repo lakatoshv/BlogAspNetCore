@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
 using Blog.Contracts.V1.Responses;
-using Blog.Contracts.V1.Responses.Chart;
 using Blog.Data.Specifications;
 using Blog.EntityServices.Interfaces;
 using BlogVerticalSliceCQRSMinimalApi.CQRSExtensions;
-using BlogVerticalSliceCQRSMinimalApi.Features.Comments.CommentsActivity;
 
 namespace BlogVerticalSliceCQRSMinimalApi.Features.Messages.GetRecipientMessages;
 

@@ -3,6 +3,7 @@ using Blog.Contracts.V1;
 using Carter;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BlogVerticalSliceCQRSMinimalApi.Features.Accounts.Login;
 
@@ -21,7 +22,7 @@ public class LoginEndpoint : ICarterModule
             .WithTags("Accounts");
 
         group.MapPost(ApiRoutes.AccountsController.Login,
-                async (LoginRequest request, ISender sender) =>
+                async ([FromBody] LoginRequest request, [FromServices] ISender sender) =>
                 {
                     if (request is null)
                         return Results.BadRequest();

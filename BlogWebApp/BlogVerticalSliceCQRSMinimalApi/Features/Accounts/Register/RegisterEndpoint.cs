@@ -4,6 +4,7 @@ using Carter;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BlogVerticalSliceCQRSMinimalApi.Features.Accounts.Register;
 
@@ -22,7 +23,7 @@ public class RegisterEndpoint : ICarterModule
             .WithTags("Accounts");
 
         group.MapPost(ApiRoutes.AccountsController.Register,
-                async (RegisterRequest request, ISender sender) =>
+                async ([FromBody] RegisterRequest request, [FromServices] ISender sender) =>
                 {
                     var command = request.Adapt<RegisterCommand>();
 

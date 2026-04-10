@@ -4,10 +4,11 @@ using Blog.Contracts.V1.Responses;
 using Carter;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BlogVerticalSliceCQRSMinimalApi.Features.Posts.CreatePost;
 
-public class CreatePostEndpoint : ICarterModule
+public class GetPostsEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
@@ -22,11 +23,11 @@ public class CreatePostEndpoint : ICarterModule
             .WithTags("Posts");
 
         group.MapPost("/",
-                async (CreatePostRequest request,
-                    ISender sender,
-                    HttpContext context) =>
+                async ([FromBody] GetPostsRequest request,
+                    [FromServices] ISender sender,
+                    [FromServices] HttpContext context) =>
                 {
-                    var command = request.Adapt<CreatePostCommand>();
+                    var command = request.Adapt<GetPostsCommand>();
 
                     var result = await sender.Send(command);
 

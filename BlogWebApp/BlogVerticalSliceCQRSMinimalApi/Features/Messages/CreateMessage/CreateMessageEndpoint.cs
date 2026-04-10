@@ -4,6 +4,7 @@ using Blog.Contracts.V1.Responses;
 using Carter;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BlogVerticalSliceCQRSMinimalApi.Features.Messages.CreateMessage;
 
@@ -22,9 +23,9 @@ public class CreateMessageEndpoint : ICarterModule
             .WithTags("Messages");
 
         group.MapPost("/",
-                async (CreateMessageRequest request,
-                    ISender sender,
-                    HttpContext context) =>
+                async ([FromBody] CreateMessageRequest request,
+                    [FromServices] ISender sender,
+                    [FromServices] HttpContext context) =>
                 {
                     var command = request.Adapt<CreateMessageCommand>();
 

@@ -6,10 +6,10 @@ using BlogVerticalSliceCQRSMinimalApi.CQRSExtensions;
 
 namespace BlogVerticalSliceCQRSMinimalApi.Features.Posts.CreatePost;
 
-public class CreatePostCommandHandler(IPostsService service, IMapper mapper)
-    : ICommandHandler<CreatePostCommand, CreatedResponse<int>>
+public class GetPostsCommandHandler(IPostsService service, IMapper mapper)
+    : ICommandHandler<GetPostsCommand, CreatedResponse<int>>
 {
-    public async Task<CreatedResponse<int>> Handle(CreatePostCommand command, CancellationToken cancellationToken)
+    public async Task<CreatedResponse<int>> Handle(GetPostsCommand command, CancellationToken cancellationToken)
     {
         var post = new Post
         {
