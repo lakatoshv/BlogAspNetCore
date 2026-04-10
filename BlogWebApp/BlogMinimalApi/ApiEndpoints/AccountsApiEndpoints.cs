@@ -51,8 +51,13 @@ public class AccountsApiEndpoints : IRoutesInstaller
 
                     return Results.Ok(response);
                 })
+            .WithName("Initialize")
             .Produces<List<RoleResponse>>()
-            .Produces<string>(400);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithSummary("Initialize")
+            .WithDescription("Initialize")
+            .HasApiVersion(1.0);
 
 
         // Get All Users
@@ -65,7 +70,13 @@ public class AccountsApiEndpoints : IRoutesInstaller
 
                     return Results.Ok(response);
                 })
-            .Produces<List<AccountResponse>>();
+            .WithName("GetAllUsers")
+            .Produces<List<AccountResponse>>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithSummary("Get All Users")
+            .WithDescription("Get All Users")
+            .HasApiVersion(1.0);
 
 
         // Login
@@ -151,7 +162,11 @@ public class AccountsApiEndpoints : IRoutesInstaller
 
                     return Results.NoContent();
                 })
-            .Produces(204);
+            .WithName("SendConfirmationEmail")
+            .Produces(StatusCodes.Status204NoContent)
+            .WithSummary("Send Confirmation Email")
+            .WithDescription("Send Confirmation Email")
+            .HasApiVersion(1.0);
 
         // Users activity
         privateGroup.MapGet(ApiRoutes.AccountsController.UsersActivity,
@@ -163,8 +178,13 @@ public class AccountsApiEndpoints : IRoutesInstaller
                         ? Results.NotFound()
                         : Results.Ok(activity);
                 })
-            .Produces<ChartDataModel>()
-            .Produces(404);
+            .WithName("UsersActivity")
+            .Produces<List<ChartDataModel>>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithSummary("Users Activity")
+            .WithDescription("Users Activity")
+            .HasApiVersion(1.0);
 
         // Change password
         privateGroup.MapPut(ApiRoutes.AccountsController.ChangePassword,
