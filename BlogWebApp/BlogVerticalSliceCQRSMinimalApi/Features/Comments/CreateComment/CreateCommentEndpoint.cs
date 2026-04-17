@@ -12,13 +12,7 @@ public class CreateCommentEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var versionSet = app.NewApiVersionSet()
-            .HasApiVersion(new ApiVersion(1, 0))
-            .ReportApiVersions()
-            .Build();
-
-        var group = app.MapGroup(ApiRoutes.CommentsController.Comments)
-            .WithApiVersionSet(versionSet)
+        var group = app.MapGroup("Comments")
             .MapToApiVersion(1.0)
             .WithTags("Comments");
 
@@ -45,7 +39,6 @@ public class CreateCommentEndpoint : ICarterModule
             .Produces<CreatedResponse<int>>(201)
             .Produces(400)
             .WithSummary("Create comment")
-            .WithDescription("Create comment")
-            .HasApiVersion(1.0);
+            .WithDescription("Create comment");
     }
 }

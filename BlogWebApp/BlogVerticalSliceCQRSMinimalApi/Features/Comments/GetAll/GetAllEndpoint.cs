@@ -1,15 +1,21 @@
-﻿using Blog.Contracts.V1.Responses.CommentsResponses;
+﻿using Asp.Versioning;
+using Blog.Contracts.V1;
+using Blog.Contracts.V1.Responses.CommentsResponses;
 using Carter;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogVerticalSliceCQRSMinimalApi.Features.Comments.GetAll;
 
-public class GetAllEndpoint : ICarterModule
+/*public class GetAllEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/comments", async ([FromRoute] string userId, [FromServices] ISender sender) =>
+        var group = app.MapGroup("/сomments")
+            .MapToApiVersion(1.0)
+            .WithTags("Comments");
+
+        group.MapGet("", async ([FromRoute] string userId, [FromServices] ISender sender) =>
             {
                 var result = await sender.Send(new GetAllQuery());
 
@@ -22,7 +28,6 @@ public class GetAllEndpoint : ICarterModule
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
             .WithSummary("Get All")
-            .WithDescription("Get All")
-            .HasApiVersion(1.0);
+            .WithDescription("Get All");
     }
-}
+}*/

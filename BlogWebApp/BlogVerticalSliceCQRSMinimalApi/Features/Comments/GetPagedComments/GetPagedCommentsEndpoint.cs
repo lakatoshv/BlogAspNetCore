@@ -12,13 +12,7 @@ public class GetCommentsByFilterEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var versionSet = app.NewApiVersionSet()
-            .HasApiVersion(new ApiVersion(1, 0))
-            .ReportApiVersions()
-            .Build();
-
-        var group = app.MapGroup(ApiRoutes.CommentsController.Comments)
-            .WithApiVersionSet(versionSet)
+        var group = app.MapGroup("Comments")
             .MapToApiVersion(1.0)
             .WithTags("Comments");
 
@@ -39,7 +33,6 @@ public class GetCommentsByFilterEndpoint : ICarterModule
             .Produces<PagedCommentsResponse>()
             .Produces(400)
             .WithSummary("Get Paged Comments")
-            .WithDescription("Get Paged Comments")
-            .HasApiVersion(1.0);
+            .WithDescription("Get Paged Comments");
     }
 }

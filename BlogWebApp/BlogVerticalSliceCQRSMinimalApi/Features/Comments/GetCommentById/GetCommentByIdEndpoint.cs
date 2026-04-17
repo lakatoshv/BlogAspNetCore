@@ -1,4 +1,6 @@
-﻿using Blog.Contracts.V1.Responses.CommentsResponses;
+﻿using Asp.Versioning;
+using Blog.Contracts.V1;
+using Blog.Contracts.V1.Responses.CommentsResponses;
 using Carter;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +11,11 @@ public class GetCommentByIdEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/comments/{id:int}", async ([FromRoute] int id, [FromServices] ISender sender) =>
+        var group = app.MapGroup("Comments")
+            .MapToApiVersion(1.0)
+            .WithTags("Comments");
+
+        group.MapGet("{id:int}", async ([FromRoute] int id, [FromServices] ISender sender) =>
             {
                 var result = await sender.Send(new GetCommentByIdQuery(Id: id));
 
@@ -22,7 +28,6 @@ public class GetCommentByIdEndpoint : ICarterModule
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
             .WithSummary("Get Comment By Id")
-            .WithDescription("Get Comment By Id")
-            .HasApiVersion(1.0);
+            .WithDescription("Get Comment By Id");
     }
 }
