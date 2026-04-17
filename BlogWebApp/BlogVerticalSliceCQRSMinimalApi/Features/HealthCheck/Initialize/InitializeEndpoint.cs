@@ -1,4 +1,5 @@
-﻿using Blog.Contracts.V1;
+﻿using Asp.Versioning;
+using Blog.Contracts.V1;
 using Blog.Contracts.V1.Responses.UsersResponses;
 using Carter;
 using MediatR;
@@ -10,7 +11,11 @@ public class InitializeEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("/health-check", async ([FromServices] ISender sender) =>
+        var group = app.MapGroup("HealthCheck")
+                .MapToApiVersion(1.0)
+                .WithTags("HealthCheck");
+
+        group.MapGet("", async ([FromServices] ISender sender) =>
             {
                 try
                 {
@@ -45,7 +50,6 @@ public class InitializeEndpoint : ICarterModule
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
             .WithSummary("Initialize")
-            .WithDescription("Initialize")
-            .HasApiVersion(1.0);
+            .WithDescription("Initialize");
     }
 }
