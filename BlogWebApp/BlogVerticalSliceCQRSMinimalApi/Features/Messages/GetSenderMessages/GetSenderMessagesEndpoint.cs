@@ -1,4 +1,5 @@
-﻿using Blog.Contracts.V1;
+﻿using Asp.Versioning;
+using Blog.Contracts.V1;
 using Blog.Contracts.V1.Responses;
 using Carter;
 using MediatR;
@@ -10,7 +11,11 @@ public class GetSenderMessagesEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet(ApiRoutes.MessagesController.GetSenderMessages, async ([FromRoute] string senderEmail, [FromServices] ISender sender) =>
+        var group = app.MapGroup("Messages")
+            .MapToApiVersion(1.0)
+            .WithTags("Messages");
+
+        group.MapGet(ApiRoutes.MessagesController.GetSenderMessages, async ([FromRoute] string senderEmail, [FromServices] ISender sender) =>
             {
                 if (string.IsNullOrEmpty(senderEmail))
                     return Results.BadRequest("Something went wrong");
@@ -26,7 +31,6 @@ public class GetSenderMessagesEndpoint : ICarterModule
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
             .WithSummary("Get Sender Messages")
-            .WithDescription("Get Sender Messages")
-            .HasApiVersion(1.0);
+            .WithDescription("Get Sender Messages");
     }
 }
