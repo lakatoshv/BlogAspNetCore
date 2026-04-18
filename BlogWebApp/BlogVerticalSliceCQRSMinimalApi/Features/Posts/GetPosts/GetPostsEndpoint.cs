@@ -12,18 +12,12 @@ public class UserPostsEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var versionSet = app.NewApiVersionSet()
-            .HasApiVersion(new ApiVersion(1, 0))
-            .ReportApiVersions()
-            .Build();
-
-        var group = app.MapGroup(ApiRoutes.PostsController.Posts)
-            .WithApiVersionSet(versionSet)
+        var group = app.MapGroup("Posts")
             .MapToApiVersion(1.0)
             .WithTags("Posts");
 
-        group.MapPost(ApiRoutes.PostsController.GetPosts,
-                async ([FromBody] UserPostsRequest request,
+        group.MapPost("",
+                async ([FromBody] GetPostsRequest request,
                     [FromServices] ISender sender) =>
                 {
                     var command = request.Adapt<GetPostsCommand>();
@@ -39,7 +33,6 @@ public class UserPostsEndpoint : ICarterModule
             .Produces<PagedPostsResponse>()
             .Produces(StatusCodes.Status400BadRequest)
             .WithSummary("Get Posts")
-            .WithDescription("Get Posts")
-            .HasApiVersion(1.0);
+            .WithDescription("Get Posts");
     }
 }

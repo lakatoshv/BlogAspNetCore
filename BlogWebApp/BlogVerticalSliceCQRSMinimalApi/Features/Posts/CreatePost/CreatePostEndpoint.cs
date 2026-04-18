@@ -12,13 +12,7 @@ public class GetPostsEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var versionSet = app.NewApiVersionSet()
-            .HasApiVersion(new ApiVersion(1, 0))
-            .ReportApiVersions()
-            .Build();
-
-        var group = app.MapGroup(ApiRoutes.PostsController.Posts)
-            .WithApiVersionSet(versionSet)
+        var group = app.MapGroup("Posts")
             .MapToApiVersion(1.0)
             .WithTags("Posts");
 
@@ -45,7 +39,6 @@ public class GetPostsEndpoint : ICarterModule
             .Produces<CreatedResponse<int>>(201)
             .Produces(400)
             .WithSummary("Create post")
-            .WithDescription("Create post")
-            .HasApiVersion(1.0);
+            .WithDescription("Create post");
     }
 }
