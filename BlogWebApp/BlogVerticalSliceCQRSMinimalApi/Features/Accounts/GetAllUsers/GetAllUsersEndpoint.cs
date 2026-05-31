@@ -1,4 +1,5 @@
-﻿using Blog.Contracts.V1;
+﻿using Asp.Versioning;
+using Blog.Contracts.V1;
 using Blog.Contracts.V1.Responses.UsersResponses;
 using Carter;
 using MediatR;
@@ -10,7 +11,11 @@ public class GetAllUsersEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet(ApiRoutes.AccountsController.GetAllUsers, async ([FromServices] ISender sender) =>
+        var group = app.MapGroup("Accounts")
+            .MapToApiVersion(1.0)
+            .WithTags("Accounts");
+
+        group.MapGet(ApiRoutes.AccountsController.GetAllUsers, async ([FromServices] ISender sender) =>
             {
                 var result = await sender.Send(new GetAllUsersQuery());
 
@@ -23,7 +28,6 @@ public class GetAllUsersEndpoint : ICarterModule
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status404NotFound)
             .WithSummary("Get All Users")
-            .WithDescription("Get All Users")
-            .HasApiVersion(1.0);
+            .WithDescription("Get All Users");
     }
 }

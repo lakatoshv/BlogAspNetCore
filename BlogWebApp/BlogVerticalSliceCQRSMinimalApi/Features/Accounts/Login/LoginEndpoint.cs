@@ -11,13 +11,7 @@ public class LoginEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var versionSet = app.NewApiVersionSet()
-            .HasApiVersion(new ApiVersion(1, 0))
-            .ReportApiVersions()
-            .Build();
-
-        var group = app.MapGroup(ApiRoutes.AccountsController.Accounts)
-            .WithApiVersionSet(versionSet)
+        var group = app.MapGroup("Accounts")
             .MapToApiVersion(1.0)
             .WithTags("Accounts");
 
@@ -40,7 +34,6 @@ public class LoginEndpoint : ICarterModule
             .Produces(200)
             .Produces<string>(400)
             .WithSummary("Login")
-            .WithDescription("Login")
-            .HasApiVersion(1.0);
+            .WithDescription("Login");
     }
 }

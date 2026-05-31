@@ -12,13 +12,7 @@ public class RegisterEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var versionSet = app.NewApiVersionSet()
-            .HasApiVersion(new ApiVersion(1, 0))
-            .ReportApiVersions()
-            .Build();
-
-        var group = app.MapGroup(ApiRoutes.AccountsController.Accounts)
-            .WithApiVersionSet(versionSet)
+        var group = app.MapGroup("Accounts")
             .MapToApiVersion(1.0)
             .WithTags("Accounts");
 
@@ -48,7 +42,6 @@ public class RegisterEndpoint : ICarterModule
             .Produces(204)
             .Produces<IdentityResult>(400)
             .WithSummary("Register")
-            .WithDescription("Register")
-            .HasApiVersion(1.0);
+            .WithDescription("Register");
     }
 }
