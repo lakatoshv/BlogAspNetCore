@@ -123,3 +123,5 @@
 /BlogWebApp/BlogMinimalApi/obj
 /BlogWebApp/BlogVerticalSliceCQRSMinimalApi/bin/Debug/net10.0
 /BlogWebApp/BlogVerticalSliceCQRSMinimalApi/obj
+/BlogWebApp/Blog.FSharpRESTAPI/bin/Debug
+/BlogWebApp/Blog.FSharpRESTAPI/obj
