@@ -45,4 +45,13 @@
 		<PackageReference Update="FSharp.Core" Version="10.0.103" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\..\Shared\Blog.Contracts\Blog.Contracts.csproj" />
+		<ProjectReference Include="..\..\Shared\Blog.Core\Blog.Core.csproj" />
+		<ProjectReference Include="..\Data\Blog.Data.Models\Blog.Data.Models.csproj" />
+		<ProjectReference Include="..\Services\Blog.CommonServices\Blog.CommonServices.csproj" />
+		<ProjectReference Include="..\Services\Blog.Services.Core\Blog.Services.Core.csproj" />
+		<ProjectReference Include="..\Services\Blog.Services\Blog.EntityServices.csproj" />
+	</ItemGroup>
+
 </Project>
