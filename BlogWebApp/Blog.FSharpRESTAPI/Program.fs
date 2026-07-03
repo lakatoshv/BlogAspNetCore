@@ -77,6 +77,22 @@ module App =
 
         services.AddDistributedMemoryCache() |> ignore
 
+        //-----------------------------------------
+        // AutoMapper
+        //-----------------------------------------
+
+        services.AddAutoMapper(typeof<Program>)
+        |> ignore
+
+        //-----------------------------------------
+        // Controllers
+        //-----------------------------------------
+
+        services.AddControllers()
+        |> ignore
+
+        services.AddEndpointsApiExplorer()
+        |> ignore
 
         app.Run()
 
