@@ -94,6 +94,20 @@ module App =
         services.AddEndpointsApiExplorer()
         |> ignore
 
+        //-----------------------------------------
+        // EF Core
+        //-----------------------------------------
+
+        services.AddDbContextPool<ApplicationDbContext>(
+            fun options ->
+
+                options.UseSqlServer(
+                    configuration.GetConnectionString("DefaultConnection")
+                )
+                |> ignore
+        )
+        |> ignore
+
         app.Run()
 
         0
