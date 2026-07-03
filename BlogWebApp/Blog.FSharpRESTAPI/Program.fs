@@ -59,6 +59,15 @@ module App =
 
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)
 
+        //-----------------------------------------
+        // Options
+        //-----------------------------------------
+
+        services.AddOptions() |> ignore
+
+        services.AddLocalization() |> ignore
+
+
         app.Run()
 
         0
