@@ -67,6 +67,16 @@ module App =
 
         services.AddLocalization() |> ignore
 
+        //-----------------------------------------
+        // Memory Cache
+        //-----------------------------------------
+
+        services.AddMemoryCache() |> ignore
+
+        services.AddResponseCaching() |> ignore
+
+        services.AddDistributedMemoryCache() |> ignore
+
 
         app.Run()
 
