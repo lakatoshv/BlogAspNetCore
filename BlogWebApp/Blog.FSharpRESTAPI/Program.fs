@@ -108,6 +108,39 @@ module App =
         )
         |> ignore
 
+        //-----------------------------------------
+        // Configuration
+        //-----------------------------------------
+
+        services.Configure<BlogConfiguration>(
+            configuration.GetSection(nameof(BlogConfiguration))
+        )
+        |> ignore
+
+        services.Configure<SmtpOptions>(
+            configuration.GetSection(nameof(SmtpOptions))
+        )
+        |> ignore
+
+        services.Configure<EmailExtensionOptions>(
+            configuration.GetSection(nameof(EmailExtensionOptions))
+        )
+        |> ignore
+
+        services.Configure<RedisCacheConfiguration>(
+            configuration.GetSection(nameof(RedisCacheConfiguration))
+        )
+        |> ignore
+
+        services.AddTransient<BlogConfiguration>(fun sp ->
+
+            sp.GetRequiredService<IOptions<BlogConfiguration>>().Value
+
+        ) |> ignore
+
+        services.AddTransient<HostingConfig>()
+        |> ignore
+
         app.Run()
 
         0
