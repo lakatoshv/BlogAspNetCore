@@ -141,6 +141,131 @@ module App =
         services.AddTransient<HostingConfig>()
         |> ignore
 
+        //-----------------------------------------
+        // Identity
+        //-----------------------------------------
+
+        services.AddScoped<RoleManager<ApplicationRole>>()
+            |> ignore
+
+        let identity =
+            services.AddIdentityCore<ApplicationUser>(fun options ->
+
+            options.Password.RequireDigit <- false
+            options.Password.RequireLowercase <- false
+            options.Password.RequireUppercase <- false
+            options.Password.RequireNonAlphanumeric <- false
+            options.Password.RequiredLength <- 6
+
+        )
+
+        let identityBuilder =
+            IdentityBuilder(
+                identity.UserType,
+                typeof<ApplicationRole>,
+                services
+            )
+
+        identityBuilder
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddUserStore<ApplicationUserStore>()
+            .AddRoleStore<ApplicationRoleStore>()
+            .AddDefaultTokenProviders()
+            |> ignore
+
+        //-----------------------------------------
+        // JWT
+        //-----------------------------------------
+
+        let jwtSection =
+            configuration.GetSection(nameof(JwtIssuerOptions))
+
+        let secretKey =
+            "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"
+
+        let signingKey =
+            SymmetricSecurityKey(
+                Encoding.ASCII.GetBytes(secretKey)
+            )
+
+        services.AddTransient<IJwtFactory, JwtFactory>()
+        |> ignore
+
+        builder.Services.Configure<JwtIssuerOptions>(
+            fun (options: JwtIssuerOptions) ->
+                options.Issuer <- jwtSection["Issuer"]
+                options.Audience <- jwtSection["Audience"]
+                options.SigningCredentials <-
+                    SigningCredentials(
+                        signingKey,
+                        SecurityAlgorithms.HmacSha256
+                    )
+        )
+        |> ignore
+
+        let issuer =
+            jwtSection.["Issuer"]
+
+        let audience =
+            jwtSection.["Audience"]
+
+        let validation =
+            TokenValidationParameters(
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = true,
+                RequireExpirationTime = false,
+                ClockSkew = TimeSpan.Zero,
+                ValidIssuer = issuer,
+                ValidAudience = audience,
+                IssuerSigningKey = signingKey
+            )
+
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(fun options ->
+
+                options.ClaimsIssuer <- issuer
+                options.TokenValidationParameters <- validation
+                options.SaveToken <- true
+
+            )
+        |> ignore
+
+        services.Configure<JwtIssuerOptions>(fun (options: JwtIssuerOptions) ->
+            options.Issuer <- issuer
+            options.Audience <- audience
+
+            options.SigningCredentials <-
+                SigningCredentials(
+                    signingKey,
+                    SecurityAlgorithms.HmacSha256
+                )
+        ) |> ignore
+
+        //-----------------------------------------
+        // Authorization
+        //-----------------------------------------
+
+        services.AddAuthorization(fun options ->
+
+            options.AddPolicy(
+                "ApiUser",
+                fun policy ->
+                    policy.RequireClaim(
+                        JwtClaimTypes.Rol,
+                        JwtClaims.ApiAccess
+                    )
+                    |> ignore
+            )
+
+        )
+            |> ignore
+
+        services.AddSingleton<IAuthorizationHandler, HasScopeHandler>()
+            |> ignore
+
         app.Run()
 
         0
