@@ -266,6 +266,26 @@ module App =
         services.AddSingleton<IAuthorizationHandler, HasScopeHandler>()
             |> ignore
 
+        //-----------------------------------------
+        // HttpContext
+        //-----------------------------------------
+
+        services.AddHttpContextAccessor()
+            |> ignore
+
+        //-----------------------------------------
+        // Email
+        //-----------------------------------------
+
+        services.AddSingleton<IEmailService, SmtpEmailService>()
+            |> ignore
+
+        services.AddTransient<IEmailExtensionService, EmailExtensionService>()
+            |> ignore
+
+        services.AddTransient<IEmailTemplateProvider, SimpleEmailTemplateProvider>()
+            |> ignore
+
         app.Run()
 
         0
