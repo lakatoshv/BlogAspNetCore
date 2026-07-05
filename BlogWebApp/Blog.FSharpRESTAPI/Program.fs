@@ -286,6 +286,16 @@ module App =
         services.AddTransient<IEmailTemplateProvider, SimpleEmailTemplateProvider>()
             |> ignore
 
+        //-----------------------------------------
+        // Cache
+        //-----------------------------------------
+
+        services.AddTransient<IStaticCacheManager, MemoryCacheManager>()
+            |> ignore
+
+        services.AddTransient<IResponseCacheService, ResponseCacheService>()
+            |> ignore
+
         app.Run()
 
         0
