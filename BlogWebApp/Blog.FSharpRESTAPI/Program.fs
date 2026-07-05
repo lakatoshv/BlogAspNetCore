@@ -296,6 +296,19 @@ module App =
         services.AddTransient<IResponseCacheService, ResponseCacheService>()
             |> ignore
 
+        //-----------------------------------------
+        // Helpers
+        //-----------------------------------------
+
+        services.AddTransient<IWebHelper, WebHelper>()
+            |> ignore
+
+        services.AddTransient<IShareFileProvider, FileProvider>()
+            |> ignore
+
+        services.AddTransient<IControllerContext, MyControllerContext>()
+            |> ignore
+
         app.Run()
 
         0
