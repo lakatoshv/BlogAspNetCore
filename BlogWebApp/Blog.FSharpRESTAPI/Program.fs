@@ -340,6 +340,40 @@ module App =
         services.AddScoped<IRepository<Setting>, Repository<Setting>>()
         |> ignore
 
+        //-----------------------------------------
+        // Domain Services
+        //-----------------------------------------
+
+        services.AddTransient<IAuthService, AuthService>()
+        |> ignore
+
+        services.AddTransient<IUserService, UserService>()
+        |> ignore
+
+        services.AddTransient<IRegistrationService, RegistrationService>()
+        |> ignore
+
+        services.AddTransient<IRefreshTokenService, RefreshTokenService>()
+        |> ignore
+
+        services.AddTransient<IPostsService, PostsService>()
+        |> ignore
+
+        services.AddTransient<ICommentsService, CommentsService>()
+        |> ignore
+
+        services.AddTransient<IProfileService, ProfileService>()
+        |> ignore
+
+        services.AddTransient<IMessagesService, MessagesService>()
+        |> ignore
+
+        services.AddTransient<ITagsService, TagsService>()
+        |> ignore
+
+        services.AddTransient<IPostsTagsRelationsService, PostsTagsRelationsService>()
+        |> ignore
+
         app.Run()
 
         0
