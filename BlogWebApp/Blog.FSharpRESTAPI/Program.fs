@@ -309,6 +309,37 @@ module App =
         services.AddTransient<IControllerContext, MyControllerContext>()
             |> ignore
 
+            //-----------------------------------------
+        // Repositories
+        //-----------------------------------------
+
+        services.AddScoped<IRepository<ApplicationUser>, Repository<ApplicationUser>>()
+        |> ignore
+
+        services.AddScoped<IRepository<RefreshToken>, Repository<RefreshToken>>()
+        |> ignore
+
+        services.AddScoped<IRepository<Post>, Repository<Post>>()
+        |> ignore
+
+        services.AddScoped<IRepository<Comment>, Repository<Comment>>()
+        |> ignore
+
+        services.AddScoped<IRepository<Message>, Repository<Message>>()
+        |> ignore
+
+        services.AddScoped<IRepository<Profile>, Repository<Profile>>()
+        |> ignore
+
+        services.AddScoped<IRepository<Tag>, Repository<Tag>>()
+        |> ignore
+
+        services.AddScoped<IRepository<PostsTagsRelations>, Repository<PostsTagsRelations>>()
+        |> ignore
+
+        services.AddScoped<IRepository<Setting>, Repository<Setting>>()
+        |> ignore
+
         app.Run()
 
         0
