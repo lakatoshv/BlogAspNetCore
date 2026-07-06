@@ -385,6 +385,31 @@ module App =
 
         services.AddMediatR(mediatr)
         |> ignore
+
+        //-----------------------------------------
+        // Health Checks
+        //-----------------------------------------
+
+        services
+            .AddHealthChecks()
+            .AddDbContextCheck<ApplicationDbContext>()
+            |> ignore
+
+        services.Configure<HealthCheckPublisherOptions>(fun (options: HealthCheckPublisherOptions) ->
+
+            options.Delay <- TimeSpan.FromSeconds(2.0)
+
+            options.Predicate <-
+                Func<HealthCheckRegistration, bool>(fun check ->
+                    check.Tags.Contains("ready")
+                )
+        )
+        |> ignore
+
+        services.AddSingleton<IHealthCheckPublisher, ReadinessPublisher>()
+        |> ignore
+
+
         app.Run()
 
         0
