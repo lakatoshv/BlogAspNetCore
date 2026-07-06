@@ -374,6 +374,17 @@ module App =
         services.AddTransient<IPostsTagsRelationsService, PostsTagsRelationsService>()
         |> ignore
 
+        //-----------------------------------------
+        // MediatR
+        //-----------------------------------------
+
+        let mediatr =
+            MediatRServiceConfiguration()
+
+        mediatr.RegisterServicesFromAssembly(typeof<Program>.Assembly)
+
+        services.AddMediatR(mediatr)
+        |> ignore
         app.Run()
 
         0
