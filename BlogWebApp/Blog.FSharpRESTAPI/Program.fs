@@ -432,6 +432,27 @@ module App =
             )
             |> ignore
 
+        //-----------------------------------------
+        // CORS
+        //-----------------------------------------
+
+        services.AddCors(fun options ->
+
+            options.AddPolicy(
+                "CorsPolicy",
+                fun builder ->
+
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                    |> ignore
+
+            )
+
+        )
+        |> ignore
+
         app.Run()
 
         0
