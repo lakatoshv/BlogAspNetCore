@@ -498,8 +498,51 @@ module App =
         )
         |> ignore
 
-        // ================= ENTRY POINT =================
+    // ================= ENTRY POINT =================
 
+    [<EntryPoint>]
+    let main args =
+
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)
+
+        let builder = WebApplication.CreateBuilder(args)
+
+        builder.Configuration
+            .AddJsonFile("appsettings.json", optional = false, reloadOnChange = true)
+            .AddEnvironmentVariables()
+            |> ignore
+
+        configureServices builder
+
+        let app = builder.Build()
+
+        // ================= Middleware =================
+
+        if app.Environment.IsDevelopment() then
+            app.UseDeveloperExceptionPage() |> ignore
+
+        app.UseSwagger() |> ignore
+
+        app.UseSwaggerUI(fun c ->
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Blog API v1")
+            c.RoutePrefix <- "swagger"
+        )
+        |> ignore
+
+        app.UseHttpsRedirection() |> ignore
+
+        app.UseRouting() |> ignore
+
+        app.UseCors("CorsPolicy") |> ignore
+
+        app.UseResponseCaching() |> ignore
+
+        app.UseAuthentication() |> ignore
+        app.UseAuthorization() |> ignore
+
+        app.MapControllers() |> ignore
+
+        app.MapHealthChecks("/health") |> ignore
 
         app.Run()
 
