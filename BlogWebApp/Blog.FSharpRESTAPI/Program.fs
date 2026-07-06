@@ -476,6 +476,31 @@ module App =
             )
         |> ignore
 
+        //-----------------------------------------
+        // Swagger
+        //-----------------------------------------
+
+        services.AddSwaggerGen(fun c ->
+
+            c.SwaggerDoc(
+                "v1",
+                OpenApiInfo(
+                    Title = "Blog API",
+                    Version = "v1",
+                    Description = "Blog REST API"
+                )
+            )
+
+            c.ResolveConflictingActions(fun api ->
+                Seq.head api
+            )
+
+        )
+        |> ignore
+
+        // ================= ENTRY POINT =================
+
+
         app.Run()
 
         0
