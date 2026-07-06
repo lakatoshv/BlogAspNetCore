@@ -453,6 +453,29 @@ module App =
         )
         |> ignore
 
+        //-----------------------------------------
+        // API Versioning
+        //-----------------------------------------
+
+        services
+            .AddApiVersioning(fun options ->
+
+                options.ReportApiVersions <- true
+
+                options.DefaultApiVersion <- ApiVersion(1,0)
+
+                options.AssumeDefaultVersionWhenUnspecified <- true
+
+            )
+            .AddApiExplorer(fun options ->
+
+                options.GroupNameFormat <- "'v'VVV"
+
+                options.SubstituteApiVersionInUrl <- true
+
+            )
+        |> ignore
+
         app.Run()
 
         0
