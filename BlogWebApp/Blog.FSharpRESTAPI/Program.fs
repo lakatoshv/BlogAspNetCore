@@ -409,6 +409,28 @@ module App =
         services.AddSingleton<IHealthCheckPublisher, ReadinessPublisher>()
         |> ignore
 
+        //-----------------------------------------
+        // Redis
+        //-----------------------------------------
+
+        let redis =
+            RedisCacheConfiguration()
+
+        configuration
+            .GetSection(nameof(RedisCacheConfiguration))
+            .Bind(redis)
+
+        services.AddSingleton(redis)
+        |> ignore
+
+        if redis.Enabled then
+
+            services.AddStackExchangeRedisCache(fun options ->
+
+                options.Configuration <- redis.ConnectionString
+
+            )
+            |> ignore
 
         app.Run()
 
