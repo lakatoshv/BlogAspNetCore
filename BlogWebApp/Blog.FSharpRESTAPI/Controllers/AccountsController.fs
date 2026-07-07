@@ -73,3 +73,16 @@ type AccountsController
                 |> mapper.Map<List<AccountResponse>>
                 |> this.Ok
         }
+
+    [<HttpGet(ApiRoutes.AccountsController.SendConfirmationEmail)>]
+    [<ProducesResponseType(204)>]
+    member this.SendVerificationEmailAsync() =
+        task {
+            let! token =
+                userService.GetEmailVerificationTokenAsync(this.CurrentUser.Email)
+
+            do!
+                emailService.SendVerificationEmailAsync(this.UserName, token)
+
+            return this.NoContent()
+        }
