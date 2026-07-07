@@ -39,3 +39,21 @@ type AccountsController
         mapper : IMapper
     ) =
     inherit BaseController(controllerContext)
+
+    [<HttpGet(ApiRoutes.AccountsController.Initialize)>]
+    [<ProducesResponseType(typeof<List<RoleResponse>>, 200)>]
+    [<ProducesResponseType(typeof<string>, 400)>]
+    [<AllowAnonymous>]
+    member this.Initialize([<FromRoute>] userId : string) : Task<IActionResult> =
+        task {
+
+            if String.IsNullOrWhiteSpace(userId) then
+                return this.BadError("Something Went Wrong")
+            else
+                let! roles = roleManager.Roles.ToListAsync()
+
+                return
+                    (this.Ok(
+                        mapper.Map<List<RoleResponse>>(roles)
+                    ) :> IActionResult)
+        }
