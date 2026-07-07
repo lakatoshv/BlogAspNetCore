@@ -57,3 +57,19 @@ type AccountsController
                         mapper.Map<List<RoleResponse>>(roles)
                     ) :> IActionResult)
         }
+
+    [<HttpGet(ApiRoutes.AccountsController.GetAllUsers)>]
+    [<AllowAnonymous>]
+    [<ProducesResponseType(typeof<List<AccountResponse>>, 200)>]
+    member this.GetAllUsers() =
+        task {
+            let! users =
+                userManager.Users
+                    .Include(fun u -> u.Roles)
+                    .ToListAsync()
+
+            return
+                users
+                |> mapper.Map<List<AccountResponse>>
+                |> this.Ok
+        }
