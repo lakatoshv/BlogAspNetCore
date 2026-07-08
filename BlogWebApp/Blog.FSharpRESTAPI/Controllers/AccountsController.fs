@@ -131,3 +131,57 @@ type AccountsController
                     else
                         return this.Ok(jwt) :> IActionResult
         }
+
+    [<HttpPost(ApiRoutes.AccountsController.Register)>]
+    [<AllowAnonymous>]
+    [<ProducesResponseType(201)>]
+    [<ProducesResponseType(typeof<IdentityResult>, 400)>]
+    member this.CreateAsync([<FromBody>] model : RegistrationRequest) : Task<IActionResult> =
+        task {
+
+            if not this.ModelState.IsValid then
+                return this.BadModel(this.ModelState)
+
+            else
+
+                model.UserName <- model.Email
+
+                let userIdentity =
+                    mapper.Map<ApplicationUser>(model)
+
+                userIdentity.CreatedOn <- DateTime.Now
+                userIdentity.SecurityStamp <- Guid.NewGuid().ToString()
+
+                let! result =
+                    registrationService.RegisterAsync(
+                        userIdentity,
+                        model.Password
+                    )
+
+                if not result.Succeeded then
+                    return this.BadIdentity(result)
+
+                else
+
+                    if isNull model.Roles then
+                        model.Roles <- [| "User" |]
+
+                    let mutable success = true
+
+                    for role in model.Roles do
+
+                        let! ir =
+                            userManager.AddToRoleAsync(
+                                userIdentity,
+                                role
+                            )
+
+                        if not ir.Succeeded then
+                            success <- false
+
+                    if success then
+                        return (this.NoContent() :> IActionResult)
+
+                    else
+                        return (this.BadRequest() :> IActionResult)
+        }
