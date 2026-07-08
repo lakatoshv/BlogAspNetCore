@@ -86,3 +86,19 @@ type AccountsController
 
             return this.NoContent()
         }
+
+    [<HttpGet(ApiRoutes.AccountsController.UsersActivity)>]
+    [<ProducesResponseType(typeof<ChartDataModel>, 200)>]
+    [<ProducesResponseType(typeof<string>, 400)>]
+    [<Cached(600)>]
+    member this.GetUsersActivity() : Task<IActionResult> =
+        task {
+
+            let! activity =
+                userService.GetUsersActivity()
+
+            if isNull activity then
+                return (this.NotFound() :> IActionResult)
+            else
+                return (this.Ok(activity) :> IActionResult)
+        }
