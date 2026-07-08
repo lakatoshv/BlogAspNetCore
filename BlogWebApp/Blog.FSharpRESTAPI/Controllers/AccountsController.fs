@@ -185,3 +185,29 @@ type AccountsController
                     else
                         return (this.BadRequest() :> IActionResult)
         }
+
+    [<HttpPut(ApiRoutes.AccountsController.ChangePassword)>]
+    [<ProducesResponseType(204)>]
+    [<ProducesResponseType(typeof<ModelStateDictionary>, 400)>]
+    member this.UpdateAsync([<FromBody>] model : ChangePasswordRequest) : Task<IActionResult> =
+        task {
+            if not this.ModelState.IsValid then
+                return this.BadModel(this.ModelState)
+
+            else
+                let! result =
+                    userService.ChangePasswordAsync(
+                        this.CurrentUser.UserName,
+                        model.OldPassword,
+                        model.NewPassword)
+
+                if result.Succeeded then
+                    return this.NoContent() :> IActionResult
+
+                else
+                    result.Errors
+                    |> Seq.iter (fun e ->
+                        this.ModelState.AddModelError(e.Code, e.Description))
+
+                    return this.BadModel(this.ModelState)
+    }
