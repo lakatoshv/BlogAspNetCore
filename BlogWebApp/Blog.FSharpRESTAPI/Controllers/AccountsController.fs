@@ -102,3 +102,32 @@ type AccountsController
             else
                 return (this.Ok(activity) :> IActionResult)
         }
+
+    [<HttpPost(ApiRoutes.AccountsController.Login)>]
+    [<AllowAnonymous>]
+    [<ProducesResponseType(typeof<string>, 200)>]
+    [<ProducesResponseType(typeof<string>, 400)>]
+    member this.PostAsync([<FromBody>] credentials : LoginRequest) : Task<IActionResult> =
+        task {
+            if not this.ModelState.IsValid then
+                return this.BadModel(this.ModelState)
+
+            else
+                let! jwt =
+                    authService.GetJwtAsync(
+                        credentials.Email,
+                        credentials.Password)
+
+                if isNull jwt then
+                    return this.BadError("Invalid name or password")
+
+                else
+                    let! user =
+                        authService.GetByUserNameAsync(credentials.Email)
+
+                    if isNull user then
+                        return this.BadError("")
+
+                    else
+                        return this.Ok(jwt) :> IActionResult
+        }
