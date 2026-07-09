@@ -37,3 +37,19 @@ type CommentsController
         mapper : IMapper
     ) =
     inherit BaseController(controllerContext)
+
+    [<ProducesResponseType(typeof<List<CommentResponse>>, 200)>]
+    [<HttpGet>]
+    [<Cached(600)>]
+    [<ProducesResponseType(typeof<List<CommentResponse>>, 200)>]
+    member this.GetAllComments() : Task<IActionResult> =
+        task {
+
+            let! comments =
+                commentsService.GetAllAsync()
+
+            let response =
+                mapper.Map<List<CommentResponse>>(comments)
+
+            return this.Ok(response) :> IActionResult
+        }
