@@ -53,3 +53,21 @@ type CommentsController
 
             return this.Ok(response) :> IActionResult
         }
+
+    [<ProducesResponseType(typeof<List<CommentResponse>>, 200)>]
+    [<HttpGet>]
+    [<Cached(600)>]
+    member this.CommentsActivity() : Task<IActionResult> =
+        task {
+
+            let! activity =
+                commentsService.GetCommentsActivity()
+
+            if isNull activity then
+                return (this.NotFound() :> IActionResult)
+
+            else
+                return
+                    (this.Ok(activity)
+                        :> IActionResult)
+        }
