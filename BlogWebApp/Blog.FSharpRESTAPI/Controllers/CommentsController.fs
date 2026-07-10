@@ -208,3 +208,46 @@ type CommentsController
                     (this.CreatedAtRoute(locationUrl, response)
                         :> IActionResult)
         }
+
+    [<HttpPut(ApiRoutes.CommentsController.EditComment)>]
+    [<ProducesResponseType(typeof<CommentResponse>, 204)>]
+    [<ProducesResponseType(400)>]
+    [<ProducesResponseType(404)>]
+    [<Authorize>]
+    member this.EditAsync(
+        [<FromRoute>] id : int,
+        [<FromBody>] request : UpdateCommentRequest
+    )
+        : Task<IActionResult> =
+
+        task {
+
+            let! originComment =
+                commentsService.GetCommentAsync(id)
+
+            if isNull originComment then
+                return (this.NotFound() :> IActionResult)
+
+            else
+
+                if not (originComment.UserId.Equals(request.UserId)) then
+                    return (this.NotFound() :> IActionResult)
+
+                else
+
+                    request.CreatedAt <- DateTime.Now
+
+                    let updatedComment =
+                        mapper.Map(request, originComment)
+
+                    do!
+                        commentsService.UpdateAsync(updatedComment)
+
+                    let! comment =
+                        commentsService.GetCommentAsync(id)
+
+                    return
+                        (this.Ok(
+                            mapper.Map<CommentResponse>(comment)
+                        ) :> IActionResult)
+        }
