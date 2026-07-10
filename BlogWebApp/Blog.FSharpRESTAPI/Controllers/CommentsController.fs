@@ -147,3 +147,26 @@ type CommentsController
                         mapper.Map<List<CommentResponse>>(comments)
                     ) :> IActionResult)
         }
+
+    [<ProducesResponseType(typeof<CommentResponse>, 200)>]
+    [<ProducesResponseType(404)>]
+    [<HttpGet("{id:int}", Name = ApiRoutes.CommentsController.GetComment)>]
+    member this.GetComment(
+        [<FromRoute>] id : int
+    )
+        : Task<IActionResult> =
+
+        task {
+
+            let! comment =
+                commentsService.GetCommentAsync(id)
+
+            if isNull comment then
+                return (this.NotFound() :> IActionResult)
+
+            else
+                return
+                    (this.Ok(
+                        mapper.Map<CommentResponse>(comment)
+                    ) :> IActionResult)
+        }
