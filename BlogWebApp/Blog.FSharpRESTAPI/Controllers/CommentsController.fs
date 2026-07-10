@@ -108,3 +108,42 @@ type CommentsController
                         mapper.Map<PagedCommentsResponse>(comments)
                     ) :> IActionResult)
         }
+
+    [<ProducesResponseType(typeof<List<CommentResponse>>, 200)>]
+    [<ProducesResponseType(404)>]
+    [<HttpPost(ApiRoutes.CommentsController.GetCommentsByPost)>]
+    [<Cached(600)>]
+    member this.GetCommentsByPostAsync(
+        [<FromRoute>] id : int,
+        [<FromBody>] sortParameters : SortParametersRequest
+    )
+        : Task<IActionResult> =
+
+        task {
+
+            let sortParameters =
+                if isNull sortParameters then
+                    SortParametersRequest()
+                else
+                    sortParameters
+
+            if not sortParameters.CurrentPage.HasValue then
+                sortParameters.CurrentPage <- Nullable 1
+
+            sortParameters.PageSize <- 10
+
+            let! comments =
+                commentsService.GetPagedCommentsByPostId(
+                    id,
+                    mapper.Map<SortParametersDto>(sortParameters)
+                )
+
+            if isNull comments then
+                return (this.NotFound() :> IActionResult)
+
+            else
+                return
+                    (this.Ok(
+                        mapper.Map<List<CommentResponse>>(comments)
+                    ) :> IActionResult)
+        }
