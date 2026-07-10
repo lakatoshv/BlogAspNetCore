@@ -170,3 +170,41 @@ type CommentsController
                         mapper.Map<CommentResponse>(comment)
                     ) :> IActionResult)
         }
+
+    [<HttpPost(ApiRoutes.CommentsController.CreateComment)>]
+    [<ProducesResponseType(typeof<CommentResponse>, 201)>]
+    [<ProducesResponseType(typeof<ModelStateDictionary>, 400)>]
+    [<Authorize>]
+    member this.CreateAsync(
+        [<FromBody>] request : CreateCommentRequest
+    )
+        : Task<IActionResult> =
+
+        task {
+
+            if not this.ModelState.IsValid then
+                return this.BadModel(this.ModelState)
+
+            else
+
+                let comment =
+                    mapper.Map<Comment>(request)
+
+                comment.CreatedAt <- DateTime.Now
+
+                do!
+                    commentsService.InsertAsync(comment)
+
+                let response = CreatedResponse<int>()
+                response.Id <- comment.Id
+
+                let baseUrl =
+                    $"{this.HttpContext.Request.Scheme}://{this.HttpContext.Request.Host.ToUriComponent()}"
+
+                let locationUrl =
+                    $"{baseUrl}/{ApiRoutes.CommentsController.Comments}/{ApiRoutes.CommentsController.GetComment}/{comment.Id}"
+
+                return
+                    (this.CreatedAtRoute(locationUrl, response)
+                        :> IActionResult)
+        }
