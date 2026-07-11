@@ -26,3 +26,23 @@ type MessagesController(
     mapper : IMapper
 ) =
     inherit BaseController(controllerContext)
+
+    [<HttpGet>]
+    [<ProducesResponseType(typeof<List<MessageResponse>>, 200)>]
+    [<ProducesResponseType(404)>]
+    [<Cached(600)>]
+    member this.Index() : Task<IActionResult> =
+        task {
+
+            let! messages =
+                messagesService.GetAllAsync()
+
+            if isNull messages then
+                return (this.NotFound() :> IActionResult)
+
+            else
+                return
+                    (this.Ok(
+                        mapper.Map<List<MessageResponse>>(messages.ToList())
+                    ) :> IActionResult)
+        }
