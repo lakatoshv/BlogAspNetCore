@@ -251,3 +251,32 @@ type CommentsController
                             mapper.Map<CommentResponse>(comment)
                         ) :> IActionResult)
         }
+
+    [<HttpDelete(ApiRoutes.CommentsController.DeleteComment)>]
+    [<ProducesResponseType(typeof<CreatedResponse<int>>, 200)>]
+    [<ProducesResponseType(404)>]
+    member this.DeleteAsync(
+        [<FromRoute>] id : int
+    )
+        : Task<IActionResult> =
+
+        task {
+
+            let! comment =
+                commentsService.GetCommentAsync(id)
+
+            if isNull comment then
+                return (this.NotFound() :> IActionResult)
+
+            else
+
+                do!
+                    commentsService.DeleteAsync(comment)
+
+                let response = CreatedResponse<int>()
+                response.Id <- id
+
+                return
+                    (this.Ok(response)
+                        :> IActionResult)
+        }
