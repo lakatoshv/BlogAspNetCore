@@ -139,3 +139,58 @@ type PostsController(
 
                 return this.Ok(response) :> IActionResult
         }
+
+    // --------------------------------------------------------------------
+    // POST: Posts/user_posts/{id}
+    // --------------------------------------------------------------------
+
+    [<HttpPost(ApiRoutes.PostsController.UserPosts)>]
+    [<ProducesResponseType(typeof<PagedPostsResponse>, 200)>]
+    [<ProducesResponseType(404)>]
+    [<Cached(600)>]
+    member this.GetUserPosts
+        (
+            [<FromRoute>] id : string,
+            [<FromBody>] searchParameters : PostsSearchParametersRequest
+        ) : Task<IActionResult> =
+
+        task {
+
+            searchParameters.SortParameters
+                <- searchParameters.SortParameters
+                |> Option.ofObj
+                |> Option.defaultValue (SortParametersRequest())
+
+            searchParameters.SortParameters.OrderBy
+                <- searchParameters.SortParameters.OrderBy
+                |> Option.ofObj
+                |> Option.defaultValue "asc"
+
+            searchParameters.SortParameters.SortBy
+                <- searchParameters.SortParameters.SortBy
+                |> Option.ofObj
+                |> Option.defaultValue "Title"
+
+            searchParameters.SortParameters.CurrentPage
+                <- searchParameters.SortParameters.CurrentPage
+                |> Option.ofNullable
+                |> Option.defaultValue 1
+                |> Nullable
+
+            searchParameters.SortParameters.PageSize <- Nullable 10
+
+            let! posts =
+                postsService.GetUserPostsAsync(
+                    id,
+                    mapper.Map<PostsSearchParametersDto>(searchParameters)
+                )
+
+            if isNull posts then
+                return this.NotFound() :> IActionResult
+            else
+
+                let response =
+                    mapper.Map<PagedPostsResponse>(posts)
+
+                return this.Ok(response) :> IActionResult
+        }
