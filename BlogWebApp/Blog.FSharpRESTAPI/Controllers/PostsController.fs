@@ -39,3 +39,27 @@ type PostsController(
     mapper : IMapper
 ) =
     inherit BaseController(controllerContext)
+
+    // --------------------------------------------------------------------
+    // GET: Posts
+    // --------------------------------------------------------------------
+
+    [<HttpGet>]
+    [<ProducesResponseType(typeof<List<PostResponse>>, 200)>]
+    [<ProducesResponseType(404)>]
+    [<Cached(600)>]
+    member this.Index() : Task<IActionResult> =
+        task {
+
+            let! posts =
+                postsService.GetAllAsync()
+
+            if isNull posts then
+                return this.NotFound() :> IActionResult
+            else
+
+                let response =
+                    mapper.Map<List<PostResponse>>(posts.ToList())
+
+                return this.Ok(response) :> IActionResult
+        }
