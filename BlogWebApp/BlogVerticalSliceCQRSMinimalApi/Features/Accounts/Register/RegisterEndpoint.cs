@@ -4,6 +4,7 @@ using Carter;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BlogVerticalSliceCQRSMinimalApi.Features.Accounts.Register;
 
@@ -11,18 +12,12 @@ public class RegisterEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var versionSet = app.NewApiVersionSet()
-            .HasApiVersion(new ApiVersion(1, 0))
-            .ReportApiVersions()
-            .Build();
-
-        var group = app.MapGroup(ApiRoutes.AccountsController.Accounts)
-            .WithApiVersionSet(versionSet)
+        var group = app.MapGroup("Accounts")
             .MapToApiVersion(1.0)
             .WithTags("Accounts");
 
         group.MapPost(ApiRoutes.AccountsController.Register,
-                async (RegisterRequest request, ISender sender) =>
+                async ([FromBody] RegisterRequest request, [FromServices] ISender sender) =>
                 {
                     var command = request.Adapt<RegisterCommand>();
 
@@ -47,7 +42,6 @@ public class RegisterEndpoint : ICarterModule
             .Produces(204)
             .Produces<IdentityResult>(400)
             .WithSummary("Register")
-            .WithDescription("Register")
-            .HasApiVersion(1.0);
+            .WithDescription("Register");
     }
 }

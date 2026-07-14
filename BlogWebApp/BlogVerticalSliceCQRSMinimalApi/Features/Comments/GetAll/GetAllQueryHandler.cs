@@ -1,7 +1,7 @@
-﻿using Blog.Contracts.V1.Responses.CommentsResponses;
+﻿using AutoMapper;
+using Blog.Contracts.V1.Responses.CommentsResponses;
 using Blog.EntityServices.Interfaces;
 using BlogVerticalSliceCQRSMinimalApi.CQRSExtensions;
-using MapsterMapper;
 
 namespace BlogVerticalSliceCQRSMinimalApi.Features.Comments.GetAll;
 

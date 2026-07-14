@@ -4,29 +4,24 @@ using Blog.Contracts.V1.Responses;
 using Carter;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BlogVerticalSliceCQRSMinimalApi.Features.Posts.CreatePost;
 
-public class CreatePostEndpoint : ICarterModule
+public class GetPostsEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var versionSet = app.NewApiVersionSet()
-            .HasApiVersion(new ApiVersion(1, 0))
-            .ReportApiVersions()
-            .Build();
-
-        var group = app.MapGroup(ApiRoutes.PostsController.Posts)
-            .WithApiVersionSet(versionSet)
+        var group = app.MapGroup("Posts")
             .MapToApiVersion(1.0)
             .WithTags("Posts");
 
         group.MapPost("/",
-                async (CreatePostRequest request,
-                    ISender sender,
-                    HttpContext context) =>
+                async ([FromBody] GetPostsRequest request,
+                    [FromServices] ISender sender,
+                    [FromServices] HttpContext context) =>
                 {
-                    var command = request.Adapt<CreatePostCommand>();
+                    var command = request.Adapt<GetPostsCommand>();
 
                     var result = await sender.Send(command);
 
@@ -44,7 +39,6 @@ public class CreatePostEndpoint : ICarterModule
             .Produces<CreatedResponse<int>>(201)
             .Produces(400)
             .WithSummary("Create post")
-            .WithDescription("Create post")
-            .HasApiVersion(1.0);
+            .WithDescription("Create post");
     }
 }

@@ -44,7 +44,13 @@ public class CommentsApiEndpoints : IRoutesInstaller
 
                 return Results.Ok(response);
             })
-            .Produces<List<CommentResponse>>();
+            .WithName("GetAll")
+            .Produces<List<CommentResponse>>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithSummary("Get All")
+            .WithDescription("Get All")
+            .HasApiVersion(1.0);
 
 
         // Comments Activity
@@ -57,8 +63,13 @@ public class CommentsApiEndpoints : IRoutesInstaller
                     ? Results.NotFound()
                     : Results.Ok(activity);
             })
-            .Produces<ChartDataModel>()
-            .Produces(404);
+            .WithName("CommentsActivity")
+            .Produces<List<ChartDataModel>>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithSummary("Comments Activity")
+            .WithDescription("Comments Activity")
+            .HasApiVersion(1.0);
 
 
         // Get Paged Comments
@@ -78,8 +89,13 @@ public class CommentsApiEndpoints : IRoutesInstaller
                     ? Results.NotFound()
                     : Results.Ok(mapper.Map<PagedCommentsResponse>(result));
             })
+            //.RequireAuthorization()
+            .WithName("GetCommentsByFilter")
             .Produces<PagedCommentsResponse>()
-            .Produces(404);
+            .Produces(400)
+            .WithSummary("Get Comments By Filter")
+            .WithDescription("Get CommentsBy Filter")
+            .HasApiVersion(1.0);
 
 
         // Get Comments By Post
@@ -101,8 +117,13 @@ public class CommentsApiEndpoints : IRoutesInstaller
                     ? Results.NotFound()
                     : Results.Ok(mapper.Map<PagedCommentsResponse>(result));
             })
+            //.RequireAuthorization()
+            .WithName("Get Comments By Post")
             .Produces<PagedCommentsResponse>()
-            .Produces(404);
+            .Produces(400)
+            .WithSummary("Get Comments By Post")
+            .WithDescription("Get Comments By Post")
+            .HasApiVersion(1.0);
 
 
         // Get Comment By ID
@@ -117,9 +138,13 @@ public class CommentsApiEndpoints : IRoutesInstaller
                     ? Results.NotFound()
                     : Results.Ok(mapper.Map<CommentResponse>(comment));
             })
-            .WithName(ApiRoutes.CommentsController.GetComment)
+            .WithName("GetCommentById")
             .Produces<CommentResponse>()
-            .Produces(404);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithSummary("Get Comment By Id")
+            .WithDescription("Get Comment By Id")
+            .HasApiVersion(1.0);
 
         // -------------------------
         // PRIVATE (Authorized)

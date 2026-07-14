@@ -1,12 +1,13 @@
-﻿using Carter;
+﻿using Asp.Versioning;
 
 namespace BlogVerticalSliceCQRSMinimalApi.StartupConfigures;
 
-using System.IO;
-using System.Net;
+using CQRSExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Net;
 
 /// <summary>
 /// Configure routes.
@@ -76,7 +77,13 @@ public class ConfigureRoutes
             //endpoints.MapHealthChecks("/health");
         });
 
-        app.MapCarter();
+
+        var versionSet = app.NewApiVersionSet()
+            .HasApiVersion(new ApiVersion(1, 0))
+            .ReportApiVersions()
+            .Build();
+
+        app.MapVersionedCarter(versionSet);
 
         app.MapDefaultEndpoints();
 

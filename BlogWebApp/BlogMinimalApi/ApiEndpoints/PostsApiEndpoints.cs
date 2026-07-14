@@ -49,8 +49,13 @@ public class PostsApiEndpoints : IRoutesInstaller
                     return Results.Ok(
                         mapper.Map<List<PostResponse>>(posts));
                 })
+            .WithName("GetAllPosts")
             .Produces<List<PostResponse>>()
-            .Produces(404);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithSummary("Get All Posts")
+            .WithDescription("Get All Posts")
+            .HasApiVersion(1.0);
 
 
         // POSTS ACTIVITY
@@ -63,8 +68,13 @@ public class PostsApiEndpoints : IRoutesInstaller
                         ? Results.NotFound()
                         : Results.Ok(activity);
                 })
-            .Produces<ChartDataModel>()
-            .Produces(404);
+            .WithName("PostsActivity")
+            .Produces<List<ChartDataModel>>()
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithSummary("Posts Activity")
+            .WithDescription("Posts Activity")
+            .HasApiVersion(1.0);
 
 
         // FILTERED POSTS
@@ -86,8 +96,12 @@ public class PostsApiEndpoints : IRoutesInstaller
                         ? Results.NotFound()
                         : Results.Ok(mapper.Map<PagedPostsResponse>(posts));
                 })
+            .WithName("GetPosts")
             .Produces<PagedPostsResponse>()
-            .Produces(404);
+            .Produces(StatusCodes.Status400BadRequest)
+            .WithSummary("Get Posts")
+            .WithDescription("Get Posts")
+            .HasApiVersion(1.0);
 
 
         // USER POSTS
@@ -111,8 +125,12 @@ public class PostsApiEndpoints : IRoutesInstaller
                         ? Results.NotFound()
                         : Results.Ok(mapper.Map<PagedPostsResponse>(posts));
                 })
+            .WithName("UserPosts")
             .Produces<PagedPostsResponse>()
-            .Produces(404);
+            .Produces(StatusCodes.Status400BadRequest)
+            .WithSummary("User Posts")
+            .WithDescription("User Posts")
+            .HasApiVersion(1.0);
 
 
         // GET POST BY ID
@@ -134,8 +152,13 @@ public class PostsApiEndpoints : IRoutesInstaller
                         : Results.Ok(
                             mapper.Map<PostWithPagedCommentsResponse>(post));
                 })
+            .WithName("GetPostById")
             .Produces<PostWithPagedCommentsResponse>()
-            .Produces(404);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithSummary("Get Post By Id")
+            .WithDescription("Get Post By Id")
+            .HasApiVersion(1.0);
 
 
         // -------------------------

@@ -35,11 +35,11 @@
                         new HeaderApiVersionReader("x-api-version"),
                         new MediaTypeApiVersionReader("x-api-version"));
                 })
-                .AddApiExplorer(options =>
+                /*.AddApiExplorer(options =>
                 {
                     options.GroupNameFormat = "'v'VVV";
                     options.SubstituteApiVersionInUrl = true;
-                });
+                })*/;
             //services.ConfigureOptions<ConfigureSwaggerOptions>();
             services.AddSwaggerGen(c =>
             {

@@ -3,6 +3,7 @@ using Blog.Contracts.V1;
 using Carter;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BlogVerticalSliceCQRSMinimalApi.Features.Accounts.Login;
 
@@ -10,18 +11,12 @@ public class LoginEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var versionSet = app.NewApiVersionSet()
-            .HasApiVersion(new ApiVersion(1, 0))
-            .ReportApiVersions()
-            .Build();
-
-        var group = app.MapGroup(ApiRoutes.AccountsController.Accounts)
-            .WithApiVersionSet(versionSet)
+        var group = app.MapGroup("Accounts")
             .MapToApiVersion(1.0)
             .WithTags("Accounts");
 
         group.MapPost(ApiRoutes.AccountsController.Login,
-                async (LoginRequest request, ISender sender) =>
+                async ([FromBody] LoginRequest request, [FromServices] ISender sender) =>
                 {
                     if (request is null)
                         return Results.BadRequest();
@@ -39,7 +34,6 @@ public class LoginEndpoint : ICarterModule
             .Produces(200)
             .Produces<string>(400)
             .WithSummary("Login")
-            .WithDescription("Login")
-            .HasApiVersion(1.0);
+            .WithDescription("Login");
     }
 }

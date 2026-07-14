@@ -46,8 +46,13 @@ public class MessagesApiEndpoints : IRoutesInstaller
 
                     return Results.Ok(response);
                 })
+            .WithName("GetAll")
             .Produces<List<MessageResponse>>()
-            .Produces(404);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithSummary("Get All")
+            .WithDescription("Get All")
+            .HasApiVersion(1.0);
 
 
         // GET BY RECIPIENT
@@ -65,8 +70,13 @@ public class MessagesApiEndpoints : IRoutesInstaller
 
                     return Results.Ok(mapper.Map<List<MessageResponse>>(messages));
                 })
+            .WithName("GetRecipientMessages")
             .Produces<List<MessageResponse>>()
-            .Produces(404);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithSummary("Get Recipient Messages")
+            .WithDescription("Get Recipient Messages")
+            .HasApiVersion(1.0);
 
 
         // GET BY SENDER
@@ -84,8 +94,13 @@ public class MessagesApiEndpoints : IRoutesInstaller
 
                     return Results.Ok(mapper.Map<List<MessageResponse>>(messages));
                 })
+            .WithName("GetSenderMessages")
             .Produces<List<MessageResponse>>()
-            .Produces(404);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithSummary("Get Sender Messages")
+            .WithDescription("Get Sender Messages")
+            .HasApiVersion(1.0);
 
 
         // GET BY ID
@@ -100,8 +115,13 @@ public class MessagesApiEndpoints : IRoutesInstaller
                         ? Results.NotFound()
                         : Results.Ok(mapper.Map<MessageResponse>(message));
                 })
+            .WithName("GetById")
             .Produces<MessageResponse>()
-            .Produces(404);
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithSummary("Get By Id")
+            .WithDescription("Get By Id")
+            .HasApiVersion(1.0);
 
 
         // -------------------------
