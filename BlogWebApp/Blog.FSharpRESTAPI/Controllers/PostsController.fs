@@ -83,3 +83,59 @@ type PostsController(
             else
                 return this.Ok(activity) :> IActionResult
         }
+
+    // --------------------------------------------------------------------
+    // POST: Posts/get-posts
+    // --------------------------------------------------------------------
+
+    [<HttpPost(ApiRoutes.PostsController.GetPosts)>]
+    [<ProducesResponseType(typeof<PagedPostsResponse>, 200)>]
+    [<ProducesResponseType(404)>]
+    [<Cached(600)>]
+    member this.GetPosts
+        (
+            [<FromBody>] searchParameters : PostsSearchParametersRequest
+        ) : Task<IActionResult> =
+
+        task {
+
+            searchParameters.SortParameters
+                <- searchParameters.SortParameters
+                |> Option.ofObj
+                |> Option.defaultValue (SortParametersRequest())
+
+            searchParameters.SortParameters.OrderBy
+                <- searchParameters.SortParameters.OrderBy
+                |> Option.ofObj
+                |> Option.defaultValue "asc"
+
+            searchParameters.SortParameters.SortBy
+                <- searchParameters.SortParameters.SortBy
+                |> Option.ofObj
+                |> Option.defaultValue "Title"
+
+            searchParameters.SortParameters.CurrentPage
+                <- searchParameters.SortParameters.CurrentPage
+                |> Option.ofNullable
+                |> Option.defaultValue 1
+                |> Nullable
+
+            searchParameters.SortParameters.PageSize
+                <- searchParameters.SortParameters.PageSize
+                |> Option.ofNullable
+                |> Option.defaultValue 10
+                |> Nullable
+
+            let! posts =
+                mapper.Map<PostsSearchParametersDto>(searchParameters)
+                |> postsService.GetPostsAsync
+
+            if isNull posts then
+                return this.NotFound() :> IActionResult
+            else
+
+                let response =
+                    mapper.Map<PagedPostsResponse>(posts)
+
+                return this.Ok(response) :> IActionResult
+        }
