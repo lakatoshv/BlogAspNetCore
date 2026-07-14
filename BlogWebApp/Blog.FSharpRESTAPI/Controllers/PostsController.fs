@@ -63,3 +63,23 @@ type PostsController(
 
                 return this.Ok(response) :> IActionResult
         }
+
+    // --------------------------------------------------------------------
+    // GET: Posts/posts-activity
+    // --------------------------------------------------------------------
+
+    [<HttpGet(ApiRoutes.PostsController.PostsActivity)>]
+    [<ProducesResponseType(typeof<ChartDataModel>, 200)>]
+    [<ProducesResponseType(404)>]
+    [<Cached(600)>]
+    member this.PostsActivity() : Task<IActionResult> =
+        task {
+
+            let! activity =
+                postsService.GetPostsActivity()
+
+            if isNull activity then
+                return this.NotFound() :> IActionResult
+            else
+                return this.Ok(activity) :> IActionResult
+        }
