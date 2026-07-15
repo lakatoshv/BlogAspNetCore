@@ -194,3 +194,32 @@ type PostsController(
 
                 return this.Ok(response) :> IActionResult
         }
+
+    // --------------------------------------------------------------------
+    // GET: Posts/Show/{id}
+    // --------------------------------------------------------------------
+
+    [<ProducesResponseType(typeof<PostWithPagedCommentsResponse>, 200)>]
+    [<ProducesResponseType(404)>]
+    [<HttpGet(ApiRoutes.PostsController.Show)>]
+    [<Cached(600)>]
+    member this.Show([<FromRoute>] id : int) : Task<IActionResult> =
+        task {
+
+            let sortParameters = SortParametersDto()
+
+            sortParameters.CurrentPage <- Nullable 1
+            sortParameters.PageSize <- Nullable 10
+
+            let! post =
+                postsService.GetPost(id, sortParameters)
+
+            if isNull post then
+                return this.NotFound() :> IActionResult
+            else
+
+                let response =
+                    mapper.Map<PostWithPagedCommentsResponse>(post)
+
+                return this.Ok(response) :> IActionResult
+        }
