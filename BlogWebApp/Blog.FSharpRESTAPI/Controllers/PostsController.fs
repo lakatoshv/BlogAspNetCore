@@ -223,3 +223,58 @@ type PostsController(
 
                 return this.Ok(response) :> IActionResult
         }
+
+    // --------------------------------------------------------------------
+    // POST: Posts
+    // --------------------------------------------------------------------
+
+    [<HttpPost>]
+    [<Authorize>]
+    [<ProducesResponseType(typeof<PostResponse>, 201)>]
+    [<ProducesResponseType(typeof<obj>, 400)>]
+    member this.CreateAsync(
+        [<FromBody>] model : CreatePostRequest
+    ) : Task<IActionResult> =
+
+        task {
+
+            if isNull this.CurrentUser then
+                return this.BadError("Unauthorized")
+
+            else
+
+                if not this.ModelState.IsValid
+                    || String.IsNullOrWhiteSpace(model.AuthorId) then
+
+                    return (this.NotFound() :> IActionResult)
+
+                else
+
+                    model.AuthorId <- this.CurrentUser.Id
+
+                    let postToCreate =
+                        mapper.Map<Post>(model)
+
+                    let tags =
+                        mapper.Map<List<Tag>>(model.Tags.Distinct())
+
+                    do!
+                        postsService.InsertAsync(postToCreate, tags)
+
+                    let response = CreatedResponse<int>()
+                    response.Id <- postToCreate.Id
+
+                    let baseUrl =
+                        $"{this.HttpContext.Request.Scheme}://{this.HttpContext.Request.Host.ToUriComponent()}"
+
+                    let locationUrl =
+                        baseUrl + "/" +
+                        ApiRoutes.PostsController.Show.Replace(
+                            "{id}",
+                            postToCreate.Id.ToString()
+                        )
+
+                    return
+                        this.Created(locationUrl, response)
+                        :> IActionResult
+        }
