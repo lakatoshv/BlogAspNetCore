@@ -433,3 +433,51 @@ type PostsController(
                             this.Ok(mappedPost)
                             :> IActionResult
         }
+
+
+    // --------------------------------------------------------------------
+    // DELETE: Posts/{id}
+    // --------------------------------------------------------------------
+
+    [<HttpDelete("{id:int}")>]
+    [<Authorize>]
+    [<ProducesResponseType(typeof<CreatedResponse<int>>, 200)>]
+    [<ProducesResponseType(404)>]
+    member this.DeleteAsync
+        (
+            [<FromRoute>] id : int,
+            [<FromBody>] authorId : string
+        ) : Task<IActionResult> =
+
+        task {
+
+            if isNull this.CurrentUser then
+                return this.BadError("Unauthorized")
+
+            else
+
+                let! post =
+                    postsService.GetPostAsync(id)
+
+                if isNull post then
+                    return (this.NotFound() :> IActionResult)
+
+                else
+
+                    if not (post.AuthorId.Equals(this.CurrentUser.Id)) then
+                        return this.BadError("You are not an author of the post.")
+
+                    else
+
+                        do!
+                            postsService.DeleteAsync(post)
+
+                        let response =
+                            CreatedResponse<int>()
+
+                        response.Id <- id
+
+                        return
+                            this.Ok(response)
+                            :> IActionResult
+        }
