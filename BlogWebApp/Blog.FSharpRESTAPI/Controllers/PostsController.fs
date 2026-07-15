@@ -278,3 +278,91 @@ type PostsController(
                         this.Created(locationUrl, response)
                         :> IActionResult
         }
+
+    // --------------------------------------------------------------------
+    // PUT: Posts/like-post
+    // --------------------------------------------------------------------
+
+    [<HttpPut(ApiRoutes.PostsController.LikePost)>]
+    [<Authorize>]
+    [<ProducesResponseType(typeof<PostViewResponse>, 204)>]
+    [<ProducesResponseType(typeof<obj>, 400)>]
+    [<ProducesResponseType(404)>]
+    member this.LikePostAsync([<FromRoute>] id : int) : Task<IActionResult> =
+        task {
+
+            if isNull this.CurrentUser then
+                return this.BadError("Unauthorized")
+
+            else
+
+                let! model =
+                    postsService.GetPostAsync(id)
+
+                if isNull model then
+                    return (this.NotFound() :> IActionResult)
+
+                else
+
+                    model.Likes <- model.Likes + 1
+
+                    do!
+                        postsService.UpdateAsync(model)
+
+                    let! post =
+                        postsService.GetPostAsync(id)
+
+                    let mappedPost =
+                        mapper.Map<PostViewResponse>(post)
+
+                    mappedPost.Author <-
+                        mapper.Map<ApplicationUserResponse>(post.Author)
+
+                    return
+                        this.Ok(mappedPost)
+                        :> IActionResult
+        }
+
+    // --------------------------------------------------------------------
+    // PUT: Posts/dislike-post
+    // --------------------------------------------------------------------
+
+    [<HttpPut(ApiRoutes.PostsController.DislikePost)>]
+    [<Authorize>]
+    [<ProducesResponseType(typeof<PostViewResponse>, 204)>]
+    [<ProducesResponseType(typeof<obj>, 400)>]
+    [<ProducesResponseType(404)>]
+    member this.DislikePostAsync([<FromRoute>] id : int) : Task<IActionResult> =
+        task {
+
+            if isNull this.CurrentUser then
+                return this.BadError("Unauthorized")
+
+            else
+
+                let! model =
+                    postsService.GetPostAsync(id)
+
+                if isNull model then
+                    return (this.NotFound() :> IActionResult)
+
+                else
+
+                    model.Dislikes <- model.Dislikes + 1
+
+                    do!
+                        postsService.UpdateAsync(model)
+
+                    let! post =
+                        postsService.GetPostAsync(id)
+
+                    let mappedPost =
+                        mapper.Map<PostViewResponse>(post)
+
+                    mappedPost.Author <-
+                        mapper.Map<ApplicationUserResponse>(post.Author)
+
+                    return
+                        this.Ok(mappedPost)
+                        :> IActionResult
+        }
