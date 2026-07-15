@@ -366,3 +366,70 @@ type PostsController(
                         this.Ok(mappedPost)
                         :> IActionResult
         }
+
+    // --------------------------------------------------------------------
+    // PUT: Posts/{id}
+    // --------------------------------------------------------------------
+
+    [<HttpPut("{id:int}")>]
+    [<Authorize>]
+    [<ProducesResponseType(typeof<PostViewResponse>, 204)>]
+    [<ProducesResponseType(typeof<obj>, 400)>]
+    [<ProducesResponseType(404)>]
+    member this.EditAsync
+        (
+            [<FromRoute>] id : int,
+            [<FromBody>] model : UpdatePostRequest
+        ) : Task<IActionResult> =
+
+        task {
+
+            if isNull this.CurrentUser then
+                return this.BadError("Unauthorized")
+
+            else
+
+                if not (model.AuthorId.Equals(this.CurrentUser.Id)) then
+                    return this.BadError("You are not an author of the post.")
+
+                else
+
+                    let! post =
+                        postsService.GetPostAsync(id)
+
+                    if isNull post then
+                        return (this.NotFound() :> IActionResult)
+
+                    else
+
+                        let updatedModel =
+                            mapper.Map<UpdatePostRequest, Post>(
+                                model,
+                                post
+                            )
+
+                        updatedModel.Author <- this.CurrentUser
+
+                        do!
+                            postsService.UpdateAsync(updatedModel)
+
+                        let tags =
+                            mapper.Map<List<Tag>>(model.Tags)
+
+                        do!
+                            postsTagsRelationsService.AddTagsToExistingPost(
+                                post.Id,
+                                List<PostsTagsRelations>(post.PostsTagsRelations),
+                                tags
+                            )
+
+                        let! postModel =
+                            postsService.GetPostAsync(id)
+
+                        let mappedPost =
+                            mapper.Map<PostViewResponse>(postModel)
+
+                        return
+                            this.Ok(mappedPost)
+                            :> IActionResult
+        }
