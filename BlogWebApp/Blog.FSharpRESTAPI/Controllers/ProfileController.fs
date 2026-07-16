@@ -26,3 +26,28 @@ type ProfileController(
         mapper : IMapper
     ) =
     inherit BaseController(controllerContext)
+
+    [<ProducesResponseType(typeof<ApplicationUserResponse>, 200)>]
+    [<ProducesResponseType(404)>]
+    [<HttpGet("{id:int}")>]
+    [<Cached(600)>]
+    member this.Show([<FromRoute>] id : int) : Task<IActionResult> =
+        task {
+
+            let! profile =
+                profileService.GetProfile(id)
+
+            if isNull profile then
+                return (this.NotFound() :> IActionResult)
+
+            else
+
+                profile.Profile.User <- null
+
+                let response =
+                    mapper.Map<ApplicationUserResponse>(profile)
+
+                return
+                    this.Ok(response)
+                    :> IActionResult
+        }
