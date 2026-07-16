@@ -51,3 +51,54 @@ type ProfileController(
                     this.Ok(response)
                     :> IActionResult
         }
+
+    [<HttpPut("{profileId:int}")>]
+    [<Authorize>]
+    [<ProducesResponseType(typeof<ApplicationUserResponse>, 204)>]
+    [<ProducesResponseType(typeof<obj>, 400)>]
+    [<ProducesResponseType(404)>]
+    member this.EditAsync
+        (
+            [<FromRoute>] profileId : int,
+            [<FromBody>] model : UpdateProfileRequest
+        ) : Task<IActionResult> =
+
+        task {
+
+            if isNull this.CurrentUser then
+                return this.BadError("Unauthorized")
+
+            else
+
+                let! profile =
+                    profileService.GetProfile(profileId)
+
+                if isNull profile then
+                    return (this.NotFound() :> IActionResult)
+
+                else
+
+                    if not (profile.Profile.UserId.Equals(this.CurrentUser.Id)) then
+                        return this.BadError("You are not allowed to edit profile.")
+
+                    else
+
+                        profile.Profile.User.Email <- model.Email
+                        profile.Profile.User.FirstName <- model.FirstName
+                        profile.Profile.User.LastName <- model.LastName
+                        profile.Profile.User.PhoneNumber <- model.PhoneNumber
+                        profile.Profile.About <- model.About
+
+                        do!
+                            profileService.UpdateAsync(profile.Profile)
+
+                        let! editedProfile =
+                            profileService.GetProfile(profileId)
+
+                        let response =
+                            mapper.Map<ApplicationUserResponse>(editedProfile)
+
+                        return
+                            this.Ok(response)
+                            :> IActionResult
+        }
