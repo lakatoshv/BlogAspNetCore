@@ -56,3 +56,46 @@ type TagsController(
 
                 return this.Ok(response) :> IActionResult
         }
+
+    [<HttpPost(ApiRoutes.TagsController.GetTagsByFilter)>]
+    [<ProducesResponseType(typeof<PagedTagsResponse>, 200)>]
+    [<ProducesResponseType(404)>]
+    [<Cached(600)>]
+    member this.GetTagsByFilter
+        (
+            [<FromBody>] searchParameters : SearchParametersRequest
+        ) : Task<IActionResult> =
+
+        task {
+
+            if isNull searchParameters then
+                return this.BadRequest() :> IActionResult
+            else
+
+                if isNull searchParameters.SortParameters then
+                    searchParameters.SortParameters <- SortParametersRequest()
+
+                if String.IsNullOrWhiteSpace(searchParameters.SortParameters.OrderBy) then
+                    searchParameters.SortParameters.OrderBy <- "asc"
+
+                if String.IsNullOrWhiteSpace(searchParameters.SortParameters.SortBy) then
+                    searchParameters.SortParameters.SortBy <- "Title"
+
+                if not searchParameters.SortParameters.CurrentPage.HasValue then
+                    searchParameters.SortParameters.CurrentPage <- Nullable 1
+
+                if not searchParameters.SortParameters.PageSize.HasValue then
+                    searchParameters.SortParameters.PageSize <- Nullable 10
+
+                let! tags =
+                    mapper.Map<SearchParametersDto>(searchParameters)
+                    |> tagsService.GetTagsAsync
+
+                if isNull tags then
+                    return this.NotFound() :> IActionResult
+                else
+                    return
+                        mapper.Map<PagedTagsResponse>(tags)
+                        |> this.Ok
+                        :> IActionResult
+        }
