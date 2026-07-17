@@ -122,3 +122,21 @@ type TagsController(
                     |> this.Ok
                     :> IActionResult
         }
+
+    [<HttpGet(ApiRoutes.TagsController.GetTag)>]
+    [<ProducesResponseType(typeof<TagResponse>, 200)>]
+    [<ProducesResponseType(404)>]
+    [<Cached(600)>]
+    member this.GetTag([<FromRoute>] id : int) : Task<IActionResult> =
+        task {
+
+            let! tag = tagsService.FindAsync(id)
+
+            if isNull tag then
+                return this.NotFound() :> IActionResult
+            else
+                return
+                    mapper.Map<TagResponse>(tag)
+                    |> this.Ok
+                    :> IActionResult
+        }
