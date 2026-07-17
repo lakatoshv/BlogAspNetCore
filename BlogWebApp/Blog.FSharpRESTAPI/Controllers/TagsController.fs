@@ -99,3 +99,26 @@ type TagsController(
                         |> this.Ok
                         :> IActionResult
         }
+
+    [<HttpGet(ApiRoutes.TagsController.GetAvailableTags)>]
+    [<ProducesResponseType(typeof<ResizeArray<TagResponse>>, 200)>]
+    [<ProducesResponseType(404)>]
+    [<Cached(600)>]
+    member this.GetAvailableTags([<FromRoute>] postId : int) : Task<IActionResult> =
+        task {
+
+            let spec =
+                TagSpecification(fun x ->
+                    isNull x.PostsTagsRelations ||
+                    x.PostsTagsRelations.Any(fun y -> y.PostId <> postId))
+
+            let! tags = tagsService.GetAllAsync(spec)
+
+            if isNull tags then
+                return this.NotFound() :> IActionResult
+            else
+                return
+                    mapper.Map<ResizeArray<TagResponse>>(tags)
+                    |> this.Ok
+                    :> IActionResult
+        }
