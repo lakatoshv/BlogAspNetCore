@@ -38,3 +38,21 @@ type TagsController(
     mapper : IMapper
 ) =
     inherit BaseController(controllerContext)
+
+    [<HttpGet(ApiRoutes.TagsController.GetTags)>]
+    [<ProducesResponseType(typeof<ResizeArray<TagResponse>>, 200)>]
+    [<ProducesResponseType(404)>]
+    [<Cached(600)>]
+    member this.GetTags() : Task<IActionResult> =
+        task {
+
+            let! tags = tagsService.GetAllAsync()
+
+            if isNull tags then
+                return this.NotFound() :> IActionResult
+            else
+                let response =
+                    mapper.Map<ResizeArray<TagResponse>>(tags)
+
+                return this.Ok(response) :> IActionResult
+        }
