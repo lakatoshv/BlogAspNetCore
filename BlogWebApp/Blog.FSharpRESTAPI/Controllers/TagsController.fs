@@ -231,3 +231,23 @@ type TagsController(
                     |> this.Ok
                     :> IActionResult
         }
+
+    [<HttpDelete("{id:int}")>]
+    [<ProducesResponseType(typeof<CreatedResponse<int>>, 200)>]
+    [<ProducesResponseType(404)>]
+    member this.DeleteAsync([<FromRoute>] id : int) : Task<IActionResult> =
+        task {
+
+            let! tag =
+                tagsService.FindAsync(id)
+
+            if isNull tag then
+                return this.NotFound() :> IActionResult
+            else
+
+                do! tagsService.DeleteAsync(tag)
+
+                return
+                    this.Ok(CreatedResponse<int>(Id = id))
+                    :> IActionResult
+        }
