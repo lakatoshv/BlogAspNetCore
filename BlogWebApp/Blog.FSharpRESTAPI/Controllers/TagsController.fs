@@ -140,3 +140,19 @@ type TagsController(
                     |> this.Ok
                     :> IActionResult
         }
+
+    [<HttpGet(ApiRoutes.TagsController.TagsActivity)>]
+    [<ProducesResponseType(typeof<ChartDataModel>, 200)>]
+    [<ProducesResponseType(404)>]
+    [<Cached(600)>]
+    member this.TagsActivity() : Task<IActionResult> =
+        task {
+
+            let! activity =
+                tagsService.GetTagsActivity()
+
+            if isNull activity then
+                return this.NotFound() :> IActionResult
+            else
+                return this.Ok(activity) :> IActionResult
+        }
