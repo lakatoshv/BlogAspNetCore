@@ -156,3 +156,44 @@ type TagsController(
             else
                 return this.Ok(activity) :> IActionResult
         }
+
+    [<HttpPost(ApiRoutes.TagsController.CreateTag)>]
+    [<Authorize>]
+    [<ProducesResponseType(typeof<CreatedResponse<int>>, 201)>]
+    [<ProducesResponseType(typeof<ModelStateDictionary>, 400)>]
+    member this.CreateAsync
+        (
+            [<FromBody>] model : CreateTagRequest
+        ) : Task<IActionResult> =
+
+        task {
+
+            let! exists =
+                tagsService.AnyAsync(
+                    TagSpecification(fun x ->
+                        x.Title.ToLower() = model.Title.ToLower())
+                )
+
+            if (not this.ModelState.IsValid) || exists then
+                return this.BadModel(this.ModelState)
+            else
+
+                let tag =
+                    mapper.Map<Tag>(model)
+
+                do! tagsService.InsertAsync(tag)
+
+                let response =
+                    CreatedResponse<int>(Id = tag.Id)
+
+                let baseUrl =
+                    $"{this.HttpContext.Request.Scheme}://{this.HttpContext.Request.Host.ToUriComponent()}"
+
+                let location =
+                    baseUrl + "/" +
+                    ApiRoutes.TagsController.GetTag.Replace("{id}", string tag.Id)
+
+                return
+                    this.Created(location, response)
+                    :> IActionResult
+        }
