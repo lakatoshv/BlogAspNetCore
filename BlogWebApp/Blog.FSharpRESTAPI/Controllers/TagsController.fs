@@ -197,3 +197,37 @@ type TagsController(
                     this.Created(location, response)
                     :> IActionResult
         }
+
+    [<HttpPut("{id}")>]
+    [<Authorize>]
+    [<ProducesResponseType(typeof<TagResponse>, 200)>]
+    [<ProducesResponseType(400)>]
+    [<ProducesResponseType(404)>]
+    member this.EditAsync
+        (
+            [<FromRoute>] id : int,
+            [<FromBody>] model : UpdateTagRequest
+        ) : Task<IActionResult> =
+
+        task {
+
+            let! original =
+                tagsService.FindAsync(id)
+
+            if isNull original then
+                return this.NotFound() :> IActionResult
+            else
+
+                let updated =
+                    mapper.Map(model, original)
+
+                do! tagsService.UpdateAsync(updated)
+
+                let! tag =
+                    tagsService.FindAsync(id)
+
+                return
+                    mapper.Map<TagResponse>(tag)
+                    |> this.Ok
+                    :> IActionResult
+        }
