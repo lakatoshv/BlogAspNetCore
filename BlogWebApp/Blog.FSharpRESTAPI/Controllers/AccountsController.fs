@@ -1,0 +1,213 @@
+﻿namespace Blog.FSharpRESTAPI.Controllers
+
+open Blog.Data.Models;
+open Microsoft.AspNetCore.Authorization;
+open Microsoft.AspNetCore.Identity;
+open Microsoft.AspNetCore.Mvc;
+open Microsoft.EntityFrameworkCore;
+open System;
+open System.Threading.Tasks;
+open System.Collections.Generic;
+open Microsoft.AspNetCore.Mvc.ModelBinding;
+open AutoMapper;
+open Blog.Services.Core.Utilities;
+open Blog.CommonServices.EmailServices.Interfaces;
+open Blog.EntityServices.ControllerContext;
+open Blog.Contracts.V1;
+open Blog.Contracts.V1.Requests.UsersRequests;
+open Blog.Contracts.V1.Responses.UsersResponses;
+open Blog.Contracts.V1.Responses.Chart;
+open Blog.Core.Consts;
+open Blog.EntityServices.EntityFrameworkServices.Identity.Auth;
+open Blog.EntityServices.EntityFrameworkServices.Identity.Registration;
+open Blog.EntityServices.EntityFrameworkServices.Identity.User;
+open Blog.FSharpRESTAPI.Cache
+
+[<Route(ApiRoutes.AccountsController.Accounts)>]
+[<ApiController>]
+[<Authorize>]
+[<Produces(Consts.JsonType)>]
+type AccountsController
+    (
+        controllerContext : IControllerContext,
+        registrationService : IRegistrationService,
+        authService : IAuthService,
+        userManager : UserManager<ApplicationUser>,
+        roleManager : RoleManager<ApplicationRole>,
+        userService : IUserService,
+        emailService : IEmailExtensionService,
+        mapper : IMapper
+    ) =
+    inherit BaseController(controllerContext)
+
+    [<HttpGet(ApiRoutes.AccountsController.Initialize)>]
+    [<ProducesResponseType(typeof<List<RoleResponse>>, 200)>]
+    [<ProducesResponseType(typeof<string>, 400)>]
+    [<AllowAnonymous>]
+    member this.Initialize([<FromRoute>] userId : string) : Task<IActionResult> =
+        task {
+
+            if String.IsNullOrWhiteSpace(userId) then
+                return this.BadError("Something Went Wrong")
+            else
+                let! roles = roleManager.Roles.ToListAsync()
+
+                return
+                    (this.Ok(
+                        mapper.Map<List<RoleResponse>>(roles)
+                    ) :> IActionResult)
+        }
+
+    [<HttpGet(ApiRoutes.AccountsController.GetAllUsers)>]
+    [<AllowAnonymous>]
+    [<ProducesResponseType(typeof<List<AccountResponse>>, 200)>]
+    member this.GetAllUsers() =
+        task {
+            let! users =
+                userManager.Users
+                    .Include(fun u -> u.Roles)
+                    .ToListAsync()
+
+            return
+                users
+                |> mapper.Map<List<AccountResponse>>
+                |> this.Ok
+        }
+
+    [<HttpGet(ApiRoutes.AccountsController.SendConfirmationEmail)>]
+    [<ProducesResponseType(204)>]
+    member this.SendVerificationEmailAsync() =
+        task {
+            let! token =
+                userService.GetEmailVerificationTokenAsync(this.CurrentUser.Email)
+
+            do!
+                emailService.SendVerificationEmailAsync(this.UserName, token)
+
+            return this.NoContent()
+        }
+
+    [<HttpGet(ApiRoutes.AccountsController.UsersActivity)>]
+    [<ProducesResponseType(typeof<ChartDataModel>, 200)>]
+    [<ProducesResponseType(typeof<string>, 400)>]
+    [<Cached(600)>]
+    member this.GetUsersActivity() : Task<IActionResult> =
+        task {
+
+            let! activity =
+                userService.GetUsersActivity()
+
+            if isNull activity then
+                return (this.NotFound() :> IActionResult)
+            else
+                return (this.Ok(activity) :> IActionResult)
+        }
+
+    [<HttpPost(ApiRoutes.AccountsController.Login)>]
+    [<AllowAnonymous>]
+    [<ProducesResponseType(typeof<string>, 200)>]
+    [<ProducesResponseType(typeof<string>, 400)>]
+    member this.PostAsync([<FromBody>] credentials : LoginRequest) : Task<IActionResult> =
+        task {
+            if not this.ModelState.IsValid then
+                return this.BadModel(this.ModelState)
+
+            else
+                let! jwt =
+                    authService.GetJwtAsync(
+                        credentials.Email,
+                        credentials.Password)
+
+                if isNull jwt then
+                    return this.BadError("Invalid name or password")
+
+                else
+                    let! user =
+                        authService.GetByUserNameAsync(credentials.Email)
+
+                    if isNull user then
+                        return this.BadError("")
+
+                    else
+                        return this.Ok(jwt) :> IActionResult
+        }
+
+    [<HttpPost(ApiRoutes.AccountsController.Register)>]
+    [<AllowAnonymous>]
+    [<ProducesResponseType(201)>]
+    [<ProducesResponseType(typeof<IdentityResult>, 400)>]
+    member this.CreateAsync([<FromBody>] model : RegistrationRequest) : Task<IActionResult> =
+        task {
+
+            if not this.ModelState.IsValid then
+                return this.BadModel(this.ModelState)
+
+            else
+
+                model.UserName <- model.Email
+
+                let userIdentity =
+                    mapper.Map<ApplicationUser>(model)
+
+                userIdentity.CreatedOn <- DateTime.Now
+                userIdentity.SecurityStamp <- Guid.NewGuid().ToString()
+
+                let! result =
+                    registrationService.RegisterAsync(
+                        userIdentity,
+                        model.Password
+                    )
+
+                if not result.Succeeded then
+                    return this.BadIdentity(result)
+
+                else
+
+                    if isNull model.Roles then
+                        model.Roles <- [| "User" |]
+
+                    let mutable success = true
+
+                    for role in model.Roles do
+
+                        let! ir =
+                            userManager.AddToRoleAsync(
+                                userIdentity,
+                                role
+                            )
+
+                        if not ir.Succeeded then
+                            success <- false
+
+                    if success then
+                        return (this.NoContent() :> IActionResult)
+
+                    else
+                        return (this.BadRequest() :> IActionResult)
+        }
+
+    [<HttpPut(ApiRoutes.AccountsController.ChangePassword)>]
+    [<ProducesResponseType(204)>]
+    [<ProducesResponseType(typeof<ModelStateDictionary>, 400)>]
+    member this.UpdateAsync([<FromBody>] model : ChangePasswordRequest) : Task<IActionResult> =
+        task {
+            if not this.ModelState.IsValid then
+                return this.BadModel(this.ModelState)
+
+            else
+                let! result =
+                    userService.ChangePasswordAsync(
+                        this.CurrentUser.UserName,
+                        model.OldPassword,
+                        model.NewPassword)
+
+                if result.Succeeded then
+                    return this.NoContent() :> IActionResult
+
+                else
+                    result.Errors
+                    |> Seq.iter (fun e ->
+                        this.ModelState.AddModelError(e.Code, e.Description))
+
+                    return this.BadModel(this.ModelState)
+    }
